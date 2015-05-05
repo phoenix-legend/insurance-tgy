@@ -1,0 +1,1 @@
+<%= select_tag("#{ name_pre.blank? ? "sale_system_potential_customer" : name_pre }[channel]", options_from_collection_for_select(@channels||[], :first, :last), prompt: "选择市场来源") %>

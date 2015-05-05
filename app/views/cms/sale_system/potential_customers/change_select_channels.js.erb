@@ -1,0 +1,1 @@
+$("#select_channel").html('<%= escape_javascript(select_tag 'channel', options_from_collection_for_select( @select_channels, 'first', 'second', '' ), prompt: 'ALL') %>');

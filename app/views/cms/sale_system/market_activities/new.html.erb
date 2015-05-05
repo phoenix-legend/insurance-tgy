@@ -1,0 +1,67 @@
+<h2 class="text-center">活动创建</h2>
+<%= form_tag cms_sale_system_market_activities_path, method: :post do %>
+    <%= content_for_div( 2, 2, "活动名称：", text_field_tag(:market_activity_name, @market_activity_name), true ).html_safe %>
+    <div class="row">
+      <div class="columns small-2 text-right">
+        <label>活动时间：</label>
+      </div>
+      <div class="columns small-2">
+        <%= date_field_tag('session_date', @temp_session_time.blank? ? Time.now.to_date+3.days : @temp_session_time.to_date) %>
+      </div>
+      <div class="columns small-2">
+        <%= time_field_tag('session_time', @temp_session_time.blank? ? Time.now.to_s(:time) : @temp_session_time.to_s(:time)) %>
+      </div>
+      <div class="columns small-2">
+        <%= link_to '添加场次', "javascript:add_one_session()", class: 'button tiny' %>
+      </div>
+    </div>
+    <div id="hidden_div" class="row">
+    </div>
+    <div class="row">
+      <div class="columns small-2">
+        &nbsp;
+      </div>
+      <div class="columns small-10">
+        <table>
+          <thead>
+          <th>活动名称</th>
+          <th>活动场次</th>
+          <th>活动日期</th>
+          <th>活动时间</th>
+          <th>操作</th>
+          </thead>
+          <tbody id="session_body">
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <%= content_for_div( 2, 2, "&nbsp;", submit_tag('创建活动', class: 'button tiny'), false ).html_safe %>
+<% end %>
+<script language="javascript">
+    session_count = 0;
+    function add_one_session() {
+        session_count = session_count + 1;
+        session_name = "第" + session_count + "场";
+        activity_name = $("#market_activity_name").val();
+        session_date = $("#session_date").val();
+        session_time = $("#session_time").val();
+        append_content = "<tr id='session_" + session_count + "'>";
+        append_content += "<td>" + activity_name + "</td>";
+        append_content += "<td>" + session_name + "</td>";
+        append_content += "<td>" + session_date + "</td>";
+        append_content += "<td>" + session_time + "</td>";
+        append_content += "<td>" + "<a href='javascript:delete_current_session(" + session_count + ")'>删除</a>" + "</td>";
+        append_content += "</tr>";
+        $("#session_body").append(append_content);
+        append_hidden_content = '<p id="hidden_session_' + session_count + '">';
+        append_hidden_content += '<input name="sessions[' + session_count + '][name]" type="hidden" value="' + session_name + '">';
+        append_hidden_content += '<input name="sessions[' + session_count + '][session_date]" type="hidden" value="' + session_date + '">';
+        append_hidden_content += '<input name="sessions[' + session_count + '][session_time]" type="hidden" value="' + session_time + '">';
+        append_hidden_content += '</p>';
+        $("#hidden_div").append(append_hidden_content);
+    }
+    function delete_current_session(id) {
+        $("#session_" + id).remove();
+        $("#hidden_session_" + id).remove();
+    }
+</script>

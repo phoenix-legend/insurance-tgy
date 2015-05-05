@@ -1,0 +1,195 @@
+<h2 class="text-center">销售任务管理</h2>
+
+<div class="row">
+  <div class="columns small-12 text-right">
+    <%= link_to '新增客户信息', new_cms_sale_system_potential_customer_path, class: "button tiny" %>
+  </div>
+</div>
+<%=form_tag("/cms/sale_system/potential_customers/custom_query", :method => :get ) do %>
+<div class="row" style="border-top: solid 1px #000000">
+  <br/>
+  <div class="column small-6">
+    <div class="row">
+      <div class="columns small-2">
+        <label class="inline left">录入日期:</label>
+      </div>
+      <div class="columns small-4">
+        <%= date_field_tag "custom_query[created_start]", @created_start %>
+      </div>
+      <div class="columns small-1">
+        <label class="inline left">至</label>
+      </div>
+      <div class="columns small-5">
+        <%=date_field_tag "custom_query[created_end]", @created_end%>
+      </div>
+    </div>
+  </div>
+  <div class="column small-6">
+    <div class="columns small-3">
+      <label class="inline left">最后跟踪时间:</label>
+    </div>
+    <div class="columns small-4">
+      <%= date_field_tag "custom_query[tracking_start]", @tracking_start %>
+    </div>
+    <div class="columns small-1">
+      <label class="inline left">至</label>
+    </div>
+    <div class="columns small-4">
+      <%= date_field_tag "custom_query[tracking_end]", @tracking_end %>
+    </div>
+  </div>
+</div>
+    <br/>
+<div class="row">
+  <div class="columns small-3">
+    <div class="row">
+      <div class="columns small-4">
+        <label class="inline left">登记方式:</label>
+      </div>
+      <div class="columns small-8">
+        <%= select_tag( 'custom_query[register_way]', options_for_select(::SaleSystem::PotentialCustomer.register_ways.keys, @register_way), :prompt => "请选择登记方式", onchange: "change_channel()") %>
+      </div>
+    </div>
+  </div>
+  <div class="columns small-3">
+    <div class="row">
+      <div class="columns small-4">
+        <label class="inline left">市场来源:</label>
+      </div>
+      <div class="columns small-8" id="custom_query_channel_div">
+        <%= select_tag 'custom_query[channel]', options_from_collection_for_select( @channels, 'first', 'second', @channel ), :prompt => "选择市场来源" %>
+      </div>
+    </div>
+  </div>
+  <div class="columns small-3 end">
+    <div class="row">
+      <div class="columns small-4">
+        <label class="inline left">客户类型:</label>
+      </div>
+      <div class="columns small-8">
+        <%= select_tag 'custom_query[status]', options_from_collection_for_select(@statuses, 'first', 'second', @status),:prompt => "选择客户类型" %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="columns small-3">
+    <div class="row">
+      <div class="columns small-4">
+        <label class="inline left">孩子姓名:</label>
+      </div>
+      <div class="columns small-8">
+        <%= text_field_tag 'custom_query[name]', @name %>
+      </div>
+    </div>
+  </div>
+  <div class="columns small-3">
+    <div class="row">
+      <div class="columns small-4">
+        <label class="inline left">联系电话:</label>
+      </div>
+      <div class="columns small-8">
+        <%= text_field_tag 'custom_query[phone]', @phone %>
+      </div>
+    </div>
+  </div>
+  <div class="columns small-3 end">
+    <div class="row">
+      <div class="columns small-4">
+        <label class="inline left">跟踪情况:</label>
+      </div>
+      <div class="columns small-8">
+          <%= select_tag 'custom_query[be_tracked]', options_from_collection_for_select( {"1"=>"已经跟踪", "0"=>"未跟踪"}, 'first', 'second', @be_tracked ), prompt: "全部" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<input type="submit" name="commit" value="查找" class="button tiny">
+<% end %>
+
+<div id="query_result">
+  <% unless @potential_customers.blank? %>
+  <table>
+    <thead>
+    <tr>
+      <th>
+        录入时间
+      </th>
+      <th>
+        当前顾问
+      </th>
+      <th>
+        登记方式
+      </th>
+      <th>市场来源</th>
+      <th>孩子姓名</th>
+      <th>家长姓名</th>
+      <th>联系电话</th>
+
+      <th>最后跟踪时间</th>
+
+      <th>跟踪阶段</th>
+      <th>备注</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @potential_customers.each do |potential_customer| %>
+        <tr>
+          <td>
+            <%=potential_customer.created_at.chinese_format %>
+          </td>
+          <td>
+            <%=potential_customer.sale_name %>
+          </td>
+          <td>
+            <%=potential_customer.register_way %>
+          </td>
+          <td>
+            <%=channel_label(potential_customer.channel) %>
+          </td>
+          <td>
+            <%=potential_customer.student_name %>
+          </td>
+          <td>
+            <%=parent_name(potential_customer) %>
+          </td>
+          <td>
+            <%=potential_customer_phone_show(potential_customer) %>
+          </td>
+          <td>
+            <%=potential_customer.last_track_time.to_s(:db) rescue '' %>
+          </td>
+
+          <td>
+            <%=potential_customer.status_label %>
+          </td>
+          <td>
+            <%=potential_customer.notes %>
+          </td>
+          <td>
+            <a href="/cms/sale_system/potential_customers/<%=potential_customer.id%>" >查看</a>
+          </td>
+        </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <%= will_paginate @collection, renderer: FoundationPagination::Rails unless @potential_customers.blank?%>
+  <% end %>
+</div>
+
+<script language="javascript">
+    function change_channel(){
+        $.ajax({
+            url: "/cms/sale_system/potential_customers/change_register_way",
+            type: "post",
+            async: false,
+            data: {"register_way": $("#custom_query_register_way").val(), "name_pre": "custom_query"}
+        }).done(
+                function(result) {
+                    $("#custom_query_channel_div").html(result);
+                }
+        );
+    }
+</script>

@@ -6,7 +6,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module Xx
+module Insurance
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -19,5 +19,21 @@ module Xx
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+
+    require Rails.root.join('app/models/concerns/model_treasure_chest.rb')
+    require Rails.root.join('lib/tools.rb')
+
+    config.action_mailer.raise_delivery_errors = true
+    config.action_controller.include_all_helpers = false
+
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+        :address              => "smtp.exmail.qq.com",
+        :port                 => 587,
+        :user_name            => 'noreply@ikidstv.com',
+        :password             => 'ikidstv2014',
+        :authentication       => 'plain',
+        :enable_starttls_auto => true
+    }
   end
 end

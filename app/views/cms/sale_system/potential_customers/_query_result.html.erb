@@ -1,0 +1,28 @@
+<table>
+  <thead>
+  <tr>
+    <th>
+      录入时间
+    </th>
+    <th>
+      当前顾问
+    </th>
+    <th>
+      登记方式
+    </th>
+    <th>市场来源</th>
+    <th>孩子姓名</th>
+    <th>家长姓名</th>
+    <th>联系电话</th>
+
+    <th>最后跟踪时间</th>
+
+    <th>跟踪阶段</th>
+    <th>备注</th>
+    <th>操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <%=render :partial=> "/cms/sale_system/potential_customers/query_customer", :collection => @query_customers %>
+  </tbody>
+</table>

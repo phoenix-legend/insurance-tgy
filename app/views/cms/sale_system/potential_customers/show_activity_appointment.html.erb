@@ -1,0 +1,69 @@
+<h2 class="text-center">修改活动预约</h2>
+<div class="row">
+  <div class="columns small-2 text-right">
+    <label>孩子姓名:</label>
+  </div>
+  <div class="columns small-2 text-left">
+    <label>
+      <%= @potential_customer.student_name %>&nbsp;
+    </label>
+  </div>
+  <div class="columns small-2 text-right">
+    <label>父亲姓名:</label>
+  </div>
+  <div class="columns small-2 text-left">
+    <label>
+      <%= @potential_customer.dad_name %>&nbsp;
+    </label>
+  </div>
+  <div class="columns small-2 text-right">
+    <label>父亲联系电话:</label>
+  </div>
+  <div class="columns small-2 text-left">
+    <label>
+      <%= @potential_customer.dad_phone %>&nbsp;
+    </label>
+  </div>
+</div>
+<div class="row">
+  <div class="columns small-2 small-offset-4 text-right">
+    <label>母亲姓名:</label>
+  </div>
+  <div class="columns small-2 text-left">
+    <label>
+      <%= @potential_customer.mum_name %>&nbsp;
+    </label>
+  </div>
+  <div class="columns small-2 text-right">
+    <label>母亲联系电话:</label>
+  </div>
+  <div class="columns small-2 text-left">
+    <label>
+      <%= @potential_customer.mum_phone %>&nbsp;
+    </label>
+  </div>
+</div>
+<br/>
+<div class="row" style="border-bottom: 1px solid black"></div>
+<br/>
+<div class="row">
+  <div class="columns small-1">
+    <label>参与活动:</label>
+  </div>
+  <div class="columns small-3 text-left end">
+    <%= @market_activity_name %>
+  </div>
+</div>
+<div class="row">
+  <div class="columns small-1">
+    <label>活动场次:</label>
+  </div>
+  <div class="columns small-3 text-left end">
+    <%= @session_name %>
+  </div>
+</div>
+<div class="row">
+  <div class="columns small-2 end">
+    <%= link_to '修改预约', "/cms/sale_system/potential_customers/#{@seller_tracking_info_id}/edit_activity_appointment", class: "button tiny" %>
+  </div>
+</div>

@@ -1,0 +1,54 @@
+<h2 class="text-center">回访提醒</h2>
+<div class="row" style="border-top: solid 1px #000000">
+  <div class="columns small-12 text-center">
+    <% unless @seller_tracking_infos.blank? %>
+        <table class="table">
+          <thead>
+          <th>序号</th>
+          <th>孩子姓名</th>
+          <th>上次跟踪时间</th>
+          <th>方式</th>
+          <th>回访提醒日期</th>
+          <th>回访跟踪问题</th>
+          <th>类型</th>
+          <th>状态</th>
+          <th>操作</th>
+          </thead>
+          <tbody>
+          <% @seller_tracking_infos.each_with_index do |seller_tracking, index| %>
+              <tr>
+                <td>
+                  <%= index+1 %>
+                </td>
+                <td>
+                  <%= seller_tracking.potential_customer.student_name rescue '' %>
+                </td>
+                <td>
+                  <%= seller_tracking.track_time.to_s(:db) rescue '' %>
+                </td>
+                <td>
+                  <%= ::SaleSystem::SellerTrackingInfo::TRACETYPE[seller_tracking.trace_type] rescue '' %>
+                </td>
+                <td>
+                  <%= seller_tracking.next_track_time.to_s(:db) rescue '' %>
+                </td>
+                <td>
+                  <%= seller_tracking.next_step_note rescue '' %>
+                </td>
+                <td>
+                  <%= ::SaleSystem::PotentialCustomer::STATUS[seller_tracking.new_status] rescue '' %>
+                </td>
+                <td>
+                  <% aai = seller_tracking.activity_appointment_info %>
+                  <%= aai.blank? ? '跟踪' : (aai.is_checkin? ? '已到访' : '已预约') %>
+                </td>
+                <td>
+                  <%= link_to '立即跟踪', cms_sale_system_potential_customer_path(seller_tracking.potential_customer.id) unless seller_tracking.potential_customer.blank? %>
+                </td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+    <% end %>
+  </div>
+</div>

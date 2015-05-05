@@ -1,0 +1,451 @@
+<h2 class="text-center">添加客户信息</h2>
+
+<div id="light" class="white_content" style="width: 80%;left: 10%;">
+  <div class="row">
+    <div class="columns small-10 text-center">
+      <h4></h4>
+    </div>
+    <div class="columns small-2 text-right">
+      <%= link_to '关闭',"#", onclick: 'closeWindow()', id: "button_close_search_referral" %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns small-4">
+      <div class="row">
+        <div class="columns small-3">
+          <label class="right inline">
+            姓名
+          </label>
+        </div>
+        <div class="columns small-9">
+          <%= text_field_tag :search_name %>
+        </div>
+      </div>
+    </div>
+    <div class="columns small-4">
+      <div class="row">
+        <div class="columns small-3">
+          <label class="right inline">
+            电话
+          </label>
+        </div>
+        <div class="columns small-9">
+          <%= text_field_tag :search_phone %>
+        </div>
+      </div>
+    </div>
+    <div class="columns small-4">
+      <div class="row">
+        <div class="columns small-4">
+          <label class="left"><%= link_to "查询", "javascript:start_search_referral()", class: "button tiny", id: "search_referral" %></label>
+        </div>
+        <div class="columns small-8">
+          <label class="left inline">
+            转介绍姓名和电话必须二选一
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns small-12" id="search_referral_result">
+
+    </div>
+  </div>
+</div>
+<div id="fade" class="black_overlay"></div>
+
+
+
+<%=form_for([:cms, @sale_system_potential_customer]) do |f| %>
+    <%= label_title_tag("数据来源").html_safe %>
+    <div class="row">
+      <div class="small-4 columns">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="register_way" class="right"><span class="required">*</span>登记方式:</label>
+          </div>
+          <div class="small-9 columns">
+            <% if @sale_system_potential_customer.id.blank? %>
+                <%= f.select(:register_way, @register_ways, {:prompt => "请选择登记方式"}, {:onChange=>"change_channel(self.value)"}) %>
+            <% else %>
+                <label class="inline"><span>&nbsp;</span><%= @sale_system_potential_customer.register_way %></label>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="small-4 columns">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="channel" class="right"><span class="required">*</span>市场来源:</label>
+          </div>
+          <div class="small-9 columns" id="channel_changed_by_register_way">
+            <% if @sale_system_potential_customer.id.blank? %>
+                <%= f.select(:channel, options_from_collection_for_select(@channels, 'first', 'second', @sale_system_potential_customer.channel), :prompt => "请选择市场来源") %>
+            <% else %>
+                <label class="inline"><span>&nbsp;</span><%= channel_label(@sale_system_potential_customer.channel) %></label>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="small-4 columns">
+        <div class="row" id="referral_info_div" style="<%= @sale_system_potential_customer.register_way == "Refferal" ? "" : "display: none;" %>">
+          <div class="small-3 columns">
+            <label for="refer_info" class="right inline">转介绍信息:</label>
+          </div>
+          <%= f.hidden_field :referral_id %>
+          <div class="small-9 columns text-left inline">
+            <label class="inline" id="refer_info_label">
+              <% if @sale_system_potential_customer.referral.blank? %>
+                  <a href="#" onclick="openWindow()">选择介绍人信息</a>
+              <% else %>
+                  <a href="#" onclick="openWindow()"><%= @sale_system_potential_customer.referral.student_name rescue '' %></a>
+              <% end %>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <%= label_title_tag("客户资料").html_safe %>
+    <div class="row">
+      <div class="small-4 columns">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="student_name" class="right"><span class="required">*</span>孩子姓名:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :student_name %>
+          </div>
+        </div>
+      </div>
+      <div class="small-4 columns">
+        <div class="row">
+          <div class="small-3 columns">
+            <label class="right inline">孩子性别:</label>
+          </div>
+          <div class="small-9 columns">
+            <label class="inline">
+              <%= collection_radio_buttons(:sale_system_potential_customer, :sex,::SaleSystem::PotentialCustomer::SEX, :first, :last) %>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="small-4 columns">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="birthday" class="right"><span class="required">*</span>出生年月:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.date_field :birthday, onchange: "change_age()" %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-4 columns">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="age" class="right"><span class="required">*</span>孩子年龄:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :age %>
+          </div>
+        </div>
+      </div>
+      <div class="small-4 columns end">
+        <div class="row">
+          <div class="small-3 columns">
+            <label class="right inline">学校/幼儿园:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :school_name %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-4 columns">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="mum_name" class="right inline">母亲姓名:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :mum_name %>
+          </div>
+        </div>
+      </div>
+      <div class="small-4 columns">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="dad_name" class="right inline">父亲姓名:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :dad_name %>
+          </div>
+        </div>
+      </div>
+      <div class="small-4 columns">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="other_person" class="right inline">紧急联系人:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :other_person %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-4 columns">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="mum_phone" class="right"><span class="required">*</span>母亲电话:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :mum_phone %>
+          </div>
+        </div>
+      </div>
+      <div class="small-4 columns">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="dad_phone" class="right"><span class="required">*</span>父亲电话:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :dad_phone %>
+          </div>
+        </div>
+      </div>
+      <div class="small-4 columns">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="other_phone" class="right"><span class="required">*</span>紧急电话:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :other_phone %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns small-4">
+        <div class="row">
+          <div class="small-3 columns">
+            <label class="right"><span class="required">*</span>固定电话:</label>
+          </div>
+          <div class="small-9 columns">
+            <div class="row">
+              <div class="columns small-3">
+                <%= f.text_field :area_code %>
+              </div>
+              <div class="columns small-1"><label class="inline">－</label></div>
+              <div class="columns small-8">
+                <%= f.text_field :fixed_phone %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="columns small-4">
+        <div class="row">
+          <div class="small-3 columns">
+            <label class="right inline">家庭住址:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :address %>
+          </div>
+        </div>
+      </div>
+      <div class="columns small-4">
+        <div class="row">
+          <div class="columns small-3">
+            <label class="right inline">电子邮箱:</label>
+          </div>
+          <div class="columns small-9">
+            <%= f.text_field :email %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%= label_title_tag("补充资料").html_safe %>
+    <div class="row">
+      <div class="columns small-4">
+        <div class="row">
+          <div class="columns small-3">
+            <label class="inline right">决策人:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.select(:decision_maker, ::SaleSystem::PotentialCustomer::DECISION_MAKER.invert, :prompt => "请选择") %>
+          </div>
+        </div>
+      </div>
+      <div class="columns small-4">
+        <div class="row">
+          <div class="columns small-3">
+            <label class="inline right">距离:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.select(:distance, ::SaleSystem::PotentialCustomer::DISTANCE.invert, prompt: "请选择距离") %>
+          </div>
+        </div>
+      </div>
+      <div class="columns small-4">
+        <div class="row">
+          <div class="columns small-3">
+            <label class="inline right">交通方式:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.select(:traffic, ::SaleSystem::PotentialCustomer::TRAFFIC.invert, :prompt => "请选择") %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="columns small-4">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="caregivers" class="right inline">接送人:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= collection_radio_buttons(:sale_system_potential_customer, :caregivers,::SaleSystem::PotentialCustomer::CAREGIVERS, :first, :last) %>
+          </div>
+        </div>
+      </div>
+      <div class="columns small-4">
+        <div class="row">
+          <div class="small-3 columns">
+            <label class="right inline">孩子性格:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.select(:character, ::SaleSystem::PotentialCustomer::CHARACTER.invert, :prompt => "请选择") %>
+          </div>
+        </div>
+      </div>
+      <div class="columns small-4">
+        <div class="row">
+          <div class="small-3 columns">
+            <label class="right inline">孩子适应力:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.select(:adaptability, ::SaleSystem::PotentialCustomer::ADAPTABILITY.invert, :prompt => "请选择") %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="columns small-4">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="customer[free_time]" class="right inline">课外时间:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :free_time %>
+          </div>
+        </div>
+      </div>
+      <div class="columns small-4 end">
+        <div class="row">
+          <div class="small-3 columns">
+            <label class="right inline">兴趣班:</label>
+          </div>
+          <div class="small-9 columns">
+            <%= f.select(:interest_group, ::SaleSystem::PotentialCustomer::INTEREST_GROUP.invert, :prompt => "请选择") %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns small-4">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="customer[education_awareness]" class="right inline">消费理念:</label>
+          </div>
+          <div class="small-9 columns">
+            <label class="inline">
+              <%= collection_radio_buttons(:sale_system_potential_customer, :education_awareness,::SaleSystem::PotentialCustomer::EDUCATION_AWARENESS, :first, :last) %>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="columns small-4 end">
+        <div class="row">
+          <div class="small-3 columns">
+            <label for="customer[spending_power]" class="right inline">支付能力:</label>
+          </div>
+          <div class="small-9 columns">
+            <label class="inline">
+              <%= collection_radio_buttons(:sale_system_potential_customer, :spending_power,::SaleSystem::PotentialCustomer::SPENDING_POWER, :first, :last) %>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns small-1">
+        <label class="right right">特殊情况:</label>
+      </div>
+      <div class="columns small-11">
+        <%= f.text_area :notes %>
+      </div>
+    </div>
+    <div class="row text-center">
+      <%=f.submit "添加客户信息", class: "button" %>
+    </div>
+<% end %>
+
+<script language="javascript">
+    function start_search_referral(){
+        search_name = $("#search_name").val();
+        search_phone = $("#search_phone").val();
+        if(search_name == "" && search_phone == ""){
+            alert("姓名和电话至少填写一个。")
+        } else {
+            $.ajax({
+                url: "/cms/sale_system/potential_customers/search",
+                type: "post",
+                async: false,
+                data: {"name": search_name, "phone": search_phone}
+            }).done(
+                    function (result) {
+                        $("#search_referral_result").html(result);
+                    }
+            );
+        }
+    }
+
+    function change_channel(register_way_value){
+        register_way = $("#sale_system_potential_customer_register_way").val();
+        if (register_way == "Refferal") {
+            $("#referral_info_div").show();
+            $("#refer_info_label").html('<a href="#" onclick="openWindow()">选择介绍人信息</a>');
+        }
+        else {
+            $("#referral_info_div").hide();
+            $("#sale_system_potential_customer_referral_id").val('');
+            $("#refer_info_label").html('');
+        }
+        $.ajax({
+            url: "/cms/sale_system/potential_customers/change_register_way",
+            type: "post",
+            async: false,
+            data: {"register_way": register_way }
+        }).done(
+                function(result) {
+                    $("#channel_changed_by_register_way").html(result);
+                }
+        );
+    }
+
+    function change_age(){
+        var birthday = new Date($("#sale_system_potential_customer_birthday").val());
+        var birthday_date = new Date(birthday);
+        var now = new Date();
+        var age = now.getFullYear() - birthday_date.getFullYear();
+        $("#sale_system_potential_customer_age").val(age);
+    }
+</script>

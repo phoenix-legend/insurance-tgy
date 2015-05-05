@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="large-6 columns end">
+    <%=form_for([:cms,@market_activity]) do |f|%>
+        <div class="row">
+          <div class="small-3 columns">
+            <label class="string required text-right inline" for="sale_system_market_activity_name"><abbr title="required">*</abbr> 名称</label>
+          </div>
+          <div class="small-9 columns">
+            <%=f.text_field :name %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="small-3 columns">
+            <label class="string required text-right inline" for="sale_system_market_activity_start_time"><abbr title="required">*</abbr> 开始时间</label>
+          </div>
+          <div class="small-9 columns">
+            <%=f.date_field :start_time %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="small-3 columns">
+            <label class="string required text-right inline" for="sale_system_market_activity_end_time"><abbr title="required">*</abbr> 结束时间</label>
+          </div>
+          <div class="small-9 columns">
+            <%=f.date_field :end_time %>
+          </div>
+        </div>
+        <input type="submit" name="commit" class="button" value="提交">
+
+    <%end %>
+
+  </div>
+</div>

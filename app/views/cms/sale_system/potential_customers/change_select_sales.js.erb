@@ -1,0 +1,1 @@
+$("#select_sale").html('<%= escape_javascript(select_tag 'sale_id', options_from_collection_for_select(@select_sales, 'id', 'real_name', ''), prompt: 'ALL') %>');
