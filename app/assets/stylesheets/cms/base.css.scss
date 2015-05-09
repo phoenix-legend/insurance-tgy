@@ -9,13 +9,14 @@
  * compiled file so the styles you add here take precedence over styles defined in any styles
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
- *= require_self
- *= require cms/old_base/foundation_and_overrides
+  *= require_self
+  *= require cms/old_base/foundation_and_overrides
   *= require cms/old_base/base_1
   *= require cms/old_base/cms
   *= require cms/old_base/custom
   *= require cms/old_base/header
   *= require cms/old_base/reset
+
  */
 
 
