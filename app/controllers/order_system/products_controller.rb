@@ -4,19 +4,21 @@ class OrderSystem::ProductsController < ActionController::Base
   end
 
   def new_appointment
-    @product_id = ::OrderSystem::Product.find_by_name("1元洗车")
+    @product_id = ::OrderSystem::Product.find_by_name('1元洗车').id
   end
 
   def create_appointment
     begin
-      #1/0
       @car_number = params[:car_number]
       @phone = params[:phone]
-      #::UserSystem::UserInfo.create_user_info params.permit(:car_number, :phone,:product_id)
-        render appointment_success_order_system_products_path
+      ::UserSystem::UserInfo.create_user_info params.permit(:car_number,:phone,:product_id)
+      render appointment_success_order_system_products_path
     rescue Exception => e
+      #@car_number = params[:car_number]
       @car_number = params[:car_number]
       @phone = params[:phone]
+      @product_id = params[:product_id]
+      #dispose_exception e
       render new_appointment_order_system_products_path
     end
   end
@@ -26,10 +28,9 @@ class OrderSystem::ProductsController < ActionController::Base
   end
 
   def compare_price
-    @product_id = ::OrderSystem::Product.find_by_name("车险比价")
-    @cities = ['上海', '北京', '苏州']
-    #@cities = ::UserSystem::UserInfo::CITY
-    @city = '上海'
+    @product_id = ::OrderSystem::Product.find_by_name("车险比价").id
+    @cities = ::UserSystem::UserInfo::CITY
+    @city = @cities.at(0)
   end
 
   def search_price
@@ -39,14 +40,17 @@ class OrderSystem::ProductsController < ActionController::Base
       @city = params[:city]
       @car_number = params[:car_number]
       @phone = params[:phone]
-      #::UserSystem::UserInfo.create_user_info params.permit(:car_price, :city :car_number, :phone, :product_id) TODO
+      ::UserSystem::UserInfo.create_user_info params.permit(:car_price, :city , :car_number, :phone, :product_id)
       render display_price_order_system_products_path
     rescue Exception => e
-      @cities = {'上海' => '1', '北京' => '2', '苏州' => '3'}
+      @cities = ::UserSystem::UserInfo::CITY
       @car_price = params[:car_price]
       @city = params[:city]
       @car_number = params[:car_number]
       @phone = params[:phone]
+      @product_id = params[:product_id]
+      @phone = e.to_s
+      #dispose_exception e
       render compare_price_order_system_products_path
     end
   end
