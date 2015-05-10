@@ -1,10 +1,10 @@
 class OrderSystem::ProductsController < ActionController::Base
   def index
-
+    @prouducts = ::OrderSystem::Product.all
   end
 
   def new_appointment
-
+    @prouduct_id = ::OrderSystem::Product.find_by_name("1元洗车")
   end
 
   def create_appointment
