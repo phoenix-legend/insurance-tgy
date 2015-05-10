@@ -47,7 +47,24 @@ Rails.application.routes.draw do
 
       resources :system_configs
     end
+end
+  namespace :order_system do
+    resources :products do
+      collection do
+        get :new_appointment
+        post :create_appointment
+        get :appointment_success
+        get :compare_price
+        post :search_price
+        get :display_price
+      end
+    end
+    resources :orders
   end
+  namespace :user_system do
+    resources :user_infos
+  end
+
 
   get '/cms', to: 'cms/employee_validate/functions#login'
 

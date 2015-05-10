@@ -151,6 +151,3 @@ DEPENDENCIES
   spring
   turbolinks
   uglifier (>= 1.3.0)
-
-BUNDLED WITH
-   1.10.0.pre.2
