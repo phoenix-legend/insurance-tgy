@@ -1,4 +1,5 @@
-source 'https://rubygems.org'
+# source 'https://rubygems.org'
+source 'http://ruby.taobao.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -7,7 +8,12 @@ gem 'rails', '4.1.4'
 # gem 'sqlite3'
 gem 'mysql2'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.3'
+
+#warning...
+# gem 'sass-rails', '~> 4.0.3'
+gem 'sass-rails', '~> 5.0.1'
+gem 'foundation-rails','~> 5.5.0'
+
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .js.coffee assets and views
@@ -40,6 +46,8 @@ gem 'spring',        group: :development
 # gem 'debugger', group: [:development, :test]
 gem 'nokogiri'
 gem 'eric_tools', '~> 0.0.4'
+gem 'rest-client'
 #异常通知邮件
+
+# gem 'zurb-foundation'
 gem 'exception_notification', '~> 4.0.1'
-gem 'foundation-rails'

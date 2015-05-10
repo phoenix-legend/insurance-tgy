@@ -4,8 +4,6 @@ class Personal::Employee < ActiveRecord::Base
   STATUS = [IN_SEVICE, DIMISSION]
 
 
-
-
   has_and_belongs_to_many :roles, :class_name => '::Personal::Role'
   has_and_belongs_to_many :organizations, :class_name => '::Personal::Organization'
 
@@ -21,18 +19,14 @@ class Personal::Employee < ActiveRecord::Base
   validates :status, inclusion: {in: STATUS}
 
 
-
   def only_one_organization?
     self.organizations.count == 1
   end
 
 
-
-
   def in_service?
     self.status == 1
   end
-
 
 
   def functions
@@ -65,7 +59,7 @@ class Personal::Employee < ActiveRecord::Base
   end
 
   def modify_password options
-    options = ::Personal::Employee.get_arguments_options options,[:old_password, :new_password, :new_password_confirmation]
+    options = ::Personal::Employee.get_arguments_options options, [:old_password, :new_password, :new_password_confirmation]
     BusinessException.raise '密码不正确' if !(self.password == Digest::MD5.hexdigest(options[:old_password]))
     self.password = Digest::MD5.hexdigest(options[:new_password])
     self.password_confirmation = Digest::MD5.hexdigest(options[:new_password_confirmation])
@@ -75,7 +69,7 @@ class Personal::Employee < ActiveRecord::Base
   def update_status
     unless self.teacher.blank?
       if self.status != ::Personal::Employee::IN_SEVICE
-        self.teacher.update( :is_valid => false)
+        self.teacher.update(:is_valid => false)
       elsif self.status != ::Personal::Employee::IN_SEVICE
         #self.teacher.update( :is_valid => true)
         #todo
@@ -86,7 +80,7 @@ class Personal::Employee < ActiveRecord::Base
 
     unless self.sale.blank?
       if self.status != ::Personal::Employee::IN_SEVICE
-        self.sale.update( :is_valid => false)
+        self.sale.update(:is_valid => false)
       elsif self.status != ::Personal::Employee::IN_SEVICE
         #self.teacher.update( :is_valid => true)
         #todo
@@ -141,6 +135,21 @@ class Personal::Employee < ActiveRecord::Base
       BusinessException.raise '用户名和密码不匹配' if employee.blank?
       BusinessException.raise '您已离职' unless employee.status == ::Personal::Employee::IN_SEVICE
       employee
+    end
+
+    #Personal::Employee.xx
+    def xx
+      require 'rest-client'
+      (3..100).each do |i|
+        sleep 0.2
+        pp "car price is: #{i}万"
+        url = "https://www.baidu.com/ecomui/finance?controller=Carinsurance&action=aList&city=%E4%B8%8A%E6%B5%B7&carPrice=#{i}&tabValue=&t=1431176589145&serverTime=1431176518857&resourceid=29183&subqid=1431176518853840652&sid=ui%3A0%26bsInsurance%3A4%26bsInvest%3A3%26bsLoan%3A1&category=1105&pssid=11076_1423_12772_13075_10812_12867_11048_13323_13691_10562_12722_13892_13210_13761_13257_13781_11616_13837_8016_13086_8498&tn=baiduhome_pg&zt=ps&pvid=1431176518853840652&qid=10542686875225800426&wd=%E4%BF%9D%E9%99%A9%E6%8A%A5%E4%BB%B7&vSiteSign=3105313369505510982&chengxin=Array&feData=Array&burstFlag=0&curr_sort=1"
+        response = RestClient.get url
+        a = JSON.parse(response.body)
+        a["data"]["list"].each do |data|
+          pp "#{data["title"]}: #{data["showPrice"]}"
+        end
+      end
     end
 
 

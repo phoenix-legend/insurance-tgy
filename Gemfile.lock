@@ -1,5 +1,5 @@
 GEM
-  remote: https://rubygems.org/
+  remote: http://ruby.taobao.org/
   specs:
     actionmailer (4.1.4)
       actionpack (= 4.1.4)
@@ -36,16 +36,20 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.9.1.1)
+    domain_name (0.5.24)
+      unf (>= 0.0.5, < 1.0.0)
     eric_tools (0.0.4)
     erubis (2.7.0)
     exception_notification (4.0.1)
       actionmailer (>= 3.0.4)
       activesupport (>= 3.0.4)
     execjs (2.5.2)
-    foundation-rails (5.5.0.0)
+    foundation-rails (5.5.2.1)
       railties (>= 3.1.0)
-      sass (>= 3.2.0, < 3.4)
+      sass (>= 3.3.0, < 3.5)
     hike (1.2.3)
+    http-cookie (1.0.2)
+      domain_name (~> 0.5)
     i18n (0.7.0)
     jbuilder (2.2.13)
       activesupport (>= 3.0.0, < 5)
@@ -62,6 +66,7 @@ GEM
     minitest (5.6.1)
     multi_json (1.11.0)
     mysql2 (0.3.18)
+    netrc (0.10.3)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     polyglot (0.3.5)
@@ -86,12 +91,17 @@ GEM
     rake (10.4.2)
     rdoc (4.2.0)
       json (~> 1.4)
-    sass (3.2.19)
-    sass-rails (4.0.5)
+    rest-client (1.8.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
+    sass (3.4.13)
+    sass-rails (5.0.3)
       railties (>= 4.0.0, < 5.0)
-      sass (~> 3.2.2)
-      sprockets (~> 2.8, < 3.0)
-      sprockets-rails (~> 2.0)
+      sass (~> 3.1)
+      sprockets (>= 2.8, < 4.0)
+      sprockets-rails (>= 2.0, < 4.0)
+      tilt (~> 1.1)
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
@@ -118,6 +128,9 @@ GEM
     uglifier (2.7.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.1)
 
 PLATFORMS
   ruby
@@ -126,13 +139,14 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   eric_tools (~> 0.0.4)
   exception_notification (~> 4.0.1)
-  foundation-rails
+  foundation-rails (~> 5.5.0)
   jbuilder (~> 2.0)
   jquery-rails
   mysql2
   nokogiri
   rails (= 4.1.4)
-  sass-rails (~> 4.0.3)
+  rest-client
+  sass-rails (~> 5.0.1)
   sdoc (~> 0.4.0)
   spring
   turbolinks
