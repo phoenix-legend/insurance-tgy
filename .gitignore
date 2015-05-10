@@ -23,6 +23,8 @@ public/assets/
 .idea/*.*
 /.idea
 /.idea/*
+.idea/insurance-tgy.iml
+.idea/workspace.xml
 *.sass-cache*
 
 # Ignore tmp
