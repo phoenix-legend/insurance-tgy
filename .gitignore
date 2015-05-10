@@ -21,7 +21,8 @@
 public/assets/
 # Ignore all idea
 .idea/*.*
-
+/.idea
+/.idea/*
 *.sass-cache*
 
 # Ignore tmp
