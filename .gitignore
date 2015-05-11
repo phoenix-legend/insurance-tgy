@@ -12,7 +12,7 @@
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
-
+.idea/
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /log/*.log.*
@@ -20,7 +20,6 @@
 .sass-cache/
 public/assets/
 # Ignore all idea
-.idea/*.*
 
 *.sass-cache*
 
