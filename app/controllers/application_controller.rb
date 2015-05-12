@@ -99,16 +99,16 @@ class ApplicationController < ActionController::Base
     return id
   end
 
-  def set_ddc_session
-    s = DdcSession.new(value: params.symbolize_keys.delete_if{|key, value| key == :utf8 || key == :authenticity_token} .to_s)
+  def set_session_content
+    s = SessionContent.new(value: params.symbolize_keys.delete_if{|key, value| key == :utf8 || key == :authenticity_token} .to_s)
     s.save!
     s.reload
     s.id
   end
 
-  def get_ddc_session id
+  def get_session_content id
     begin
-      s = DdcSession.where(id: id, is_valid: true).first
+      s = SessionContent.where(id: id, is_valid: true).first
       s.update_attribute :is_valid, false
       eval(s.value)
     rescue Exception=>e

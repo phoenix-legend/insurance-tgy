@@ -1,0 +1,100 @@
+<style>
+    .diff {
+        position: absolute;
+    }
+    .fake.diff{
+        background-color:white;
+        width:450px;
+        disabled:disabled;
+        z-index: 0
+    }
+    .upload.diff{
+        color: #000;
+        top:10px;
+        left:470px;
+        z-index: 0
+    }
+    .file.diff{
+        opacity:0;
+        width:500px;
+        height: 27px;
+        z-index: 1
+    }
+</style>
+<div class="row">
+  <div class="columns small-2 text-right">
+    <label class="inline">产品名称</label>
+  </div>
+  <div class="columns small-4 text-left end">
+    <%= text_field_tag :name, @name %>
+  </div>
+</div>
+<div class="row">
+  <div class="columns small-12" id="product_description">
+    <% @description.each_with_index do |d, index| %>
+        <% if index == 0 %>
+            <div class="row">
+              <div class="columns small-2 text-right">
+                <label class="inline">产品描述</label>
+              </div>
+              <div class="columns small-4 text-left">
+                <%= text_area_tag "description[]", d %>
+              </div>
+              <div class="columns small-2 text-left end">
+                <%= link_to "添加一条产品描述", "javascript:add_one_description()", class: "button tiny" %>
+              </div>
+            </div>
+        <% else %>
+            <div class="row">
+              <div class="columns small-4 text-left end small-offset-2">
+                <%= text_area_tag "description[]", d %>
+              </div>
+            </div>
+        <% end %>
+    <% end unless @description.blank? %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="small-2 columns text-right">
+    <label>产品图片</label>
+  </div>
+  <div class="small-10 columns" style="position: relative">
+    <input class="fake diff" type="text" value="<%= @cover_image %>" disabled="disabled" style="background-color: white" name="txt_image"/>
+    <label class="upload diff" name="file">选择文件</label>
+    <input class="file diff" type="file" name="cover_image" onchange="txt_image.value=this.value"/>
+  </div>
+</div>
+<br/><br/>
+<div class="row">
+  <div class="columns small-2 text-right">
+    <label class="inline">URL</label>
+  </div>
+  <div class="columns small-4 text-left end">
+    <%= text_field_tag :url, @url %>
+  </div>
+</div>
+<div class="row">
+  <div class="columns small-2 text-right">
+    <label class="">是否上线</label>
+  </div>
+  <div class="columns small-4 text-left end inline">
+    <%= check_box_tag :online, '1', @online %>
+  </div>
+</div>
+<div class="row">
+  <div class="columns small-offset-2 small-2 text-left end">
+    <%= submit_tag "保存", class: 'button tiny' %>
+  </div>
+</div>
+
+<script language="javascript">
+    function add_one_description(){
+        str = "<div class='row'>";
+        str += "<div class='columns small-4 small-offset-2 text-left end'> ";
+        str += "<textarea id='description_' name='description[]'></textarea>";
+        str += "</div>";
+        str += "</div>";
+        $("#product_description").append(str);
+    }
+</script>

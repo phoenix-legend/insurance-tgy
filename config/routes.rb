@@ -42,6 +42,9 @@ Rails.application.routes.draw do
       end
     end
 
+    namespace :order_system do
+      resources :products
+    end
 
     namespace :sys do
 
