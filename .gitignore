@@ -20,15 +20,11 @@
 .sass-cache/
 public/assets/
 # Ignore all idea
-<<<<<<< HEAD
-
-=======
 .idea/*.*
 /.idea
 /.idea/*
 .idea/insurance-tgy.iml
 .idea/workspace.xml
->>>>>>> 7c5544ede3fc44e04ded9e85d47b5adaf0195449
 *.sass-cache*
 
 # Ignore tmp
