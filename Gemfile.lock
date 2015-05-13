@@ -1,5 +1,5 @@
 GEM
-  remote: http://ruby.taobao.org/
+  remote: https://rubygems.org/
   specs:
     actionmailer (4.1.4)
       actionpack (= 4.1.4)
@@ -38,7 +38,9 @@ GEM
     coffee-script-source (1.9.1.1)
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
-    eric_tools (0.0.4)
+    eric_tools (0.0.5)
+      nokogiri (~> 1.6)
+      rest-client (~> 1.8)
     erubis (2.7.0)
     exception_notification (4.0.1)
       actionmailer (>= 3.0.4)
@@ -137,7 +139,7 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-rails (~> 4.0.0)
-  eric_tools (~> 0.0.4)
+  eric_tools (~> 0.0.5)
   exception_notification (~> 4.0.1)
   foundation-rails (~> 5.5.0)
   jbuilder (~> 2.0)

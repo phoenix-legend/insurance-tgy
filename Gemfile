@@ -1,5 +1,5 @@
-# source 'https://rubygems.org'
-source 'http://ruby.taobao.org'
+ source 'https://rubygems.org'
+#source 'http://ruby.taobao.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -45,7 +45,7 @@ gem 'spring',        group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 gem 'nokogiri'
-gem 'eric_tools', '~> 0.0.4'
+gem 'eric_tools', '~> 0.0.5'
 gem 'rest-client'
 #异常通知邮件
 
