@@ -1,10 +1,12 @@
 class OrderSystem::ProductsController < ActionController::Base
   def index
-
+    @products = ::OrderSystem::Product.where(online: true).order(sort_by: :desc)
   end
 
   def new_appointment
-    @product_id = ::OrderSystem::Product.find_by_name('1元洗车').id
+    @product_id = params[:id]
+    @image_url = ::OrderSystem::Product.find_by_id(@product_id).cover_image
+    @descriptions = ::OrderSystem::Product.find_by_id(@product_id).description
   end
 
   def create_appointment
@@ -12,14 +14,14 @@ class OrderSystem::ProductsController < ActionController::Base
       @car_number = params[:car_number]
       @phone = params[:phone]
       ::UserSystem::UserInfo.create_user_info params.permit(:car_number,:phone,:product_id)
-      render appointment_success_order_system_products_path
+      render :appointment_success
     rescue Exception => e
-      #@car_number = params[:car_number]
       @car_number = params[:car_number]
       @phone = params[:phone]
       @product_id = params[:product_id]
-      #dispose_exception e
-      render new_appointment_order_system_products_path
+      @image_url = ::OrderSystem::Product.find_by_id(@product_id).cover_image
+      @descriptions = params[:description]
+      render :new_appointment
     end
   end
 

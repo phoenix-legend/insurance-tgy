@@ -1,5 +1,6 @@
 <h1>这是预约界面</h1>
-<%= form_tag(create_appointment_order_system_products_path,method: 'post') do %>
+<%= image_tag "/uploads/images/#{@image_url}" unless @image_url.blank? %>
+<%= form_tag(create_appointment_order_system_product_path,method: 'post') do %>
     <div class="row">
       <label>车牌号</label>
       <%= text_field_tag :car_number,@car_number %>
@@ -8,6 +9,8 @@
       <label>手机号</label>
       <%= text_field_tag :phone,@phone %>
     </div>
+    <div><%= label_tag :description,@descriptions%></div>
+    <div><%= hidden_field_tag :description, @descriptions %></div>
     <div><%= hidden_field_tag :product_id, @product_id %></div>
     <div class="row">
       <%= submit_tag "免费预约"%>
