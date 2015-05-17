@@ -51,3 +51,5 @@ gem 'rest-client'
 
 # gem 'zurb-foundation'
 gem 'exception_notification', '~> 4.0.1'
+# 操作excel
+gem 'spreadsheet'

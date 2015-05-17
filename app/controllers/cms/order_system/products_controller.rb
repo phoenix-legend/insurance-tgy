@@ -41,7 +41,7 @@ class Cms::OrderSystem::ProductsController < Cms::BaseController
       @product = ::OrderSystem::Product.find_by_id(params[:id])
       params[:description] = params[:description].to_s unless params[:description].blank?
       params[:cover_image] = upload_file params[:cover_image] unless params[:cover_image].blank?
-      @product.update_product params.permit(:name, :description, :cover_image, :url, :sort_by, :app_name)
+      @product.update_product params.permit(:name, :description, :cover_image, :url, :online, :sort_by, :app_name)
       redirect_to '/cms/order_system/products'
     rescue Exception=> e
       dispose_exception e

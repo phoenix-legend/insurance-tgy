@@ -1,12 +1,14 @@
-class OrderSystem::ProductsController < ActionController::Base
+class OrderSystem::ProductsController < ApplicationController
   def index
     @products = ::OrderSystem::Product.where(online: true).order(sort_by: :desc)
   end
 
   def new_appointment
     @product_id = params[:id]
-    @image_url = ::OrderSystem::Product.find_by_id(@product_id).cover_image
-    @descriptions = ::OrderSystem::Product.find_by_id(@product_id).description
+    product = ::OrderSystem::Product.find_by_id(@product_id)
+    @image_url = product.cover_image
+    @descriptions = eval(product.description) rescue nil
+    @product_name = product.name
   end
 
   def create_appointment
@@ -19,8 +21,12 @@ class OrderSystem::ProductsController < ActionController::Base
       @car_number = params[:car_number]
       @phone = params[:phone]
       @product_id = params[:product_id]
-      @image_url = ::OrderSystem::Product.find_by_id(@product_id).cover_image
-      @descriptions = params[:description]
+      product = ::OrderSystem::Product.find_by_id(@product_id)
+      @product_name = product.name
+      @image_url = product.cover_image
+      @descriptions = eval(product.description) rescue nil
+      dispose_exception e
+      @error_message = get_notice_str
       render :new_appointment
     end
   end

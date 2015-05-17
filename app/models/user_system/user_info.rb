@@ -1,3 +1,4 @@
+require "spreadsheet"
 class UserSystem::UserInfo < ActiveRecord::Base
   has_many :orders, :class_name => '::OrderSystem::Order'
 
@@ -40,4 +41,43 @@ class UserSystem::UserInfo < ActiveRecord::Base
     ::OrderSystem::Order.create_order user_info_id: user_info.id, product_id: product_id
 
   end
+
+  def self.export_excel users
+    Spreadsheet.client_encoding = 'UTF-8'
+    book = Spreadsheet::Workbook.new
+    in_center = Spreadsheet::Format.new horizontal_align: :center, vertical_align: :center, border: :thin
+    in_left = Spreadsheet::Format.new horizontal_align: :left, border: :thin
+    sheet1 = book.create_worksheet name: '用户资料表'
+
+    sheet1.row(0)[0] = "名字"
+    sheet1.row(0)[1] = "手机号"
+    sheet1.row(0)[2] = "渠道"
+    sheet1.row(0)[3] = "车牌号"
+    sheet1.row(0)[4] = "车价"
+    sheet1.row(0)[5] = "所在城市"
+    sheet1.row(0)[6] = "IP"
+
+    0.upto(6).each do |i|
+      sheet1.row(0).set_format(i, in_center)
+    end
+
+    current_row = 1
+    users.each do |user|
+      sheet1.row(current_row)[0] = user.name
+      sheet1.row(current_row)[1] = user.phone
+      sheet1.row(current_row)[2] = user.channel
+      sheet1.row(current_row)[3] = user.car_number
+      sheet1.row(current_row)[4] = user.car_price.to_s + "万元"
+      sheet1.row(current_row)[5] = user.city
+      sheet1.row(current_row)[6] = user.ip
+      0.upto(6).each do |j|
+        sheet1.row(current_row).set_format(j, in_left)
+      end
+      current_row += 1
+    end
+    file_path = "保盒用户资料表.xls"
+    book.write file_path
+    file_path
+  end
+
 end

@@ -9,10 +9,15 @@
       <label>手机号</label>
       <%= text_field_tag :phone,@phone %>
     </div>
-    <div><%= label_tag :description,@descriptions%></div>
-    <div><%= hidden_field_tag :description, @descriptions %></div>
-    <div><%= hidden_field_tag :product_id, @product_id %></div>
+    <% unless @error_message.blank? %>
+    <p style="color:#ff0000"><%= @error_message %></p>
+    <% end %>
     <div class="row">
       <%= submit_tag "免费预约"%>
     </div>
+    <p><%= "#{@product_name}说明" %></p>
+    <% @descriptions.each do |description| %>
+        <p><%= description %></p>
+    <% end %>
+    <div><%= hidden_field_tag :product_id, @product_id %></div>
 <% end %>

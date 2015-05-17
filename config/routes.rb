@@ -46,6 +46,16 @@ Rails.application.routes.draw do
       resources :products
     end
 
+    namespace :user_system do
+      resources :user_infos do
+        collection do
+          get :export_users_xls
+          post :export_users_xls
+        end
+      end
+
+    end
+
     namespace :sys do
 
       resources :system_configs
