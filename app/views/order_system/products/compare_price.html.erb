@@ -1,12 +1,13 @@
 <h1>这是保险比价界面</h1>
-<%= form_tag(search_price_order_system_products_path,method: 'post') do %>
+<%= form_tag(search_price_order_system_products_path, id: 'compare_price_form', method: 'post') do %>
     <div class="row">
       <label>车价</label>
       <%= text_field_tag :car_price,@car_price %><span>万元</span>
     </div>
     <div class="row">
       <label>所在地</label>
-      <%= select_tag :city, options_from_collection_for_select( @cities, 'to_s','to_s',@city) %>
+      <%= text_field_tag :city,@city %>
+      <%= link_to '>', "javascript:get_city_name()" %>
     </div>
     <div class="row">
       <label>车牌号</label>
@@ -17,7 +18,20 @@
       <%= text_field_tag :phone,@phone %>
     </div>
     <div><%= hidden_field_tag :product_id,@product_id %></div>
+    <% unless @error_message.blank? %>
+        <p style="color:#ff0000"><%= @error_message %></p>
+    <% end %>
     <div class="row">
-      <%= submit_tag "立即比价"%>
+      <%= link_to "立即比价", "javascript:compare_price()"%>
     </div>
 <% end %>
+<script language="javascript">
+    function get_city_name(){
+        $("#compare_price_form").attr('action', '/order_system/products/get_city_name');
+        $("#compare_price_form").submit();
+    }
+    function compare_price(){
+        $("#compare_price_form").attr('action', '<%= search_price_order_system_products_path %>');
+        $("#compare_price_form").submit();
+    }
+</script>

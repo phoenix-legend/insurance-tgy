@@ -1,1 +1,13 @@
 <h1>这里是比价信息</h1>
+<% @car_insurance_prices.each do |car_insurance_price| %>
+    <div class="row">
+      <div class="col-sm-7 text-left">
+        <%= car_insurance_price.comp_name %>
+      </div>
+      <div class="col-sm-5">
+        参考报价：<%= car_insurance_price.insurance_price %> 元
+      </div>
+    </div>
+<% end %>
+<%= hidden_field_tag :product_id,@product_id %>
+<%= link_to "重新比价",compare_price_order_system_products_path %>

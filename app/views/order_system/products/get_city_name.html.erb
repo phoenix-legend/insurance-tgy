@@ -1,0 +1,19 @@
+<%= form_tag '/order_system/products/compare_price', id: 'compare_price', method: :get do %>
+
+    <div><%= hidden_field_tag :car_price,@car_price %></div>
+    <div><%= hidden_field_tag :product_id,@product_id %></div>
+    <div><%= hidden_field_tag :car_number,@car_number %></div>
+    <div><%= hidden_field_tag :phone,@phone %></div>
+    <div><%= hidden_field_tag :city %></div>
+    <div><%= hidden_field_tag :car_number_prefix %></div>
+<% @cities.each do |city|%>
+    <div><%= link_to city.name, "javascript:choose_city('#{city.name}','#{city.car_number_prefix}')" %></div>
+<% end%>
+<% end %>
+<script language="javascript">
+  function choose_city(city_name,prefix){
+      $("#city").val(city_name);
+      $("#car_number_prefix").val(prefix);
+      $("#compare_price").submit();
+  }
+</script>

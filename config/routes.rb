@@ -72,6 +72,8 @@ end
         get :compare_price
         post :search_price
         get :display_price
+        get :get_city_name
+        post :get_city_name
       end
     end
     resources :orders
