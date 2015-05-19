@@ -48,7 +48,7 @@ class OrderSystem::ProductsController < ApplicationController
       @city = params[:city]
     end
     @car_price = params[:car_price]
-    @car_number = params[:car_number_prefix] if params[:car_number].blank?
+    @car_number =  params[:car_number]
     @phone = params[:phone]
   end
 
@@ -60,7 +60,7 @@ class OrderSystem::ProductsController < ApplicationController
       @phone = params[:phone]
       @product_id = params[:product_id]
       ::UserSystem::UserInfo.create_user_info params.permit(:car_price, :city , :car_number, :phone, :product_id)
-      redirect_to action: :display_price, city: params[:city], car_price: params[:car_price]
+      redirect_to action: :display_price, city: params[:city], car_price: params[:car_price],product_id: params[:product_id]
     rescue Exception => e
       @cities = ::UserSystem::UserInfo::CITY
       @car_price = params[:car_price]
@@ -78,6 +78,8 @@ class OrderSystem::ProductsController < ApplicationController
   def display_price
     @car_insurance_prices = ::OrderSystem::CarInsurancePrice.where(city_name: params[:city],car_price: params[:car_price])
     @product_id = params[:product_id]
+    @car_price = params[:car_price]
+    @city = params[:city]
   end
 
   def get_city_name

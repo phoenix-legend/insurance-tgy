@@ -1,9 +1,5 @@
 <div class="banner">
-  <% if @image_url.blank? %>
-    <%= image_tag "/uploads/images/#{@image_url}"%>
-  <% else %>
-    <%= image_tag "img/banner1.jpg"%>
-  <% end %>
+    <%= image_tag "/uploads/images/#{@image_url}" unless @image_url.blank?%>
 </div>
 <div class="form">
 <%= form_tag(create_appointment_order_system_product_path,method: 'post') do %>
@@ -12,7 +8,7 @@
       <li><label>手机号</label><%= text_field_tag :phone,@phone ,class:"ipt",placeholder: "13888889999"%></li>
     </ul>
     <% unless @error_message.blank? %>
-       <div class="error">车牌号格式不正确<%= @error_message %></div>
+       <div class="error"><%= @error_message %></div>
     <% end %>
     <div class="tc submit">
        <%= submit_tag "免费预约"%>
@@ -20,12 +16,14 @@
     <div>
         <%= hidden_field_tag :product_id, @product_id %>
     </div>
-    <div class="intro intro1">
-        <h4><%= "#{@product_name}服务说明" %></h4>
-            <p><% @descriptions.each do |description| %>
-                <%= description %><br>
-                <% end %>
-            </p>
-    </div>
 <% end %>
+</div>
+<div class="intro intro1">
+  <h4><%= "#{@product_name}服务说明" %></h4>
+  <% i = 1 %>
+  <p><% @descriptions.each do |description| %>
+        <%= i %>、<%= description %><br>
+        <% i = i + 1 %>
+    <% end %>
+  </p>
 </div>

@@ -1,5 +1,6 @@
-<h1>这是产品列表界面</h1>
-
+<div class="nav-logo"><%= image_tag "/img/nav-logo.jpg" %></div>
+<ul class="nav">
 <% @products.each do |product|%>
-    <div><%= link_to image_tag("/uploads/images/#{product.cover_image}"),product.url%></div>
+    <li><%= link_to image_tag("/uploads/images/#{product.cover_image}"),product.url%></li>
 <% end %>
+</ul>
