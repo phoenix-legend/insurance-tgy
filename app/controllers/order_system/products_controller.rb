@@ -60,7 +60,7 @@ class OrderSystem::ProductsController < ApplicationController
       @phone = params[:phone]
       @product_id = params[:product_id]
       ::UserSystem::UserInfo.create_user_info params.permit(:car_price, :city , :car_number, :phone, :product_id)
-      render :display_price
+      redirect_to action: :display_price, city: params[:city], car_price: params[:car_price]
     rescue Exception => e
       @cities = ::UserSystem::UserInfo::CITY
       @car_price = params[:car_price]
