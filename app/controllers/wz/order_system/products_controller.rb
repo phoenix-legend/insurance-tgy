@@ -74,7 +74,8 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
       @car_number = params[:car_number]
       @phone = params[:phone]
       @product_id = params[:product_id]
-      ::UserSystem::UserInfo.create_user_info params.permit(:car_price, :city, :car_number, :phone, :product_id)
+      @ip = params[:ip]
+      ::UserSystem::UserInfo.create_user_info params.permit(:car_price, :city, :car_number, :phone, :product_id, :ip)
       redirect_to action: :display_price, city: params[:city], car_price: params[:car_price], product_id: params[:product_id]
     rescue Exception => e
       @cities = ::UserSystem::UserInfo::CITY
@@ -83,6 +84,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
       @car_number = params[:car_number]
       @phone = params[:phone]
       @product_id = params[:product_id]
+      @ip = params[:ip]
       dispose_exception e
       @error_message = get_notice_str
       #dispose_exception e
@@ -104,6 +106,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
     @car_number = params[:car_number]
     @phone = params[:phone]
     @product_id = params[:product_id]
+    @ip = params[:ip]
   end
 
 end

@@ -19,6 +19,7 @@
           <%= text_field_tag :phone,@phone,class:"ipt", placeholder: "13888889999"  %>
       </li>
     <div><%= hidden_field_tag :product_id,@product_id %></div>
+    <div><%= hidden_field_tag :ip,@ip %></div>
     </ul>
     <div class="error">
         <% unless @error_message.blank? %>
