@@ -33,6 +33,12 @@
 
 <% end %>
 </div>
+<ul class="letters_lst" id="lettersLst">
+    <% ("A".."Z").each do |letter| %>
+        <li><%= link_to letter,"javascript:;" %></li>
+    <% end %>
+
+</ul>
 <script language="javascript">
     function choose_city(city_name) {
         $("#city").val(city_name);
