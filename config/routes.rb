@@ -1,8 +1,4 @@
 Rails.application.routes.draw do
-
-
-
-
   namespace :cms do
     namespace :personal do
       resources :organizations do
@@ -42,9 +38,11 @@ Rails.application.routes.draw do
       end
     end
 
+
     namespace :order_system do
       resources :products
     end
+
 
     namespace :user_system do
       resources :user_infos do
@@ -57,34 +55,31 @@ Rails.application.routes.draw do
     end
 
     namespace :sys do
-
       resources :system_configs
     end
-end
-  namespace :order_system do
-    resources :products do
-      member do
-        get :new_appointment
-        post :create_appointment
-        get :appointment_success
+  end
+
+  namespace :wz do
+    namespace :order_system do
+      resources :products do
+        collection do
+          get :new_appointment
+          post :create_appointment
+          get :appointment_success
+          get :compare_price
+          post :search_price
+          get :display_price
+          get :get_city_name
+          post :get_city_name
+        end
       end
-      collection do
-        get :compare_price
-        post :search_price
-        get :display_price
-        get :get_city_name
-        post :get_city_name
-      end
+      resources :orders
     end
-    resources :orders
-  end
-  namespace :user_system do
-    resources :user_infos
   end
 
 
+  root to: "wz/order_system/products#index"
   get '/cms', to: 'cms/employee_validate/functions#login'
-
 
 
   # The priority is based upon order of creation: first created -> highest priority.
