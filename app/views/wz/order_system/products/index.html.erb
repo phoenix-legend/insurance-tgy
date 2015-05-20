@@ -1,10 +1,6 @@
 <div class="nav-logo"><%= image_tag "/img/nav-logo.jpg" %></div>
 <ul class="nav">
-
-<% @products.each do |product|%>
-
-        <li><%= link_to image_tag("/uploads/images/#{product.cover_image}"),"/wz/order_system/products/new_appointment?id=#{product.id}"%></li>
-
-<% end %>
-
+  <% @products.each do |product|%>
+  <li><a href="<%=product.url%>"><img src="/uploads/images/<%=product.cover_image%>" alt=""/></a></li>
+  <% end %>
 </ul>

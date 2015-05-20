@@ -1,6 +1,6 @@
 <div class="banner"><img src="/img/banner.jpg" alt=""/></div>
 <div class="form">
-<%= form_tag(search_price_order_system_products_path, id: 'compare_price_form', method: 'post') do %>
+<%= form_tag(search_price_wz_order_system_products_path, id: 'compare_price_form', method: 'post') do %>
     <ul>
       <li><label>车价</label><%= text_field_tag :car_price,@car_price,class: "ipt" %><span class="unit">万元</span></li>
       <li>
@@ -37,11 +37,11 @@
 </div>
 <script language="javascript">
     function get_city_name(){
-        $("#compare_price_form").attr('action', '/order_system/products/get_city_name');
+        $("#compare_price_form").attr('action', '/wz/order_system/products/get_city_name');
         $("#compare_price_form").submit();
     }
     function compare_price(){
-        $("#compare_price_form").attr('action', '<%= search_price_order_system_products_path %>');
+        $("#compare_price_form").attr('action', '<%= search_price_wz_order_system_products_path %>');
         $("#compare_price_form").submit();
     }
 </script>
