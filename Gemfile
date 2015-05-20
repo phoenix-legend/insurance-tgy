@@ -19,7 +19,7 @@ gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails', '~> 4.0.0'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer',  platforms: :ruby
+gem 'therubyracer',  platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -45,9 +45,11 @@ gem 'spring',        group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 gem 'nokogiri'
-gem 'eric_tools', '~> 0.0.4'
+gem 'eric_tools', '~> 0.0.5'
 gem 'rest-client'
 #异常通知邮件
 
 # gem 'zurb-foundation'
 gem 'exception_notification', '~> 4.0.1'
+# 操作excel
+gem 'spreadsheet'

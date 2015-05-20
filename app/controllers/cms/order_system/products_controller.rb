@@ -12,10 +12,12 @@ class Cms::OrderSystem::ProductsController < Cms::BaseController
       @online = false
     else
       @name = session_content[:name]
-      @description = eval(session_content[:description])
+      @description = eval(session_content[:description]) rescue ''
       @cover_image = session_content[:cover_image]
       @url = session_content[:url]
       @online = session_content[:online] == '1'
+      @sort_by = session_content[:sort_by]
+      @app_name = session_content[:app_name]
     end
   end
 
@@ -24,7 +26,7 @@ class Cms::OrderSystem::ProductsController < Cms::BaseController
       # BusinessException.raise 'xxx'
       params[:description] = params[:description].to_s unless params[:description].blank?
       params[:cover_image] = upload_file params[:cover_image] unless params[:cover_image].blank?
-      ::OrderSystem::Product.create_product params.permit(:name, :description, :cover_image, :url, :online)
+      ::OrderSystem::Product.create_product params.permit(:name, :description, :cover_image, :url, :online, :sort_by, :app_name)
       redirect_to '/cms/order_system/products'
     rescue Exception=>e
       dispose_exception e
@@ -39,13 +41,13 @@ class Cms::OrderSystem::ProductsController < Cms::BaseController
       @product = ::OrderSystem::Product.find_by_id(params[:id])
       params[:description] = params[:description].to_s unless params[:description].blank?
       params[:cover_image] = upload_file params[:cover_image] unless params[:cover_image].blank?
-      @product.update_product params.permit(:name, :description, :cover_image, :url)
+      @product.update_product params.permit(:name, :description, :cover_image, :url, :online, :sort_by, :app_name)
       redirect_to '/cms/order_system/products'
     rescue Exception=> e
       dispose_exception e
       params.delete(:cover_image)
       flash[:alert] = get_notice_str
-      redirect_to '/cms/order_system/products/' + @product.id, session_content_id: set_session_content
+      redirect_to "/cms/order_system/products/#{@product.id.to_s}/edit", session_content_id: set_session_content
     end
   end
 
@@ -58,10 +60,12 @@ class Cms::OrderSystem::ProductsController < Cms::BaseController
     if session_content.blank?
       @product = ::OrderSystem::Product.find_by_id(params[:id])
       @name = @product.name
-      @description = eval(@product.description)
+      @description = eval(@product.description) rescue ''
       @cover_image = @product.cover_image
       @url = @product.url
       @online = @product.online
+      @sort_by = @product.sort_by
+      @app_name = @product.app_name
     else
       @product = ::OrderSystem::Product.find_by_id(session_content[:id])
       @name = session_content[:name]
@@ -69,6 +73,8 @@ class Cms::OrderSystem::ProductsController < Cms::BaseController
       @cover_image = session_content[:cover_image]
       @url = session_content[:url]
       @online = session_content[:online] == "1"
+      @sort_by = session_content[:sort_by]
+      @app_name = session_content[:app_name]
     end
   end
 

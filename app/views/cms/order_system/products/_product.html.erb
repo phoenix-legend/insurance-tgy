@@ -83,6 +83,22 @@
   </div>
 </div>
 <div class="row">
+  <div class="columns small-2 text-right">
+    <label class="inline">排序号</label>
+  </div>
+  <div class="columns small-4 text-left end">
+    <%= text_field_tag :sort_by, @sort_by %>
+  </div>
+</div>
+<div class="row">
+  <div class="columns small-2 text-right">
+    <label class="inline">APP名称</label>
+  </div>
+  <div class="columns small-4 text-left end">
+    <%= text_field_tag :app_name, @app_name %>
+  </div>
+</div>
+<div class="row">
   <div class="columns small-offset-2 small-2 text-left end">
     <%= submit_tag "保存", class: 'button tiny' %>
   </div>

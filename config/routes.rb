@@ -46,6 +46,16 @@ Rails.application.routes.draw do
       resources :products
     end
 
+    namespace :user_system do
+      resources :user_infos do
+        collection do
+          get :export_users_xls
+          post :export_users_xls
+        end
+      end
+
+    end
+
     namespace :sys do
 
       resources :system_configs
@@ -53,13 +63,17 @@ Rails.application.routes.draw do
 end
   namespace :order_system do
     resources :products do
-      collection do
+      member do
         get :new_appointment
         post :create_appointment
         get :appointment_success
+      end
+      collection do
         get :compare_price
         post :search_price
         get :display_price
+        get :get_city_name
+        post :get_city_name
       end
     end
     resources :orders
