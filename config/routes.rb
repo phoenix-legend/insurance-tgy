@@ -77,6 +77,17 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :api, :defaults => {:format => 'json'} do
+    namespace :v1 do
+      resource :update_user_infos do
+        collection do
+          get :update_user_by_xiecheyangche
+          post :update_user_by_xiecheyangche
+        end
+      end
+    end
+  end
+
 
   root to: "wz/order_system/products#index"
   get '/cms', to: 'cms/employee_validate/functions#login'

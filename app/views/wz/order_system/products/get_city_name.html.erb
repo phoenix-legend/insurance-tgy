@@ -1,19 +1,45 @@
 <%= form_tag '/wz/order_system/products/compare_price', id: 'compare_price', method: :get do %>
 
-    <div><%= hidden_field_tag :car_price,@car_price %></div>
-    <div><%= hidden_field_tag :product_id,@product_id %></div>
-    <div><%= hidden_field_tag :car_number,@car_number %></div>
-    <div><%= hidden_field_tag :phone,@phone %></div>
-    <div><%= hidden_field_tag :city %></div>
-    <div><%= hidden_field_tag :car_number_prefix %></div>
-<% @cities.each do |city|%>
-    <div><%= link_to city.name, "javascript:choose_city('#{city.name}','#{city.car_number_prefix}')" %></div>
-<% end%>
+    <div>
+      <%= hidden_field_tag :car_price, @car_price %>
+      <%= hidden_field_tag :product_id, @product_id %>
+      <%= hidden_field_tag :car_number, @car_number %>
+      <%= hidden_field_tag :phone, @phone %>
+      <%= hidden_field_tag :city %>
+      <%= hidden_field_tag :car_number_prefix %>
+    </div>
+    <div class="city-lst" id="cityLst">
+
+    <%
+
+       group_cities = @cities.group_by { |city| city.first_letter }
+    %>
+
+    <%
+       group_cities.each_pair do |k, v|
+    %>
+        <h3><%= k %></h3>
+        <ul>
+          <% v.each do |city| %>
+              <li onclick="choose_city('<%=city.name%>','<%=city.car_number_prefix%>')">
+                <a href="#" onclick="return false;" >
+                    <%=city.name%>
+                </a>
+              </li>
+
+          <% end %>
+
+        </ul>
+    <% end %>
+
+
 <% end %>
+</div>
 <script language="javascript">
-  function choose_city(city_name,prefix){
-      $("#city").val(city_name);
-      $("#car_number_prefix").val(prefix);
-      $("#compare_price").submit();
-  }
+    function choose_city(city_name, prefix) {
+        $("#city").val(city_name);
+        $("#car_number_prefix").val(prefix);
+        $("#compare_price").submit();
+    }
 </script>
+<script src="/js/citySelect.js"></script>
