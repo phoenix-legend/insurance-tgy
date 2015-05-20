@@ -11,7 +11,6 @@
     <div class="city-lst" id="cityLst">
 
     <%
-
        group_cities = @cities.group_by { |city| city.first_letter }
     %>
 
@@ -21,12 +20,11 @@
         <h3><%= k %></h3>
         <ul>
           <% v.each do |city| %>
-              <li onclick="choose_city('<%=city.name%>','<%=city.car_number_prefix%>')">
+              <li onclick="choose_city('<%=city.name%>')">
                 <a href="#" onclick="return false;" >
                     <%=city.name%>
                 </a>
               </li>
-
           <% end %>
 
         </ul>
@@ -36,9 +34,8 @@
 <% end %>
 </div>
 <script language="javascript">
-    function choose_city(city_name, prefix) {
+    function choose_city(city_name) {
         $("#city").val(city_name);
-        $("#car_number_prefix").val(prefix);
         $("#compare_price").submit();
     }
 </script>

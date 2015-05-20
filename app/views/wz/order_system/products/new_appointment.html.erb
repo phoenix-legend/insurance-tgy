@@ -18,12 +18,14 @@
     </div>
 <% end %>
 </div>
+<% unless @descriptions.blank? %>
 <div class="intro intro1">
   <h4><%= "#{@product_name}服务说明" %></h4>
   <% i = 1 %>
-  <p><% @descriptions||[].each do |description| %>
+  <p><% (@descriptions||[]).each do |description| %>
         <%= i %>、<%= description %><br>
         <% i = i + 1 %>
     <% end %>
   </p>
 </div>
+<% end %>
