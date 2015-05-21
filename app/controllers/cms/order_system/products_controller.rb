@@ -60,7 +60,7 @@ class Cms::OrderSystem::ProductsController < Cms::BaseController
     if session_content.blank?
       @product = ::OrderSystem::Product.find_by_id(params[:id])
       @name = @product.name
-      @description = eval(@product.description) rescue ''
+      @description = eval(@product.description) rescue ['']
       @cover_image = @product.cover_image
       @url = @product.url
       @online = @product.online
