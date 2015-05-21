@@ -46,7 +46,7 @@ solr/default/data
 .bin
 .idea
 /db/schema.rb
-/public/
+/public/uploads/
 db/schema.rb
 #bin/
 /dump/*.*

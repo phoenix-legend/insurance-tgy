@@ -1,5 +1,5 @@
 class Cms::OrderSystem::ProductsController < Cms::BaseController
-  # before_filter :need_login
+  before_filter :need_login
 
   def new
     session_content = get_session_content params[:session_content_id]
