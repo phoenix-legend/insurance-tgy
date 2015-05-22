@@ -50,7 +50,7 @@ a{text-decoration: none; color: inherit;}
 .letters_lst li{width: 30px; line-height: 36px; font-size: 20px; color: #2c6dad; text-align: center;}
 /*城市选择*/
 .error{color: #f00; font-size: 30px; margin-bottom: 34px; padding-left: 140px;}
-.ipt,.select{width: 450px; height: 68px; background: #fff; line-height: 68px; border: 1px solid #ddd !important; text-indent: 18px; font-size: 30px; color: #666;}
+.ipt,.select{width: 76%; height: 68px; background: #fff; line-height: 68px; border: 1px solid #ddd !important; text-indent: 18px; font-size: 30px; color: #666;}
 .ipt{height: 30px; line-height: inherit; padding: 19px 0;}
 .select{text-indent: 4px;}
 .form{padding: 30px 28px 50px; border-bottom: 1px solid #ddd;}
