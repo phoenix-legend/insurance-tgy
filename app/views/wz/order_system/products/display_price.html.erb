@@ -2,12 +2,14 @@
 <div class="query-lst">
   <% i = 1 %>
 <% @car_insurance_prices.each do |car_insurance_price| %>
-      <% if i==1 %>
-          <li><span class="fr tit">车价：<%= @car_price %>万元&emsp;</span><span class="tit">所在地：<%= @city %></span></li>
-      <% end %>
-      <li><span class="price">参考报价：<%= car_insurance_price.insurance_price %> 元</span><em><%= i %></em><span class="name"> <%= car_insurance_price.comp_name %></span></li>
+      <ul>
+          <% if i==1 %>
+              <li><span class="fr tit">车价：<%= @car_price %>万元&emsp;</span><span class="tit">所在地：<%= @city %></span></li>
+          <% end %>
+          <li><span class="price">参考报价：<%= car_insurance_price.insurance_price %> 元</span><em><%= i %></em><span class="name"> <%= car_insurance_price.comp_name %></span></li>
 
-      <% i = i + 1 %>
+          <% i = i + 1 %>
+      </ul>
 <% end %>
 <%= hidden_field_tag :product_id,@product_id %>
   <div class="tc ok"><%= link_to "重新比价",compare_price_wz_order_system_products_path %></div>

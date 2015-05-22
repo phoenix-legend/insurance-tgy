@@ -63,9 +63,9 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
     else
       @city = params[:city]
     end
+    @car_number = ::OrderSystem::Region.find_by_name(@city).car_number_prefix rescue ''
     @car_price = params[:car_price]
-    @car_number = params[:car_number]
-    @phone = params[:phone]
+    @phone = params[:phone] unless params[:phone].blank?
   end
 
   def search_price
