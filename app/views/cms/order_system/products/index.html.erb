@@ -5,14 +5,15 @@
 </div>
 <table>
   <thead>
-    <th>产品名称</th><th width="300">描述</th><th>url</th><th>封面</th><th>操作</th><th>是否上线</th><th>排序号</th><th>APP名称</th>
+    <th>产品名称</th><th>描述</th><th>url</th><th>封面图</th><th>详情图</th><th>操作</th><th>是否上线</th><th>排序号</th><th>APP名称</th>
   </thead>
   <% @products.each do |product| %>
     <tr>
       <td><%= product.name %></td>
       <td><%= eval(product.description).join('/') rescue '' %></td>
       <td><%= product.url %></td>
-      <td><%= image_tag "/uploads/images/#{product.cover_image}" %></td>
+      <td><%= image_tag product.cover_image.blank? ? '未上传' : "/uploads/images/#{product.cover_image}" %></td>
+      <td><%= image_tag product.detail_image.blank? ? '未上传' : "/uploads/images/#{product.detail_image}" %></td>
       <td><%= link_to '编辑', "/cms/order_system/products/#{product.id}/edit" %></td>
       <td><%= product.online? ? "已上线" : "未上线"  %></td>
       <td><%= product.sort_by rescue '' %></td>

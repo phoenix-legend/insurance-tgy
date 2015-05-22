@@ -1,4 +1,6 @@
-<div class="banner"><img src="/img/banner.jpg" alt=""/></div>
+<div class="banner">
+  <%= image_tag "/uploads/images/#{@image_url}" unless @image_url.blank?%>
+</div>
 <div class="form">
 <%= form_tag(search_price_wz_order_system_products_path, id: 'compare_price_form', method: 'post') do %>
     <ul>

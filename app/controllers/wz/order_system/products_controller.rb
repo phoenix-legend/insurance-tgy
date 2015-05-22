@@ -7,7 +7,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
   def new_appointment
     @product_id = params[:id]
     product = ::OrderSystem::Product.find_by_id(@product_id)
-    @image_url = product.cover_image
+    @image_url = product.detail_image
     @descriptions = eval(product.description) rescue nil
     @product_name = product.name
   end
@@ -55,6 +55,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
     else
       @product_id = params[:product_id]
     end
+    @image_url = ::OrderSystem::Product.find_by_id(@product_id).detail_image rescue ''
     @ip = request.remote_ip
     if params[:city].blank?
       @city = ::OrderSystem::IpRegion.get_city_name @ip

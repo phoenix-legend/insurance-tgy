@@ -57,12 +57,23 @@
 
 <div class="row">
   <div class="small-2 columns text-right">
-    <label>产品图片</label>
+    <label>产品封面图片</label>
   </div>
   <div class="small-10 columns" style="position: relative">
     <input class="fake diff" type="text" value="<%= @cover_image %>" disabled="disabled" style="background-color: white" name="txt_image"/>
     <label class="upload diff" name="file">选择文件</label>
     <input class="file diff" type="file" name="cover_image" onchange="txt_image.value=this.value"/>
+  </div>
+</div>
+<br/><br/>
+<div class="row">
+  <div class="small-2 columns text-right">
+    <label>产品详情图片</label>
+  </div>
+  <div class="small-10 columns" style="position: relative">
+    <input class="fake diff" type="text" value="<%= @detail_image %>" disabled="disabled" style="background-color: white" name="txt_image2"/>
+    <label class="upload diff" name="file">选择文件</label>
+    <input class="file diff" type="file" name="detail_image" onchange="txt_image2.value=this.value"/>
   </div>
 </div>
 <br/><br/>
