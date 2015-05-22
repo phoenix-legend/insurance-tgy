@@ -4,8 +4,8 @@
 <div class="form">
 <%= form_tag('/wz/order_system/products/create_appointment',method: 'post') do %>
     <ul>
-      <li><label>车牌号</label><%= text_field_tag :car_number,@car_number ,class:"ipt",placeholder: "浙J61E27"%></li>
-      <li><label>手机号</label><%= text_field_tag :phone,@phone ,class:"ipt",placeholder: "13888889999"%></li>
+      <li><label>车牌号</label><%= text_field_tag :car_number,@car_number ,class:"ipt",placeholder: ""%></li>
+      <li><label>手机号</label><%= text_field_tag :phone,@phone ,class:"ipt",placeholder: ""%></li>
     </ul>
     <% unless @error_message.blank? %>
        <div class="error"><%= @error_message %></div>
