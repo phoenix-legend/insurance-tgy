@@ -5,6 +5,18 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
   end
 
   def new_appointment
+
+    @city = if params[:city].blank?
+              city = ::OrderSystem::IpRegion.get_city_name request.remote_ip
+              city.gsub!('市', '')
+              city
+            else
+              params[:city]
+            end
+    pp '....'
+    pp @city
+    @car_number = ::OrderSystem::Region.find_by_name(@city).car_number_prefix rescue ''
+    pp @car_number
     @product_id = params[:id]
     product = ::OrderSystem::Product.find_by_id(@product_id)
     @image_url = product.detail_image
@@ -14,18 +26,14 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
 
   def create_appointment
     begin
+      session[:car_number] = params[:car_number]
+      session[:phone] = params[:phone]
       @car_number = params[:car_number]
       @phone = params[:phone]
       user = ::UserSystem::UserInfo.create_user_info params.permit(:car_number, :phone, :product_id)
       product = ::OrderSystem::Product.find_by_id params[:product_id].to_i
       if product.server_name.to_s == 'xieche'
-        param = {
-            "mobile" => user.phone,
-            "licenseplate_type" => user.car_number[0],
-            "licenseplate" => user.car_number[1..-1],
-            "pingan_id" => user.id
-
-        }.to_json
+        param = user.get_xieche_param
         pp param
         redirect_to "http://www.xieche.com.cn/mobilecar-carservice?param=#{CGI.escape param}"
         return
@@ -70,6 +78,8 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
 
   def search_price
     begin
+      session[:car_number] = params[:car_number]
+      session[:phone] = params[:phone]
       @car_price = params[:car_price]
       @city = params[:city]
       @car_number = params[:car_number]
@@ -88,13 +98,12 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
       @ip = params[:ip]
       dispose_exception e
       @error_message = get_notice_str
-      #dispose_exception e
       render :compare_price
     end
   end
 
   def display_price
-    @car_insurance_prices = ::OrderSystem::CarInsurancePrice.where(city_name: params[:city], car_price: params[:car_price])
+    @car_insurance_prices = ::OrderSystem::CarInsurancePrice.get_price params
     @product_id = params[:product_id]
     @car_price = params[:car_price]
     @city = params[:city]
