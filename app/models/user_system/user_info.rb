@@ -13,43 +13,57 @@ class UserSystem::UserInfo < ActiveRecord::Base
   "新疆维吾尔","江苏省","浙江省","江西省","湖北省","广西壮族","甘肃省","山西省","内蒙古","陕西省","吉林省","福建省",
   "贵州省","广东省","青海省","西藏","四川省","宁夏回族","海南省","台湾省","香港特别行政区","澳门特别行政区"]
 
+  def get_xieche_param
+    {
+        "mobile" => self.phone,
+        "licenseplate_type" => self.car_number[0],
+        "licenseplate" => self.car_number[1..-1],
+        "pingan_id" => self.id
+
+    }.to_json
+  end
+
   def self.update_user_by_xieche userid
-    user = UserSystem::UserInfo.find_by_id userid
-    BusinessException.raise '用户不存在' if user.blank?
-    product = ::OrderSystem::Product.find_by_server_name 'xieche'
-    orders = ::OrderSystem::Order.where product_id: product.id, user_info_id: userid, status: 0
-    BusinessException.raise '订单不存在' if orders.blank?
-    order = orders[0]
-    order.status=1
-    order.save!
+    UserSystem::UserInfo.transaction do
+      user = UserSystem::UserInfo.find_by_id userid
+      BusinessException.raise '用户不存在' if user.blank?
+      product = ::OrderSystem::Product.find_by_server_name 'xieche'
+      orders = ::OrderSystem::Order.where product_id: product.id, user_info_id: userid, status: 0
+      BusinessException.raise '订单不存在' if orders.blank?
+      order = orders[0]
+      order.status=1
+      order.save!
+    end
   end
 
   # 点击“免费预约“将用户信息保存到数据库中，同时生成订单。
   # 将信息提交到合作伙伴网址。同时在数据库中记录是否提交成功。
   def self.create_user_info options
-    product_id = options[:product_id]
-    BusinessException.raise '产品ID不存在' if product_id.blank?
-    options = get_arguments_options options, [:name, :phone, :channel, :car_number, :car_price, :city ,:ip]
-    exist_user_info = self.where(car_number: options[:car_number], phone: options[:phone]).first
-    user_info = nil
-    if exist_user_info.blank?
-      # 保存用户信息
-      user_info = self.new options
-      user_info.save!
-      user_info.reload
-    else
-      # 根据车牌号查找，user_info已经存在，则更新
-      exist_user_info.channel = options[:channel] unless options[:channel].blank?
-      exist_user_info.car_price = options[:car_price] unless options[:car_price].blank?
-      exist_user_info.city = options[:city] unless options[:city].blank?
-      exist_user_info.ip = options[:ip] unless options[:ip].blank?
-      exist_user_info.save!
-      exist_user_info.reload
-      user_info = exist_user_info
+    UserSystem::UserInfo.transaction do
+      product_id = options[:product_id]
+      BusinessException.raise '产品ID不存在' if product_id.blank?
+      options = get_arguments_options options, [:name, :phone, :channel, :car_number, :car_price, :city ,:ip]
+      exist_user_info = self.where(car_number: options[:car_number], phone: options[:phone]).first
+      user_info = nil
+      if exist_user_info.blank?
+        # 保存用户信息
+        user_info = self.new options
+        user_info.save!
+        user_info.reload
+      else
+        # 根据车牌号查找，user_info已经存在，则更新
+        exist_user_info.channel = options[:channel] unless options[:channel].blank?
+        exist_user_info.car_price = options[:car_price] unless options[:car_price].blank?
+        exist_user_info.city = options[:city] unless options[:city].blank?
+        exist_user_info.ip = options[:ip] unless options[:ip].blank?
+        exist_user_info.save!
+        exist_user_info.reload
+        user_info = exist_user_info
+      end
+      # 创建订单
+      ::OrderSystem::Order.create_order user_info_id: user_info.id, product_id: product_id
+      user_info
     end
-    # 创建订单
-    ::OrderSystem::Order.create_order user_info_id: user_info.id, product_id: product_id
-    user_info
   end
 
   def self.export_excel users
@@ -85,7 +99,7 @@ class UserSystem::UserInfo < ActiveRecord::Base
       end
       current_row += 1
     end
-    file_path = "保盒用户资料表.xls"
+    file_path = "保盒用户资料表-#{Time.now.chinese_format}.xls"
     book.write file_path
     file_path
   end

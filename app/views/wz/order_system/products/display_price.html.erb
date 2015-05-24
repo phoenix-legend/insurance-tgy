@@ -1,7 +1,7 @@
 
 <div class="query-lst">
   <% i = 1 %>
-<% @car_insurance_prices.each do |car_insurance_price| %>
+<% (@car_insurance_prices||[]).each do |car_insurance_price| %>
       <ul>
           <% if i==1 %>
               <li><span class="fr tit">车价：<%= @car_price %>万元&emsp;</span><span class="tit">所在地：<%= @city %></span></li>
