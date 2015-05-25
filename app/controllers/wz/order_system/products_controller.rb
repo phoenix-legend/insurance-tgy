@@ -89,7 +89,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
       ::UserSystem::UserInfo.create_user_info params.permit(:car_price, :city, :car_number, :phone, :product_id, :ip)
       redirect_to action: :display_price, city: params[:city], car_price: params[:car_price], product_id: params[:product_id]
     rescue Exception => e
-      @cities = ::UserSystem::UserInfo::CITY
+      # @cities = ::UserSystem::UserInfo::CITY
       @car_price = params[:car_price]
       @city = params[:city]
       @car_number = params[:car_number]
