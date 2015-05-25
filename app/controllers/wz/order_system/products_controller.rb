@@ -45,7 +45,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
       @product_id = params[:product_id]
       product = ::OrderSystem::Product.find_by_id(@product_id)
       @product_name = product.name
-      @image_url = product.cover_image
+      @image_url = product.detail_image
       @descriptions = eval(product.description) rescue nil
       dispose_exception e
       @error_message = get_notice_str
