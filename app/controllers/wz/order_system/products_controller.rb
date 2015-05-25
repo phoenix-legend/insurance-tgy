@@ -80,14 +80,19 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
     begin
       session[:car_number] = params[:car_number]
       session[:phone] = params[:phone]
-      @car_price = params[:car_price]
+      @car_price = params[:car_price].to_i
+      if @car_price <= 2
+        BusinessException.raise "车价不正确"
+      elsif @car_price >= 100
+        @car_price = 100
+      end
       @city = params[:city]
       @car_number = params[:car_number]
       @phone = params[:phone]
       @product_id = params[:product_id]
       @ip = params[:ip]
       ::UserSystem::UserInfo.create_user_info params.permit(:car_price, :city, :car_number, :phone, :product_id, :ip)
-      redirect_to action: :display_price, city: params[:city], car_price: params[:car_price], product_id: params[:product_id]
+      redirect_to action: :display_price, city: params[:city], car_price: @car_price, product_id: params[:product_id]
     rescue Exception => e
       # @cities = ::UserSystem::UserInfo::CITY
       @car_price = params[:car_price]
@@ -117,6 +122,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
     @phone = params[:phone]
     @product_id = params[:product_id]
     @ip = params[:ip]
+    session[:car_number] = nil
   end
 
 end
