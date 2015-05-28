@@ -68,6 +68,7 @@ Rails.application.routes.draw do
           get :appointment_success
           get :compare_price
           post :search_price
+          get :search_price
           get :display_price
           get :get_city_name
           post :get_city_name

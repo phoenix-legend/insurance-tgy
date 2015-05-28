@@ -53,7 +53,7 @@ a{text-decoration: none; color: inherit;}
 .ipt,.select{width: 76%; height: 68px; background: #fff; line-height: 68px; border: 1px solid #ddd !important; text-indent: 18px; font-size: 30px; color: #666;}
 .ipt{height: 30px; line-height: inherit; padding: 19px 0;}
 .select{text-indent: 4px;}
-.form{padding: 30px 28px 50px; border-bottom: 1px solid #ddd;}
+.form{padding: 30px 28px 0px; border-bottom: 1px solid #ddd;}
 .form li{position: relative; margin-bottom: 30px;}
 .form li label{display: inline-block; width: 110px; margin-right: 20px; font-size: 36px; color: #333; text-align: right; vertical-align: middle; }
 .form li span.unit{position:absolute; right: 18px; top: 18px; }
