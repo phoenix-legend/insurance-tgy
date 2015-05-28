@@ -100,6 +100,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
       @car_number = params[:car_number]
       @phone = params[:phone]
       @product_id = params[:product_id]
+      @image_url = ::OrderSystem::Product.find_by_id(@product_id).detail_image rescue ''
       @ip = params[:ip]
       dispose_exception e
       @error_message = get_notice_str

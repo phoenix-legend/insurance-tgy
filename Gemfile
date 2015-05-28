@@ -37,7 +37,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 # gem 'bcrypt', '~> 3.1.7'
 
 # Use unicorn as the app server
-# gem 'unicorn'
+ gem 'unicorn'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
@@ -54,4 +54,3 @@ gem 'exception_notification', '~> 4.0.1'
 # 操作excel
 gem 'spreadsheet'
 
-gem 'unicorn'
