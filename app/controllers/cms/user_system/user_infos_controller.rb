@@ -3,7 +3,7 @@ class Cms::UserSystem::UserInfosController < Cms::BaseController
   def export_users_xls
     if request.post?
       begin
-        file_name = ::UserSystem::UserInfo.export_excel ::UserSystem;:UserInfo.all
+        file_name = ::UserSystem::UserInfo.export_excel ::UserSystem::UserInfo.all
         if File.exists? file_name
           io = File.open(file_name)
           io.binmode
