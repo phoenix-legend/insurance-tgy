@@ -20,11 +20,11 @@
 </div>
 <% unless @descriptions.blank? %>
 <div class="intro intro1">
-  <h4><%= "#{@product_name}服务说明" %></h4>
-  <% i = 1 %>
-  <p><% (@descriptions||[]).each do |description| %>
-        <%= i %>、<%= description %><br>
-        <% i = i + 1 %>
+  <h4><%= unless @product_name.blank? then  "#{@product_name}服务说明" end %></h4>
+  <p><% (@descriptions||[]).each do |description|
+        next if description.blank?
+  %>
+        <%= description %><br>
     <% end %>
   </p>
 </div>

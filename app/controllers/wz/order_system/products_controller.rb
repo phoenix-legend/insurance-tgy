@@ -38,6 +38,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
         redirect_to "http://www.xieche.com.cn/mobilecar-carservice?param=#{CGI.escape param}"
         return
       end
+      @product_app = product.app_name
       render :appointment_success
     rescue Exception => e
       @car_number = params[:car_number]
