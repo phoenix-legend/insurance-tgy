@@ -3,7 +3,8 @@ class Wz::WangzhanController < ApplicationController
   around_filter :round
 
   def round
-    yield
+    
+yield
   end
 
   def current_user
