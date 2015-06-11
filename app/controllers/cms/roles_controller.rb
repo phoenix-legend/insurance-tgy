@@ -1,4 +1,5 @@
 class Cms::RolesController < Cms::BaseController
+  before_filter :need_login
   def index
     @roles = ::Personal::Role.all
   end

@@ -1,5 +1,5 @@
 class Wz::OrderSystem::ProductsController < Wz::WangzhanController
-
+  before_filter :nee
   def index
     @products = ::OrderSystem::Product.where(online: true).order(sort_by: :desc)
   end

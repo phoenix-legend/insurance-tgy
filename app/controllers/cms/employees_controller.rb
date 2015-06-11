@@ -1,5 +1,5 @@
 class Cms::EmployeesController < Cms::BaseController
-
+  before_filter :need_login
   def index
     @employees = ::Personal::Employee.all
   end

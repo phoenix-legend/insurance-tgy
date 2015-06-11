@@ -1,6 +1,7 @@
 module Cms
   module Personal
     class OrganizationsController < Cms::BaseController
+      before_filter :need_login
       def index
         @organizations = ::Personal::Organization.permitted(current_employee)
       end

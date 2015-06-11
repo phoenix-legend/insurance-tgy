@@ -1,4 +1,5 @@
 class Cms::Sys::SystemConfigsController < Cms::BaseController
+  before_filter :need_login
   before_action :set_system_config, only: [:show, :edit, :update, :destroy]
 
 

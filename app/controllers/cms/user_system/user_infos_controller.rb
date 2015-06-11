@@ -1,5 +1,5 @@
 class Cms::UserSystem::UserInfosController < Cms::BaseController
-
+  before_filter :need_login
   def export_users_xls
     if request.post?
       begin
