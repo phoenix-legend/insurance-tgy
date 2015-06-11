@@ -1,5 +1,5 @@
 class Wz::WangzhanController < ApplicationController
-  before_filter :need_login
+
   around_filter :round
 
   def round
@@ -15,9 +15,9 @@ yield
 
   alias  current_employee current_user
 
-  private
-    def need_login
-      redirect_to '/cms/employee_validate/functions/login' if current_user.blank?
-      return
-    end
+
+  def need_login
+    redirect_to '/cms/employee_validate/functions/login' if current_user.blank?
+    return
+  end
 end
