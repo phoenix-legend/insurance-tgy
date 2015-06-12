@@ -6,10 +6,6 @@ class Cms::EmployeeValidate::FunctionsController < Cms::BaseController
     render :layout => false
   end
 
-  def not_teacher
-
-  end
-
   def list
     @functions = ::Personal::Function.all
   end

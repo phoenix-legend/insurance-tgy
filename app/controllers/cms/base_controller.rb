@@ -1,5 +1,5 @@
 class Cms::BaseController < ApplicationController
-
+  before_filter :need_login
   around_filter :round
 
   def round
