@@ -1,5 +1,23 @@
-<div class="tc suc-icn"><img src="/img/success-icn.png" alt=""/></div>
-<p class="tc suc-txt">
-  请下载 <span style="font-size: 32px; color: #f00;"><%=@product_app%></span> 即可获得本次服务
-</p>
-<div class="tc ok"><%= link_to "确 认", wz_order_system_products_path %></div>
+<div class="top_green">
+  <span class="top_green_title">一元洗车服务</span>
+</div>
+
+<div style="width: 90%; height: 122px; background-color: #ffffff; margin-left: auto; margin-right: auto; position: relative">
+  <div style="position: absolute; top: 15px; left: 20px;">
+    <img src="/img/success/right.png" height="37px" width="37px"/>
+  </div>
+  <div style="position: absolute; top: 23px; left: 65px; font-size: 18px;">
+    恭喜你！ &nbsp;预约成功！
+  </div>
+  <div style="position: absolute; top: 58px; left: 65px; font-size: 14px; padding-right: 20px; color: #666666;">
+    请下载“<%= @product_app %>”客户端即可获得本次服务
+  </div>
+
+</div>
+<div class="error"></div>
+<div class="form" style="">
+<div class="tc submit">
+  <%= submit_tag "下载途虎养车", onclick: "javascript:window.location = '/'; return false;", style: "width: 35%"  %>
+  <%= submit_tag "返回首页", onclick: "javascript:window.location = '/'; return false;", style: "width: 35%" %>
+</div>
+  </div>

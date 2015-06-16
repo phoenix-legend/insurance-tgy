@@ -55,7 +55,8 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
   end
 
   def appointment_success
-
+    #todo 调完删掉
+    @product_name = ::OrderSystem::Product.first
   end
 
   def compare_price
