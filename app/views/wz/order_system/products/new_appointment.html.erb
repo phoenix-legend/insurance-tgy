@@ -1,11 +1,11 @@
 <div class="banner" style="position: relative">
-  <%= image_tag(("/uploads/images/#{@image_url}" unless @image_url.blank?), :width => "100%") %>
+  <%= image_tag(("/uploads/images/#{@product.detail_image}" unless @product.detail_image.blank?), :width => "100%") %>
   <div style="position: absolute; left: 15px; bottom: 8px; color: #FFFFFF; font-weight: normal;">
-    <p style="font-size: 17px; line-height: 24px ">一元洗车，限时秒杀</p>
-    <p style="font-size: 13px;">已有<span style="font-size: 15px;">88</span>人抢购</p>
+    <p style="font-size: 17px; line-height: 24px; font-weight: bold;"><%= @product.adds_words %></p>
+    <p style="font-size: 13px;">已有<span style="font-size: 15px;"><%= @product.sale_number %></span>人抢购</p>
   </div>
   <div style="background-color: RGBA(0,0,0,0.6); padding-left: 15px; padding-right: 20px; height: 30px; position: absolute; right: 0px; bottom: 20px; color: #fff; font-size: 19px;">
-    <span style="font-size: 14px;">￥</span>1
+    <span style="font-size: 14px;">￥</span><%= @product.price %>
   </div>
 </div>
 
@@ -33,15 +33,15 @@
         <%= submit_tag "确定" %>
       </div>
       <div>
-        <%= hidden_field_tag :product_id, @product_id %>
+        <%= hidden_field_tag :product_id, @product.id %>
       </div>
   <% end %>
 </div>
 
 <% unless @descriptions.blank? %>
     <div class="intro intro1">
-      <h4><%= unless @product_name.blank? then
-                "#{@product_name}服务说明："
+      <h4><%= unless @product.name.blank? then
+                "#{@product.name}服务说明："
               end %></h4>
 
       <p>

@@ -85,6 +85,7 @@
     <%= text_field_tag :url, @url %>
   </div>
 </div>
+
 <div class="row">
   <div class="columns small-2 text-right">
     <label class="">是否上线</label>
@@ -93,6 +94,7 @@
     <%= check_box_tag :online, '1', @online %>
   </div>
 </div>
+
 <div class="row">
   <div class="columns small-2 text-right">
     <label class="inline">排序号</label>
@@ -101,6 +103,7 @@
     <%= text_field_tag :sort_by, @sort_by %>
   </div>
 </div>
+
 <div class="row">
   <div class="columns small-2 text-right">
     <label class="inline">APP名称</label>
@@ -109,6 +112,50 @@
     <%= text_field_tag :app_name, @app_name %>
   </div>
 </div>
+<div class="row">
+  <div class="columns small-2 text-right">
+    <label class="inline">android APP 下载地址</label>
+  </div>
+  <div class="columns small-4 text-left end">
+    <%= text_field_tag :android_app_url, @android_app_url %>
+  </div>
+</div>
+<div class="row">
+  <div class="columns small-2 text-right">
+    <label class="inline">iphone APP 下载地址</label>
+  </div>
+  <div class="columns small-4 text-left end">
+    <%= text_field_tag :iphone_app_url, @iphone_app_url %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="columns small-2 text-right">
+    <label class="inline">销售数量</label>
+  </div>
+  <div class="columns small-4 text-left end">
+    <%= text_field_tag :sale_number, @sale_number %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="columns small-2 text-right">
+    <label class="inline">价格</label>
+  </div>
+  <div class="columns small-4 text-left end">
+    <%= text_field_tag :price, @price %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="columns small-2 text-right">
+    <label class="inline">一句话广告语</label>
+  </div>
+  <div class="columns small-4 text-left end">
+    <%= text_field_tag :adds_words, @adds_words %>
+  </div>
+</div>
+
 <div class="row">
   <div class="columns small-offset-2 small-2 text-left end">
     <%= submit_tag "保存", class: 'button tiny' %>

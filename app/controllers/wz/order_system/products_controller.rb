@@ -13,15 +13,10 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
             else
               params[:city]
             end
-    pp '....'
-    pp @city
     @car_number = ::OrderSystem::Region.find_by_name(@city).car_number_prefix rescue ''
     pp @car_number
-    @product_id = params[:id]
-    product = ::OrderSystem::Product.find_by_id(@product_id)
-    @image_url = product.detail_image
-    @descriptions = eval(product.description) rescue nil
-    @product_name = product.name
+    @product = ::OrderSystem::Product.find_by_id params[:id]
+    @descriptions = eval(@product.description) rescue nil
   end
 
   def create_appointment
@@ -38,8 +33,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
         redirect_to "http://www.xieche.com.cn/mobilecar-carservice?param=#{CGI.escape param}"
         return
       end
-      @product_app = product.app_name
-      render :appointment_success
+      redirect_to "/wz/order_system/products/appointment_success?product_id=#{product.id}"
     rescue Exception => e
       @car_number = params[:car_number]
       @phone = params[:phone]
@@ -55,8 +49,8 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
   end
 
   def appointment_success
-    #todo 调完删掉
-    @product_name = ::OrderSystem::Product.first
+    get_operate_system
+    @product = ::OrderSystem::Product.find_by_id params[:product_id].to_i
   end
 
   def compare_price
@@ -93,7 +87,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
       @phone = params[:phone]
       @product_id = params[:product_id]
       @ip = params[:ip]
-      ::UserSystem::UserInfo.create_user_info params.permit(:car_price, :city, :car_number, :phone, :product_id, :ip)
+      ::UserSystem::UserInfo.create_user_info params.permit(:month, :car_price, :city, :car_number, :phone, :product_id, :ip)
       redirect_to action: :display_price, city: params[:city], car_price: @car_price, product_id: params[:product_id]
     rescue Exception => e
       # @cities = ::UserSystem::UserInfo::CITY

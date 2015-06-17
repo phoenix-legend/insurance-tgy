@@ -23,6 +23,10 @@
           <%= hidden_field_tag :product_id, @product_id %>
           <%= hidden_field_tag :ip, @ip %>
         </li>
+        <li style="position: relative">
+          <label>保险购买月份：</label>
+          <%= select_tag :month, options_for_select((1..12).collect{|m|["#{m}月", m]}), class: "form_ipt" %>
+        </li>
       </ul>
       <div class="error">
         <% unless @error_message.blank? %>

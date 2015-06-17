@@ -6,7 +6,7 @@ class OrderSystem::Product < ActiveRecord::Base
 
 
   def self.create_product options
-    options = get_arguments_options options, [:name, :description, :url, :cover_image, :detail_image, :online, :sort_by, :app_name]
+    options = get_arguments_options options, [:adds_words, :price, :sale_number, :iphone_app_url, :android_app_url, :name, :description, :url, :cover_image, :detail_image, :online, :sort_by, :app_name]
     self.transaction do
       product = self.new options
       product.save!
@@ -16,18 +16,12 @@ class OrderSystem::Product < ActiveRecord::Base
   end
 
   def update_product options
-    options = self.class.get_arguments_options options, [:name, :description, :url, :cover_image, :detail_image, :online, :sort_by, :app_name]
+    options = self.class.get_arguments_options options, [:adds_words, :price, :sale_number, :iphone_app_url, :android_app_url, :name, :description, :url, :cover_image, :detail_image, :online, :sort_by, :app_name]
+    options[:online] = options[:online] == '1'
+    options.delete(:cover_image) if options[:cover_image].blank?
+    options.delete(:detail_image) if options[:detail_image].blank?
     ::OrderSystem::Product.transaction do
-      self.name = options[:name]
-      self.description = options[:description]
-      self.url = options[:url]
-      self.cover_image = options[:cover_image] unless options[:cover_image].blank?
-      self.detail_image = options[:detail_image] unless options[:detail_image].blank?
-      self.online = options[:online] == '1'
-      self.sort_by = options[:sort_by]
-      self.app_name = options[:app_name]
-      self.save!
-      self.reload
+      self.update_attributes! options
       self
     end
 

@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   require 'pp'
   # helper :all # include all helpers, all the time
-  helper_method :current_user
+  helper_method :current_user, :get_operate_system
 
   #处理控制器中的异常信息。
   def dispose_exception e, error_messages={:unknow_error=>nil, :act=>nil}
@@ -39,6 +39,16 @@ class ApplicationController < ActionController::Base
 
   def set_notice str
     session[:notice] = str
+  end
+
+  def get_operate_system
+    #pp request
+
+    if request.env["HTTP_USER_AGENT"].match /Android/
+      'android'
+    else
+      'iphone'
+    end
   end
 
   def get_notice

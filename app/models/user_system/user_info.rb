@@ -42,7 +42,7 @@ class UserSystem::UserInfo < ActiveRecord::Base
     UserSystem::UserInfo.transaction do
       product_id = options[:product_id]
       BusinessException.raise '产品ID不存在' if product_id.blank?
-      options = get_arguments_options options, [:name, :phone, :channel, :car_number, :car_price, :city ,:ip]
+      options = get_arguments_options options, [:month, :name, :phone, :channel, :car_number, :car_price, :city ,:ip]
       exist_user_info = self.where(car_number: options[:car_number], phone: options[:phone]).first
       user_info = nil
       if exist_user_info.blank?
@@ -56,6 +56,7 @@ class UserSystem::UserInfo < ActiveRecord::Base
         exist_user_info.car_price = options[:car_price] unless options[:car_price].blank?
         exist_user_info.city = options[:city] unless options[:city].blank?
         exist_user_info.ip = options[:ip] unless options[:ip].blank?
+        exist_user_info.month = options[:month] unless options[:month].blank?
         exist_user_info.save!
         exist_user_info.reload
         user_info = exist_user_info

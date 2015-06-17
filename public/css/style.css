@@ -166,8 +166,8 @@ a {
 /*信息提交表单*/
 .form ul {
     padding-left: 30px;
-    border-top: 1px #9a9a9a solid;
-    border-bottom: 1px #9a9a9a solid;
+    border-top: 1px #aaaaaa solid;
+    border-bottom: 1px #aaaaaa solid;
     background-color: #ffffff;
 }
 
@@ -215,6 +215,7 @@ a {
 .description {
     font-size: 14px;
     color: #ccc;
+
 }
 
 /*出错提示*/
@@ -355,6 +356,7 @@ a {
 
 .intro {
     padding: 7px;
+    padding-left: 30px;
     color: #666666
 }
 
@@ -363,6 +365,7 @@ a {
 }
 
 .intro1 h4 {
+    margin-top: 20px;
     margin-bottom: 7px;
     font-size: 16px;
 }
