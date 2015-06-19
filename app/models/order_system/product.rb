@@ -6,7 +6,7 @@ class OrderSystem::Product < ActiveRecord::Base
 
 
   def self.create_product options
-    options = get_arguments_options options, [:adds_words, :price, :sale_number, :iphone_app_url, :android_app_url, :name, :description, :url, :cover_image, :detail_image, :online, :sort_by, :app_name]
+    options = get_arguments_options options, [:return_page, :adds_words, :price, :sale_number, :iphone_app_url, :android_app_url, :name, :description, :url, :cover_image, :detail_image, :online, :sort_by, :app_name]
     self.transaction do
       product = self.new options
       product.save!
@@ -16,7 +16,7 @@ class OrderSystem::Product < ActiveRecord::Base
   end
 
   def update_product options
-    options = self.class.get_arguments_options options, [:adds_words, :price, :sale_number, :iphone_app_url, :android_app_url, :name, :description, :url, :cover_image, :detail_image, :online, :sort_by, :app_name]
+    options = self.class.get_arguments_options options, [:return_page, :adds_words, :price, :sale_number, :iphone_app_url, :android_app_url, :name, :description, :url, :cover_image, :detail_image, :online, :sort_by, :app_name]
     options[:online] = options[:online] == '1'
     options.delete(:cover_image) if options[:cover_image].blank?
     options.delete(:detail_image) if options[:detail_image].blank?

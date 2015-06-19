@@ -33,7 +33,13 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
         redirect_to "http://www.xieche.com.cn/mobilecar-carservice?param=#{CGI.escape param}"
         return
       end
-      redirect_to "/wz/order_system/products/appointment_success?product_id=#{product.id}"
+      if product.return_page == 'download_app'
+        redirect_to "/wz/order_system/products/appointment_success?product_id=#{product.id}"
+      else
+        redirect_to "/wz/order_system/products/appointment_success2?product_id=#{product.id}"
+      end
+      return
+
     rescue Exception => e
       @car_number = params[:car_number]
       @phone = params[:phone]
@@ -47,7 +53,10 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
   end
 
   def appointment_success
-    get_operate_system
+    @product = ::OrderSystem::Product.find_by_id params[:product_id].to_i
+  end
+
+  def appointment_success2
     @product = ::OrderSystem::Product.find_by_id params[:product_id].to_i
   end
 

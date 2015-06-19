@@ -66,6 +66,7 @@ Rails.application.routes.draw do
           get :new_appointment
           post :create_appointment
           get :appointment_success
+          get :appointment_success2
           get :compare_price
           post :search_price
           get :search_price

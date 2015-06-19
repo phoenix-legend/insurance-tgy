@@ -19,6 +19,7 @@ class Cms::OrderSystem::ProductsController < Cms::BaseController
       @sort_by = session_content[:sort_by]
       @app_name = session_content[:app_name]
       @android_app_url = session_content[:android_app_url]
+      @return_page = session_content[:return_page]
       @price = session_content[:price]
       @iphone_app_url = session_content[:iphone_app_url]
       @sale_number = session_content[:sale_number]
@@ -32,7 +33,7 @@ class Cms::OrderSystem::ProductsController < Cms::BaseController
       params[:description] = params[:description].to_s unless params[:description].blank?
       params[:cover_image] = upload_file params[:cover_image] unless params[:cover_image].blank?
       params[:detail_image] = upload_file params[:detail_image] unless params[:detail_image].blank?
-      ::OrderSystem::Product.create_product params.permit(:adds_words, :price, :sale_number, :iphone_app_url, :android_app_url, :name, :description, :cover_image, :detail_image, :url, :online, :sort_by, :app_name)
+      ::OrderSystem::Product.create_product params.permit(:return_page, :adds_words, :price, :sale_number, :iphone_app_url, :android_app_url, :name, :description, :cover_image, :detail_image, :url, :online, :sort_by, :app_name)
       redirect_to '/cms/order_system/products'
     rescue Exception=>e
       dispose_exception e
@@ -49,7 +50,7 @@ class Cms::OrderSystem::ProductsController < Cms::BaseController
       params[:description] = params[:description].to_s unless params[:description].blank?
       params[:cover_image] = upload_file params[:cover_image] unless params[:cover_image].blank?
       params[:detail_image] = upload_file params[:detail_image] unless params[:detail_image].blank?
-      @product.update_product params.permit(:adds_words, :price, :sale_number, :iphone_app_url, :android_app_url, :name, :description, :cover_image, :detail_image, :url, :online, :sort_by, :app_name)
+      @product.update_product params.permit(:return_page, :adds_words, :price, :sale_number, :iphone_app_url, :android_app_url, :name, :description, :cover_image, :detail_image, :url, :online, :sort_by, :app_name)
       redirect_to '/cms/order_system/products'
     rescue Exception=> e
       dispose_exception e
@@ -78,6 +79,7 @@ class Cms::OrderSystem::ProductsController < Cms::BaseController
       @sort_by = @product.sort_by
       @app_name = @product.app_name
       @android_app_url = @product.android_app_url
+      @return_page = @product.return_page
       @iphone_app_url = @product.iphone_app_url
       @sale_number = @product.sale_number
       @price = @product.price
@@ -92,6 +94,7 @@ class Cms::OrderSystem::ProductsController < Cms::BaseController
       @sort_by = session_content[:sort_by]
       @app_name = session_content[:app_name]
       @android_app_url = session_content[:android_app_url]
+      @return_page = session_content[:return_page]
       @iphone_app_url = session_content[:iphone_app_url]
       @sale_number = session_content[:sale_number]
       @price = session_content[:price]
