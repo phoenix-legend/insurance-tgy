@@ -45,8 +45,11 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 gem 'nokogiri'
-gem 'eric_tools', '~> 0.0.5'
+gem 'eric_tools', '~> 0.0.6'
 gem 'rest-client'
+gem "multi_xml"
+
+
 #异常通知邮件
 
 # gem 'zurb-foundation'

@@ -75,7 +75,15 @@ Rails.application.routes.draw do
           post :get_city_name
         end
       end
-      resources :orders
+    end
+
+    namespace :weizhang do
+      resources :chaxun do
+        collection do
+          get :no_weizhang
+          post :result
+        end
+      end
     end
   end
 

@@ -13,8 +13,6 @@ class OrderSystem::Order < ActiveRecord::Base
       order.status= 0
       order.save!
       order.reload
-      # TODO 将信息提交到合作伙伴网址。同时在数据库中记录是否提交成功
-
       order
   end
 

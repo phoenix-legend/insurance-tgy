@@ -4,10 +4,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   require 'pp'
   # helper :all # include all helpers, all the time
-  helper_method :current_user, :get_operate_system
+  helper_method :current_user, :get_operate_system, :get_session_content, :get_notice_str, :has_notice?
 
   #处理控制器中的异常信息。
-  def dispose_exception e, error_messages={:unknow_error=>nil, :act=>nil}
+  def dispose_exception e, error_messages={:unknow_error => nil, :act => nil}
     case e
       when BusinessException
         set_notice e.to_s
@@ -38,6 +38,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_notice str
+    pp '我到这儿了'*30
     session[:notice] = str
   end
 
@@ -59,12 +60,14 @@ class ApplicationController < ActionController::Base
 
 
   def get_notice_str is_all=true
-    if session[:notice].class == String
-      str = session[:notice]
-      session[:notice] = nil
-      str
-    end
+    str = if session[:notice].class == String
+            str = session[:notice]
+            session[:notice] = nil
+            str
+          end
     if is_all
+      pp '我来取了'*30
+      pp str
       return str if not str.blank?
       h = get_notice_hash
       if h.values.length>0
@@ -73,6 +76,10 @@ class ApplicationController < ActionController::Base
     else
       return str
     end
+  end
+
+  def has_notice?
+    !session[:notice].blank?
   end
 
   def get_notice_hash
@@ -96,7 +103,6 @@ class ApplicationController < ActionController::Base
   end
 
   def get_really_member_id id
-
     if id.class == Fixnum
       member_info = MemberInfo.find id
       return member_info.member_id
@@ -110,19 +116,21 @@ class ApplicationController < ActionController::Base
   end
 
   def set_session_content
-    s = SessionContent.new(value: params.symbolize_keys.delete_if{|key, value| key == :utf8 || key == :authenticity_token} .to_s)
+    s = SessionContent.new(value: params.symbolize_keys.delete_if { |key, value| [:utf8, :authenticity_token].include? key }.to_s)
     s.save!
-    s.reload
     s.id
   end
 
   def get_session_content id
+    return {} if id.blank?
     begin
       s = SessionContent.where(id: id, is_valid: true).first
+      return {} if s.blank?
       s.update_attribute :is_valid, false
-      eval(s.value)
-    rescue Exception=>e
-      nil
+      value = eval(s.value)
+      value.deep_symbolize_keys
+    rescue Exception => e
+      {}
     end
   end
 

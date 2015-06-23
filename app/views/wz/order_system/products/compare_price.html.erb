@@ -20,7 +20,7 @@
         <li style="border-bottom: none">
           <label>手机号：</label>
           <%= text_field_tag :phone, get_show_value('', v1: @phone, v2: session[:phone]), class: "form_ipt", placeholder: "请输入手机号" %>
-          <%= hidden_field_tag :product_id, @product_id %>
+
           <%= hidden_field_tag :ip, @ip %>
         </li>
         <li style="position: relative">

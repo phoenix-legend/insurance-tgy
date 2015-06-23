@@ -61,11 +61,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
   end
 
   def compare_price
-    if params[:product_id].blank?
-      @product_id = ::OrderSystem::Product.find_by_name("车险比价").id
-    else
-      @product_id = params[:product_id]
-    end
+    @product_id = ::OrderSystem::Product.find_by_server_name("bijia").id
     @image_url = ::OrderSystem::Product.find_by_id(@product_id).detail_image rescue ''
     @ip = request.remote_ip
     if params[:city].blank?
@@ -92,17 +88,16 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
       @city = params[:city]
       @car_number = params[:car_number]
       @phone = params[:phone]
-      @product_id = params[:product_id]
+      @product_id = ::OrderSystem::Product.find_by_server_name("bijia").id
       @ip = params[:ip]
       ::UserSystem::UserInfo.create_user_info params.permit(:month, :car_price, :city, :car_number, :phone, :product_id, :ip)
-      redirect_to action: :display_price, city: params[:city], car_price: @car_price, product_id: params[:product_id]
+      redirect_to action: :display_price, city: params[:city], car_price: @car_price, product_id: @product_id
     rescue Exception => e
-      # @cities = ::UserSystem::UserInfo::CITY
       @car_price = params[:car_price]
       @city = params[:city]
       @car_number = params[:car_number]
       @phone = params[:phone]
-      @product_id = params[:product_id]
+      @product_id = ::OrderSystem::Product.find_by_server_name("bijia").id
       @image_url = ::OrderSystem::Product.find_by_id(@product_id).detail_image rescue ''
       @ip = params[:ip]
       dispose_exception e

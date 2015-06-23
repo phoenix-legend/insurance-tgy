@@ -6,22 +6,7 @@ module ApplicationHelper
   end
 
 
-  def get_notice_str is_all=true
-    if session[:notice].class == String
-      str = session[:notice]
-      session[:notice] = nil
-      str
-    end
-    if is_all
-      return str if not str.blank?
-      h = get_notice_hash
-      if h.values.length>0
-        return h.values[0]
-      end
-    else
-      return str
-    end
-  end
+
 
   def get_notice_hash
     if session[:notice].class == Hash
