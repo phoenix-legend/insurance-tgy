@@ -32,19 +32,24 @@ class OrderSystem::WeizhangResult < ActiveRecord::Base
       weizhang_log.save!
       result = MultiXml.parse(response.body).deep_symbolize_keys[:result]
       pp result
-      if result[:status].to_i == 0
+      if !result[:status].blank? && result[:status].to_i == 0
         OrderSystem::WeizhangResult.create_result user_info.car_number, user_info.id, result
         return user_info.weizhang_results
       end
     end
-    error_message = case result[:status].to_i
-                      when 1
-                        '恭喜你，你现在没有违章信息。|right'
-                      when 2
-                        '车辆信息错误，请检查。'
-                      else
-                        '交管局服务器错误，请稍后再试。'
+    error_message = if result[:status].blank?
+                      '未进行查询或输入信息有误'
+                    else
+                      case result[:status].to_i
+                        when 1
+                          '恭喜你，你现在没有违章信息。|right'
+                        when 2
+                          '车辆信息错误，请检查。'
+                        else
+                          '交管局服务器错误，请稍后再试。'
+                      end
                     end
+
     BusinessException.raise error_message
   end
 
