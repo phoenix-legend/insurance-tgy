@@ -25,6 +25,8 @@ class Wz::Weizhang::ChaxunController < Wz::WangzhanController
       set_notice str
       id = set_session_content
       redirect_to action: 'index', session_content_id: id
+
+
     end
   end
 end
