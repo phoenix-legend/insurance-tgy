@@ -1,0 +1,22 @@
+<h3>模板</h3>
+<%= link_to '创建', '/cms/order_system/templates/new', class: 'button tiny' %>
+<%= will_paginate @collection, renderer: FoundationPagination::Rails %>
+<table>
+  <thead>
+    <th>show_name</th>
+    <th>real_name</th>
+    <th>是否上线</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    <% @templates.each do |template| %>
+        <tr>
+          <td><%= template.show_name %></td>
+          <td><%= template.real_name %></td>
+          <td><%= template.is_valid? ? '上线' : '未上线' %></td>
+          <td><%= link_to '编辑', "/cms/order_system/templates/#{template.id}/edit" %></td>
+        </tr>
+    <% end unless @templates.blank? %>
+  </tbody>
+</table>
+<%= will_paginate @collection, renderer: FoundationPagination::Rails %>

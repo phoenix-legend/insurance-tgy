@@ -1,31 +1,22 @@
 class OrderSystem::Template < ActiveRecord::Base
   has_many :templates_products, :class_name => '::OrderSystem::TemplatesProducts', foreign_key: 'template_id'
   has_many :products, :class_name => '::OrderSystem::Product', through: :templates_products
-  # has_many :orders, :class_name => '::OrderSystem::Order'
-  #
-  # validates_presence_of :name, message: "产品名称不可以为空。"
-  # validates_presence_of :cover_image, message: "产品图片不可以为空。"
 
+  validates_presence_of :show_name, message: 'show_name不能为空。'
+  validates_presence_of :real_name, message: 'real_name不能为空。'
 
-  # def self.create_product options
-  #   options = get_arguments_options options, [:return_page, :adds_words, :price, :sale_number, :iphone_app_url, :android_app_url, :name, :description, :url, :cover_image, :detail_image, :online, :sort_by, :app_name]
-  #   self.transaction do
-  #     product = self.new options
-  #     product.save!
-  #     product.reload
-  #     product
-  #   end
-  # end
-  #
-  # def update_product options
-  #   options = self.class.get_arguments_options options, [:return_page, :adds_words, :price, :sale_number, :iphone_app_url, :android_app_url, :name, :description, :url, :cover_image, :detail_image, :online, :sort_by, :app_name]
-  #   options[:online] = options[:online] == '1'
-  #   options.delete(:cover_image) if options[:cover_image].blank?
-  #   options.delete(:detail_image) if options[:detail_image].blank?
-  #   ::OrderSystem::Product.transaction do
-  #     self.update_attributes! options
-  #     self
-  #   end
-  #
-  # end
+  def self.create_template options
+    product_options = options[:products]
+    options = get_arguments_options options, [:show_name, :real_name, :is_valid], is_valid: true
+    template = self.new options
+    template.save!
+    template.reload
+
+  end
+
+  def update_template
+    product_options = options[:products]
+    options = get_arguments_options options, [:show_name, :real_name, :is_valid], is_valid: true
+  end
+
 end

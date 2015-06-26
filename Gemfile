@@ -57,3 +57,6 @@ gem 'exception_notification', '~> 4.0.1'
 # 操作excel
 gem 'spreadsheet'
 
+#分页
+gem "will_paginate-foundation"
+
