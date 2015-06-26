@@ -1,6 +1,9 @@
 class OrderSystem::Template < ActiveRecord::Base
   has_many :templates_products, :class_name => '::OrderSystem::TemplatesProducts', foreign_key: 'template_id'
   has_many :products, :class_name => '::OrderSystem::Product', through: :templates_products
+
+  
+
   # has_many :orders, :class_name => '::OrderSystem::Order'
   #
   # validates_presence_of :name, message: "产品名称不可以为空。"

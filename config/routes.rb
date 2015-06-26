@@ -102,6 +102,8 @@ Rails.application.routes.draw do
   root to: "wz/order_system/products#index"
   get '/cms', to: 'cms/employee_validate/functions#login'
 
+  get '/:template_name/:qudao_name', to: "wz/order_system/products#index"
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -1,6 +1,10 @@
 class Wz::OrderSystem::ProductsController < Wz::WangzhanController
 
   def index
+    unless params[:template_name].blank?
+      BusinessException.raise '渠道错误' if params[:qudao_name].blank?
+
+    end
     @products = ::OrderSystem::Product.where(online: true).order(sort_by: :desc)
   end
 
