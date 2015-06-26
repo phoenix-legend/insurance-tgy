@@ -4,7 +4,7 @@ class OrderSystem::Template < ActiveRecord::Base
 
   validates_presence_of :show_name, message: 'show_name不能为空。'
   validates_presence_of :real_name, message: 'real_name不能为空。'
-
+  validates_uniqueness_of :real_name, message: 'real_name重复'
   # {"show_name"=>"1",
   #     "real_name"=>"2",
   #     "products"=>
