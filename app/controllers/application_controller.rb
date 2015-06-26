@@ -115,7 +115,12 @@ class ApplicationController < ActionController::Base
     return id
   end
 
-  def set_session_content
+  def set_session_content except_params=nil
+    unless except_params.blank?
+      except_params.each do |ep|
+        params.delete(ep.to_s)
+      end rescue ''
+    end
     s = SessionContent.new(value: params.symbolize_keys.delete_if { |key, value| [:utf8, :authenticity_token].include? key }.to_s)
     s.save!
     s.id

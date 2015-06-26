@@ -50,6 +50,24 @@ module ActiveRecord
         return id
       end
 
+      def upload_file name
+        return '' if name.blank?
+        uploaded_io = name
+        dir = 'images'
+        prefix = 'image'
+        new_name = ''
+        index = 1
+        origin_name_with_path = Rails.root.join('public', 'uploads/' + dir, uploaded_io.original_filename)
+        File.open(origin_name_with_path, 'wb') do |file|
+          file.write(uploaded_io.read)
+          new_name = prefix + Time.now.to_s(:number) + EricTools.generate_random_string(3,3) + File.extname(file)
+          new_name_with_path = Rails.root.join('public', 'uploads/' + dir, new_name)
+          File.rename(origin_name_with_path, new_name_with_path)
+          index += 1
+        end
+        new_name
+      end
+
     end
   end
 
