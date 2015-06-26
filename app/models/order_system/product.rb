@@ -6,7 +6,7 @@ class OrderSystem::Product < ActiveRecord::Base
 
   validates_presence_of :name, message: "产品名称不可以为空。"
   validates_presence_of :cover_image, message: "产品图片不可以为空。"
-
+  scope :online, ->{ where online: true }
 
   def self.create_product options
     options = get_arguments_options options, [:return_page, :adds_words, :price, :sale_number, :iphone_app_url, :android_app_url, :name, :description, :url, :cover_image, :detail_image, :online, :sort_by, :app_name]
