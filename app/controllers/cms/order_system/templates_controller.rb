@@ -15,7 +15,7 @@ class Cms::OrderSystem::TemplatesController < Cms::BaseController
   end
 
   def create
-    params.permit!
+    params.permit(:products)
     begin
       ::OrderSystem::Template.create_template params
     rescue Exception=> e

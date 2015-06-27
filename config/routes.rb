@@ -60,6 +60,20 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :dwz do
+    namespace :haoche_stat do
+      resources :promation do
+        collection do
+          get :join_us
+          get :product_list
+          get :topics
+        end
+      end
+
+    end
+
+  end
+
   namespace :wz do
     namespace :order_system do
       resources :products do
@@ -102,6 +116,7 @@ Rails.application.routes.draw do
 
   root to: "wz/order_system/products#index"
   get '/cms', to: 'cms/employee_validate/functions#login'
+  get '/dwz', to: 'dwz/haoche_stat/promation#index'
 
   get '/:template_name/:qudao_name', to: "wz/order_system/products#index"
 

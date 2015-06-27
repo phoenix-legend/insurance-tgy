@@ -5,6 +5,12 @@ class OrderSystem::Template < ActiveRecord::Base
   validates_presence_of :show_name, message: 'show_name不能为空。'
   validates_presence_of :real_name, message: 'real_name不能为空。'
 
+
+  def valid_products
+    template_products = self.templates_products.where(online: true).order(sort_by: desc)
+    template_products.collect &:product
+  end
+
   def self.create_template options
     product_options = options[:products]
     options = get_arguments_options options, [:show_name, :real_name, :is_valid], is_valid: true

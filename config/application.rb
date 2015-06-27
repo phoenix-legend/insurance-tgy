@@ -26,6 +26,9 @@ module Insurance
     config.action_mailer.raise_delivery_errors = true
     config.action_controller.include_all_helpers = false
 
+    config.prepend_helpers_path = true
+
+
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
         :address              => "smtp.exmail.qq.com",

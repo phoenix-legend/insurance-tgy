@@ -1,15 +1,17 @@
 class Wz::OrderSystem::ProductsController < Wz::WangzhanController
 
   def index
-    unless params[:template_name].blank?
-      BusinessException.raise '渠道错误' if params[:qudao_name].blank?
-
-    end
-    @products = ::OrderSystem::Product.where(online: true).order(sort_by: :desc)
+    @products =if params[:template_name].blank?
+                 ::OrderSystem::Product.where(online: true).order(sort_by: :desc)
+               else
+                 BusinessException.raise '渠道错误' if params[:qudao_name].blank?
+                 session[:qudao_name] = params[:qudao_name]
+                 template = ::OrderSystem::Template.first real_name: params[:template_name]
+                 template.valid_products
+               end
   end
 
   def new_appointment
-
     @city = if params[:city].blank?
               city = ::OrderSystem::IpRegion.get_city_name request.remote_ip
               city.gsub!('市', '')
@@ -18,7 +20,6 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
               params[:city]
             end
     @car_number = ::OrderSystem::Region.find_by_name(@city).car_number_prefix rescue ''
-    pp @car_number
     @product = ::OrderSystem::Product.find_by_id params[:id]
     @descriptions = eval(@product.description) rescue nil
   end
