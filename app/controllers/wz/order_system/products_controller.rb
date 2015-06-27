@@ -1,19 +1,22 @@
 class Wz::OrderSystem::ProductsController < Wz::WangzhanController
 
   def index
-    @products =if params[:template_name].blank?
-                 ::OrderSystem::Product.where(online: true).order(sort_by: :desc)
-               else
-                 BusinessException.raise '渠道错误' if params[:qudao_name].blank?
-                 session[:qudao_name] = params[:qudao_name]
-                 template = ::OrderSystem::Template.first real_name: params[:template_name]
-                 template.valid_products
-               end
+    if params[:template_name].blank?
+      @products = ::OrderSystem::Product.where(online: true).order(sort_by: :desc)
+    else
+      BusinessException.raise '渠道错误' if params[:qudao_name].blank?
+      template = ::OrderSystem::Template.where real_name: params[:template_name]
+      BusinessException.raise '渠道错误' if template[0].blank?
+      @products = template[0].valid_template_products
+      session[:qudao_name] = params[:qudao_name]
+      session[:template_name] = params[:template_name]
+      render 'index2'
+    end
   end
 
   def new_appointment
     @city = if params[:city].blank?
-              city = ::OrderSystem::IpRegion.get_city_name request.remote_ip
+              city = ::OrderSystem::IpRegion.get_city_name get_ip
               city.gsub!('市', '')
               city
             else
@@ -68,7 +71,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
   def compare_price
     @product_id = ::OrderSystem::Product.find_by_server_name("bijia").id
     @image_url = ::OrderSystem::Product.find_by_id(@product_id).detail_image rescue ''
-    @ip = request.remote_ip
+    @ip = get_ip
     if params[:city].blank?
       @city = ::OrderSystem::IpRegion.get_city_name @ip
       @city.gsub!('市', '')
@@ -95,7 +98,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
       @phone = params[:phone]
       @product_id = ::OrderSystem::Product.find_by_server_name("bijia").id
       @ip = params[:ip]
-      ::UserSystem::UserInfo.create_user_info params.permit(:month, :car_price, :city, :car_number, :phone, :product_id, :ip)
+      ::UserSystem::UserInfo.create_user_info params.permit(:month, :car_price, :city, :car_number, :phone, :ip).merge(:product_id => @product_id)
       redirect_to action: :display_price, city: params[:city], car_price: @car_price, product_id: @product_id
     rescue Exception => e
       @car_price = params[:car_price]

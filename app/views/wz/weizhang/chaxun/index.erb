@@ -10,7 +10,7 @@
       <ul>
         <li>
           <label>车牌号：</label>
-          <%= text_field_tag "query[car_number]", get_show_value('', v2: session[:car_number], v1: session_content[:car_number]), class: "form_ipt", placeholder: "请输入车牌号" %>
+          <%= text_field_tag "query[car_number]", get_show_value(@car_number, v2: session[:car_number], v1: session_content[:car_number]), class: "form_ipt", placeholder: "请输入车牌号" %>
         </li>
 
         <li style="position: relative">

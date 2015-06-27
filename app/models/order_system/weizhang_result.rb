@@ -29,6 +29,7 @@ class OrderSystem::WeizhangResult < ActiveRecord::Base
       pp url
       response = RestClient.get url
       weizhang_log.contents = response.body
+      pp
       weizhang_log.save!
       result = MultiXml.parse(response.body).deep_symbolize_keys[:result]
       pp result

@@ -44,10 +44,19 @@ class UserSystem::UserInfo < ActiveRecord::Base
     UserSystem::UserInfo.transaction do
       product_id = options[:product_id]
       BusinessException.raise '产品ID不存在' if product_id.blank?
-      options = get_arguments_options options, [:engine_no, :vin_no, :month, :name, :phone, :channel, :car_number, :car_price, :city, :ip]
+      options = get_arguments_options options, [:engine_no, :vin_no, :month, :name, :phone, :channel, :car_number, :car_price, :city]
       exist_user_info = self.where(car_number: options[:car_number], phone: options[:phone]).first
 
-      #todo 如果是查询违章，无车架号和发动机号不能查询。
+      # 如果是查询违章，无车架号和发动机号不能查询。
+      product = ::OrderSystem::Product.find product_id
+      if product.server_name == 'weizhang'
+        BusinessException.raise '发动机号填写错误' if options[:engine_no].blank?
+        BusinessException.raise '车架号填写错误' if options[:vin_no].blank?
+      end
+
+      options[:template_name] = Thread.current[:template_name]
+      options[:qudao_name] = Thread.current[:qudao_name]
+      options[:ip] = Thread.current[:ip]
       user_info = if exist_user_info.blank?
                     # 保存用户信息
                     user_info = self.new options

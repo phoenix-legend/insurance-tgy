@@ -4,16 +4,16 @@ class OrderSystem::Template < ActiveRecord::Base
 
   validates_presence_of :show_name, message: 'show_name不能为空。'
   validates_presence_of :real_name, message: 'real_name不能为空。'
-<<<<<<< HEAD
+  validates_uniqueness_of :real_name, message: 'real_name重复'
 
 
-  def valid_products
-    template_products = self.templates_products.where(online: true).order(sort_by: desc)
-    template_products.collect &:product
+
+  def valid_template_products
+    template_products = self.templates_products.where(online: true).order(sort_by: :desc)
   end
 
-=======
-  validates_uniqueness_of :real_name, message: 'real_name重复'
+
+
   # {"show_name"=>"1",
   #     "real_name"=>"2",
   #     "products"=>
@@ -32,7 +32,7 @@ class OrderSystem::Template < ActiveRecord::Base
   #           "sort_by"=>"5",
   #           "online"=>"1",
   #           "cover_image"=>"tao_0623_3"}}}
->>>>>>> 0ebc827dd038876040ad368cd3e684748d20e8d1
+
   def self.create_template options
     self.transaction do
       pp "&&&&&&&&&&&&&&&&&&&&&&&&& options &&&&&&&&&&&&&&&&&&&&&&&&&"

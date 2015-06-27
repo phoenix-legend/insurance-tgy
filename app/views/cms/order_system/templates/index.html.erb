@@ -23,7 +23,7 @@
           <td><%= t_p.product.name rescue '' %></td>
           <td><%= image_tag(t_p.cover_image.blank? ? '未上传' : "/uploads/images/#{t_p.cover_image}") rescue '' %></td>
           <td><%= t_p.sort_by rescue '' %></td>
-          <td><%= t_p.online == 1 ? "是" : "否" rescue '' %></td>
+          <td><%= t_p.online == true ? "是" : "否" rescue '' %></td>
 
           <td rowspan="<%= product_num %>"><%= link_to '编辑', "/cms/order_system/templates/#{template.id}/edit" %></td>
         </tr>
@@ -33,7 +33,7 @@
           <td><%= t_p.product.name rescue '' %></td>
           <td><%= image_tag(t_p.cover_image.blank? ? '未上传' : "/uploads/images/#{t_p.cover_image}") rescue '' %></td>
           <td><%= t_p.sort_by rescue '' %></td>
-          <td><%= t_p.online == 1 ? "是" : "否" rescue '' %></td>
+          <td><%= t_p.online == true ? "是" : "否" rescue '' %></td>
         </tr>
         <% end %>
     <% end unless @templates.blank? %>
