@@ -118,7 +118,7 @@ Rails.application.routes.draw do
   get '/cms', to: 'cms/employee_validate/functions#login'
   get '/dwz', to: 'dwz/haoche_stat/promation#index'
 
-  get '/:template_name/:qudao_name', to: "wz/order_system/products#index"
+  get '/i/:template_name/:qudao_name', to: "wz/order_system/products#index"
 
 
   # The priority is based upon order of creation: first created -> highest priority.
