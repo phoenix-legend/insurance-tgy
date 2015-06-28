@@ -21,7 +21,7 @@
 
           <% t_p = t_ps.first  %>
           <td><%= t_p.product.name rescue '' %></td>
-          <td><%= image_tag(t_p.cover_image.blank? ? '未上传' : "/uploads/images/#{t_p.cover_image}") rescue '' %></td>
+          <td><%= image_tag(t_p.cover_image.blank? ? '未上传' : "/uploads/images/#{t_p.cover_image}", height: '32', width: '32') rescue '' %></td>
           <td><%= t_p.sort_by rescue '' %></td>
           <td><%= t_p.online == true ? "是" : "否" rescue '' %></td>
 
@@ -31,7 +31,7 @@
         <% next if index == 0 %>
         <tr>
           <td><%= t_p.product.name rescue '' %></td>
-          <td><%= image_tag(t_p.cover_image.blank? ? '未上传' : "/uploads/images/#{t_p.cover_image}") rescue '' %></td>
+          <td><%= image_tag(t_p.cover_image.blank? ? '未上传' : "/uploads/images/#{t_p.cover_image}", height: '32', width: '32') rescue '' %></td>
           <td><%= t_p.sort_by rescue '' %></td>
           <td><%= t_p.online == true ? "是" : "否" rescue '' %></td>
         </tr>
@@ -40,3 +40,9 @@
   </tbody>
 </table>
 <%= will_paginate @collection, renderer: FoundationPagination::Rails %>
+
+<style>
+    table{border-collapse:collapse;border-spacing:0;border-left:1px solid #888;border-top:1px solid #888;background:#efefef;}
+    th,td{border-right:1px solid #888;border-bottom:1px solid #888;padding:5px 15px;}
+    th{font-weight:bold;background:#ccc;}
+</style>

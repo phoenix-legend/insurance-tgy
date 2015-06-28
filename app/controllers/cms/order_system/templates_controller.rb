@@ -15,9 +15,8 @@ class Cms::OrderSystem::TemplatesController < Cms::BaseController
   end
 
   def create
-    params.permit(:products)
     begin
-      ::OrderSystem::Template.create_template params
+      ::OrderSystem::Template.create_template template_params
       redirect_to action: :index, notice: "模板创建成功。"
     rescue Exception=> e
       dispose_exception e
@@ -30,9 +29,8 @@ class Cms::OrderSystem::TemplatesController < Cms::BaseController
   end
 
   def update
-    params.permit!
     begin
-      ::OrderSystem::Template.find(params[:id]).update_template params
+      ::OrderSystem::Template.find(params[:id]).update_template template_params
       redirect_to action: :index, notice: "模板更新成功。"
     rescue Exception=>e
       dispose_exception e
@@ -43,5 +41,10 @@ class Cms::OrderSystem::TemplatesController < Cms::BaseController
       redirect_to "/cms/order_system/templates/#{params[:id]}/edit?session_content_id=#{set_session_content}"
     end
   end
+
+  private
+    def template_params
+      params.permit(:show_name, :real_name, products: [:select, :sort_by, :online, :cover_image])
+    end
 
 end
