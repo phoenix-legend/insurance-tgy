@@ -5,11 +5,11 @@ class UserSystem::UserInfo < ActiveRecord::Base
   has_many :weizhang_logs, :class_name => 'OrderSystem::WeizhangLog'
 
 
-  validates_presence_of :car_number, message: "车牌号不可以为空。"
+
   validates_presence_of :phone, message: "手机号不可以为空。"
   validates_uniqueness_of :car_number, scope: :phone, message: "该车牌号已经存在。"
   validates_format_of :phone, :with => EricTools::RegularConstants::MobilePhone, message: '手机号格式不正确', allow_blank: false
-  validates_format_of :car_number, :with => Tools::RegularConstants::CarNumber, message: '车牌号格式不正确', allow_blank: false
+  validates_format_of :car_number, :with => Tools::RegularConstants::CarNumber, message: '车牌号格式不正确', allow_blank: true
   validates_format_of :vin_no, :with => EricTools::RegularConstants::VinNo, message: '车架号不正确', allow_blank: true
   validates_format_of :engine_no, :with => EricTools::RegularConstants::EngineNo, message:'发动机号不正确' ,allow_blank: true
 
@@ -44,19 +44,32 @@ class UserSystem::UserInfo < ActiveRecord::Base
     UserSystem::UserInfo.transaction do
       product_id = options[:product_id]
       BusinessException.raise '产品ID不存在' if product_id.blank?
-      options = get_arguments_options options, [:engine_no, :vin_no, :month, :name, :phone, :channel, :car_number, :car_price, :city]
-      exist_user_info = self.where(car_number: options[:car_number], phone: options[:phone]).first
+      options = get_arguments_options options, [:gender, :birthday, :engine_no, :vin_no, :month, :name, :phone, :channel, :car_number, :car_price, :city]
+      BusinessException.raise '车牌号不能为空' if options[:car_number].blank?
+
+
 
       # 如果是查询违章，无车架号和发动机号不能查询。
       product = ::OrderSystem::Product.find product_id
+
+      if product.server_name == 'yiwaixian'
+        BusinessException.raise '请填写姓名' if options[:name].blank?
+        BusinessException.raise '请选择性别' if options[:gender].blank?
+        BusinessException.raise '请填写生日' if options[:birthday].blank?
+      end
+
+
       if product.server_name == 'weizhang'
         BusinessException.raise '发动机号填写错误' if options[:engine_no].blank?
         BusinessException.raise '车架号填写错误' if options[:vin_no].blank?
       end
 
+      exist_user_info = self.where(car_number: options[:car_number], phone: options[:phone]).first
+
       options[:template_name] = Thread.current[:template_name]
       options[:qudao_name] = Thread.current[:qudao_name]
       options[:ip] = Thread.current[:ip]
+
       user_info = if exist_user_info.blank?
                     # 保存用户信息
                     user_info = self.new options

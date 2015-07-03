@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_notice str
-    pp '我到这儿了'*30
+
     session[:notice] = str
   end
 
@@ -66,8 +66,7 @@ class ApplicationController < ActionController::Base
             str
           end
     if is_all
-      pp '我来取了'*30
-      pp str
+
       return str if not str.blank?
       h = get_notice_hash
       if h.values.length>0

@@ -88,6 +88,8 @@ Rails.application.routes.draw do
           get :display_price
           get :get_city_name
           post :get_city_name
+          get :jiankangxian
+          post :create_jiankangxian
         end
       end
     end

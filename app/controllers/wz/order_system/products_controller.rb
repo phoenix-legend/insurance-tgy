@@ -14,17 +14,27 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
     end
   end
 
-  def new_appointment
-    @city = if params[:city].blank?
-              city = ::OrderSystem::IpRegion.get_city_name get_ip
-              city.gsub!('市', '')
-              city
-            else
-              params[:city]
-            end
-    @car_number = ::OrderSystem::Region.find_by_name(@city).car_number_prefix rescue ''
+  def jiankangxian
+    @car_number = ::OrderSystem::Region.find_by_name(get_city).car_number_prefix rescue ''
     @product = ::OrderSystem::Product.find_by_id params[:id]
-    @descriptions = eval(@product.description) rescue nil
+  end
+
+  def create_jiankangxian
+    begin
+      product_id = ::OrderSystem::Product.find_by_server_name("yiwaixian").id
+      session[:name], session[:gender], session[:birthday] = params[:name], params[:gender], params[:birthday]
+      user = ::UserSystem::UserInfo.create_user_info params.permit(:name, :phone, :birthday, :gender, :product_id).merge(car_number: '晋Z88888')
+      redirect_to "/wz/order_system/products/appointment_success2?product_id=#{product_id}"
+    rescue Exception => e
+      dispose_exception e
+      redirect_to action: :jiankangxian, session_content_id: set_session_content, id: product_id
+    end
+
+  end
+
+  def new_appointment
+    @car_number = ::OrderSystem::Region.find_by_name(get_city).car_number_prefix rescue ''
+    @product = ::OrderSystem::Product.find_by_id params[:id]
   end
 
   def create_appointment
@@ -35,28 +45,25 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
       @phone = params[:phone]
       user = ::UserSystem::UserInfo.create_user_info params.permit(:car_number, :phone, :product_id)
       product = ::OrderSystem::Product.find_by_id params[:product_id].to_i
-      if product.server_name.to_s == 'xieche'
-        param = user.get_xieche_param
-        pp param
-        redirect_to "http://www.xieche.com.cn/mobilecar-carservice?param=#{CGI.escape param}"
-        return
+      case product.server_name.to_s
+        when 'baoyang'
+          # param = user.get_xieche_param
+          # redirect_to "http://www.xieche.com.cn/mobilecar-carservice?param=#{CGI.escape param}" and return
+          redirect_to 'http://t.cn/RL7pt6K' and return
+        when 'lvqingqi'
+          redirect_to 'http://t.cn/RL7N7Iv' and return
+        when 'zuche'
+          redirect_to 'http://www.udache.com/app/mDriverReg/index?channel=10&channelId=22733' and return
       end
+
       if product.return_page == 'download_app'
         redirect_to "/wz/order_system/products/appointment_success?product_id=#{product.id}"
-      else
-        redirect_to "/wz/order_system/products/appointment_success2?product_id=#{product.id}"
+        return
       end
-      return
-
+      redirect_to "/wz/order_system/products/appointment_success2?product_id=#{product.id}"
     rescue Exception => e
-      @car_number = params[:car_number]
-      @phone = params[:phone]
-      @product_id = params[:product_id]
-      @product = ::OrderSystem::Product.find_by_id(@product_id)
-      @descriptions = eval(@product.description) rescue nil
       dispose_exception e
-      @error_message = get_notice_str
-      render :new_appointment
+      redirect_to action: :new_appointment, session_content_id: set_session_content, id: params[:product_id]
     end
   end
 
@@ -130,6 +137,16 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
     @product_id = params[:product_id]
     @ip = params[:ip]
     session[:car_number] = nil
+  end
+
+  def get_city
+    if params[:city].blank?
+      city = ::OrderSystem::IpRegion.get_city_name get_ip
+      city.gsub!('市', '')
+      city
+    else
+      params[:city]
+    end
   end
 
 end

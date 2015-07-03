@@ -3,7 +3,7 @@
 </div>
 <div class="form" style="margin-bottom: 35px;">
   <% session_content = get_session_content params[:session_content_id]
-     pp session_content
+
      session_content = session_content[:query] || {}
   %>
   <%= form_tag('/wz/weizhang/chaxun/result', id: 'chaxun', method: 'post') do %>

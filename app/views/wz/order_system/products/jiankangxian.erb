@@ -1,3 +1,11 @@
+
+
+<script type="text/javascript">
+    $(function(){
+        $('#birthday').date();
+    });
+</script>
+
 <div class="banner" style="position: relative">
   <%= image_tag(("/uploads/images/#{@product.detail_image}" unless @product.detail_image.blank?), :width => "100%") %>
   <div style="position: absolute; left: 15px; bottom: 8px; color: #FFFFFF; font-weight: normal;">
@@ -14,11 +22,30 @@
 %>
 
 <div class="form">
-  <%= form_tag('/wz/order_system/products/create_appointment', method: 'post') do %>
+  <%= form_tag('/wz/order_system/products/create_jiankangxian', method: 'post') do %>
 
       <ul style="">
         <li>
-          <label>车牌号:</label><%= text_field_tag :car_number, get_show_value('', v3: @car_number, v2: session[:car_number], v1: session_content[:car_number]), class: "form_ipt", placeholder: "如沪A12345" %>
+          <label>姓名:</label>
+          <span style="font-size: 15px; color: #333; padding-left: 10px;">
+          <%= text_field_tag :name, get_show_value('', v2: session[:name], v1: session_content[:name]), class: "form_ipt", placeholder: "" %>
+              </span>
+        </li>
+
+        <li>
+          <label>性别:</label>
+          <span style="font-size: 15px; color: #333; padding-left: 10px;">
+            <%= radio_button_tag :gender, 'nv' , get_show_value('', v2: session[:gender], v1: session_content[:gender])=='nv'%> 女
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <%= radio_button_tag :gender, 'nan' , get_show_value('', v2: session[:gender], v1: session_content[:gender])=='nan'%> 男
+          </span>
+
+        </li>
+
+        <li>
+          <label>生日:</label>
+          <input type="date" style="border: none" name="birthday", value="<%= get_show_value('', v1: session_content[:birthday], v2: session[:birthday]) %>" placeholder="请选择生日">
+
         </li>
 
         <li style="border-bottom: none">
@@ -32,7 +59,7 @@
 
       <div style="padding-left: 30px; height: 35px; margin-bottom: 5px; line-height: 35px; ">
         <span class="description">为了给您提供更好的服务，请正确填写。</span>
-        </div>
+      </div>
       <div class="tc submit">
         <%= submit_tag "确定" %>
       </div>
@@ -57,3 +84,4 @@
       </p>
     </div>
 <% end %>
+<div id="datePlugin"></div>
