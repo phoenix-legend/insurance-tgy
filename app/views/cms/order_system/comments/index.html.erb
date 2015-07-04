@@ -18,9 +18,9 @@
         <td><%= comment.nick_name %></td>
         <td><%= comment.city %></td>
         <td><%= comment.phone %></td>
-        <td><%= comment.sex %></td>
+        <td><%= ::OrderSystem::Comment::SEX[comment.sex] rescue '未知' %></td>
         <td><%= comment.content %></td>
-        <td><%= comment.comment_time.chinese_format %></td>
+        <td><%= comment.comment_time.chinese_format rescue '' %></td>
         <td><%= comment.sort_by %></td>
         <td>
           <%= link_to "编辑", "/cms/order_system/comments/#{comment.id}/edit" %>

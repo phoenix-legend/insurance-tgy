@@ -1,6 +1,7 @@
 class OrderSystem::Comment < ActiveRecord::Base
   belongs_to :product
 
+  SEX={1=>'男', 0=>'女'}
   validates_presence_of :product, message: "评论必须关联一个产品。"
   validates_presence_of :nick_name, message: "请填写昵称。"
   validates_presence_of :city, message: "请填写所在城市。"
