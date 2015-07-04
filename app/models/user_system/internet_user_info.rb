@@ -9,37 +9,169 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
   end
 
 
-
-
-  def self.sz_shanghai_ershoufang_fangcom
-    UserSystem::InternetUserInfo.jingjiren_ershoufang_fangcom 1, 100, 'sz', 'http://esf.sz.fang.com/agenthome/'
+  # UserSystem::InternetUserInfo.need_run
+  def self.need_run
+    [['tj','/agenthome-a041/-i31-j310/','天津'],
+     ['cd','/agenthome-a0132/-i31-j310/','成都'],
+     ['cq','/agenthome-a058/-i31-j310/','重庆'],
+     # ['wuhan','/agenthome-a0494/-i31-j310/','武汉'],
+     # ['suzhou','/agenthome-a0277/-i31-j310/','苏州'],
+     # ['hz','/agenthome-a0151/-i31-j310/','杭州'],
+     # ['nanjing','/agenthome-a0265/-i31-j310/','南京'],
+     # ['jn','/agenthome-a0386/-i31-j310/','济南'],
+     # ['zz','/agenthome-a0362/-i31-j310/','郑州'],
+    ].each do |city_info|
+      city = city_info[0]
+      agent = city_info[1]
+      init_host = "http://esf.#{city}.fang.com"
+      init_url = "#{init_host}#{agent}"
+      UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
+    end
   end
 
 
 
-  def self.gz_shanghai_ershoufang_fangcom
-    UserSystem::InternetUserInfo.jingjiren_ershoufang_fangcom 1, 100, 'gz', 'http://esf.gz.fang.com/agenthome/'
+  def self.need_run2
+    [
+    # [['tj','/agenthome-a041/-i31-j310/','天津'],
+    #  ['cd','/agenthome-a0132/-i31-j310/','成都'],
+    #  ['cq','/agenthome-a058/-i31-j310/','重庆'],
+     ['wuhan','/agenthome-a0494/-i31-j310/','武汉'],
+     ['suzhou','/agenthome-a0277/-i31-j310/','苏州'],
+     ['hz','/agenthome-a0151/-i31-j310/','杭州'],
+     # ['nanjing','/agenthome-a0265/-i31-j310/','南京'],
+     # ['jn','/agenthome-a0386/-i31-j310/','济南'],
+     # ['zz','/agenthome-a0362/-i31-j310/','郑州'],
+    ].each do |city_info|
+      city = city_info[0]
+      agent = city_info[1]
+      init_host = "http://esf.#{city}.fang.com"
+      init_url = "#{init_host}#{agent}"
+      UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
+    end
   end
 
 
-  def self.sh_shanghai_ershoufang_fangcom
-    UserSystem::InternetUserInfo.jingjiren_ershoufang_fangcom 1, 200, 'sh', 'http://esf.sh.fang.com/agenthome/'
+
+  def self.need_run3
+    # [['tj','/agenthome-a041/-i31-j310/','天津'],
+    #  ['cd','/agenthome-a0132/-i31-j310/','成都'],
+    #  ['cq','/agenthome-a058/-i31-j310/','重庆'],
+    #  ['wuhan','/agenthome-a0494/-i31-j310/','武汉'],
+    #  ['suzhou','/agenthome-a0277/-i31-j310/','苏州'],
+    #  ['hz','/agenthome-a0151/-i31-j310/','杭州'],
+     [['nanjing','/agenthome-a0265/-i31-j310/','南京'],
+     ['jn','/agenthome-a0386/-i31-j310/','济南'],
+     ['zz','/agenthome-a0362/-i31-j310/','郑州'],
+    ].each do |city_info|
+      city = city_info[0]
+      agent = city_info[1]
+      init_host = "http://esf.#{city}.fang.com"
+      init_url = "#{init_host}#{agent}"
+      UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
+    end
   end
 
 
+
+  # 深圳二手房经纪人
+  def self.sz_jingjiren_ershoufang_fangcom
+    init_host = 'http://esf.sz.fang.com'
+    init_url = "#{init_host}/agenthome-a089/-i31-j310/"
+    city = 'sz'
+    UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
+  end
+
+
+  # 广州二手房经纪人
+  def self.gz_jingjiren_ershoufang_fangcom
+    init_host = 'http://esf.gz.fang.com'
+    init_url = "#{init_host}/agenthome-a073/-i31-j310/"
+    city = 'gz'
+    UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
+  end
+
+  # 上海二手房经纪人
+  def self.sh_jingjiren_ershoufang_fangcom
+    init_host = 'http://esf.sh.fang.com'
+    init_url = "#{init_host}/agenthome-a025-b01646/-i31-j310/"
+    city = 'sh'
+    UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
+  end
+
+  # 北京二手房经纪人
   def self.bj_jingjiren_ershoufang_fangcom
-    UserSystem::InternetUserInfo.jingjiren_ershoufang_fangcom 1, 200, 'bj', 'http://esf.fang.com/agenthome/'
+    init_host = 'http://esf.fang.com'
+    init_url = "#{init_host}/agenthome-a01/-i31-j310/"
+    city = 'bj'
+    UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
+  end
+
+
+
+  # 剩下广州和北京
+  def self.fenpianqu_common init_host, init_url, city
+
+    content = `curl '#{init_url}' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: global_wapandm_cookie=nswiidhghms8p127uf3mqb3r730ibj0104n; global_cookie=0bab37cc-1435648460044-66998e9a; __utmt_t0=1; __utmt_t1=1; __utmt_t2=1; __utma=147393320.1313865077.1435648464.1435761767.1435920774.7; __utmb=147393320.6.10.1435920774; __utmc=147393320; __utmz=147393320.1435648464.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); unique_cookie=U_tur6pl0ia82wx5ce0g35abr7j3vibni5jf0*2' -H 'Connection: keep-alive' --compressed`
+    ec = Encoding::Converter.new("gb18030","UTF-8")
+    content = ec.convert content
+    doc = Nokogiri::HTML(content)
+    doc.css("#list_38 .qxName a").each_with_index do |qu, i|
+      next if i == 0
+      qu_url = "#{init_host}#{qu.attributes["href"].value}"
+      qu_content = `curl '#{qu_url}' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: global_wapandm_cookie=nswiidhghms8p127uf3mqb3r730ibj0104n; global_cookie=0bab37cc-1435648460044-66998e9a; __utmt_t0=1; __utmt_t1=1; __utmt_t2=1; __utma=147393320.1313865077.1435648464.1435761767.1435920774.7; __utmb=147393320.6.10.1435920774; __utmc=147393320; __utmz=147393320.1435648464.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); unique_cookie=U_tur6pl0ia82wx5ce0g35abr7j3vibni5jf0*2' -H 'Connection: keep-alive' --compressed`
+      qu_content = ec.convert qu_content
+      qu_doc = Nokogiri::HTML(qu_content)
+      qu_doc.css("#shangQuancontain a").each_with_index { |shangquan, i|
+        next if i == 0
+        shangquan_url = "#{init_host}/#{shangquan.attributes["href"].value}"
+        begin_url =   shangquan_url.gsub('-i31-j310/','')
+
+        # pudong = /agenthome-a025/
+        # unless (pudong.match begin_url).blank?
+        #   puts '浦东已过'
+        #   next
+        # end
+
+
+        UserSystem::InternetUserInfo.jingjiren_ershoufang_fangcom 1, 700, city, begin_url
+
+      }
+    end
   end
 
   def self.jingjiren_ershoufang_fangcom begin_page, end_page, city, begin_url
     category = '二手房'
+    a = 0
+    b = 0
+    old_content = ''
     (begin_page..end_page).each do |i|
       url = "#{begin_url}-i3#{i}-j310/"
       pp "正在抓取#{url}"
+      a = a+1
       content = `curl '#{url}' -connect-timeout 10  -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Referer: http://esf.fang.com/agenthome/-i31-j310/' -H 'Cookie: global_wapandm_cookie=nswiidhghms8p127uf3mqb3r730ibj0104n; global_cookie=0bab37cc-1435648460044-66998e9a; unique_wapandm_cookie=U_nswiidhghms8p127uf3mqb3r730ibj0104n*19; unique_cookie=U_0bab37cc-1435648460044-66998e9a*9; __utma=147393320.1313865077.1435648464.1435673927.1435761767.6; __utmb=147393320.34.10.1435761767; __utmc=147393320; __utmz=147393320.1435648464.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)' -H 'Connection: keep-alive' -H 'Cache-Control: max-age=0' --compressed`
       ec = Encoding::Converter.new("gb18030","UTF-8")
       content = ec.convert content
       doc = Nokogiri::HTML(content)
+      dts = doc.css(".agent_pic .house  dt")
+
+      if dts.length > 0
+        b = b+1
+        pp "当前是第 #{i} 页， 获取到名单继续"
+      else
+        pp "当前是第 #{i} 页， 没获取任何名单，可能可结束了,再跑 #{10-(a-b)}页"
+      end
+      if b-a > 10
+        pp "当前是第 #{i} 页"
+        pp '后面没有页码了，到此结束。'
+        break;
+      end
+      if old_content.to_s == dts.to_s
+        pp "当前是第 #{i} 页"
+        pp '开始重复前一页面，结束'
+        break;
+      end
+      old_content = dts.to_s
       doc.css(".agent_pic .house  dt").each do |dt|
         name =  dt.css(".housetitle a").text.strip
         dian = dt.css(".black")[0].css("span").text.strip
