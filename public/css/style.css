@@ -355,19 +355,21 @@ a {
 }
 
 .intro {
-    padding: 7px;
-    padding-left: 30px;
+    padding: 7px 30px 0 30px;
+    /*padding-left: 30px;*/
     color: #666666
 }
 
 .intro p {
     font-size: 14px;
+
 }
 
 .intro1 h4 {
     margin-top: 20px;
     margin-bottom: 7px;
-    font-size: 16px;
+    font-size: 14px;
+
 }
 
 .query-lst{
@@ -437,6 +439,7 @@ a {
 }
 
 .comments_block .split-line{
+    margin-top: 10px;
     background-color: #4abdcc;
     height: 25px;
     /*width: 100%;*/
@@ -446,17 +449,17 @@ a {
     padding-left: 20px;
 }
 .comments_block{
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .comments_block .comments{
-    margin: 10px 0 0 10px;
+    margin: 10px 30px 10px 30px;
 }
 
 .comments_block .comments .comment{
     margin-top: 10px;
     margin-bottom: 10px;
-    font-size: 11px;
+    font-size: 14px;
 }
 
 .comments_block .comments .comment .title{
