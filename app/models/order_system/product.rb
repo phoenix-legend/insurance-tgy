@@ -1,6 +1,7 @@
 class OrderSystem::Product < ActiveRecord::Base
   has_many :templates_products, :class_name => '::OrderSystem::TemplatesProducts', foreign_key: 'product_id'
   has_many :templates, :class_name => '::OrderSystem::Template', through: :templates_products
+  has_many :comments
 
   has_many :orders, :class_name => '::OrderSystem::Order'
 
