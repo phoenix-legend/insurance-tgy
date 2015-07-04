@@ -77,6 +77,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
 
   def compare_price
     @product_id = ::OrderSystem::Product.find_by_server_name("bijia").id
+    @product = ::OrderSystem::Product.find @product_id
     @image_url = ::OrderSystem::Product.find_by_id(@product_id).detail_image rescue ''
     @ip = get_ip
     if params[:city].blank?

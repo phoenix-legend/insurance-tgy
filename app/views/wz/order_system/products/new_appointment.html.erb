@@ -57,3 +57,22 @@
       </p>
     </div>
 <% end %>
+
+<% if @product.comments.length > 0%>
+<div class="comments_block">
+    <div class="split-line">
+      用户反馈
+    </div>
+  <div class="comments">
+    <%@product.comments.each do |comment|%>
+    <div class="comment">
+      <div class="title">
+        <img src="/images/<%= if comment.sex == 1 then 'nantouxiang.png' else 'nvtouxiang.jpg' end %>"/>
+        &nbsp;&nbsp;<%= comment.city %>用户：<%= comment.phone %>
+      </div>
+      <div class="content"><%= comment.content %></div>
+    </div>
+    <%end%>
+  </div>
+</div>
+<%end%>

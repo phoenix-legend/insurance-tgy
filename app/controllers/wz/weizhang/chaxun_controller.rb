@@ -1,5 +1,7 @@
 class Wz::Weizhang::ChaxunController < Wz::WangzhanController
   def index
+    product_id = ::OrderSystem::Product.find_by_server_name("weizhang").id
+    @product = ::OrderSystem::Product.find product_id
     city = ::OrderSystem::IpRegion.get_city_name get_ip
     city.gsub!('市', '')
     @car_number = ::OrderSystem::Region.find_by_name(city).car_number_prefix rescue ''

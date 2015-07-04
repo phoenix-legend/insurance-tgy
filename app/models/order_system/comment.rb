@@ -5,9 +5,10 @@ class OrderSystem::Comment < ActiveRecord::Base
   validates_presence_of :product, message: "评论必须关联一个产品。"
   validates_presence_of :nick_name, message: "请填写昵称。"
   validates_presence_of :city, message: "请填写所在城市。"
-  validates_format_of :phone, :with => EricTools::RegularConstants::MobilePhone, message: '手机号格式不正确', allow_blank: false
+  # validates_format_of :phone, :with => EricTools::RegularConstants::MobilePhone, message: '手机号格式不正确', allow_blank: false
   validates_presence_of :content, message: "请填写评论内容。"
   validates_presence_of :comment_time, message: "请填写评论时间。"
+  validates_presence_of :phone, message: "请填写手机号。"
 
 
 

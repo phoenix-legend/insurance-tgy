@@ -435,3 +435,47 @@ a {
 .query-lst li:nth-child(4) em {
     background: #66cb03;
 }
+
+.comments_block .split-line{
+    background-color: #4abdcc;
+    height: 25px;
+    /*width: 100%;*/
+    line-height: 25px;
+    font-size: 13px;
+    color: #ffffff;
+    padding-left: 20px;
+}
+.comments_block{
+    margin-bottom: 20px;
+}
+
+.comments_block .comments{
+    margin: 10px 0 0 10px;
+}
+
+.comments_block .comments .comment{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 11px;
+}
+
+.comments_block .comments .comment .title{
+    color: #8a8a8a;
+}
+
+.comments_block .comments .comment .title img{
+    width: 30px;
+    height: 30px;
+}
+
+.comments_block .comments .comment .content{
+    margin-top: 8px;
+    /*width: 90%;*/
+    min-height: 50px;
+    padding: 0 10px 0 10px;
+    border: 1px #f5f6f6 solid;
+    border-radius: 5px;
+    background-color: #ffffff;
+    white-space: pre-wrap;
+    /*text-indent: 2em;*/
+}

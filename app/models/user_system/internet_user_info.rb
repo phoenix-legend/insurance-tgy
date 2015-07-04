@@ -9,58 +9,14 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
   end
 
 
-  # UserSystem::InternetUserInfo.need_run
-  def self.need_run
+  def self.need_run2
     [['tj','/agenthome-a041/-i31-j310/','天津'],
      ['cd','/agenthome-a0132/-i31-j310/','成都'],
      ['cq','/agenthome-a058/-i31-j310/','重庆'],
-     # ['wuhan','/agenthome-a0494/-i31-j310/','武汉'],
-     # ['suzhou','/agenthome-a0277/-i31-j310/','苏州'],
-     # ['hz','/agenthome-a0151/-i31-j310/','杭州'],
-     # ['nanjing','/agenthome-a0265/-i31-j310/','南京'],
-     # ['jn','/agenthome-a0386/-i31-j310/','济南'],
-     # ['zz','/agenthome-a0362/-i31-j310/','郑州'],
-    ].each do |city_info|
-      city = city_info[0]
-      agent = city_info[1]
-      init_host = "http://esf.#{city}.fang.com"
-      init_url = "#{init_host}#{agent}"
-      UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
-    end
-  end
-
-
-
-  def self.need_run2
-    [
-    # [['tj','/agenthome-a041/-i31-j310/','天津'],
-    #  ['cd','/agenthome-a0132/-i31-j310/','成都'],
-    #  ['cq','/agenthome-a058/-i31-j310/','重庆'],
      ['wuhan','/agenthome-a0494/-i31-j310/','武汉'],
      ['suzhou','/agenthome-a0277/-i31-j310/','苏州'],
      ['hz','/agenthome-a0151/-i31-j310/','杭州'],
-     # ['nanjing','/agenthome-a0265/-i31-j310/','南京'],
-     # ['jn','/agenthome-a0386/-i31-j310/','济南'],
-     # ['zz','/agenthome-a0362/-i31-j310/','郑州'],
-    ].each do |city_info|
-      city = city_info[0]
-      agent = city_info[1]
-      init_host = "http://esf.#{city}.fang.com"
-      init_url = "#{init_host}#{agent}"
-      UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
-    end
-  end
-
-
-
-  def self.need_run3
-    # [['tj','/agenthome-a041/-i31-j310/','天津'],
-    #  ['cd','/agenthome-a0132/-i31-j310/','成都'],
-    #  ['cq','/agenthome-a058/-i31-j310/','重庆'],
-    #  ['wuhan','/agenthome-a0494/-i31-j310/','武汉'],
-    #  ['suzhou','/agenthome-a0277/-i31-j310/','苏州'],
-    #  ['hz','/agenthome-a0151/-i31-j310/','杭州'],
-     [['nanjing','/agenthome-a0265/-i31-j310/','南京'],
+     ['nanjing','/agenthome-a0265/-i31-j310/','南京'],
      ['jn','/agenthome-a0386/-i31-j310/','济南'],
      ['zz','/agenthome-a0362/-i31-j310/','郑州'],
     ].each do |city_info|
@@ -71,6 +27,7 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
       UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
     end
   end
+
 
 
 
