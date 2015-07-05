@@ -115,6 +115,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
       @phone = params[:phone]
       @product_id = ::OrderSystem::Product.find_by_server_name("bijia").id
       @image_url = ::OrderSystem::Product.find_by_id(@product_id).detail_image rescue ''
+      @product = ::OrderSystem::Product.find @product_id
       @ip = params[:ip]
       dispose_exception e
       @error_message = get_notice_str

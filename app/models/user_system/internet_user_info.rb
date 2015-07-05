@@ -8,17 +8,26 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
     info.save!
   end
 
-
-  def self.need_run2
-    [['tj','/agenthome-a041/-i31-j310/','天津'],
-     ['cd','/agenthome-a0132/-i31-j310/','成都'],
-     ['cq','/agenthome-a058/-i31-j310/','重庆'],
-     ['wuhan','/agenthome-a0494/-i31-j310/','武汉'],
-     ['suzhou','/agenthome-a0277/-i31-j310/','苏州'],
-     ['hz','/agenthome-a0151/-i31-j310/','杭州'],
-     ['nanjing','/agenthome-a0265/-i31-j310/','南京'],
-     ['jn','/agenthome-a0386/-i31-j310/','济南'],
-     ['zz','/agenthome-a0362/-i31-j310/','郑州'],
+  # UserSystem::InternetUserInfo.need_run
+  def self.need_run
+    [
+        # ['tj', '/agenthome-a041/-i31-j310/', '天津'],
+        # ['cd', '/agenthome-a0132/-i31-j310/', '成都'],
+        # ['cq', '/agenthome-a058/-i31-j310/', '重庆'],
+        # ['wuhan', '/agenthome-a0494/-i31-j310/', '武汉'],
+        # ['suzhou', '/agenthome-a0277/-i31-j310/', '苏州'],
+        # ['hz', '/agenthome-a0151/-i31-j310/', '杭州'],
+        # ['nanjing', '/agenthome-a0265/-i31-j310/', '南京'],
+        # ['jn', '/agenthome-a0386/-i31-j310/', '济南'],
+        # ['zz', '/agenthome-a0362/-i31-j310/', '郑州'],
+        ['sjz', '/agenthome-a0357-b05163/-i31-j310/', '石家庄'],
+        ['xian', '/agenthome-a0478-b04113/-i31-j310/', '西安'],
+        ['wuxi', '/agenthome-a0767-b03826/-i31-j310/', '无锡'],
+        ['qd', '/agenthome-a0389-b012143/-i31-j310/', '青岛'],
+        ['nc', '/agenthome-a0504-b05790/-i31-j310/', '南昌'],
+        ['dg', '/agenthome-a099/-i31-j310/', '东莞'],
+        ['dl', '/agenthome-a0256-b04364/-i31-j310/', '大连'],
+        ['km', '/agenthome-a01086-b07255/-i31-j310/', '昆明']
     ].each do |city_info|
       city = city_info[0]
       agent = city_info[1]
@@ -27,8 +36,6 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
       UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
     end
   end
-
-
 
 
   # 深圳二手房经纪人
@@ -65,12 +72,11 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
   end
 
 
-
   # 剩下广州和北京
   def self.fenpianqu_common init_host, init_url, city
 
     content = `curl '#{init_url}' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: global_wapandm_cookie=nswiidhghms8p127uf3mqb3r730ibj0104n; global_cookie=0bab37cc-1435648460044-66998e9a; __utmt_t0=1; __utmt_t1=1; __utmt_t2=1; __utma=147393320.1313865077.1435648464.1435761767.1435920774.7; __utmb=147393320.6.10.1435920774; __utmc=147393320; __utmz=147393320.1435648464.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); unique_cookie=U_tur6pl0ia82wx5ce0g35abr7j3vibni5jf0*2' -H 'Connection: keep-alive' --compressed`
-    ec = Encoding::Converter.new("gb18030","UTF-8")
+    ec = Encoding::Converter.new("gb18030", "UTF-8")
     content = ec.convert content
     doc = Nokogiri::HTML(content)
     doc.css("#list_38 .qxName a").each_with_index do |qu, i|
@@ -82,7 +88,7 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
       qu_doc.css("#shangQuancontain a").each_with_index { |shangquan, i|
         next if i == 0
         shangquan_url = "#{init_host}/#{shangquan.attributes["href"].value}"
-        begin_url =   shangquan_url.gsub('-i31-j310/','')
+        begin_url = shangquan_url.gsub('-i31-j310/', '')
 
         # pudong = /agenthome-a025/
         # unless (pudong.match begin_url).blank?
@@ -107,7 +113,7 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
       pp "正在抓取#{url}"
       a = a+1
       content = `curl '#{url}' -connect-timeout 10  -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Referer: http://esf.fang.com/agenthome/-i31-j310/' -H 'Cookie: global_wapandm_cookie=nswiidhghms8p127uf3mqb3r730ibj0104n; global_cookie=0bab37cc-1435648460044-66998e9a; unique_wapandm_cookie=U_nswiidhghms8p127uf3mqb3r730ibj0104n*19; unique_cookie=U_0bab37cc-1435648460044-66998e9a*9; __utma=147393320.1313865077.1435648464.1435673927.1435761767.6; __utmb=147393320.34.10.1435761767; __utmc=147393320; __utmz=147393320.1435648464.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)' -H 'Connection: keep-alive' -H 'Cache-Control: max-age=0' --compressed`
-      ec = Encoding::Converter.new("gb18030","UTF-8")
+      ec = Encoding::Converter.new("gb18030", "UTF-8")
       content = ec.convert content
       doc = Nokogiri::HTML(content)
       dts = doc.css(".agent_pic .house  dt")
@@ -130,9 +136,9 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
       end
       old_content = dts.to_s
       doc.css(".agent_pic .house  dt").each do |dt|
-        name =  dt.css(".housetitle a").text.strip
+        name = dt.css(".housetitle a").text.strip
         dian = dt.css(".black")[0].css("span").text.strip
-        phone =  dt.css("p strong").text.strip
+        phone = dt.css("p strong").text.strip
         ::UserSystem::InternetUserInfo.create_info name: "#{name}-#{dian}",
                                                    phone: phone,
                                                    city: city,
@@ -149,7 +155,7 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
   # UserSystem::InternetUserInfo.bj_ershoufang_fangcom
   def self.bj_ershoufang_fangcom
     url = 'http://m.fang.com/esf/?purpose=%D7%A1%D5%AC&city=%B1%B1%BE%A9&keywordtype=qz&gettype=android&correct=true&pagesizeslipt=5&c=esf&a=ajaxGetList&city=bj&r=0.19393627950921655&page='
-    UserSystem::InternetUserInfo.common_fangcom  83, 1000000, url, 'bj', '二手房'
+    UserSystem::InternetUserInfo.common_fangcom 83, 1000000, url, 'bj', '二手房'
   end
 
   def self.common_fangcom first_page, last_page, url, city, category
@@ -175,12 +181,12 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
         end
 
         content = `curl -A "Mozilla/5.0 (Linux; U; Android 4.1; en-us; GT-N7100 Build/JRO03C) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30" -L #{link}`
-        ec = Encoding::Converter.new("gbk","UTF-8")
+        ec = Encoding::Converter.new("gbk", "UTF-8")
         doc = Nokogiri::HTML(content)
         doc.css('.xqZygw p')
         name = doc.css('.xqZygw p span')[0].text rescue ''
         phone = doc.css('.xqZygw p span')[2].text rescue ''
-        name =  ec.convert(name)
+        name = ec.convert(name)
 
 
         ::UserSystem::InternetUserInfo.create_info name: name,
@@ -227,7 +233,6 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
 
         phone = doc.css(".landlord .llnumber").children.first.text rescue ''
         pp phone
-
 
 
         ::UserSystem::InternetUserInfo.create_info name: name,
@@ -305,7 +310,6 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
   def self.get_sz_zufang_info
     UserSystem::InternetUserInfo.common_58 1, 300, 'http://m.58.com/sz/zufang/', '租房', 'sz'
   end
-
 
 
 end
