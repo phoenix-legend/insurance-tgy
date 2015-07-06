@@ -2,15 +2,144 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
 
 
   def self.create_info options
-    iui = ::UserSystem::InternetUserInfo.where name: options[:name], phone: options[:phone]
+    iui = ::UserSystem::InternetUserInfo.where  phone: options[:phone]
     return unless iui.blank?
     info = ::UserSystem::InternetUserInfo.new options
     info.save!
   end
 
+
+  def self.get_chinese_cityname
+    cities = UserSystem::InternetUserInfo.get_all_city
+    hash_cty = {}
+    cities.each do |city|
+      hash_cty[city[0]] = city[2]
+    end
+    UserSystem::InternetUserInfo.all.each do |info|
+      info.city_name = hash_cty[info.city]
+      info.save!
+    end
+
+  end
+
+
+  # UserSystem::InternetUserInfo.focus
+  def self.focus
+    # citys = ['sh', 'bj', 'sz', 'tj', 'gz', 'cd', 'cq', 'sjz', 'cs', 'hn', 'sanya', 'jn', 'qd', 'wh', 'xa', 'km', 'nj', 'hz', 'qhd', 'hrb', 'sy', 'zz', 'suzhou', 'fs']
+    citys = ['bj', 'sz', 'tj', 'gz', 'cd', 'cq', 'sjz', 'cs', 'hn', 'sanya', 'jn', 'qd', 'wh', 'xa', 'km', 'nj', 'hz', 'qhd', 'hrb', 'sy', 'zz', 'suzhou', 'fs']
+    # citys = ["sh"]
+    citys.each do |city_name|
+      host = "#{city_name}.esf.focus.cn/"
+      city_url = "#{city_name}.esf.focus.cn/agent/"
+      # city_url = "http://sh.esf.focus.cn/agent/"
+      content = `curl '#{city_url}' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: global_wapandm_cookie=nswiidhghms8p127uf3mqb3r730ibj0104n; global_cookie=0bab37cc-1435648460044-66998e9a; __utmt_t0=1; __utmt_t1=1; __utmt_t2=1; __utma=147393320.1313865077.1435648464.1435761767.1435920774.7; __utmb=147393320.6.10.1435920774; __utmc=147393320; __utmz=147393320.1435648464.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); unique_cookie=U_tur6pl0ia82wx5ce0g35abr7j3vibni5jf0*2' -H 'Connection: keep-alive' --compressed`
+      doc = Nokogiri::HTML(content)
+      dl = doc.css(".wrap #topFilters .bd dl").first
+      dl.css("dd a").each_with_index do |quyu, i|
+        next if i == 0
+        qu_href = quyu.attributes["href"].value
+        qu_url = "#{host}#{qu_href}"
+
+        pp qu_url
+
+        # qu_url = "http://sh.esf.focus.cn/agent/q111"
+        shangquan_content = `curl '#{qu_url}' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: global_wapandm_cookie=nswiidhghms8p127uf3mqb3r730ibj0104n; global_cookie=0bab37cc-1435648460044-66998e9a; __utmt_t0=1; __utmt_t1=1; __utmt_t2=1; __utma=147393320.1313865077.1435648464.1435761767.1435920774.7; __utmb=147393320.6.10.1435920774; __utmc=147393320; __utmz=147393320.1435648464.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); unique_cookie=U_tur6pl0ia82wx5ce0g35abr7j3vibni5jf0*2' -H 'Connection: keep-alive' --compressed`
+        shangquan_doc = Nokogiri::HTML(shangquan_content)
+        sq_dl = shangquan_doc.css(".wrap #topFilters .bd dl").first
+        sq_dl.css("dd .subarea a").each_with_index do |shangquan_url,i|
+          next if i == 0
+          u = shangquan_url.attributes["href"].value
+          UserSystem::InternetUserInfo.focus_fanye city_name, "#{host}#{u}"
+        end
+
+      end
+    end
+  end
+
+  def self.focus_fanye city, url
+    # city = 'sh'
+    # url = "sh.esf.focus.cn/agent/q110a30067"
+    old_content = '1'
+    (1..1000).each do |yema|
+      yema_url = "#{url}p#{yema}"
+
+
+      exists_url = ::UserSystem::InternetUserInfo.where list_url: yema_url
+      unless exists_url.blank?
+        pp "#{yema_url}已经存在，跳过"
+        next
+      end
+
+      pp "正在抓取页面：#{yema_url}"
+
+      content = `curl '#{yema_url}' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: global_wapandm_cookie=nswiidhghms8p127uf3mqb3r730ibj0104n; global_cookie=0bab37cc-1435648460044-66998e9a; __utmt_t0=1; __utmt_t1=1; __utmt_t2=1; __utma=147393320.1313865077.1435648464.1435761767.1435920774.7; __utmb=147393320.6.10.1435920774; __utmc=147393320; __utmz=147393320.1435648464.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); unique_cookie=U_tur6pl0ia82wx5ce0g35abr7j3vibni5jf0*2' -H 'Connection: keep-alive' --compressed`
+      doc = Nokogiri::HTML(content)
+      items = doc.css("#listItem .items")
+      pp "本页有数据#{items.length}条"
+
+
+
+
+      new_content = ""
+      items.each do |item|
+        name = item.css(".items_m div h2 a").children.first.text rescue ''
+        phone = item.css(".items_r em").children.first.text rescue ''
+        new_content = new_content + phone
+        ::UserSystem::InternetUserInfo.create_info name: name,
+                                                   phone: phone,
+                                                   city: city,
+                                                   category: '二手房',
+                                                   list_url: yema_url,
+                                                   detail_url: '经纪人页面',
+                                                   number_of_this_page: yema,
+                                                   wangzhan_name: 'focus.cn'
+      end
+      if new_content == old_content
+        pp '跟上一页相同，跳过'
+        break;
+      end
+      old_content = new_content
+    end
+
+
+
+  end
+
+
+
+
+
+
+  def self.get_all_city
+    except_city =[] # ['bj', 'sh', 'gz', 'sz', 'tj', 'cd', 'cq', 'wuhan', 'suzhou', 'hz', 'nanjing',
+    # 'jn', 'zz', 'sjz', 'xian', 'wuxi', 'qd', 'nc', 'dg', 'dl', 'km', 'changchun']
+
+    url = 'http://esf.changchun.fang.com/newsecond/esfcities.aspx'
+    content = `curl '#{url}' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: global_wapandm_cookie=nswiidhghms8p127uf3mqb3r730ibj0104n; global_cookie=0bab37cc-1435648460044-66998e9a; __utmt_t0=1; __utmt_t1=1; __utmt_t2=1; __utma=147393320.1313865077.1435648464.1435761767.1435920774.7; __utmb=147393320.6.10.1435920774; __utmc=147393320; __utmz=147393320.1435648464.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); unique_cookie=U_tur6pl0ia82wx5ce0g35abr7j3vibni5jf0*2' -H 'Connection: keep-alive' --compressed`
+    ec = Encoding::Converter.new("gb18030", "UTF-8")
+    content = ec.convert content
+    doc = Nokogiri::HTML(content)
+    city_array = []
+    doc.css("#c01 ul li a").each_with_index do |city, i|
+      begin
+        wangzhan = city.attributes["href"].value
+        city_regular = /http\:\/\/esf\.(.*)\.fang\.com/.match(wangzhan)
+        city_name = city_regular[1]
+        city_array << [city_name, '', city.children.first.text]
+      rescue Exception => e
+      end
+    end
+    city_array = city_array.delete_if { |city| except_city.include?(city[0]) }
+    city_array.each do |c|
+      c[1] = '/agenthome/'
+    end
+    city_array
+
+  end
+
   # UserSystem::InternetUserInfo.need_run
-  def self.need_run
-    [
+  def self.need_run array=nil
+    a = [
         # ['tj', '/agenthome-a041/-i31-j310/', '天津'],
         # ['cd', '/agenthome-a0132/-i31-j310/', '成都'],
         # ['cq', '/agenthome-a058/-i31-j310/', '重庆'],
@@ -20,61 +149,36 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
         # ['nanjing', '/agenthome-a0265/-i31-j310/', '南京'],
         # ['jn', '/agenthome-a0386/-i31-j310/', '济南'],
         # ['zz', '/agenthome-a0362/-i31-j310/', '郑州'],
-        ['sjz', '/agenthome-a0357-b05163/-i31-j310/', '石家庄'],
-        ['xian', '/agenthome-a0478-b04113/-i31-j310/', '西安'],
-        ['wuxi', '/agenthome-a0767-b03826/-i31-j310/', '无锡'],
-        ['qd', '/agenthome-a0389-b012143/-i31-j310/', '青岛'],
-        ['nc', '/agenthome-a0504-b05790/-i31-j310/', '南昌'],
-        ['dg', '/agenthome-a099/-i31-j310/', '东莞'],
-        ['dl', '/agenthome-a0256-b04364/-i31-j310/', '大连'],
-        ['km', '/agenthome-a01086-b07255/-i31-j310/', '昆明']
-    ].each do |city_info|
+        # ['sjz', '/agenthome-a0357-b05163/-i31-j310/', '石家庄'],
+        # ['xian', '/agenthome-a0478-b04113/-i31-j310/', '西安'],
+        # ['wuxi', '/agenthome-a0767-b03826/-i31-j310/', '无锡'],
+        # ['qd', '/agenthome-a0389-b012143/-i31-j310/', '青岛'],
+        # ['nc', '/agenthome-a0504-b05790/-i31-j310/', '南昌'],
+        # ['dg', '/agenthome-a099/-i31-j310/', '东莞'],
+        # ['dl', '/agenthome-a0256-b04364/-i31-j310/', '大连'],
+        # ['km', '/agenthome-a01086-b07255/-i31-j310/', '昆明']
+        # ['changchun', '/agenthome/', '长春']
+    ]
+
+    a = UserSystem::InternetUserInfo.get_all_city
+    yijingpaoguo = []
+    unless array.blank?
+      a = array
+    end
+    a.each do |city_info|
+      yijingpaoguo << city_info
       city = city_info[0]
       agent = city_info[1]
+      next if /\A[a-fA-F]/.match(city)
       init_host = "http://esf.#{city}.fang.com"
       init_url = "#{init_host}#{agent}"
       UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
+      pp "#{city_info[2]}已经跑完"*100
     end
+    yijingpaoguo
   end
 
-
-  # 深圳二手房经纪人
-  def self.sz_jingjiren_ershoufang_fangcom
-    init_host = 'http://esf.sz.fang.com'
-    init_url = "#{init_host}/agenthome-a089/-i31-j310/"
-    city = 'sz'
-    UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
-  end
-
-
-  # 广州二手房经纪人
-  def self.gz_jingjiren_ershoufang_fangcom
-    init_host = 'http://esf.gz.fang.com'
-    init_url = "#{init_host}/agenthome-a073/-i31-j310/"
-    city = 'gz'
-    UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
-  end
-
-  # 上海二手房经纪人
-  def self.sh_jingjiren_ershoufang_fangcom
-    init_host = 'http://esf.sh.fang.com'
-    init_url = "#{init_host}/agenthome-a025-b01646/-i31-j310/"
-    city = 'sh'
-    UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
-  end
-
-  # 北京二手房经纪人
-  def self.bj_jingjiren_ershoufang_fangcom
-    init_host = 'http://esf.fang.com'
-    init_url = "#{init_host}/agenthome-a01/-i31-j310/"
-    city = 'bj'
-    UserSystem::InternetUserInfo.fenpianqu_common init_host, init_url, city
-  end
-
-
-  # 剩下广州和北京
   def self.fenpianqu_common init_host, init_url, city
-
     content = `curl '#{init_url}' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: global_wapandm_cookie=nswiidhghms8p127uf3mqb3r730ibj0104n; global_cookie=0bab37cc-1435648460044-66998e9a; __utmt_t0=1; __utmt_t1=1; __utmt_t2=1; __utma=147393320.1313865077.1435648464.1435761767.1435920774.7; __utmb=147393320.6.10.1435920774; __utmc=147393320; __utmz=147393320.1435648464.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); unique_cookie=U_tur6pl0ia82wx5ce0g35abr7j3vibni5jf0*2' -H 'Connection: keep-alive' --compressed`
     ec = Encoding::Converter.new("gb18030", "UTF-8")
     content = ec.convert content
@@ -107,9 +211,14 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
     category = '二手房'
     a = 0
     b = 0
-    old_content = ''
+    old_content = '1'
     (begin_page..end_page).each do |i|
       url = "#{begin_url}-i3#{i}-j310/"
+      exists_url = ::UserSystem::InternetUserInfo.where list_url: url
+      unless exists_url.blank?
+        pp "#{url}已经存在，跳过"
+        next
+      end
       pp "正在抓取#{url}"
       a = a+1
       content = `curl '#{url}' -connect-timeout 10  -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Referer: http://esf.fang.com/agenthome/-i31-j310/' -H 'Cookie: global_wapandm_cookie=nswiidhghms8p127uf3mqb3r730ibj0104n; global_cookie=0bab37cc-1435648460044-66998e9a; unique_wapandm_cookie=U_nswiidhghms8p127uf3mqb3r730ibj0104n*19; unique_cookie=U_0bab37cc-1435648460044-66998e9a*9; __utma=147393320.1313865077.1435648464.1435673927.1435761767.6; __utmb=147393320.34.10.1435761767; __utmc=147393320; __utmz=147393320.1435648464.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)' -H 'Connection: keep-alive' -H 'Cache-Control: max-age=0' --compressed`
