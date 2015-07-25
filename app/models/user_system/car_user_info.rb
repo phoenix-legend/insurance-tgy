@@ -10,6 +10,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     return 0
   end
 
+  def self.send_email
+
+  end
+
 
   #UserSystem::CarUserInfo.update_che168_detail2
   def self.update_che168_detail2
