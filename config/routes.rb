@@ -111,6 +111,7 @@ Rails.application.routes.draw do
         collection do
           get :update_user_by_xiecheyangche
           post :update_user_by_xiecheyangche
+          post :update_car_user_info
         end
       end
     end
