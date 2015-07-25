@@ -16,14 +16,14 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   #UserSystem::CarUserInfo.update_che168_detail2
-  def self.update_che168_detail2
+  def self.update_che168_detail2 run_list = true, thread_number = 5
     while true
-      begin
-        UserSystem::CarUserInfo.che168_get_car_list
-      rescue Exception => e
+      if run_list
+        begin
+          UserSystem::CarUserInfo.che168_get_car_list
+        rescue Exception => e
+        end
       end
-
-
       threads = []
       car_user_infos = UserSystem::CarUserInfo.where need_update: true
       car_user_infos.each do |car_user_info|
@@ -31,7 +31,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         next unless car_user_info.phone.blank?
         pp '------------------------------------'
         pp "现在线程池中有#{threads.length}个。"
-        if threads.length > 4
+        if threads.length > thread_number
           sleep 2
         end
         threads.delete_if { |thread| thread.status == false }
@@ -92,6 +92,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       city_content = JSON.parse city_content
       city_content["item"].each do |city|
         areaid, areaname = city["id"], city["value"]
+
+        if not ["广州","深圳","宁波","东莞","唐山","厦门","上海","西安","重庆","杭州","天津","苏州","成都","福州", "长沙","北京","南京","温州","哈尔滨","石家庄","合肥","郑州","武汉","太原","沈阳","无锡","大连","济南", "佛山","青岛"].include? areaname
+          next
+        end
+
+        pp "现在跑 #{areaname}"
         1.upto 1000000000 do |i|
           content = `curl 'http://m.che168.com/handler/getcarlist.ashx?num=200&pageindex=#{i}&brandid=0&seriesid=0&specid=0&price=#{car_price_start}_#{car_price_end}&carageid=5&milage=0&carsource=1&store=6&levelid=0&key=&areaid=#{areaid}&browsetype=0&market=00&browserType=0' -H 'Host: m.che168.com' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:39.0) Gecko/20100101 Firefox/39.0' -H 'Accept: application/json' -H 'Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3' -H 'deflate' -H 'X-Requested-With: XMLHttpRequest' -H 'Referer: http://m.che168.com/guangzhou/1_10/1-5-0-6-0-0-00/?pvareaid=100421' -H 'Cookie: sessionid=e4434ae5-a74f-430f-bf16-2301fe709574; sessionip=27.203.171.229; area=371099; Hm_lvt_5a373383174a999f435969fc84eef6ec=1437745123; Hm_lpvt_5a373383174a999f435969fc84eef6ec=1437748038; userarea=0; SessionSeries=0; sheight=; __utma=247243734.1237350500.1437745133.1437745133.1437747639.2; __utmc=247243734; __utmz=247243734.1437745133.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _ga=GA1.2.1237350500.1437745133; BroswerCategory=77d%7C26d%7C71d%7C165d%7C15d%7C12d%7C47d%7C38d%7C36d%7C1d%7C86d%7C; BroswerSeries=552%2C434%2C657%2C153%2C; authenticationarea=0; historysearch=china|0|0|1|10,china|0|0|8|10; uarea=440100%7Cguangzhou; sessionvisit=182dfd58-da85-4c78-9e75-0740e76a52c1; _gat=1' -H 'Connection: keep-alive'`
           # content = ActiveSupport::Gzip.decompress(content)
