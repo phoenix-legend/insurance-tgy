@@ -59,6 +59,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         threads << t
         pp "现在线程池中有#{threads.length}个。"
       end
+
+      begin
+        UserSystem::CarUserInfo.send_email
+      rescue Exception => e
+      end
       sleep 60*60
     end
   end
