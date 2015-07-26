@@ -28,13 +28,23 @@ module Insurance
 
     config.prepend_helpers_path = true
 
+    #
+    # config.action_mailer.delivery_method = :smtp
+    # config.action_mailer.smtp_settings = {
+    #     :address              => "smtp.qq.com",
+    #     :port                 => 587,
+    #     :user_name            => '379576382@qq.com',
+    #     :password             => 'llx667^^&',
+    #     :authentication       => 'plain',
+    #     :enable_starttls_auto => true
+    # }
 
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
-        :address              => "smtp.qq.com",
+        :address              => "smtp.exmail.qq.com",
         :port                 => 587,
-        :user_name            => '2778182976@qq.com',
-        :password             => 'jiaren123456',
+        :user_name            => 'noreply@ikidstv.com',
+        :password             => 'ikidstv2014',
         :authentication       => 'plain',
         :enable_starttls_auto => true
     }

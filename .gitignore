@@ -5,6 +5,7 @@
 #   git config --global core.excludesfile ~/.gitignore_global
 public/img/.DS_Store
 # Ignore bundler config
+public/downloads/
 /.bundle
 /config/database.yml
 config/secrets.yml

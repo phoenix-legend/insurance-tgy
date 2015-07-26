@@ -1,7 +1,7 @@
 class UserSystem::CarUserInfo < ActiveRecord::Base
   require 'rest-client'
 
-  EMAIL_STATUS = { 0 => '待导', 1 => '已导', 2 => '不导入'}
+  EMAIL_STATUS = {0 => '待导', 1 => '已导', 2 => '不导入'}
 
   def self.create_car_user_info options
     user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]
@@ -13,6 +13,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
   def self.send_email
+    #晚上不发邮件
+    return if Time.now.hour < 9
+    return if Time.now.hour > 20
     # 同一个小时不发两次邮件
     return if ::UserSystem::CarUserInfoSendEmail.had_send_email_in_current_hour?
 
@@ -22,14 +25,14 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     return if send_car_user_infos.blank?
 
     # 发送邮件
-    MailSend.send_car_user_infos( self.generate_xls_of_car_user_info(send_car_user_infos),
-                                         '549174542@qq.com',
-                                         '',
-                                         send_car_user_infos.count
+    MailSend.send_car_user_infos(self.generate_xls_of_car_user_info(send_car_user_infos),
+                                 'chenkai@baohe001.com',
+                                 '13472446647@163.com',
+                                 send_car_user_infos.count
     ).deliver
 
     # 发完邮件，将对应的车主信息的邮件状态置为已发(1)
-    send_car_user_infos.each {|u| u.update email_status: 1}
+    send_car_user_infos.each { |u| u.update email_status: 1 }
     # execute "update car_user_infos set email_status = 1 where id in "
     ''
   end
@@ -80,10 +83,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         pp "现在线程池中有#{threads.length}个。"
       end
 
-      begin
+      # begin
         UserSystem::CarUserInfo.send_email
-      rescue Exception => e
-      end
+      # rescue Exception => e
+      # end
       sleep 60*60
     end
   end
@@ -103,7 +106,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                  "500000" => "重庆", "410000" => "河南"}
 
     # @陈小朋，测试的时候用这组province
-    provinces = {"310000" => "上海"}
+    #provinces = {"310000" => "上海"}
     # 广州，深圳，宁波，东莞，唐山，厦门，上海，西安，重庆，杭州，天津，苏州，成都，福州，长沙，北京，南京，温州，哈尔滨，石家庄，合肥，郑州，武汉，太原，沈阳，无锡，大连，济南，佛山，青岛
 
     provinces.each_pair do |key, v|
@@ -113,7 +116,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       city_content["item"].each do |city|
         areaid, areaname = city["id"], city["value"]
 
-        if not ["广州","深圳","宁波","东莞","唐山","厦门","上海","西安","重庆","杭州","天津","苏州","成都","福州", "长沙","北京","南京","温州","哈尔滨","石家庄","合肥","郑州","武汉","太原","沈阳","无锡","大连","济南", "佛山","青岛"].include? areaname
+        if not ["广州", "深圳", "宁波", "东莞", "唐山", "厦门", "上海", "西安", "重庆", "杭州", "天津", "苏州", "成都", "福州", "长沙", "北京", "南京", "温州", "哈尔滨", "石家庄", "合肥", "郑州", "武汉", "太原", "沈阳", "无锡", "大连", "济南", "佛山", "青岛"].include? areaname
           next
         end
 
@@ -148,18 +151,29 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   # 获取需要发送邮件的车主信息
   def self.need_send_mail_car_user_infos
     car_user_infos = self.where(email_status: 0)
-    provinces = ['广州', '深圳', '宁波', '东莞', '唐山', '厦门', '上海', '西安','重庆', '杭州', '天津', '苏州', '成都', '福州', '长沙',
+    provinces = ['广州', '深圳', '宁波', '东莞', '唐山', '厦门', '上海', '西安', '重庆', '杭州', '天津', '苏州', '成都', '福州', '长沙',
                  '北京', '南京', '温州', '哈尔滨', '石家庄', '合肥', '郑州', '武汉', '太原', '沈阳', '无锡', '大连',
                  '济南', '佛山', '青岛']
     result_car_users = []
     car_user_infos.each do |car_user_info|
       # 只从这20个城市中发
-      next unless provinces.include? car_user_info.city_chinese
-      # 车龄大于等于10年，这个则不发邮件，将改车主信息置为不发邮件状态
-      if Time.now.year - (car_user_info.che_ling.to_i rescue 0) >= 10
-        car_user_info.update_attribute email_status: 2
+      unless provinces.include? car_user_info.city_chinese
+        car_user_info.update_attributes email_status: 2
         next
       end
+      # 车龄大于等于10年，这个则不发邮件，将改车主信息置为不发邮件状态
+      if Time.now.year - (car_user_info.che_ling.to_i rescue 0) >= 10
+        car_user_info.update_attributes email_status: 2
+        next
+      end
+
+      # 车龄大于等于10年，这个则不发邮件，将改车主信息置为不发邮件状态
+      if car_user_info.phone.blank?
+        car_user_info.update_attributes email_status: 2
+        next
+      end
+
+      # car_user_info.update_attributes email_status: 1
       result_car_users << car_user_info
     end
     result_car_users
@@ -172,21 +186,32 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     in_center = Spreadsheet::Format.new horizontal_align: :center, vertical_align: :center, border: :thin
     center_gray = Spreadsheet::Format.new horizontal_align: :center, vertical_align: :center, border: :thin, color: :gray
     sheet1 = book.create_worksheet name: '车主信息数据'
-    sheet1.row(1) << ['姓名', '电话', '车型', '车龄', '城市', '备注', '里程', '发布时间', '保存时间', '数据来源']
-    current_row = 2
+    # sheet1.row(1) << ['姓名', '电话', '车型', '车龄', '城市', '备注', '里程', '发布时间', '保存时间', '数据来源']
+    ['姓名', '电话', '车型', '车龄', '城市', '备注', '里程', '发布时间', '保存时间', '数据来源'].each_with_index do |content, i|
+      sheet1.row(0)[i]  = content
+    end
+
+    current_row = 1
 
     car_user_infos.each do |car_user_info|
 
-          sheet1.row(current_row) << [car_user_info.name, car_user_info.phone, car_user_info.che_xing,
-                                  ((Time.now.year-car_user_info.che_ling.to_i) rescue ''),
-                                  car_user_info.city_chinese, car_user_info.note, car_user_info.milage,
-                                  car_user_info.fabushijian, ((car_user_info.created_at + 8.hours).to_s(:db) rescue ''),
-                                  car_user_info.site_name]
+      # sheet1.row(current_row) << [car_user_info.name, car_user_info.phone, car_user_info.che_xing,
+      #                             ((Time.now.year-car_user_info.che_ling.to_i) rescue ''),
+      #                             car_user_info.city_chinese, car_user_info.note, car_user_info.milage,
+      #                             car_user_info.fabushijian, (car_user_info.created_at.chinese_format rescue ''),
+      #                             car_user_info.site_name]
+      [car_user_info.name, car_user_info.phone, car_user_info.che_xing,
+       ("#{(Time.now.year-car_user_info.che_ling.to_i) rescue ''}年"),
+       car_user_info.city_chinese, car_user_info.note, "#{car_user_info.milage}万公里",
+       car_user_info.fabushijian, (car_user_info.created_at.chinese_format rescue ''),
+       car_user_info.site_name].each_with_index do |content, i|
+        sheet1.row(current_row)[i]  = content
+      end
       current_row += 1
     end
     dir = Rails.root.join('public', 'downloads')
     Dir.mkdir dir unless Dir.exist? dir
-    file_path = File.join(dir,"#{Time.now.strftime("%Y%m%dT%H%M%S")}车主信息数据.xls")
+    file_path = File.join(dir, "#{Time.now.strftime("%Y%m%dT%H%M%S")}车主信息数据.xls")
     book.write file_path
     file_path
   end

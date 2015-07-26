@@ -1,9 +1,11 @@
 class MailSend < BaseMailer
 
   def send_car_user_infos file_path, receiver, copy_receivers, record_number
+    pp "file_path.."
+    pp file_path
     attachments[file_path] = File.read( file_path )
-    mail( to: receiver, cc: copy_receivers,  subject:  '车主信息数据')
-    File.delete file_path
+    mail( to: receiver, cc: copy_receivers,  subject:  "车主信息数据#{record_number}条")
+    # File.delete file_path
     ::UserSystem::CarUserInfoSendEmail.create_car_user_info_send_email receiver: receiver,
                                                                        cc: copy_receivers,
                                                                        attachment_name: file_path,

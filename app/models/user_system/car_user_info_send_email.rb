@@ -11,7 +11,7 @@ class UserSystem::CarUserInfoSendEmail < ActiveRecord::Base
     self.transaction do
       cue = self.new options
       cue.save!
-      cue.reload
+      # cue.reload
       cue
     end
   end
