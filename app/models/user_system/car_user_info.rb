@@ -31,6 +31,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # 发完邮件，将对应的车主信息的邮件状态置为已发(1)
     send_car_user_infos.each {|u| u.update email_status: 1}
     # execute "update car_user_infos set email_status = 1 where id in "
+    ''
   end
 
 
