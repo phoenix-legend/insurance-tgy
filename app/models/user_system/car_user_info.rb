@@ -98,7 +98,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       UserSystem::CarUserInfo.send_email
       # rescue Exception => e
       # end
-      sleep 60*60
+      # sleep 60*60
     end
   end
 
