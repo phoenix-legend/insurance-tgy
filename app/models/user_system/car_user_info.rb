@@ -40,7 +40,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   #UserSystem::CarUserInfo.update_che168_detail2
   def self.update_che168_detail2 run_list = true, thread_number = 30
-    while true
+    # while true
       if run_list
         begin
           UserSystem::CarUserInfo.che168_get_car_list
@@ -96,10 +96,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
       # begin
       UserSystem::CarUserInfo.send_email
+      pp Time.now.chinese_format
       # rescue Exception => e
       # end
       # sleep 60*60
-    end
+    # end
   end
 
 
