@@ -39,7 +39,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   #UserSystem::CarUserInfo.update_che168_detail2
-  def self.update_che168_detail2 run_list = true, thread_number = 5
+  def self.update_che168_detail2 run_list = true, thread_number = 30
     while true
       if run_list
         begin
@@ -122,7 +122,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     threads = []
     provinces.each_pair do |key, v|
       threads.delete_if { |thread| thread.status == false }
-      if threads.length > 4
+      if threads.length > 10
         sleep 2
       end
       #线程开始
