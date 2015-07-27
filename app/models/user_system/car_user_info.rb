@@ -78,7 +78,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                                                                                                phone: phone,
                                                                                                                note: note,
                                                                                                                fabushijian: time}
-            pp response
+            # pp response
           rescue Exception => e
           end
         end
@@ -132,7 +132,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
           city_content = RestClient.get("http://m.che168.com/Handler/GetArea.ashx?pid=#{key}")
           pp 'xxx'
-          pp city_content
+          # pp city_content
           city_content = JSON.parse city_content.body
 
           city_content["item"].each do |city|
@@ -149,7 +149,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
               # content = ActiveSupport::Gzip.decompress(content)
               content = content.body
               break if content.blank?
-              pp content
+              # pp content
               a = JSON.parse content
               break if a.length == 0
               car_number = a.length
