@@ -28,6 +28,9 @@ module Insurance
 
     config.prepend_helpers_path = true
 
+    config.active_record.default_timezone = :local
+    config.time_zone = 'Beijing'
+
     #
     # config.action_mailer.delivery_method = :smtp
     # config.action_mailer.smtp_settings = {

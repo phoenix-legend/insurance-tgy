@@ -2,8 +2,8 @@ class UserSystem::CarUserInfoSendEmail < ActiveRecord::Base
 
   def self.had_send_email_in_current_hour?
     return false if self.all.blank?
-    last_send_time = self.all.order(:id).last.created_at + 8.hours
-    Time.now > last_send_time.change(min:0,sec:0) && Time.now < last_send_time.change(min:59, sec:59)
+    last_send_time = self.all.order(:id).last.created_at
+    Time.now - last_send_time < 300
   end
 
   def self.create_car_user_info_send_email options

@@ -47,11 +47,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         rescue Exception => e
         end
       end
+      pp '.........列表跑完'
       threads = []
       car_user_infos = UserSystem::CarUserInfo.where need_update: true
       car_user_infos.each do |car_user_info|
         next unless car_user_info.name.blank?
         next unless car_user_info.phone.blank?
+        next if car_user_info.detail_url.match /m\.hao\.autohome\.com\.cn/
         pp '------------------------------------'
         pp "现在线程池中有#{threads.length}个。"
         if threads.length > thread_number
@@ -70,7 +72,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             phone = connect_info.css("#callPhone")[0].attributes["data-telno"].value
             note = detail_content.css(".cardet-message-2sc .text")[0].text
             time = detail_content.css(".noa .time")[0].text.gsub("发布日期：", '')
-            response = RestClient.post 'http://127.0.0.1:3000/api/v1/update_user_infos/update_car_user_info', {id: car_user_info.id,
+
+            response = RestClient.post "http://#{Rails.env == "development" ? "localhost:4000": "www.haoche001.com"}/api/v1/update_user_infos/update_car_user_info", {id: car_user_info.id,
                                                                                                                name: name,
                                                                                                                phone: phone,
                                                                                                                note: note,
@@ -83,8 +86,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         pp "现在线程池中有#{threads.length}个。"
       end
 
+      1.upto(2000) do
+        sleep(1)
+        pp '休息.......'
+        threads.delete_if { |thread| thread.status == false }
+        break if threads.blank?
+      end
+
+
       # begin
-        UserSystem::CarUserInfo.send_email
+      UserSystem::CarUserInfo.send_email
       # rescue Exception => e
       # end
       sleep 60*60
@@ -108,56 +119,90 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # @陈小朋，测试的时候用这组province
     #provinces = {"310000" => "上海"}
     # 广州，深圳，宁波，东莞，唐山，厦门，上海，西安，重庆，杭州，天津，苏州，成都，福州，长沙，北京，南京，温州，哈尔滨，石家庄，合肥，郑州，武汉，太原，沈阳，无锡，大连，济南，佛山，青岛
-
+    threads = []
     provinces.each_pair do |key, v|
-      pp "现在跑 #{v}"
-      city_content = `curl 'http://m.che168.com/Handler/GetArea.ashx?pid=#{key}'`
-      city_content = JSON.parse city_content
-      city_content["item"].each do |city|
-        areaid, areaname = city["id"], city["value"]
-
-        if not ["广州", "深圳", "宁波", "东莞", "唐山", "厦门", "上海", "西安", "重庆", "杭州", "天津", "苏州", "成都", "福州", "长沙", "北京", "南京", "温州", "哈尔滨", "石家庄", "合肥", "郑州", "武汉", "太原", "沈阳", "无锡", "大连", "济南", "佛山", "青岛"].include? areaname
-          next
-        end
-
-        pp "现在跑 #{areaname}"
-        1.upto 1000000000 do |i|
-          content = `curl 'http://m.che168.com/handler/getcarlist.ashx?num=200&pageindex=#{i}&brandid=0&seriesid=0&specid=0&price=#{car_price_start}_#{car_price_end}&carageid=5&milage=0&carsource=1&store=6&levelid=0&key=&areaid=#{areaid}&browsetype=0&market=00&browserType=0' -H 'Host: m.che168.com' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:39.0) Gecko/20100101 Firefox/39.0' -H 'Accept: application/json' -H 'Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3' -H 'deflate' -H 'X-Requested-With: XMLHttpRequest' -H 'Referer: http://m.che168.com/guangzhou/1_10/1-5-0-6-0-0-00/?pvareaid=100421' -H 'Cookie: sessionid=e4434ae5-a74f-430f-bf16-2301fe709574; sessionip=27.203.171.229; area=371099; Hm_lvt_5a373383174a999f435969fc84eef6ec=1437745123; Hm_lpvt_5a373383174a999f435969fc84eef6ec=1437748038; userarea=0; SessionSeries=0; sheight=; __utma=247243734.1237350500.1437745133.1437745133.1437747639.2; __utmc=247243734; __utmz=247243734.1437745133.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _ga=GA1.2.1237350500.1437745133; BroswerCategory=77d%7C26d%7C71d%7C165d%7C15d%7C12d%7C47d%7C38d%7C36d%7C1d%7C86d%7C; BroswerSeries=552%2C434%2C657%2C153%2C; authenticationarea=0; historysearch=china|0|0|1|10,china|0|0|8|10; uarea=440100%7Cguangzhou; sessionvisit=182dfd58-da85-4c78-9e75-0740e76a52c1; _gat=1' -H 'Connection: keep-alive'`
-          # content = ActiveSupport::Gzip.decompress(content)
-          break if content.blank?
-          pp content
-          a = JSON.parse content
-          break if a.length == 0
-          car_number = a.length
-          exists_car_number = 0
-          a.each do |info|
-            result = UserSystem::CarUserInfo.create_car_user_info che_xing: info["carname"],
-                                                                  che_ling: info["date"],
-                                                                  milage: info['milage'],
-                                                                  detail_url: "http://m.che168.com#{info["url"]}",
-                                                                  city_chinese: areaname,
-                                                                  site_name: 'che168'
-            exists_car_number = exists_car_number + 1 if result == 1
-          end
-          if car_number == exists_car_number
-            puts '本页数据全部存在，跳出'
-            break
-          end
-        end
+      threads.delete_if { |thread| thread.status == false }
+      if threads.length > 4
+        sleep 2
       end
+      #线程开始
+      t = Thread.new do
+        begin
+          pp "现在跑.. #{v}"
+
+          city_content = RestClient.get("http://m.che168.com/Handler/GetArea.ashx?pid=#{key}")
+          pp 'xxx'
+          pp city_content
+          city_content = JSON.parse city_content.body
+
+          city_content["item"].each do |city|
+            areaid, areaname = city["id"], city["value"]
+
+            if not ["广州", "深圳", "宁波", "东莞", "唐山", "厦门", "上海", "西安", "重庆", "杭州", "天津", "苏州", "成都", "福州", "长沙", "北京", "南京", "温州", "哈尔滨", "石家庄", "合肥", "郑州", "武汉", "太原", "沈阳", "无锡", "大连", "济南", "佛山", "青岛"].include? areaname
+              next
+            end
+
+            pp "现在跑 #{areaname}"
+            1.upto 1000000000 do |i|
+              # content = `curl 'http://m.che168.com/handler/getcarlist.ashx?num=200&pageindex=#{i}&brandid=0&seriesid=0&specid=0&price=#{car_price_start}_#{car_price_end}&carageid=5&milage=0&carsource=1&store=6&levelid=0&key=&areaid=#{areaid}&browsetype=0&market=00&browserType=0' -H 'Host: m.che168.com' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:39.0) Gecko/20100101 Firefox/39.0' -H 'Accept: application/json' -H 'Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3' -H 'deflate' -H 'X-Requested-With: XMLHttpRequest' -H 'Referer: http://m.che168.com/guangzhou/1_10/1-5-0-6-0-0-00/?pvareaid=100421' -H 'Cookie: sessionid=e4434ae5-a74f-430f-bf16-2301fe709574; sessionip=27.203.171.229; area=371099; Hm_lvt_5a373383174a999f435969fc84eef6ec=1437745123; Hm_lpvt_5a373383174a999f435969fc84eef6ec=1437748038; userarea=0; SessionSeries=0; sheight=; __utma=247243734.1237350500.1437745133.1437745133.1437747639.2; __utmc=247243734; __utmz=247243734.1437745133.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _ga=GA1.2.1237350500.1437745133; BroswerCategory=77d%7C26d%7C71d%7C165d%7C15d%7C12d%7C47d%7C38d%7C36d%7C1d%7C86d%7C; BroswerSeries=552%2C434%2C657%2C153%2C; authenticationarea=0; historysearch=china|0|0|1|10,china|0|0|8|10; uarea=440100%7Cguangzhou; sessionvisit=182dfd58-da85-4c78-9e75-0740e76a52c1; _gat=1' -H 'Connection: keep-alive'`
+              content = RestClient.get "http://m.che168.com/handler/getcarlist.ashx?num=200&pageindex=#{i}&brandid=0&seriesid=0&specid=0&price=#{car_price_start}_#{car_price_end}&carageid=5&milage=0&carsource=1&store=6&levelid=0&key=&areaid=#{areaid}&browsetype=0&market=00&browserType=0"
+              # content = ActiveSupport::Gzip.decompress(content)
+              content = content.body
+              break if content.blank?
+              pp content
+              a = JSON.parse content
+              break if a.length == 0
+              car_number = a.length
+              exists_car_number = 0
+              a.each do |info|
+                # result = 0
+                result = UserSystem::CarUserInfo.create_car_user_info che_xing: info["carname"],
+                                                                      che_ling: info["date"],
+                                                                      milage: info['milage'],
+                                                                      detail_url: "http://m.che168.com#{info["url"]}",
+                                                                      city_chinese: areaname,
+                                                                      site_name: 'che168'
+                exists_car_number = exists_car_number + 1 if result == 1
+              end
+              if car_number == exists_car_number
+                puts '本页数据全部存在，跳出'
+                break
+              end
+            end
+          end
+        rescue Exception => e
+        end
+        ActiveRecord::Base.connection.close
+      end
+
+      threads << t
+      # t.join
+
+      #线程结束
+
+
+    end
+    1.upto(2000) do
+      sleep(1)
+      pp '抓省份。。休息.......'
+      threads.each do |t|
+        pp t.status
+      end
+      threads.delete_if { |thread| thread.status == false }
+      break if threads.blank?
     end
   end
 
   # 获取需要发送邮件的车主信息
   def self.need_send_mail_car_user_infos
     car_user_infos = self.where(email_status: 0)
-    provinces = ['广州', '深圳', '宁波', '东莞', '唐山', '厦门', '上海', '西安', '重庆', '杭州', '天津', '苏州', '成都', '福州', '长沙',
-                 '北京', '南京', '温州', '哈尔滨', '石家庄', '合肥', '郑州', '武汉', '太原', '沈阳', '无锡', '大连',
-                 '济南', '佛山', '青岛']
+    cities = ['广州', '深圳', '宁波', '东莞', '唐山', '厦门', '上海', '西安', '重庆', '杭州', '天津', '苏州', '成都', '福州', '长沙',
+              '北京', '南京', '温州', '哈尔滨', '石家庄', '合肥', '郑州', '武汉', '太原', '沈阳', '无锡', '大连',
+              '济南', '佛山', '青岛']
     result_car_users = []
     car_user_infos.each do |car_user_info|
       # 只从这20个城市中发
-      unless provinces.include? car_user_info.city_chinese
+      unless cities.include? car_user_info.city_chinese
         car_user_info.update_attributes email_status: 2
         next
       end
@@ -188,24 +233,24 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     sheet1 = book.create_worksheet name: '车主信息数据'
     # sheet1.row(1) << ['姓名', '电话', '车型', '车龄', '城市', '备注', '里程', '发布时间', '保存时间', '数据来源']
     ['姓名', '电话', '车型', '车龄', '城市', '备注', '里程', '发布时间', '保存时间', '数据来源'].each_with_index do |content, i|
-      sheet1.row(0)[i]  = content
+      sheet1.row(0)[i] = content
     end
 
     current_row = 1
 
     car_user_infos.each do |car_user_info|
 
-      # sheet1.row(current_row) << [car_user_info.name, car_user_info.phone, car_user_info.che_xing,
-      #                             ((Time.now.year-car_user_info.che_ling.to_i) rescue ''),
-      #                             car_user_info.city_chinese, car_user_info.note, car_user_info.milage,
-      #                             car_user_info.fabushijian, (car_user_info.created_at.chinese_format rescue ''),
-      #                             car_user_info.site_name]
+      sheet1.row(current_row) << [car_user_info.name, car_user_info.phone, car_user_info.che_xing,
+                                  ((Time.now.year-car_user_info.che_ling.to_i) rescue ''),
+                                  car_user_info.city_chinese, car_user_info.note, car_user_info.milage,
+                                  car_user_info.fabushijian, (car_user_info.created_at.chinese_format rescue ''),
+                                  car_user_info.site_name]
       [car_user_info.name, car_user_info.phone, car_user_info.che_xing,
        ("#{(Time.now.year-car_user_info.che_ling.to_i) rescue ''}年"),
        car_user_info.city_chinese, car_user_info.note, "#{car_user_info.milage}万公里",
        car_user_info.fabushijian, (car_user_info.created_at.chinese_format rescue ''),
        car_user_info.site_name].each_with_index do |content, i|
-        sheet1.row(current_row)[i]  = content
+        sheet1.row(current_row)[i] = content
       end
       current_row += 1
     end
