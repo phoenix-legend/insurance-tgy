@@ -13,28 +13,31 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
   def self.send_email
-    #晚上不发邮件
-    return if Time.now.hour < 9
-    return if Time.now.hour > 20
-    # 同一个小时不发两次邮件
-    return if ::UserSystem::CarUserInfoSendEmail.had_send_email_in_current_hour?
+    ::UserSystem::CarUserInfoSendEmail.transaction do
+      #晚上不发邮件
+      return if Time.now.hour < 9
+      return if Time.now.hour > 20
+      # 同一个小时不发两次邮件
+      return if ::UserSystem::CarUserInfoSendEmail.had_send_email_in_current_hour?
 
-    send_car_user_infos = self.need_send_mail_car_user_infos
+      send_car_user_infos = self.need_send_mail_car_user_infos
 
-    # 若需发送的数据量为0，则不发送邮件
-    return if send_car_user_infos.blank?
+      # 若需发送的数据量为0，则不发送邮件
+      return if send_car_user_infos.blank?
 
-    # 发送邮件
-    MailSend.send_car_user_infos(self.generate_xls_of_car_user_info(send_car_user_infos),
-                                 'chenkai@baohe001.com',
-                                 '13472446647@163.com',
-                                 send_car_user_infos.count
-    ).deliver
+      # 发送邮件
+      MailSend.send_car_user_infos(self.generate_xls_of_car_user_info(send_car_user_infos),
+                                   'chenkai@baohe001.com;tanguanyu@baohe001.com;yuanyuan@baohe001.com',
+                                   '13472446647@163.com',
+                                   send_car_user_infos.count
+      ).deliver
 
-    # 发完邮件，将对应的车主信息的邮件状态置为已发(1)
-    send_car_user_infos.each { |u| u.update email_status: 1 }
-    # execute "update car_user_infos set email_status = 1 where id in "
-    ''
+      # 发完邮件，将对应的车主信息的邮件状态置为已发(1)
+      send_car_user_infos.each { |u| u.update email_status: 1 }
+      # execute "update car_user_infos set email_status = 1 where id in "
+      ''
+    end
+
   end
 
 
