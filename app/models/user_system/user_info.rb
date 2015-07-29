@@ -38,6 +38,18 @@ class UserSystem::UserInfo < ActiveRecord::Base
     end
   end
 
+  def self.yiwaixianjiekou options
+  require 'digest'
+    url = "http://testapi.zonghengche.com/life/query"
+    options = get_arguments_options options, [:realname, :gender,
+                                                     :birth, :mobile, :product, :parentname, :city,
+                                                     :idcard, :carmodel, :remark, :answer1, :answer2, :answer3]
+    options.merge! media: '017792',
+                   appid: 'baohe',
+                   sign: Digest::MD5.hexdigest("#{options[:birth].gsub('-','')}#{options[:mobile]}#{options[]}")
+    RestClient.post(url, options.merge())
+  end
+
   # 点击“免费预约“将用户信息保存到数据库中，同时生成订单。
   # 将信息提交到合作伙伴网址。同时在数据库中记录是否提交成功。
   def self.create_user_info options

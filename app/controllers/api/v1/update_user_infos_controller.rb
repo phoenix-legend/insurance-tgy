@@ -19,6 +19,7 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
       car_user_info.phone = params[:phone]
       car_user_info.note = params[:note]
       car_user_info.fabushijian = params[:fabushijian]
+      car_user_info.price = params[:price]
     end
     car_user_info.need_update = false
     car_user_info.save
