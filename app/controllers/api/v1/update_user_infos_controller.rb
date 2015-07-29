@@ -10,10 +10,11 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
 
     car_user_info = UserSystem::CarUserInfo.find params[:id]
     user_infos = UserSystem::CarUserInfo.where name: params[:name],
-                                               phone: params[:phone],
-                                               che_xing: car_user_info.che_xing,
-                                               che_ling: car_user_info.che_ling,
-                                               city_chinese: car_user_info.city_chinese
+                                               phone: params[:phone]
+
+                                               # che_xing: car_user_info.che_xing,
+                                               # che_ling: car_user_info.che_ling,
+                                               # city_chinese: car_user_info.city_chinese
     unless user_infos.length > 0
       car_user_info.name = params[:name]
       car_user_info.phone = params[:phone]

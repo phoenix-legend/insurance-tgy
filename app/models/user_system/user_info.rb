@@ -5,13 +5,12 @@ class UserSystem::UserInfo < ActiveRecord::Base
   has_many :weizhang_logs, :class_name => 'OrderSystem::WeizhangLog'
 
 
-
   validates_presence_of :phone, message: "手机号不可以为空。"
   validates_uniqueness_of :car_number, scope: :phone, message: "该车牌号已经存在。"
   validates_format_of :phone, :with => EricTools::RegularConstants::MobilePhone, message: '手机号格式不正确', allow_blank: false
   validates_format_of :car_number, :with => Tools::RegularConstants::CarNumber, message: '车牌号格式不正确', allow_blank: true
   validates_format_of :vin_no, :with => EricTools::RegularConstants::VinNo, message: '车架号不正确', allow_blank: true
-  validates_format_of :engine_no, :with => EricTools::RegularConstants::EngineNo, message:'发动机号不正确' ,allow_blank: true
+  validates_format_of :engine_no, :with => EricTools::RegularConstants::EngineNo, message: '发动机号不正确', allow_blank: true
 
   #获取携车网所需要的参数。
   def get_xieche_param
@@ -38,16 +37,21 @@ class UserSystem::UserInfo < ActiveRecord::Base
     end
   end
 
+  # UserSystem::UserInfo.yiwaixianjiekou({"realname"=>'刘晓琦', "gender" => "M", "birth" => '1984-01-01', "mobile"  => '13444444444', "product" => 'WYCX', "city" => '上海'})
+
   def self.yiwaixianjiekou options
-  require 'digest'
-    url = "http://testapi.zonghengche.com/life/query"
+    require 'digest'
+    url = "http://apis.zonghengche.com/life/query"
     options = get_arguments_options options, [:realname, :gender,
-                                                     :birth, :mobile, :product, :parentname, :city,
-                                                     :idcard, :carmodel, :remark, :answer1, :answer2, :answer3]
+                                              :birth, :mobile, :product, :parentname, :city,
+                                              :idcard, :carmodel, :remark, :answer1, :answer2, :answer3]
     options.merge! media: '017792',
                    appid: 'baohe',
-                   sign: Digest::MD5.hexdigest("#{options[:birth].gsub('-','')}#{options[:mobile]}#{options[]}")
-    RestClient.post(url, options.merge())
+                   sign: Digest::MD5.hexdigest("#{options[:birth].gsub('-', '')}#{options[:mobile]}f4d7f0a85c4cea2360aa0d71ecd90862")
+    pp options
+    RestClient.post(url, options)
+
+    Spreadsheet.open("")
   end
 
   # 点击“免费预约“将用户信息保存到数据库中，同时生成订单。
@@ -58,7 +62,6 @@ class UserSystem::UserInfo < ActiveRecord::Base
       BusinessException.raise '产品ID不存在' if product_id.blank?
       options = get_arguments_options options, [:gender, :birthday, :engine_no, :vin_no, :month, :name, :phone, :channel, :car_number, :car_price, :city]
       BusinessException.raise '车牌号不能为空' if options[:car_number].blank?
-
 
 
       # 如果是查询违章，无车架号和发动机号不能查询。
@@ -89,7 +92,7 @@ class UserSystem::UserInfo < ActiveRecord::Base
                     user_info
                   else
                     # 根据车牌号查找，user_info已经存在，则更新
-                    options.delete_if{|k,v| v.blank?}
+                    options.delete_if { |k, v| v.blank? }
                     exist_user_info.update_attributes! options
                     exist_user_info
                   end
