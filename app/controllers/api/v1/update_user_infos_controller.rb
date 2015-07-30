@@ -4,10 +4,12 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
     ::UserSystem::UserInfo.update_user_by_xieche params[:id]
   end
 
+  def yiwaixian
+    json = UserSystem::UserInfo.yiwaixianjiekou params
+    render :json => json, :layout  => false
+  end
+
   def update_car_user_info
-
-
-
     car_user_info = UserSystem::CarUserInfo.find params[:id]
     user_infos = UserSystem::CarUserInfo.where name: params[:name],
                                                phone: params[:phone]

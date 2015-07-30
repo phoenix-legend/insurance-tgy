@@ -54,6 +54,76 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   end
 
+  # UserSystem::CarUserInfo.get_haoche_sessionkey_and_yanzhengma
+  def self.get_haoche_sessionkey_and_yanzhengma
+    session_key = "#{Time.now.to_i}#{rand(10000000)}"
+    url = "http://gw2.pahaoche.com/wghttp/randomImageServlet?Rand=4&sessionKey=#{session_key}"
+    response = RestClient.get url
+    file = File.new("#{Rails.root}/public/downloads/#{session_key}.jpg",'wb')
+    file.write response.body
+    file.flush
+    file.close
+    file_name = file.path
+    code = `tesseract #{file_name} stdout --tessdata-dir /Applications/OCRTOOLS.app/Contents/Resources/tessdata`
+    code = code.strip
+    pp code
+    code_match = code.match /(\d{4})/
+    puts '获取'
+    if code_match
+      return code_match[1], session_key
+    else
+      sleep 1
+      return UserSystem::CarUserInfo.get_haoche_sessionkey_and_yanzhengma
+    end
+    code
+  end
+
+
+  # UserSystem::CarUserInfo.xx
+  def self.xx
+    car_user_infos = UserSystem::CarUserInfo.where "upload_status = 'weidaoru' or upload_status = 'shibai'"
+
+    car_user_infos.each do |car_user_info|
+      code, session_key = UserSystem::CarUserInfo.get_haoche_sessionkey_and_yanzhengma
+      url = "http://gw2.pahaoche.com/wghttp/internal/booking"
+      response = RestClient.post url, {:sessionKey => session_key,
+                           :authCode => code,
+                           :channel => 'yy-huayang-141219-012',
+                           :from => 'GW',
+                           :tokenKey => '8891E237-C4DB-4B79-A7A2-77DBB50D0772',
+                           :tokenValue => '3b783617-8bf6-4f03-ab11-7c6f46054af2',
+                           :expectTime => '计划卖车时间:一周内',
+                           :name => car_user_info.name,
+                           :mobile => car_user_info.phone,
+                           :city => car_user_info.city_chinese,
+                           :vehicleType => car_user_info.che_xing,
+                           :_ => session_key
+                        }
+      pp response.body
+      response_json = JSON.parse response.body
+      if response_json["result"]
+        car_user_info.upload_status = 'success'
+        car_user_info.bookid = response_json["bookingId"]
+      else
+        if response_json["message"].match /Mobile\sexist:/
+          car_user_info.upload_status = 'yicunzai'
+        else
+          car_user_info.upload_status = 'shibai'
+          car_user_info.shibaiyuanyin = "#{response_json["message"]}--#{response_json["message_code"]}"
+        end
+      end
+      car_user_info.save!
+
+      # weidaoru, yicunzai, success, shibai
+      # add_column :car_user_infos, :upload_status, :string, :default => 'weidaoru'
+      #
+      # add_column :car_user_infos, :shibaiyuanyin, :string, :limit => '100'
+      #
+      # add_column :car_user_infos, :bookid, :string
+    end
+  end
+
+
 
   #UserSystem::CarUserInfo.update_che168_detail2
   def self.update_che168_detail2 run_list = true, thread_number = 30
@@ -213,7 +283,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
   end
 
-  # 获取需要发送邮件的车主信息
+# 获取需要发送邮件的车主信息
   def self.need_send_mail_car_user_infos
     car_user_infos = self.where(email_status: 0)
     cities = ['广州', '深圳', '宁波', '东莞', '唐山', '厦门', '上海', '西安', '重庆', '杭州', '天津', '苏州', '成都', '福州', '长沙',
@@ -244,7 +314,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     result_car_users
   end
 
-  # 生成xls
+# 生成xls
   def self.generate_xls_of_car_user_info car_user_infos
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
@@ -252,7 +322,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     center_gray = Spreadsheet::Format.new horizontal_align: :center, vertical_align: :center, border: :thin, color: :gray
     sheet1 = book.create_worksheet name: '车主信息数据'
     # sheet1.row(1) << ['姓名', '电话', '车型', '车龄', '城市', '备注', '里程', '发布时间', '保存时间', '数据来源']
-    ['姓名', '电话', '车型', '车龄', '价格','城市', '备注', '里程', '发布时间', '保存时间', '数据来源'].each_with_index do |content, i|
+    ['姓名', '电话', '车型', '车龄', '价格', '城市', '备注', '里程', '发布时间', '保存时间', '数据来源'].each_with_index do |content, i|
       sheet1.row(0)[i] = content
     end
 
@@ -282,6 +352,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     book.write file_path
     file_path
   end
+
 end
 __END__
 
@@ -301,6 +372,6 @@ __END__
     pp citys
 
 
-
+"http://m.che168.com/handler/getcarlist.ashx?num=200&pageindex=1&brandid=0&seriesid=0&specid=0&price=1_10&carageid=5&milage=0&carsource=1&store=6&levelid=0&key=&areaid=#{areaid}&browsetype=0&market=00&browserType=0
 
   广州，深圳，宁波，东莞，唐山，厦门，上海，西安，重庆，杭州，天津，苏州，成都，福州，长沙，北京，南京，温州，哈尔滨，石家庄，合肥，郑州，武汉，太原，沈阳，无锡，大连，济南，佛山，青岛

@@ -50,12 +50,14 @@ gem 'rest-client'
 gem "multi_xml"
 
 
+
 #异常通知邮件
 
 # gem 'zurb-foundation'
 gem 'exception_notification', '~> 4.0.1'
 # 操作excel
 gem 'spreadsheet'
+# gem 'parseexcel'
 
 #分页
 gem "will_paginate-foundation"
