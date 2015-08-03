@@ -75,7 +75,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     code = if Rails.env == "development"
              `tesseract #{file_name} stdout --tessdata-dir /Applications/OCRTOOLS.app/Contents/Resources/tessdata`
            else
-             `tesseract #{file_name} stdout`
+             ddd = `/usr/local/bin/tesseract #{file_name} stdout`
+             pp "里面的ddd#{ddd}"
+             pp ddd
+             ddd
            end
 
 
