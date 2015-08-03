@@ -37,23 +37,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       zhuti = "#{success_count}成功#{cunzai_count}存在#{shibai_count}失败#{budaoru_count}不导"
 
       # 发送邮件
-      if Rails.env == "production"
-        MailSend.send_car_user_infos(self.generate_xls_of_car_user_info(send_car_user_infos),
-                                     '13472446647@163.com',
-                                     '',
-                                     send_car_user_infos.count,
-                                     zhuti
-        ).deliver
-      else
 
-        MailSend.send_car_user_infos(self.generate_xls_of_car_user_info(send_car_user_infos),
-                                     'chenkai@baohe001.com;tanguanyu@baohe001.com;yuanyuan@baohe001.com',
-                                     '13472446647@163.com',
-                                     send_car_user_infos.count,
-                                     zhuti
-        ).deliver
 
-      end
+      MailSend.send_car_user_infos(self.generate_xls_of_car_user_info(send_car_user_infos),
+                                   'chenkai@baohe001.com;tanguanyu@baohe001.com;yuanyuan@baohe001.com',
+                                   '13472446647@163.com',
+                                   send_car_user_infos.count,
+                                   zhuti
+      ).deliver
+
+
       send_car_user_infos.each { |u| u.update email_status: 1 }
 
 
@@ -71,13 +64,20 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # return session_key, ''
     url = "http://gw2.pahaoche.com/wghttp/randomImageServlet?Rand=4&sessionKey=#{session_key}"
     response = RestClient.get url
+    `rm #{Rails.root}/public/downloads/*`
     file = File.new("#{Rails.root}/public/downloads/#{session_key}.jpg", 'wb')
     file.write response.body
     file.flush
     file.close
     file_name = file.path
 
-    code = `tesseract #{file_name} stdout --tessdata-dir /Applications/OCRTOOLS.app/Contents/Resources/tessdata`
+
+    code = if Rails.env == "development"
+             `tesseract #{file_name} stdout --tessdata-dir /Applications/OCRTOOLS.app/Contents/Resources/tessdata`
+           else
+             `tesseract #{file_name} stdout`
+           end
+
 
     code = code.strip
     pp code
@@ -147,7 +147,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   #UserSystem::CarUserInfo.update_che168_detail2
   def self.update_che168_detail2 run_list = true, thread_number = 30
-    while true
+    # while true
       if run_list
         begin
           UserSystem::CarUserInfo.che168_get_car_list
@@ -183,12 +183,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             time = detail_content.css(".noa .time")[0].text.gsub("发布日期：", '')
             price = detail_content.css(".price")[0].text
 
-            response = RestClient.post "http://#{Rails.env == "development" ? "localhost:4000" : "www.haoche001.com"}/api/v1/update_user_infos/update_car_user_info", {id: car_user_info.id,
-                                                                                                                                                                       name: name,
-                                                                                                                                                                       phone: phone,
-                                                                                                                                                                       note: note,
-                                                                                                                                                                       price: price,
-                                                                                                                                                                       fabushijian: time}
+            response = RestClient.post "http://localhost:4000/api/v1/update_user_infos/update_car_user_info", {id: car_user_info.id,
+                                                                                                               name: name,
+                                                                                                               phone: phone,
+                                                                                                               note: note,
+                                                                                                               price: price,
+                                                                                                               fabushijian: time}
 
           rescue Exception => e
             car_user_info.need_update = false
@@ -220,8 +220,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         pp Time.now.chinese_format
       rescue Exception => e
       end
-      sleep 60*4
-    end
+    #   sleep 60*4
+    # end
   end
 
 
@@ -302,8 +302,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
       threads << t
     end
-
-
 
 
     1.upto(2000) do
