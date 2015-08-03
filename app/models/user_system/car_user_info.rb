@@ -148,78 +148,79 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   #UserSystem::CarUserInfo.update_che168_detail2
   def self.update_che168_detail2 run_list = true, thread_number = 30
     # while true
-      if run_list
+    if run_list
+      begin
+        UserSystem::CarUserInfo.che168_get_car_list
+      rescue Exception => e
+      end
+    end
+    pp '.........列表跑完'
+    threads = []
+    car_user_infos = UserSystem::CarUserInfo.where need_update: true
+    car_user_infos.each do |car_user_info|
+      next unless car_user_info.name.blank?
+      next unless car_user_info.phone.blank?
+      next if car_user_info.detail_url.match /m\.hao\.autohome\.com\.cn/
+      pp '------------------------------------'
+      pp "现在线程池中有#{threads.length}个。"
+      if threads.length > thread_number
+        sleep 2
+      end
+      threads.delete_if { |thread| thread.status == false }
+      t = Thread.new do
         begin
-          UserSystem::CarUserInfo.che168_get_car_list
+          puts '开始跑明细'
+
+          # detail_content = `curl '#{car_user_info.detail_url}'`
+          response = RestClient.get(car_user_info.detail_url)
+
+          detail_content = response.body
+          detail_content = Nokogiri::HTML(detail_content)
+          connect_info = detail_content.css("#LinkInfo")[0]
+          name = connect_info.css(".info").text.strip
+          phone = connect_info.css("#callPhone")[0].attributes["data-telno"].value
+          note = detail_content.css(".cardet-message-2sc .text")[0].text
+          time = detail_content.css(".noa .time")[0].text.gsub("发布日期：", '')
+          price = detail_content.css(".price")[0].text
+
+          response = RestClient.post "http://localhost:4000/api/v1/update_user_infos/update_car_user_info", {id: car_user_info.id,
+                                                                                                             name: name,
+                                                                                                             phone: phone,
+                                                                                                             note: note,
+                                                                                                             price: price,
+                                                                                                             fabushijian: time}
+
         rescue Exception => e
+          car_user_info.need_update = false
+          car_user_info.save
         end
+        ActiveRecord::Base.connection.close
       end
-      pp '.........列表跑完'
-      threads = []
-      car_user_infos = UserSystem::CarUserInfo.where need_update: true
-      car_user_infos.each do |car_user_info|
-        next unless car_user_info.name.blank?
-        next unless car_user_info.phone.blank?
-        next if car_user_info.detail_url.match /m\.hao\.autohome\.com\.cn/
-        pp '------------------------------------'
-        pp "现在线程池中有#{threads.length}个。"
-        if threads.length > thread_number
-          sleep 2
-        end
-        threads.delete_if { |thread| thread.status == false }
-        t = Thread.new do
-          begin
-            puts '新的线程已创建'
+      threads << t
+      # pp "现在线程池中有#{threads.length}个。"
+    end
 
-            # detail_content = `curl '#{car_user_info.detail_url}'`
-            response = RestClient.get(car_user_info.detail_url)
-
-            detail_content = response.body
-            detail_content = Nokogiri::HTML(detail_content)
-            connect_info = detail_content.css("#LinkInfo")[0]
-            name = connect_info.css(".info").text.strip
-            phone = connect_info.css("#callPhone")[0].attributes["data-telno"].value
-            note = detail_content.css(".cardet-message-2sc .text")[0].text
-            time = detail_content.css(".noa .time")[0].text.gsub("发布日期：", '')
-            price = detail_content.css(".price")[0].text
-
-            response = RestClient.post "http://localhost:4000/api/v1/update_user_infos/update_car_user_info", {id: car_user_info.id,
-                                                                                                               name: name,
-                                                                                                               phone: phone,
-                                                                                                               note: note,
-                                                                                                               price: price,
-                                                                                                               fabushijian: time}
-
-          rescue Exception => e
-            car_user_info.need_update = false
-            car_user_info.save
-          end
-          ActiveRecord::Base.connection.close
-        end
-        threads << t
-        pp "现在线程池中有#{threads.length}个。"
-      end
-
-      1.upto(2000) do
-        sleep(1)
-        pp '休息.......'
-        threads.delete_if { |thread| thread.status == false }
-        break if threads.blank?
-      end
+    1.upto(2000) do
+      sleep(1)
+      # pp '休息.......'
+      threads.delete_if { |thread| thread.status == false }
+      break if threads.blank?
+    end
 
 
-      begin
-        UserSystem::CarUserInfo.upload_to_haoche
-      rescue Exception => e
+    begin
+      UserSystem::CarUserInfo.upload_to_haoche
+    rescue Exception => e
+      pp e
+    end
 
-      end
 
-
-      begin
-        UserSystem::CarUserInfo.send_email
-        pp Time.now.chinese_format
-      rescue Exception => e
-      end
+    begin
+      UserSystem::CarUserInfo.send_email
+      pp Time.now.chinese_format
+    rescue Exception => e
+      pp e
+    end
     #   sleep 60*4
     # end
   end
