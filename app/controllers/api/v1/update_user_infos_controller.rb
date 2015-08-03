@@ -25,7 +25,7 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
       car_user_info.price = params[:price]
     end
     car_user_info.need_update = false
-    car_user_info.save
+    car_user_info.save!
   end
 
 end

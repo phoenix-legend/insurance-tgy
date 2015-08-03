@@ -5,6 +5,7 @@
 #   git config --global core.excludesfile ~/.gitignore_global
 public/img/.DS_Store
 # Ignore bundler config
+.rvmrc
 public/downloads/
 /.bundle
 /config/database.yml

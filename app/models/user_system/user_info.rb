@@ -44,6 +44,7 @@ class UserSystem::UserInfo < ActiveRecord::Base
     options = get_arguments_options options, [:realname, :gender,
                                               :birth, :mobile, :product, :parentname, :city,
                                               :idcard, :carmodel, :remark, :answer1, :answer2, :answer3]
+    yiwaixianinfo = UserSystem::YiwaixianUserInfo.create_yiwaixian_user_info options
     options.merge! media: '017792',
                    appid: 'baohe',
                    sign: Digest::MD5.hexdigest("#{options[:birth]}#{options[:mobile]}f4d7f0a85c4cea2360aa0d71ecd90862")
@@ -58,12 +59,13 @@ class UserSystem::UserInfo < ActiveRecord::Base
 
     ce = Encoding::Converter.new("GB2312", "UTF-8")
     body = ce.convert(response.body)
-    JSON.parse body
-
-
-    # require 'spreadsheet/excel'
-    # book = Spreadsheet::Parseexcel.parse("/Users/ericliu/work/projects/github/insurance-tgy-doc/a.xls")
-    # sheet = book.worksheet 0
+    pp body
+    result = JSON.parse body
+    yiwaixianinfo.policy_result = result["resultMsg"]
+    yiwaixianinfo.result_code = result["resultCode"]
+    yiwaixianinfo.policy_no = (result["result"]["policyNo"] rescue '')
+    yiwaixianinfo.save
+    result
   end
 
   # 点击“免费预约“将用户信息保存到数据库中，同时生成订单。
@@ -83,6 +85,17 @@ class UserSystem::UserInfo < ActiveRecord::Base
         BusinessException.raise '请填写姓名' if options[:name].blank?
         BusinessException.raise '请选择性别' if options[:gender].blank?
         BusinessException.raise '请填写生日' if options[:birthday].blank?
+
+        city = ::OrderSystem::IpRegion.get_city_name Thread.current[:ip]
+        city.gsub!('市', '')
+
+        UserSystem::UserInfo.yiwaixianjiekou realname: options[:name],
+                                             gender: options[:gender]=='nan' ? 'M' : 'F',
+                                             birth: options[:birthday],
+                                             mobile: options[:phone],
+                                             product: 'WYCX',
+                                             city: city
+
       end
 
 
@@ -164,11 +177,8 @@ class UserSystem::UserInfo < ActiveRecord::Base
     string = <<EOF
 凯凯%2012-09-14%男%王俊杰%山东%烟台%15615657978
 EOF
-
     as = string.split("\n")
-
     as = as.collect { |a| a.split('%') }
-
     as.each do |bs|
       name = bs[0]
       birthdy = bs[1]
@@ -176,7 +186,6 @@ EOF
       jiazhang = bs[3]
       city = bs[5]
       phone = bs[6]
-
       puts name
       begin
         puts UserSystem::UserInfo.yiwaixianjiekou({"realname" => name,
@@ -191,64 +200,4 @@ EOF
       end
     end
   end
-
-  def self.x
-
-
-
-    content = `curl -c stored_cookies_in_file http://www.pahaoche.com/yuyue_140807a.w?ch=yy-huayang-141219-012`
-    detail_content = Nokogiri::HTML(content)
-    value = detail_content.css('#checkCode').attributes["src"].value
-
-    session_key = "#{Time.now.to_i}#{rand(10000000)}"
-    url = "http://gw2.pahaoche.com/wghttp/randomImageServlet?Rand=4&sessionKey=#{session_key}"
-
-
-
-    a = {
-        "authCode" => "abc",
-        "channel" => "yy-huayang-141219-012",
-        "city" => "南京",
-        "expectTime" => "计划卖车时间:一周内.",
-        "from" => "GW",
-        "mobile" => "18652011717",
-        "name" => "柏先生(江苏-个人)",
-        "tokenKey" => "CD6773E1-C698-4757-87C7-3F2E5C24DAEE",
-        "tokenValue" => "512017b9-61cb-477b-919b-89c2b4d36ec5",
-        "vehicleType" => "甲壳虫 2014款 1.2TSI 时尚型",
-        "yuyueId" => "5d8df285-15f3-470a-9875-32e5e9cba76b"
-    }
-    response = RestClient.post 'http://www.pahaoche.com/yuyueZt.w', a
-    pp response.body
-
-
-
-
-
-
-    session_key = "#{Time.now.to_i}#{rand(10000000)}"
-    url = "http://gw2.pahaoche.com/wghttp/randomImageServlet?Rand=4&sessionKey=#{session_key}"
-    response = RestClient.get url
-    file = File.new("#{Rails.root}/public/downloads/#{session_key}.jpg",'wb')
-    file.write response.body
-    file.flush
-    file.close
-    file_name = file.path
-    code = `tesseract #{file_name} stdout --tessdata-dir /Applications/OCRTOOLS.app/Contents/Resources/tessdata`
-    code = code.strip
-    code
-
-
-
-    url = "http://gw2.pahaoche.com/wghttp/internal/booking?sessionKey=#{session_key}&jsonpCallback=jQuery18305799584991588008_1438219790186&yuyueId=&channel=yy-huayang-141219-012&from=GW&tokenKey=8891E237-C4DB-4B79-A7A2-77DBB50D0772&tokenValue=3b783617-8bf6-4f03-ab11-7c6f46054af2&expectTime=%E8%AE%A1%E5%88%92%E5%8D%96%E8%BD%A6%E6%97%B6%E9%97%B4%3A%E4%B8%80%E5%91%A8%E5%86%85.&name=%E5%BC%A0%E4%B8%89&mobile=13472446647&city=%E5%8D%97%E4%BA%AC&vehicleType=%E7%94%B2%E5%A3%B3%E8%99%AB+2014%E6%AC%BE+1.2TSI+%E6%97%B6%E5%B0%9A%E5%9E%8B&authCode=#{code}&_=14382212161096570"
-
-    response = RestClient.get url
-
-    pp response.body
-
-    # export TESSDATA_PREFIX=/Applications/OCRTOOLS.app/Contents/Resources/tessdata
-    #                        /Applications/OCRTOOLS.app/Contents/Resources/tessdata/eng.traineddata
-    # tesseract ~/tmp/tesser/randomImageServlet.jpg stdout
-  end
-
 end
