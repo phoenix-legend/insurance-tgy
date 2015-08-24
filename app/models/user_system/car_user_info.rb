@@ -3,6 +3,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   require 'pp'
 
   EMAIL_STATUS = {0 => '待导', 1 => '已导', 2 => '不导入'}
+  ALL_CITY = {"441900" => "东莞", "440600" => "佛山", "440100" => "广州",
+              "440300" => "深圳", "370100" => "济南", "370200" => "青岛", "330100" => "杭州", "330200" => "宁波",
+              "330300" => "温州", "320100" => "南京", "320500" => "苏州", "320200" => "无锡", "130100" => "石家庄",
+              "130200" => "唐山", "410100" => "郑州", "110100" => "北京", "210200" => "大连", "210100" => "沈阳",
+              "310100" => "上海", "500100" => "重庆", "350100" => "福州", "350200" => "厦门", "420100" => "武汉",
+              "430100" => "长沙", "230100" => "哈尔滨", "610100" => "西安", "510100" => "成都", "140100" => "太原",
+              "120100" => "天津"}
+
+  IMPORTENT_CITY = ["福州", "石家庄", "温州", "青岛", "宁波", "上海", "杭州", "太原", "西安", "北京"]
 
   def self.create_car_user_info options
     user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]
@@ -52,7 +61,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
       # 发完邮件，将对应的车主信息的邮件状态置为已发(1)
 
-      # execute "update car_user_infos set email_status = 1 where id in "
       ''
     end
 
@@ -98,7 +106,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # UserSystem::CarUserInfo.upload_to_haoche
   def self.upload_to_haoche
-    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 70901"
+    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 84487 and fabushijian > '2015-08-23'"
 
     car_user_infos.each do |car_user_info|
       next if car_user_info.phone.blank?
@@ -111,7 +119,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         end
       end
 
-      ["0000","1111","2222","3333","4444","5555","6666","7777","8888","9999"].each do |p|
+      ["0000", "1111", "2222", "3333", "4444", "5555", "6666", "7777", "8888", "9999"].each do |p|
         if car_user_info.phone.include? p
           is_next = true
         end
@@ -121,20 +129,46 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
       code, session_key = UserSystem::CarUserInfo.get_haoche_sessionkey_and_yanzhengma
       url = "http://gw2.pahaoche.com/wghttp/internal/booking"
-      response = RestClient.post url, {:sessionKey => session_key,
-                                       :authCode => code,
-                                       :channel => 'yy-huayang-141219-012',
-                                       :from => 'GW',
-                                       :tokenKey => '8891E237-C4DB-4B79-A7A2-77DBB50D0779',
-                                       :tokenValue => '3b783617-8bf6-4f03-ab11-7c6f46054ad2',
-                                       :expectTime => '计划卖车时间:一周内',
-                                       :name => car_user_info.name,
-                                       :mobile => car_user_info.phone,
-                                       :city => car_user_info.city_chinese,
-                                       :vehicleType => "#{car_user_info.che_xing}-预期#{car_user_info.price}",
-                                       :_ => session_key
-                                    }
-      pp response.body
+
+      #不同的城市提交到不同的地方
+      para = if ::UserSystem::CarUserInfo::IMPORTENT_CITY.include? car_user_info.city_chinese
+               car_user_info.channel = 'yy-huayang-141219-012'
+               {:sessionKey => session_key,
+                :authCode => code,
+                :channel => 'yy-huayang-141219-012',
+                :from => 'GW',
+                :tokenKey => '8891E237-C4DB-4B79-A7A2-77DBB50D0779',
+                :tokenValue => '3b783617-8bf6-4f03-ab11-7c6f46054ad2',
+                :expectTime => '计划卖车时间:一周内',
+                :name => car_user_info.name,
+                :mobile => car_user_info.phone,
+                :city => car_user_info.city_chinese,
+                :vehicleType => "#{car_user_info.che_xing}-预期#{car_user_info.price}",
+                :_ => session_key
+               }
+             else
+               car_user_info.channel = 'yy-aiyi-150514'
+               {:sessionKey => session_key,
+                :authCode => code,
+                :channel => 'yy-aiyi-150514',
+                :from => 'GW',
+                :tokenKey => '6642FD7E-544F-4228-AC93-224E1EF98A9A',
+                :tokenValue => '7036536a-5a3a-4ab2-aa32-f53f0162f440',
+                :expectTime => '计划卖车时间:一周内',
+                :name => car_user_info.name,
+                :mobile => car_user_info.phone,
+                :city => car_user_info.city_chinese,
+                :vehicleType => "#{car_user_info.che_xing}",
+                :identifyCode => '',
+                :mobileValidate => '',
+                :id => '',
+                :yuyueId => '',
+                :_ => session_key
+               }
+             end
+
+      response = RestClient.post url, para
+      # pp response.body
       response_json = JSON.parse response.body
       if response_json["result"]
         car_user_info.upload_status = 'success'
@@ -247,7 +281,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       city_content["item"].each do |city|
         areaid, areaname = city["id"], city["value"]
 
-        if ["广州", "深圳", "宁波", "东莞", "唐山", "厦门", "上海", "西安", "重庆", "杭州", "天津", "苏州", "成都", "福州", "长沙", "北京", "南京", "温州", "哈尔滨", "石家庄", "合肥", "郑州", "武汉", "太原", "沈阳", "无锡", "大连", "济南", "佛山", "青岛"].include? areaname
+        if ::UserSystem::CarUserInfo::ALL_CITY.values.include? areaname
           city_hash[areaid] = areaname
         end
       end
@@ -259,21 +293,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_price_start = 1
     car_price_end = 1000
     number_per_page = 10
-    # city_hash = {"441900" => "东莞", "440600" => "佛山", "440100" => "广州",
-    #              "440300" => "深圳", "370100" => "济南", "370200" => "青岛", "330100" => "杭州", "330200" => "宁波",
-    #              "330300" => "温州", "320100" => "南京", "320500" => "苏州", "320200" => "无锡", "130100" => "石家庄",
+    city_hash = ::UserSystem::CarUserInfo::ALL_CITY
+
+    # city_hash = {"441900" => "东莞", "440100" => "广州",
+    #              "440300" => "深圳", "370200" => "青岛", "330100" => "杭州", "330200" => "宁波",
+    #              "330300" => "温州", "320100" => "南京", "320500" => "苏州", "130100" => "石家庄",
     #              "130200" => "唐山", "410100" => "郑州", "110100" => "北京", "210200" => "大连", "210100" => "沈阳",
     #              "310100" => "上海", "500100" => "重庆", "350100" => "福州", "350200" => "厦门", "420100" => "武汉",
-    #              "430100" => "长沙", "230100" => "哈尔滨", "610100" => "西安", "510100" => "成都", "140100" => "太原",
-    #              "120100" => "天津"}
-
-    city_hash = {"441900" => "东莞", "440100" => "广州",
-                 "440300" => "深圳", "370200" => "青岛", "330100" => "杭州", "330200" => "宁波",
-                 "330300" => "温州", "320100" => "南京", "320500" => "苏州", "130100" => "石家庄",
-                 "130200" => "唐山", "410100" => "郑州", "110100" => "北京", "210200" => "大连", "210100" => "沈阳",
-                 "310100" => "上海", "500100" => "重庆", "350100" => "福州", "350200" => "厦门", "420100" => "武汉",
-                 "610100" => "西安", "510100" => "成都", "140100" => "太原",
-                 }
+    #              "610100" => "西安", "510100" => "成都", "140100" => "太原"
+    # }
 
     threads = []
     city_hash.each_pair do |areaid, areaname|
@@ -337,9 +365,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   # 获取需要发送邮件的车主信息
   def self.need_send_mail_car_user_infos
     car_user_infos = self.where(email_status: 0)
-    cities = ['广州', '深圳', '宁波', '东莞', '唐山', '厦门', '上海', '西安', '重庆', '杭州', '天津', '苏州', '成都', '福州', '长沙',
-              '北京', '南京', '温州', '哈尔滨', '石家庄', '合肥', '郑州', '武汉', '太原', '沈阳', '无锡', '大连',
-              '济南', '佛山', '青岛']
+    cities = ::UserSystem::CarUserInfo::ALL_CITY.values
     result_car_users = []
     car_user_infos.each do |car_user_info|
       # 只从这20个城市中发
@@ -373,7 +399,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     center_gray = Spreadsheet::Format.new horizontal_align: :center, vertical_align: :center, border: :thin, color: :gray
     sheet1 = book.create_worksheet name: '车主信息数据'
     # sheet1.row(1) << ['姓名', '电话', '车型', '车龄', '城市', '备注', '里程', '发布时间', '保存时间', '数据来源']
-    ['姓名', '电话', '车型', '车龄', '价格', '城市', '备注', '里程', '发布时间', '保存时间', '数据来源', '导入状态'].each_with_index do |content, i|
+    ['姓名', '电话', '车型', '车龄', '价格', '城市', '备注', '里程', '发布时间', '保存时间', '数据来源', '导入状态', '渠道'].each_with_index do |content, i|
       sheet1.row(0)[i] = content
     end
 
@@ -396,7 +422,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
        car_user_info.price,
        car_user_info.city_chinese, car_user_info.note, "#{car_user_info.milage}万公里",
        car_user_info.fabushijian, (car_user_info.created_at.chinese_format rescue ''),
-       car_user_info.site_name, upload_zhuangtai].each_with_index do |content, i|
+       car_user_info.site_name, upload_zhuangtai, car_user_info.channel].each_with_index do |content, i|
         sheet1.row(current_row)[i] = content
       end
       current_row += 1
