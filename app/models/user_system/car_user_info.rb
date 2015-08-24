@@ -147,10 +147,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                 :_ => session_key
                }
              else
-               car_user_info.channel = 'yy-aiyi-150514'
+               car_user_info.channel = 'yy-aiyi-150513'
                {:sessionKey => session_key,
                 :authCode => code,
-                :channel => 'yy-aiyi-150514',
+                :channel => 'yy-aiyi-150513',
                 :from => 'GW',
                 :tokenKey => '6642FD7E-544F-4228-AC93-224E1EF98A9A',
                 :tokenValue => '7036536a-5a3a-4ab2-aa32-f53f0162f440',
