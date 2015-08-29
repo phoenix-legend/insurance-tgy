@@ -11,7 +11,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
               "430100" => "长沙", "230100" => "哈尔滨", "610100" => "西安", "510100" => "成都", "140100" => "太原",
               "120100" => "天津"}
 
-  IMPORTENT_CITY = ["福州", "石家庄", "温州", "青岛", "宁波", "上海", "杭州", "太原", "西安", "北京"]
+  # IMPORTENT_CITY = ["福州", "石家庄", "温州", "青岛", "宁波", "上海", "杭州", "太原", "西安", "北京"]
+  IMPORTENT_CITY = []
 
   def self.create_car_user_info options
     user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]
@@ -57,10 +58,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
       send_car_user_infos.each { |u| u.update email_status: 1 }
-
-
       # 发完邮件，将对应的车主信息的邮件状态置为已发(1)
-
       ''
     end
 
