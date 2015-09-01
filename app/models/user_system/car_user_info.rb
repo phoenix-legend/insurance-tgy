@@ -11,8 +11,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
               "430100" => "长沙", "230100" => "哈尔滨", "610100" => "西安", "510100" => "成都", "140100" => "太原",
               "120100" => "天津"}
 
-   IMPORTENT_CITY = ["福州", "石家庄", "温州", "青岛", "宁波", "上海", "杭州", "太原", "西安", "北京"]
-  #IMPORTENT_CITY = []
+   IMPORTENT_CITY = ["北京","成都","大连", "东莞","福州","广州", "杭州","南京","宁波", "青岛","上海","沈阳", "苏州","温州","武汉","西安"]
+   #IMPORTENT_CITY = []
 
   def self.create_car_user_info options
     user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]
