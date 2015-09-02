@@ -232,6 +232,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                                                                                              fabushijian: time}
 
         rescue Exception => e
+          pp e
           car_user_info.need_update = false
           car_user_info.save
         end
