@@ -32,7 +32,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     ::UserSystem::CarUserInfoSendEmail.transaction do
       #晚上不发邮件
       return if Time.now.hour < 9
-      return if Time.now.hour > 20
+      return if Time.now.hour > 21
       # 同一个小时不发两次邮件
       return if ::UserSystem::CarUserInfoSendEmail.had_send_email_in_current_hour?
 
@@ -52,12 +52,21 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       zhuti = "#{success_count}成功#{cunzai_count}存在#{shibai_count}失败#{budaoru_count}不导"
 
       # 发送邮件
-      MailSend.send_car_user_infos('chenkai@baohe001.com;tanguanyu@baohe001.com;yuanyuan@baohe001.com',
-                                   '13472446647@163.com',
-                                   send_car_user_infos.count,
-                                   zhuti,self.generate_xls_of_car_user_info(send_car_user_infos),
-                                   self.generate_xls_of_four_city
-      ).deliver
+      if Time.now > Time.parse("#{Time.now.chinese_format_day} 20:00:00")
+        MailSend.send_car_user_infos('chenkai@baohe001.com;tanguanyu@baohe001.com;yuanyuan@baohe001.com',
+                                     '13472446647@163.com',
+                                     send_car_user_infos.count,
+                                     zhuti,self.generate_xls_of_car_user_info(send_car_user_infos),
+                                     self.generate_xls_of_four_city
+        ).deliver
+      else
+        MailSend.send_car_user_infos('chenkai@baohe001.com;tanguanyu@baohe001.com;yuanyuan@baohe001.com',
+                                     '13472446647@163.com',
+                                     send_car_user_infos.count,
+                                     zhuti,self.generate_xls_of_car_user_info(send_car_user_infos)
+        ).deliver
+      end
+
       send_car_user_infos.each { |u| u.update email_status: 1 }
       # 发完邮件，将对应的车主信息的邮件状态置为已发(1)
       ''
@@ -428,6 +437,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       sheet1.row(0)[i] = content
     end
     current_row = 1
+    pp car_user_infos
+    pp "xxxx"
     car_user_infos.each do |car_user_info|
       upload_zhuangtai = case car_user_info.upload_status
                            when 'success'
