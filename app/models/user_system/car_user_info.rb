@@ -63,7 +63,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       #   MailSend.send_car_user_infos('chenkai@baohe001.com;tanguanyu@baohe001.com;yuanyuan@baohe001.com',
       #                                '13472446647@163.com',
       #                                send_car_user_infos.count,
-      #                                zhuti,self.generate_xls_of_car_user_info(send_car_user_infos)
+      #                                zhuti,
+      #                                [self.generate_xls_of_car_user_info(send_car_user_infos)]
       #   ).deliver
       # end
 

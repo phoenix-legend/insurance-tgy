@@ -10,7 +10,7 @@ class MailSend < BaseMailer
     # File.delete file_path
     ::UserSystem::CarUserInfoSendEmail.create_car_user_info_send_email receiver: receiver,
                                                                        cc: copy_receivers,
-                                                                       attachment_name: file_path,
+                                                                       attachment_name: file_paths.join(','),
                                                                        record_number: record_number
   end
 
