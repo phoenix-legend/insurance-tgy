@@ -417,7 +417,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   #每日发送四城市表格
   def self.generate_xls_of_four_city
     car_user_infos = ::UserSystem::CarUserInfo.where("created_at > '#{Time.now.yesterday.chinese_format_day} 20:00:00' and created_at < '#{Time.now.yesterday.chinese_format_day} 20:00:00'")
-    car_user_infos = car_user_info.where(city_chinese: IN UserSystem::CarUserInfo::SI_CHENGSHI)
+    car_user_infos = car_user_infos.where(city_chinese: IN ::UserSystem::CarUserInfo::SI_CHENGSHI)
 
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
