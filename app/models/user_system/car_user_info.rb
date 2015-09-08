@@ -52,21 +52,21 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       zhuti = "#{success_count}成功#{cunzai_count}存在#{shibai_count}失败#{budaoru_count}不导"
 
       # 发送邮件
-      # if Time.now > Time.parse("#{Time.now.chinese_format_day} 20:00:00")
+      if Time.now > Time.parse("#{Time.now.chinese_format_day} 20:00:00")
         MailSend.send_car_user_infos('chenkai@baohe001.com;tanguanyu@baohe001.com;yuanyuan@baohe001.com',
                                      '13472446647@163.com',
                                      send_car_user_infos.count,
                                      zhuti,
                                      [self.generate_xls_of_car_user_info(send_car_user_infos), self.generate_xls_of_four_city]
         ).deliver
-      # else
-      #   MailSend.send_car_user_infos('chenkai@baohe001.com;tanguanyu@baohe001.com;yuanyuan@baohe001.com',
-      #                                '13472446647@163.com',
-      #                                send_car_user_infos.count,
-      #                                zhuti,
-      #                                [self.generate_xls_of_car_user_info(send_car_user_infos)]
-      #   ).deliver
-      # end
+      else
+        MailSend.send_car_user_infos('chenkai@baohe001.com;tanguanyu@baohe001.com;yuanyuan@baohe001.com',
+                                     '13472446647@163.com',
+                                     send_car_user_infos.count,
+                                     zhuti,
+                                     [self.generate_xls_of_car_user_info(send_car_user_infos)]
+        ).deliver
+      end
 
       send_car_user_infos.each { |u| u.update email_status: 1 }
       # 发完邮件，将对应的车主信息的邮件状态置为已发(1)
@@ -104,13 +104,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     code_match = code.match /\A(\d{4})\Z/
     puts '获取'
 
-    pp 'xxx11111'
     if code_match
-      pp 'xxx222'
       return code_match[1], session_key
     else
       sleep 1
-      pp 'xxx333'
       return UserSystem::CarUserInfo.get_haoche_sessionkey_and_yanzhengma
     end
     code
@@ -142,7 +139,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
       code, session_key = UserSystem::CarUserInfo.get_haoche_sessionkey_and_yanzhengma
       url = "http://gw2.pahaoche.com/wghttp/internal/booking"
-      pp 'xxx555'
       #不同的城市提交到不同的地方
       para = if ::UserSystem::CarUserInfo::IMPORTENT_CITY.include? car_user_info.city_chinese
                car_user_info.channel = 'yy-huayang-141219-012'
@@ -217,8 +213,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       next unless car_user_info.name.blank?
       next unless car_user_info.phone.blank?
       next if car_user_info.detail_url.match /m\.hao\.autohome\.com\.cn/
-      pp '------------------------------------'
-      pp "现在线程池中有#{threads.length}个。"
       if threads.length > thread_number
         sleep 2
       end
