@@ -102,10 +102,14 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     pp code
     code_match = code.match /\A(\d{4})\Z/
     puts '获取'
+
+    pp 'xxx11111'
     if code_match
+      pp 'xxx222'
       return code_match[1], session_key
     else
       sleep 1
+      pp 'xxx333'
       return UserSystem::CarUserInfo.get_haoche_sessionkey_and_yanzhengma
     end
     code
@@ -137,7 +141,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
       code, session_key = UserSystem::CarUserInfo.get_haoche_sessionkey_and_yanzhengma
       url = "http://gw2.pahaoche.com/wghttp/internal/booking"
-
+      pp 'xxx555'
       #不同的城市提交到不同的地方
       para = if ::UserSystem::CarUserInfo::IMPORTENT_CITY.include? car_user_info.city_chinese
                car_user_info.channel = 'yy-huayang-141219-012'
