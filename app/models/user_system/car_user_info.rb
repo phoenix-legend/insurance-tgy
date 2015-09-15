@@ -3,6 +3,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   require 'pp'
 
   EMAIL_STATUS = {0 => '待导', 1 => '已导', 2 => '不导入'}
+  CHANNEL = {'che168' => 'yy-huayang-141219-012', 'taoche' => 'yy-huayang-141219-012'}
   ALL_CITY = {"441900" => "东莞", "440600" => "佛山", "440100" => "广州",
               "440300" => "深圳", "370100" => "济南", "370200" => "青岛", "330100" => "杭州", "330200" => "宁波",
               "330300" => "温州", "320100" => "南京", "320500" => "苏州", "320200" => "无锡", "130100" => "石家庄",
@@ -42,13 +43,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "tianjin" => "天津"
   }
 
-   # IMPORTENT_CITY = ["北京","成都","大连", "东莞","福州","广州", "杭州","南京","宁波", "青岛","上海","沈阳", "苏州","温州","武汉","西安"]
-   IMPORTENT_CITY = ["唐山","太原","温州","石家庄","西安","沈阳","福州","上海","宁波","杭州","青岛","苏州","武汉","大连","天津","南京","广州","成都","东莞"]
+  # IMPORTENT_CITY = ["北京","成都","大连", "东莞","福州","广州", "杭州","南京","宁波", "青岛","上海","沈阳", "苏州","温州","武汉","西安"]
+  IMPORTENT_CITY = ["唐山", "太原", "温州", "石家庄", "西安", "沈阳", "福州", "上海", "宁波", "杭州", "青岛", "苏州", "武汉", "大连", "天津", "南京", "广州", "成都", "东莞"]
 
-   SI_CHENGSHI = ['上海', '无锡', '苏州', '南京']
-
-
-   #IMPORTENT_CITY = []
+  SI_CHENGSHI = ['上海', '无锡', '苏州', '南京']
 
   def self.create_car_user_info options
     user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]
@@ -71,9 +69,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
       # 若需发送的数据量为0，则不发送邮件
       return if send_car_user_infos.blank?
-      # = 0
-      # = 0
-      # shibai_count = 0
 
       success_count = send_car_user_infos.count { |info| info.upload_status == 'success' }
       cunzai_count = send_car_user_infos.count { |info| info.upload_status == 'yicunzai' }
@@ -83,7 +78,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       zhuti = "#{success_count}成功#{cunzai_count}存在#{shibai_count}失败#{budaoru_count}不导"
 
       # 发送邮件
-      if Time.now > Time.parse("#{Time.now.chinese_format_day} 20:00:00")
+      if Time.now > Time.parse("#{Time.now.chinese_format_day} 21:00:00")
         MailSend.send_car_user_infos('chenkai@baohe001.com;tanguanyu@baohe001.com;yuanyuan@baohe001.com',
                                      '13472446647@163.com',
                                      send_car_user_infos.count,
@@ -123,10 +118,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     code = if Rails.env == "development"
              `tesseract #{file_name} stdout --tessdata-dir /Applications/OCRTOOLS.app/Contents/Resources/tessdata`
            else
-             ddd = `/usr/local/bin/tesseract #{file_name} stdout`
-             pp "里面的ddd#{ddd}"
-             pp ddd
-             ddd
+             `/usr/local/bin/tesseract #{file_name} stdout`
            end
 
 
@@ -147,7 +139,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # UserSystem::CarUserInfo.upload_to_haoche
   def self.upload_to_haoche
-    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 93637 and fabushijian > '2015-09-07'"
+    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 98423 and fabushijian > '2015-09-14'"
 
     car_user_infos.each do |car_user_info|
       next if car_user_info.phone.blank?
@@ -170,42 +162,45 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
       code, session_key = UserSystem::CarUserInfo.get_haoche_sessionkey_and_yanzhengma
       url = "http://gw2.pahaoche.com/wghttp/internal/booking"
+
+      channel = if ::UserSystem::CarUserInfo::IMPORTENT_CITY.include? car_user_info.city_chinese
+                  ::UserSystem::CarUserInfo::CHANNEL[car_user_info.site_name]
+                else
+                  'yy-aiyi-150513'
+                end
+
+
+      para = {
+          :sessionKey => session_key,
+          :authCode => code,
+          :from => 'GW',
+          :expectTime => '计划卖车时间:一周内',
+          :name => car_user_info.name,
+          :mobile => car_user_info.phone,
+          :city => car_user_info.city_chinese,
+          :_ => session_key,
+          :channel => channel,
+      }
+      car_user_info.channel = channel
       #不同的城市提交到不同的地方
-      para = if ::UserSystem::CarUserInfo::IMPORTENT_CITY.include? car_user_info.city_chinese
-               car_user_info.channel = 'yy-huayang-141219-012'
-               {:sessionKey => session_key,
-                :authCode => code,
-                :channel => 'yy-huayang-141219-012',
-                :from => 'GW',
-                :tokenKey => '8891E237-C4DB-4B79-A7A2-77DBB50D0779',
-                :tokenValue => '3b783617-8bf6-4f03-ab11-7c6f46054ad2',
-                :expectTime => '计划卖车时间:一周内',
-                :name => car_user_info.name,
-                :mobile => car_user_info.phone,
-                :city => car_user_info.city_chinese,
-                :vehicleType => "#{car_user_info.che_xing}-预期#{car_user_info.price}",
-                :_ => session_key
-               }
-             else
-               car_user_info.channel = 'yy-aiyi-150513'
-               {:sessionKey => session_key,
-                :authCode => code,
-                :channel => 'yy-aiyi-150513',
-                :from => 'GW',
-                :tokenKey => '6642FD7E-544F-4228-AC93-224E1EF98A9A',
-                :tokenValue => '7036536a-5a3a-4ab2-aa32-f53f0162f440',
-                :expectTime => '计划卖车时间:一周内',
-                :name => car_user_info.name,
-                :mobile => car_user_info.phone,
-                :city => car_user_info.city_chinese,
-                :vehicleType => "#{car_user_info.che_xing}",
-                :identifyCode => '',
-                :mobileValidate => '',
-                :id => '',
-                :yuyueId => '',
-                :_ => session_key
-               }
-             end
+      if ::UserSystem::CarUserInfo::IMPORTENT_CITY.include? car_user_info.city_chinese
+
+        para.merge!({
+                        :tokenKey => '8891E237-C4DB-4B79-A7A2-77DBB50D0779',
+                        :tokenValue => '3b783617-8bf6-4f03-ab11-7c6f46054ad2',
+                        :vehicleType => "#{car_user_info.che_xing}-预期#{car_user_info.price}",
+                    })
+      else
+        para.merge!({
+                        :tokenKey => '6642FD7E-544F-4228-AC93-224E1EF98A9A',
+                        :tokenValue => '7036536a-5a3a-4ab2-aa32-f53f0162f440',
+                        :vehicleType => "#{car_user_info.che_xing}",
+                        :identifyCode => '',
+                        :mobileValidate => '',
+                        :id => '',
+                        :yuyueId => ''
+                    })
+      end
 
       response = RestClient.post url, para
       # pp response.body
@@ -229,67 +224,24 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   #UserSystem::CarUserInfo.update_che168_detail2
-  def self.update_che168_detail2 run_list = true, thread_number = 30
+  def self.run_men run_list = true, thread_number = 30
     # while true
     if run_list
       begin
-        UserSystem::CarUserInfo.che168_get_car_list
+        Che168.get_car_user_list
       rescue Exception => e
+        pp e
       end
     end
     pp '.........列表跑完'
-    threads = []
-    car_user_infos = UserSystem::CarUserInfo.where need_update: true
-    car_user_infos.each do |car_user_info|
-      next unless car_user_info.name.blank?
-      next unless car_user_info.phone.blank?
-      next if car_user_info.detail_url.match /m\.hao\.autohome\.com\.cn/
-      if threads.length > thread_number
-        sleep 2
-      end
-      threads.delete_if { |thread| thread.status == false }
-      t = Thread.new do
-        begin
-          puts '开始跑明细'
 
-          # detail_content = `curl '#{car_user_info.detail_url}'`
-          response = RestClient.get(car_user_info.detail_url)
 
-          detail_content = response.body
-          detail_content = Nokogiri::HTML(detail_content)
-          connect_info = detail_content.css("#callPhone")[0]
-          name = connect_info.css("em").text.strip
-          phone = connect_info.attributes["data-telno"].value
-
-          note = detail_content.css(".seller-message #js-message")[0].text
-          # time = detail_content.css(".price .time")[0].text.gsub("发布日期：", '')
-          time = detail_content.css(".price .time")[0].text.gsub("发布", '')
-          price = detail_content.css(".price em strong")[0].text.gsub("¥", '')
-
-          response = RestClient.post "http://localhost:4000/api/v1/update_user_infos/update_car_user_info", {id: car_user_info.id,
-                                                                                                             name: name,
-                                                                                                             phone: phone,
-                                                                                                             note: note,
-                                                                                                             price: price,
-                                                                                                             fabushijian: time}
-
-        rescue Exception => e
-          pp e
-          car_user_info.need_update = false
-          car_user_info.save
-        end
-        ActiveRecord::Base.connection.close
-      end
-      threads << t
-      # pp "现在线程池中有#{threads.length}个。"
+    begin
+      Che168.update_detail
+    rescue Exception => e
+      pp e
     end
-
-    1.upto(2000) do
-      sleep(1)
-      # pp '休息.......'
-      threads.delete_if { |thread| thread.status == false }
-      break if threads.blank?
-    end
+    pp '.........明细更新完成'
 
 
     begin
@@ -327,64 +279,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
           city_hash[areaid] = areaname
         end
       end
-    end
-  end
-
-
-  def self.che168_get_car_list
-    car_price_start = 1
-    car_price_end = 1000
-    number_per_page = 10
-    city_hash = ::UserSystem::CarUserInfo::ALL_CITY
-    threads = []
-    city_hash.each_pair do |areaid, areaname|
-      threads.delete_if { |thread| thread.status == false }
-      if threads.length > 30
-        pp "现在共有#{threads.length}个线程正在运行"
-        sleep 3
-      end
-      t = Thread.new do
-        begin
-          pp "现在跑.. #{areaname}"
-          1.upto 1000000000 do |i|
-            content = RestClient.get "http://m.che168.com/handler/getcarlist.ashx?num=#{number_per_page}&pageindex=#{i}&brandid=0&seriesid=0&specid=0&price=#{car_price_start}_#{car_price_end}&carageid=5&milage=0&carsource=1&store=6&levelid=0&key=&areaid=#{areaid}&browsetype=0&market=00&browserType=0"
-            content = content.body
-            break if content.blank?
-            a = JSON.parse content
-            break if a.length == 0
-            car_number = a.length
-            exists_car_number = 0
-            a.each do |info|
-              result = UserSystem::CarUserInfo.create_car_user_info che_xing: info["carname"],
-                                                                    che_ling: info["date"],
-                                                                    milage: info['milage'],
-                                                                    detail_url: "http://m.che168.com#{info["url"]}",
-                                                                    city_chinese: areaname,
-                                                                    site_name: 'che168'
-              exists_car_number = exists_car_number + 1 if result == 1
-            end
-            if car_number == exists_car_number
-              puts '本页数据全部存在，跳出'
-              break
-            end
-          end
-          ActiveRecord::Base.connection.close
-        rescue Exception => e
-          ActiveRecord::Base.connection.close
-        end
-      end
-      threads << t
-    end
-
-
-    1.upto(2000) do
-      sleep(1)
-      pp '抓省份。。休息.......'
-      threads.each do |t|
-        pp t.status
-      end
-      threads.delete_if { |thread| thread.status == false }
-      break if threads.blank?
     end
   end
 
@@ -457,7 +351,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   def self.generate_xls_of_four_city
     car_user_infos = ::UserSystem::CarUserInfo.where("created_at > ? and created_at < ?",
                                                      Time.parse("#{Time.now.yesterday.chinese_format_day} 20:00:00"),
-                                                     Time.parse("#{Time.now.chinese_format_day} 20:00:00") )
+                                                     Time.parse("#{Time.now.chinese_format_day} 20:00:00"))
     car_user_infos = car_user_infos.where(city_chinese: ::UserSystem::CarUserInfo::SI_CHENGSHI)
 
     Spreadsheet.client_encoding = 'UTF-8'
