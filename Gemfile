@@ -62,3 +62,4 @@ gem 'spreadsheet'
 #分页
 gem "will_paginate-foundation"
 
+gem 'ruby-pinyin'
