@@ -240,6 +240,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       pp e
     end
 
+    begin
+      UserSystem::CarUserInfo.upload_to_haoche
+    rescue Exception => e
+      pp e
+    end
+
 
     begin
       UserSystem::CarUserInfo.send_email
