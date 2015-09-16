@@ -65,7 +65,7 @@ module TaoChe
     car_user_infos.each do |car_user_info|
       next unless car_user_info.name.blank?
       next unless car_user_info.phone.blank?
-      if threads.length > thread_number
+      if threads.length > 30
         sleep 2
       end
       threads.delete_if { |thread| thread.status == false }
@@ -74,16 +74,30 @@ module TaoChe
           puts '开始跑明细'
 
           # detail_content = `curl '#{car_user_info.detail_url}'`
+          url = 'http://m.taoche.com/buycar/p-6850921.html'
+          response = RestClient.get(url)
+
           response = RestClient.get(car_user_info.detail_url)
 
           detail_content = response.body
           detail_content = Nokogiri::HTML(detail_content)
+          name = detail_content.css('.shjtit')[0].text.strip
+          pp name
+          phone = detail_content.css('.cyxqshj p')[1].text.match /\d{11}/.to_s
+          pp phone
+          note = detail_content.css('.mjmstext')[0].text
+          pp note
+          price = detail_content.css('.jiagmain p em')[0].text.match(/[\d.]{1,10}/).to_s
+          pp price
+          fabushijian = detail_content.css('.chytext p')[0].text.gsub('发布','').strip
+          pp fabushijian
+
           response = RestClient.post "http://localhost:4000/api/v1/update_user_infos/update_car_user_info", {id: car_user_info.id,
-                                                                                                             name: detail_content.css('p.shjtit').first.text.strip,
-                                                                                                             phone: detail_content.css('a.tel').css('p')[1].text.strip,
-                                                                                                             note: (detail_content.css('div.mjmstext.mizaos').first.text),
-                                                                                                             price: detail_content.css('p em').first.text.strip.match(/[\d.]{1,10}/).to_s,
-                                                                                                             fabushijian: content.css('div.chytext p').text.strip.match(/[\d-]{1,10}/).to_s}
+                                                                                                             name: name,
+                                                                                                             phone: phone,
+                                                                                                             note: note,
+                                                                                                             price: price,
+                                                                                                             fabushijian: fabushijian}
 
         rescue Exception => e
           pp e

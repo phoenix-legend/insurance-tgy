@@ -55,7 +55,7 @@ module Che168
       next unless car_user_info.name.blank?
       next unless car_user_info.phone.blank?
       next if car_user_info.detail_url.match /m\.hao\.autohome\.com\.cn/
-      if threads.length > thread_number
+      if threads.length > 30
         sleep 2
       end
       threads.delete_if { |thread| thread.status == false }
@@ -70,11 +70,11 @@ module Che168
           detail_content = Nokogiri::HTML(detail_content)
           connect_info = detail_content.css("#callPhone")[0]
           name = connect_info.css("em").text.strip
-          phone = connect_info.attributes["data-telno"].value
+          phone = connect_info.attributes["data-telno"].value.strip
 
-          note = detail_content.css(".seller-message #js-message")[0].text
-          time = detail_content.css(".price .time")[0].text.gsub("发布", '')
-          price = detail_content.css(".price em strong")[0].text.gsub("¥", '')
+          note = detail_content.css(".seller-message #js-message")[0].text.strip
+          time = detail_content.css(".price .time")[0].text.gsub("发布", '').strip
+          price = detail_content.css(".price em strong")[0].text.gsub("¥", '').strip
 
           response = RestClient.post "http://localhost:4000/api/v1/update_user_infos/update_car_user_info", {id: car_user_info.id,
                                                                                                              name: name,
