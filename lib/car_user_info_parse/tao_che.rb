@@ -109,6 +109,12 @@ module TaoChe
       threads << t
       # pp "现在线程池中有#{threads.length}个。"
     end
+    1.upto(2000) do
+      sleep(1)
+      # pp '休息.......'
+      threads.delete_if { |thread| thread.status == false }
+      break if threads.blank?
+    end
   end
 
 end

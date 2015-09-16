@@ -45,6 +45,12 @@ module Che168
       end
       threads << t
     end
+    1.upto(2000) do
+      sleep(1)
+      # pp '休息.......'
+      threads.delete_if { |thread| thread.status == false }
+      break if threads.blank?
+    end
   end
 
   def self.update_detail
