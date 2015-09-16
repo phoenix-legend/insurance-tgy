@@ -221,7 +221,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         pp e
       end
     end
-    pp '.........che168列表跑完'
+    pp '.........淘车列表跑完'
 
 
     begin
@@ -229,7 +229,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     rescue Exception => e
       pp e
     end
-    pp '.........che168明细更新完成'
+    pp '.........淘车明细更新完成'
 
 
 

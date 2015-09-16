@@ -34,7 +34,7 @@ module Che168
               exists_car_number = exists_car_number + 1 if result == 1
             end
             if car_number == exists_car_number
-              puts '本页数据全部存在，跳出'
+              puts 'che 168 本页数据全部存在，跳出'
               break
             end
           end

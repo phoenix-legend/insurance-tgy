@@ -13,6 +13,7 @@ module TaoChe
           pp "现在跑.. #{areaname}"
           pp pinyin
           1.upto 10 do |i|
+            pp "现在跑.. #{areaname}  第 #{i}页"
             pp "http://#{pinyin}.m.taoche.com/buycar/pges1bxcdza/?orderid=1&page=#{i}"
             response = RestClient.get "http://#{pinyin}.m.taoche.com/buycar/pges1bxcdza/?orderid=1&page=#{i}"
             content = response.body
@@ -33,7 +34,7 @@ module TaoChe
               exists_car_number = exists_car_number + 1 if result == 1
             end
             if car_number == exists_car_number
-              puts '本页数据全部存在，跳出'
+              puts '淘车本页数据全部存在，跳出'
               break
             end
           end
