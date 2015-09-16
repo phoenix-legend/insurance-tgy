@@ -108,7 +108,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # UserSystem::CarUserInfo.upload_to_haoche
   def self.upload_to_haoche
-    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 98941 and fabushijian > '2015-09-14'"
+    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 106340 and fabushijian > '2015-09-14'"
 
     car_user_infos.each do |car_user_info|
       next if car_user_info.phone.blank?
@@ -214,22 +214,22 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
 
-    if run_list
-      begin
-        TaoChe.get_car_user_list
-      rescue Exception => e
-        pp e
-      end
-    end
-    pp '.........淘车列表跑完'
-
-
-    begin
-      TaoChe.update_detail
-    rescue Exception => e
-      pp e
-    end
-    pp '.........淘车明细更新完成'
+    # if run_list
+    #   begin
+    #     TaoChe.get_car_user_list
+    #   rescue Exception => e
+    #     pp e
+    #   end
+    # end
+    # pp '.........淘车列表跑完'
+    #
+    #
+    # begin
+    #   TaoChe.update_detail
+    # rescue Exception => e
+    #   pp e
+    # end
+    # pp '.........淘车明细更新完成'
 
 
 
