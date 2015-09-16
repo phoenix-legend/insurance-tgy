@@ -75,7 +75,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     session_key = "#{Time.now.to_i}#{rand(10000000)}"
     # return session_key, ''
     url = "http://gw2.pahaoche.com/wghttp/randomImageServlet?Rand=4&sessionKey=#{session_key}"
-    response = RestClient.get url
+    response = RestClient.get urlgit
     `rm #{Rails.root}/public/downloads/*`
     file = File.new("#{Rails.root}/public/downloads/#{session_key}.jpg", 'wb')
     file.write response.body
@@ -108,7 +108,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # UserSystem::CarUserInfo.upload_to_haoche
   def self.upload_to_haoche
-    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 98423 and fabushijian > '2015-09-14'"
+    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 98941 and fabushijian > '2015-09-14'"
 
     car_user_infos.each do |car_user_info|
       next if car_user_info.phone.blank?
@@ -193,7 +193,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   #UserSystem::CarUserInfo.update_che168_detail2
-  def self.run_men run_list = true, thread_number = 30
+  def self.run_men run_list = true
 
     if run_list
       begin

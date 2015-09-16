@@ -13,7 +13,6 @@ module TaoChe
           pp "现在跑.. #{areaname}"
           pp pinyin
           1.upto 10 do |i|
-            pp "访问。。。。。。。。。"
             pp "http://#{pinyin}.m.taoche.com/buycar/pges1bxcdza/?orderid=1&page=#{i}"
             response = RestClient.get "http://#{pinyin}.m.taoche.com/buycar/pges1bxcdza/?orderid=1&page=#{i}"
             content = response.body
@@ -74,8 +73,8 @@ module TaoChe
           puts '开始跑明细'
 
           # detail_content = `curl '#{car_user_info.detail_url}'`
-          url = 'http://m.taoche.com/buycar/p-6850921.html'
-          response = RestClient.get(url)
+          # url = 'http://m.taoche.com/buycar/p-6850921.html'
+          # response = RestClient.get(url)
 
           response = RestClient.get(car_user_info.detail_url)
 
@@ -85,7 +84,7 @@ module TaoChe
           pp name
           phone = detail_content.css('.cyxqshj p')[1].text.match /\d{11}/.to_s
           pp phone
-          note = detail_content.css('.mjmstext')[0].text
+          note = (detail_content.css('.mjmstext')[0].text rescue '')
           pp note
           price = detail_content.css('.jiagmain p em')[0].text.match(/[\d.]{1,10}/).to_s
           pp price

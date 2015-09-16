@@ -64,6 +64,7 @@ module Che168
           puts '开始跑明细'
 
           # detail_content = `curl '#{car_user_info.detail_url}'`
+          pp car_user_info.detail_url
           response = RestClient.get(car_user_info.detail_url)
 
           detail_content = response.body
@@ -71,7 +72,6 @@ module Che168
           connect_info = detail_content.css("#callPhone")[0]
           name = connect_info.css("em").text.strip
           phone = connect_info.attributes["data-telno"].value.strip
-
           note = detail_content.css(".seller-message #js-message")[0].text.strip
           time = detail_content.css(".price .time")[0].text.gsub("发布", '').strip
           price = detail_content.css(".price em strong")[0].text.gsub("¥", '').strip
