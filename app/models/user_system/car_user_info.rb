@@ -75,7 +75,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     session_key = "#{Time.now.to_i}#{rand(10000000)}"
     # return session_key, ''
     url = "http://gw2.pahaoche.com/wghttp/randomImageServlet?Rand=4&sessionKey=#{session_key}"
-    response = RestClient.get urlgit
+    response = RestClient.get url
     `rm #{Rails.root}/public/downloads/*`
     file = File.new("#{Rails.root}/public/downloads/#{session_key}.jpg", 'wb')
     file.write response.body
