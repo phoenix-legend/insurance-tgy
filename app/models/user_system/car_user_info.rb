@@ -3,17 +3,19 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   require 'pp'
 
   EMAIL_STATUS = {0 => '待导', 1 => '已导', 2 => '不导入'}
-  CHANNEL = {'che168' => 'yy-huayang-141219-012', 'taoche' => 'yy-huayang-141219-013'}
+  CHANNEL = {'che168' => 'yy-huayang-141219-012', 'taoche' => 'yy-huayang-141219-011'}
   ALL_CITY = {"441900" => "东莞", "440600" => "佛山", "440100" => "广州",
               "440300" => "深圳", "370100" => "济南", "370200" => "青岛", "330100" => "杭州", "330200" => "宁波",
               "330300" => "温州", "320100" => "南京", "320500" => "苏州", "320200" => "无锡", "130100" => "石家庄",
               "130200" => "唐山", "410100" => "郑州", "110100" => "北京", "210200" => "大连", "210100" => "沈阳",
               "310100" => "上海", "500100" => "重庆", "350100" => "福州", "350200" => "厦门", "420100" => "武汉",
               "430100" => "长沙", "230100" => "哈尔滨", "610100" => "西安", "510100" => "成都", "140100" => "太原",
-              "120100" => "天津"}
+              "120100" => "天津", "340100" => '合肥'}
   PINYIN_CITY = {"dongguan" => "东莞", "foshan" => "佛山", "guangzhou" => "广州", "shenzhen" => "深圳", "jinan" => "济南", "qingdao" => "青岛", "hangzhou" => "杭州", "ningbo" => "宁波", "wenzhou" => "温州", "nanjing" => "南京", "suzhou" => "苏州", "wuxi" => "无锡", "shijiazhuang" => "石家庄", "tangshan" => "唐山", "zhengzhou" => "郑州", "beijing" => "北京", "dalian" => "大连", "shenyang" => "沈阳", "shanghai" => "上海", "chongqing" => "重庆", "fuzhou" => "福州", "xiamen" => "厦门", "wuhan" => "武汉", "changsha" => "长沙", "haerbin" => "哈尔滨", "xian" => "西安", "chengdu" => "成都", "taiyuan" => "太原", "tianjin" => "天津"}
   # IMPORTENT_CITY = ["北京","成都","大连", "东莞","福州","广州", "杭州","南京","宁波", "青岛","上海","沈阳", "苏州","温州","武汉","西安"]
-  IMPORTENT_CITY = ["唐山", "太原", "温州", "石家庄", "西安", "沈阳", "福州", "上海", "宁波", "杭州", "青岛", "苏州", "武汉", "大连", "天津", "南京", "广州", "成都", "东莞"]
+  # IMPORTENT_CITY = ["唐山", "太原", "温州", "石家庄", "西安", "沈阳", "福州", "上海", "宁波", "杭州", "青岛", "苏州", "武汉", "大连", "天津", "南京", "广州", "成都", "东莞"]
+  IMPORTENT_CITY = ["北京","成都","大连","东莞","福州","广州","杭州","合肥","南京","宁波","青岛","上海","沈阳","苏州","天津","温州","武汉","西安"]
+
 
   SI_CHENGSHI = ['上海', '无锡', '苏州', '南京']
 
@@ -214,22 +216,22 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
 
-    # if run_list
-    #   begin
-    #     TaoChe.get_car_user_list
-    #   rescue Exception => e
-    #     pp e
-    #   end
-    # end
-    # pp '.........淘车列表跑完'
-    #
-    #
-    # begin
-    #   TaoChe.update_detail
-    # rescue Exception => e
-    #   pp e
-    # end
-    # pp '.........淘车明细更新完成'
+    if run_list
+      begin
+        TaoChe.get_car_user_list
+      rescue Exception => e
+        pp e
+      end
+    end
+    pp '.........淘车列表跑完'
+
+
+    begin
+      TaoChe.update_detail
+    rescue Exception => e
+      pp e
+    end
+    pp '.........淘车明细更新完成'
 
 
 
