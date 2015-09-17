@@ -110,7 +110,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # UserSystem::CarUserInfo.upload_to_haoche
   def self.upload_to_haoche
-    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 106340 and fabushijian > '2015-09-14'"
+    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 106340 and fabushijian > '2015-09-16'"
 
     car_user_infos.each do |car_user_info|
       next if car_user_info.phone.blank?
