@@ -79,5 +79,5 @@ a{ text-decoration: none; }
 .hr{ width: 98%; height: 1px; background: #eaeaea; }
 .copyright{ font-size: 12px; line-height: 26px; color: #a5a5a5; text-align: left; padding-left: 8px; }
 /*微信*/
-.wechat{ position: fixed; top:500px; right: 120px; width: 112px; height: 158px; background: #ff7116; border: 1px solid#e4e4e4; text-align: center; padding-top: 8px;}
+.wechat{ position: fixed; top:500px; right: 0px; width: 112px; height: 158px; background: #ff7116; border: 1px solid#e4e4e4; text-align: center; padding-top: 8px;}
 .wechat p{ font-size: 16px; color: #fff; line-height: 20px; text-align: center; padding: 10px 18px 0 18px; }
