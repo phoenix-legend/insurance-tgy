@@ -28,7 +28,7 @@ a{ text-decoration: none; }
 .nav li{ height: 90px; float: right; padding: 24px 30px 20px; text-align: center; }
 .nav li span{ display: inline-block; font-size: 18px; line-height: 46px; color: #4a4a4a; padding-left: 10px; }
 /*banner*/
-.banner{ width: 100%; height:401px;  background: url(/page/cheche/images/banner.jpg);}
+.banner{ width: 100%; height:401px;  background: url(/page/cheche/images/banner.jpg) center;min-width: 1200px;}
 .banner .main{ padding-left: 30px; }
 .banner p{ font-size: 37px; color: #fff; line-height: 46px; padding:76px 0 10px 2px; }
 .now{ width: 160px; height: 40px; background: #fff; font-size: 22px; color: #3b3b3b; text-align: center; line-height: 40px;margin-top: 20px; }
