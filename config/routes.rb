@@ -120,7 +120,7 @@ Rails.application.routes.draw do
   end
 
 
-  root to: "/index.html"
+  # root to: "wz/order_system/products#index"
   get '/cms', to: 'cms/employee_validate/functions#login'
   get '/dwz', to: 'dwz/haoche_stat/promation#index'
 
