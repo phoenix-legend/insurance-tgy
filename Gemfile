@@ -1,6 +1,8 @@
 # source 'https://rubygems.org'
 source 'http://ruby.taobao.org'
 
+ruby '2.0.0'
+#ruby-gemset=insurance
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.4'

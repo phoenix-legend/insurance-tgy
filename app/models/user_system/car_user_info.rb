@@ -116,7 +116,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       next if car_user_info.phone.blank?
       is_next = false
       unless car_user_info.note.blank?
-        ["诚信", '到店', '精品车', '本公司', '提档', '双保险', '可按揭', '该车为'].each do |word|
+        ["诚信", '到店', '精品车', '本公司', '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线', '依维柯'].each do |word|
           if car_user_info.note.include? word
             is_next = true
           end
@@ -127,6 +127,21 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         if car_user_info.phone.include? p
           is_next = true
         end
+      end
+
+      ['经理', '总'].each do |name_key|
+        is_next = true if car_user_info.name.include? name_key
+      end
+
+      unless car_user_info.price.blank?
+        price = car_user_info.price.gsub!('万', '')
+        price = price.to_f
+        is_next = true if price <= 1.0
+      end
+
+      unless car_user_info.che_ling.blank?
+        che_ling = car_user_info.che_ling.to_i
+        is_next = true if Time.now.year-che_ling>10
       end
 
       next if is_next
