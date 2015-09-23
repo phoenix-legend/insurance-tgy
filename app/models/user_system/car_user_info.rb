@@ -110,7 +110,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # UserSystem::CarUserInfo.upload_to_haoche
   def self.upload_to_haoche
-    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 106340 and fabushijian > '2015-09-16'"
+    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 111963 and fabushijian > '2015-09-16'"
 
     car_user_infos.each do |car_user_info|
       next if car_user_info.phone.blank?
@@ -134,14 +134,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
 
       unless car_user_info.price.blank?
-        price = car_user_info.price.gsub!('万', '')
-        price = price.to_f
-        is_next = true if price <= 1.0
+        car_user_info.price.gsub!('万', '')
+        is_next = true if car_user_info.price.to_f <= 1.0
       end
 
       unless car_user_info.che_ling.blank?
         che_ling = car_user_info.che_ling.to_i
-        is_next = true if Time.now.year-che_ling>10
+        is_next = true if Time.now.year-che_ling>=10
       end
 
       next if is_next
