@@ -14,6 +14,10 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
     end
   end
 
+  def new_index
+    render :layout => false
+  end
+
   def jiankangxian
     @car_number = ::OrderSystem::Region.find_by_name(get_city).car_number_prefix rescue ''
     @product = ::OrderSystem::Product.find_by_id params[:id]

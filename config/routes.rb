@@ -91,6 +91,7 @@ Rails.application.routes.draw do
           post :get_city_name
           get :jiankangxian
           post :create_jiankangxian
+          get :new_index
         end
       end
     end
@@ -120,7 +121,7 @@ Rails.application.routes.draw do
   end
 
 
-  # root to: "wz/order_system/products#index"
+  root to: "wz/order_system/products#new_index"
   get '/cms', to: 'cms/employee_validate/functions#login'
   get '/dwz', to: 'dwz/haoche_stat/promation#index'
 
