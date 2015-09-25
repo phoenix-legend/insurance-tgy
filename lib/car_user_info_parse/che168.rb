@@ -25,10 +25,12 @@ module Che168
             car_number = a.length
             exists_car_number = 0
             a.each do |info|
+              url = "http://m.che168.com#{info["url"]}"
+              url = begin url.split('#')[0] rescue '' end
               result = UserSystem::CarUserInfo.create_car_user_info che_xing: info["carname"],
                                                                     che_ling: info["date"],
                                                                     milage: info['milage'],
-                                                                    detail_url: "http://m.che168.com#{info["url"]}",
+                                                                    detail_url: url,
                                                                     city_chinese: areaname,
                                                                     site_name: 'che168'
               exists_car_number = exists_car_number + 1 if result == 1
