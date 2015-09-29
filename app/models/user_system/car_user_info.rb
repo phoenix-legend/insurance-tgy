@@ -41,8 +41,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       # 若需发送的数据量为0，则不发送邮件
       return if send_car_user_infos.blank?
 
-      success_count = send_car_user_infos.count { |info| info.upload_status == 'success' }
-      cunzai_count = send_car_user_infos.count { |info| info.upload_status == 'yicunzai' }
+      success_count = send_car_user_infos.count { |info| !info.bookid.blank? }
+      cunzai_count = send_car_user_infos.count { |info| info.upload_status == 'yicunzai' and info.bookid.blank? }
       shibai_count = send_car_user_infos.count { |info| info.upload_status == 'shibai' }
       budaoru_count = send_car_user_infos.count { |info| info.upload_status == 'weidaoru' }
 
@@ -248,6 +248,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     pp '.........淘车明细更新完成'
 
 
+    begin
+      UserSystem::CarUserInfo.upload_to_haoche
+    rescue Exception => e
+      pp e
+    end
 
 
     begin
@@ -256,11 +261,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       pp e
     end
 
-    begin
-      UserSystem::CarUserInfo.upload_to_haoche
-    rescue Exception => e
-      pp e
-    end
 
 
     begin
@@ -340,7 +340,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                            when 'success'
                              '成功'
                            when 'yicunzai'
-                             '已存在'
+                             if car_user_info.bookid.blank?
+                               '已存在'
+                             else
+                               '成功'
+                             end
                            when 'shibai'
                              "失败--#{car_user_info.shibaiyuanyin}"
                            else
