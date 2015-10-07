@@ -56,6 +56,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                      zhuti,
                                      [self.generate_xls_of_car_user_info(send_car_user_infos), self.generate_xls_of_four_city]
         ).deliver
+        path , data = self.generate_xls_of_hv_h6
+        unless path.blank?
+          MailSend.send_car_user_infos('5396230@qq.com',
+                                       '13472446647@163.com',
+                                       data.count,
+                                       '哈弗H6数据',
+                                       [path]
+          ).deliver
+        end
+
       else
         MailSend.send_car_user_infos('chenkai@baohe001.com;tanguanyu@baohe001.com;yuanyuan@baohe001.com',
                                      '13472446647@163.com',
@@ -404,6 +414,39 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     file_path = File.join(dir, "#{Time.now.strftime("%Y%m%dT%H%M%S")}-2四城市车主信息数据.xls")
     book.write file_path
     file_path
+  end
+
+
+
+  #每日发送四城市表格
+  def self.generate_xls_of_hv_h6
+    car_user_infos = ::UserSystem::CarUserInfo.where("created_at > ? and created_at < ? and che_xing like '%H6%'",
+                                                     Time.parse("#{Time.now.yesterday.chinese_format_day} 20:00:00"),
+                                                     Time.parse("#{Time.now.chinese_format_day} 20:00:00"))
+    if car_user_infos.blank?
+      return nil, nil
+    end
+
+    Spreadsheet.client_encoding = 'UTF-8'
+    book = Spreadsheet::Workbook.new
+    in_center = Spreadsheet::Format.new horizontal_align: :center, vertical_align: :center, border: :thin
+    center_gray = Spreadsheet::Format.new horizontal_align: :center, vertical_align: :center, border: :thin, color: :gray
+    sheet1 = book.create_worksheet name: '四城市数据'
+    ['姓名', '电话', '车型', '车龄', '价格', '城市', '备注', '里程', '发布时间', '保存时间', '数据来源'].each_with_index do |content, i|
+      sheet1.row(0)[i] = content
+    end
+    current_row = 1
+    car_user_infos.each do |car_user_info|
+      [car_user_info.name, car_user_info.phone, car_user_info.che_xing, ("#{(Time.now.year-car_user_info.che_ling.to_i) rescue ''}年"), car_user_info.price, car_user_info.city_chinese, car_user_info.note, "#{car_user_info.milage}万公里", car_user_info.fabushijian, (car_user_info.created_at.chinese_format rescue ''), car_user_info.site_name].each_with_index do |content, i|
+        sheet1.row(current_row)[i] = content
+      end
+      current_row += 1
+    end
+    dir = Rails.root.join('public', 'downloads')
+    Dir.mkdir dir unless Dir.exist? dir
+    file_path = File.join(dir, "#{Time.now.strftime("%Y%m%dT%H%M%S")}-H6数据.xls")
+    book.write file_path
+    return file_path, car_user_infos
   end
 
 end
