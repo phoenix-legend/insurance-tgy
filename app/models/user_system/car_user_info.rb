@@ -126,7 +126,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       next if car_user_info.phone.blank?
       is_next = false
       unless car_user_info.note.blank?
-        ["诚信", '到店', '精品车', '本公司', '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线', '依维柯'].each do |word|
+        ["诚信", '到店', '精品车', '本公司', '五菱', '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线', '依维柯'].each do |word|
           if car_user_info.note.include? word
             is_next = true
           end
