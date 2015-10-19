@@ -25,6 +25,7 @@ module TaoChe
             car_infos.each do |info|
               age_mil = info.css('p.time').text.strip
               age_mil = age_mil.split('/')
+              next if age_mil.blank?
               result = UserSystem::CarUserInfo.create_car_user_info che_xing: info.css('h4').text.strip,
                                                                     che_ling: age_mil.first.match(/\d{4}/).to_s,
                                                                     milage: age_mil.last.match(/[\d.]{1,10}/).to_s,

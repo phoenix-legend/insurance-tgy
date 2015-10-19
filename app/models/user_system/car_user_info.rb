@@ -14,7 +14,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   PINYIN_CITY = {"dongguan" => "东莞", "foshan" => "佛山", "guangzhou" => "广州", "shenzhen" => "深圳", "jinan" => "济南", "qingdao" => "青岛", "hangzhou" => "杭州", "ningbo" => "宁波", "wenzhou" => "温州", "nanjing" => "南京", "suzhou" => "苏州", "wuxi" => "无锡", "shijiazhuang" => "石家庄", "tangshan" => "唐山", "zhengzhou" => "郑州", "beijing" => "北京", "dalian" => "大连", "shenyang" => "沈阳", "shanghai" => "上海", "chongqing" => "重庆", "fuzhou" => "福州", "xiamen" => "厦门", "wuhan" => "武汉", "changsha" => "长沙", "haerbin" => "哈尔滨", "xian" => "西安", "chengdu" => "成都", "taiyuan" => "太原", "tianjin" => "天津", "chongqing" => "重庆"}
   # IMPORTENT_CITY = ["北京","成都","大连", "东莞","福州","广州", "杭州","南京","宁波", "青岛","上海","沈阳", "苏州","温州","武汉","西安"]
   # IMPORTENT_CITY = ["唐山", "太原", "温州", "石家庄", "西安", "沈阳", "福州", "上海", "宁波", "杭州", "青岛", "苏州", "武汉", "大连", "天津", "南京", "广州", "成都", "东莞"]
-  IMPORTENT_CITY = ["北京","成都","大连","东莞","福州","广州","杭州","重庆","南京","宁波","青岛","上海","沈阳","苏州","天津","温州","武汉","西安"]
+  # IMPORTENT_CITY = ["北京","成都","大连","东莞","福州","广州","杭州","重庆","南京","宁波","青岛","上海","沈阳","苏州","天津","温州","武汉","西安"]
+  IMPORTENT_CITY = ["北京","成都","大连","东莞","福州","广州","杭州","重庆","南京","宁波","青岛","上海","沈阳","苏州","天津","温州","武汉","西安","哈尔滨"]
 
 
   SI_CHENGSHI = ['上海', '无锡', '苏州', '南京']
@@ -163,6 +164,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                 else
                   'yy-aiyi-150513'
                 end
+
+      
 
 
       para = {
