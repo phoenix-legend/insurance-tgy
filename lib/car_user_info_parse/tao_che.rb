@@ -53,7 +53,7 @@ module TaoChe
       sleep(1)
       pp '抓省份。。休息.......'
       threads.each do |t|
-        pp t.status
+        # pp t.status
       end
       threads.delete_if { |thread| thread.status == false }
       break if threads.blank?
