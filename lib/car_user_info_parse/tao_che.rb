@@ -12,7 +12,7 @@ module TaoChe
         begin
           pp "现在跑.. #{areaname}"
           pp pinyin
-          1.upto 10 do |i|
+          1.upto 2 do |i|
             pp "现在跑.. #{areaname}  第 #{i}页"
             pp "http://#{pinyin}.m.taoche.com/buycar/pges1bxcdza/?orderid=1&page=#{i}"
             response = RestClient.get "http://#{pinyin}.m.taoche.com/buycar/pges1bxcdza/?orderid=1&page=#{i}"
