@@ -157,7 +157,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       next if is_next
 
       code, session_key = UserSystem::CarUserInfo.get_haoche_sessionkey_and_yanzhengma
-      url = "http://gw2.pahaoche.com/wghttp/internal/booking"
+      url = "http://gw2.pahaoche.com/wghttp/internal/appointment"
+             # http://gw2.pahaoche.com/wghttp/internal/appointment?sessionKey=14453088140585614&jsonpCallback=jQuery18306020450946864614_1445308810753&yuyueId=&channel=yy-huayang-141219-012&from=GW&tokenKey=925B666E-C619-4152-8746-51E94A0ED4D8&tokenValue=18ef2f42-c6a6-4e61-9414-ad5f8b0f777f&expectTime=%E8%AE%A1%E5%88%92%E5%8D%96%E8%BD%A6%E6%97%B6%E9%97%B4%3A%E4%B8%80%E5%91%A8%E5%86%85.&name=%E6%9D%8E%E5%85%88%E7%94%9F&mobile=18600590339&city=%E5%8C%97%E4%BA%AC&vehicleType=%E6%82%A6%E5%8A%A8+2011%E6%AC%BE+1.6L+%E8%87%AA%E5%8A%A8%E8%B1%AA%E5%8D%8E%E5%9E%8B&authCode=&_=1445308869844
 
       channel = if ::UserSystem::CarUserInfo::IMPORTENT_CITY.include? car_user_info.city_chinese
                   ::UserSystem::CarUserInfo::CHANNEL[car_user_info.site_name]
