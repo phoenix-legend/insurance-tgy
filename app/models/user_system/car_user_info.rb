@@ -57,15 +57,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                      zhuti,
                                      [self.generate_xls_of_car_user_info(send_car_user_infos), self.generate_xls_of_four_city]
         ).deliver
-        path , data = self.generate_xls_of_hv_h6
-        unless path.blank?
-          MailSend.send_car_user_infos('5396230@qq.com',
-                                       '13472446647@163.com',
-                                       data.count,
-                                       '哈弗H6数据',
-                                       [path]
-          ).deliver
-        end
+        # path , data = self.generate_xls_of_hv_h6
+        # unless path.blank?
+        #   MailSend.send_car_user_infos('5396230@qq.com',
+        #                                '13472446647@163.com',
+        #                                data.count,
+        #                                '哈弗H6数据',
+        #                                [path]
+        #   ).deliver
+        # end
 
       else
         MailSend.send_car_user_infos('chenkai@baohe001.com;tanguanyu@baohe001.com;yuanyuan@baohe001.com',
