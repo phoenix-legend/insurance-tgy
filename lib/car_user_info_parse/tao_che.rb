@@ -34,7 +34,7 @@ module TaoChe
                                                                     site_name: 'taoche'
               exists_car_number = exists_car_number + 1 if result == 1
             end
-            if car_number == exists_car_number
+            if car_number - exists_car_number < 5
               puts '淘车本页数据全部存在，跳出'
               break
             end
