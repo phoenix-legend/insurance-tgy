@@ -106,6 +106,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     code = code.strip
     pp code
+     if code.blank?
+       pp '获取验证码失败'
+       return '333333', session_key
+     end
     code_match = code.match /\A(\d{4})\Z/
     puts '获取'
 
