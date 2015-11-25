@@ -40,13 +40,13 @@ module UploadTianTian
 
       next if is_next
 
-
+             
       url = "http://www.ttpai.cn/signup/ttp"
       para = {
-          :name => car_user_info.name,
+          :name => CGI::escape(car_user_info.name),
           :mobile => car_user_info.phone,
-          :city => car_user_info.city_chinese,
-          :brand => car_user_info.che_xing,
+          :city => CGI::escape(car_user_info.city_chinese),
+          :brand => CGI::escape(car_user_info.che_xing),
           :source => '5-89-659',
           :utmSource => 'txnews',
           :utmMedium => 'ttCPA',
