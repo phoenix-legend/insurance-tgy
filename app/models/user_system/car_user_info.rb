@@ -11,12 +11,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
               "310100" => "上海", "500100" => "重庆", "350100" => "福州", "350200" => "厦门", "420100" => "武汉",
               "430100" => "长沙", "230100" => "哈尔滨", "610100" => "西安", "510100" => "成都", "140100" => "太原",
               "120100" => "天津", "340100" => '合肥'}
-  PINYIN_CITY = {"dongguan" => "东莞", "foshan" => "佛山", "guangzhou" => "广州", "shenzhen" => "深圳", "jinan" => "济南", "qingdao" => "青岛", "hangzhou" => "杭州", "ningbo" => "宁波", "wenzhou" => "温州", "nanjing" => "南京", "suzhou" => "苏州", "wuxi" => "无锡", "shijiazhuang" => "石家庄", "tangshan" => "唐山", "zhengzhou" => "郑州", "beijing" => "北京", "dalian" => "大连", "shenyang" => "沈阳", "shanghai" => "上海", "chongqing" => "重庆", "fuzhou" => "福州", "xiamen" => "厦门", "wuhan" => "武汉", "changsha" => "长沙", "haerbin" => "哈尔滨", "xian" => "西安", "chengdu" => "成都", "taiyuan" => "太原", "tianjin" => "天津", "chongqing" => "重庆"}
-  # IMPORTENT_CITY = ["北京","成都","大连", "东莞","福州","广州", "杭州","南京","宁波", "青岛","上海","沈阳", "苏州","温州","武汉","西安"]
-  # IMPORTENT_CITY = ["唐山", "太原", "温州", "石家庄", "西安", "沈阳", "福州", "上海", "宁波", "杭州", "青岛", "苏州", "武汉", "大连", "天津", "南京", "广州", "成都", "东莞"]
-  # IMPORTENT_CITY = ["北京","成都","大连","东莞","福州","广州","杭州","重庆","南京","宁波","青岛","上海","沈阳","苏州","天津","温州","武汉","西安"]
-  IMPORTENT_CITY = ["北京","成都","大连","东莞","福州","广州","杭州","重庆","南京","宁波","青岛","上海","沈阳","苏州","天津","温州","武汉","西安","哈尔滨"]
 
+  #城市所对应的拼音。 主要用于从淘车网更新数据。
+  PINYIN_CITY = {"dongguan" => "东莞", "foshan" => "佛山", "guangzhou" => "广州", "shenzhen" => "深圳", "jinan" => "济南", "qingdao" => "青岛", "hangzhou" => "杭州", "ningbo" => "宁波", "wenzhou" => "温州", "nanjing" => "南京", "suzhou" => "苏州", "wuxi" => "无锡", "shijiazhuang" => "石家庄", "tangshan" => "唐山", "zhengzhou" => "郑州", "beijing" => "北京", "dalian" => "大连", "shenyang" => "沈阳", "shanghai" => "上海", "chongqing" => "重庆", "fuzhou" => "福州", "xiamen" => "厦门", "wuhan" => "武汉", "changsha" => "长沙", "haerbin" => "哈尔滨", "xian" => "西安", "chengdu" => "成都", "taiyuan" => "太原", "tianjin" => "天津", "chongqing" => "重庆"}
+  #好车需要上传的城市
+  IMPORTENT_CITY = ["北京","成都","大连","东莞","福州","广州","杭州","重庆","南京","宁波","青岛","上海","沈阳","苏州","天津","温州","武汉","西安","哈尔滨"]
 
   SI_CHENGSHI = ['上海', '无锡', '苏州', '南京']
 
@@ -125,7 +124,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # UserSystem::CarUserInfo.upload_to_haoche
   def self.upload_to_haoche
-    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 111963 and fabushijian > '2015-09-16'"
+    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 230776 and fabushijian > '2015-11-24'"
 
     car_user_infos.each do |car_user_info|
       next if car_user_info.phone.blank?
@@ -162,7 +161,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
       code, session_key = UserSystem::CarUserInfo.get_haoche_sessionkey_and_yanzhengma
       url = "http://gw2.pahaoche.com/wghttp/internal/appointment"
-             # http://gw2.pahaoche.com/wghttp/internal/appointment?sessionKey=14453088140585614&jsonpCallback=jQuery18306020450946864614_1445308810753&yuyueId=&channel=yy-huayang-141219-012&from=GW&tokenKey=925B666E-C619-4152-8746-51E94A0ED4D8&tokenValue=18ef2f42-c6a6-4e61-9414-ad5f8b0f777f&expectTime=%E8%AE%A1%E5%88%92%E5%8D%96%E8%BD%A6%E6%97%B6%E9%97%B4%3A%E4%B8%80%E5%91%A8%E5%86%85.&name=%E6%9D%8E%E5%85%88%E7%94%9F&mobile=18600590339&city=%E5%8C%97%E4%BA%AC&vehicleType=%E6%82%A6%E5%8A%A8+2011%E6%AC%BE+1.6L+%E8%87%AA%E5%8A%A8%E8%B1%AA%E5%8D%8E%E5%9E%8B&authCode=&_=1445308869844
 
       channel = if ::UserSystem::CarUserInfo::IMPORTENT_CITY.include? car_user_info.city_chinese
                   ::UserSystem::CarUserInfo::CHANNEL[car_user_info.site_name]
@@ -264,6 +262,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       pp e
     end
     pp '.........淘车明细更新完成'
+
+    begin
+      UploadTianTian.upload_tt
+    rescue Exception => e
+      pp e
+    end
 
 
     begin
@@ -426,7 +430,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
 
-  #每日发送四城市表格
+  #H6 数据
   def self.generate_xls_of_hv_h6
     car_user_infos = ::UserSystem::CarUserInfo.where("created_at > ? and created_at < ? and che_xing like '%H6%'",
                                                      Time.parse("#{Time.now.yesterday.chinese_format_day} 20:00:00"),

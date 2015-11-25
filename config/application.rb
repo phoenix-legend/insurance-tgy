@@ -24,6 +24,7 @@ module Insurance
     require Rails.root.join('lib/tools.rb')
     require Rails.root.join('lib/car_user_info_parse/tao_che.rb')
     require Rails.root.join('lib/car_user_info_parse/che168.rb')
+    require Rails.root.join('lib/car_user_info_parse/upload_tian_tian.rb')
 
     config.action_mailer.raise_delivery_errors = true
     config.action_controller.include_all_helpers = false
