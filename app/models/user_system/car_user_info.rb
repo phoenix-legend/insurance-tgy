@@ -264,7 +264,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     pp '.........淘车明细更新完成'
 
     begin
-      UploadTianTian.upload_tt
+      # UploadTianTian.upload_tt
     rescue Exception => e
       pp e
     end
