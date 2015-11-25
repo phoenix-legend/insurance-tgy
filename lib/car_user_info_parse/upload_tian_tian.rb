@@ -72,9 +72,9 @@ module UploadTianTian
           :_ => "#{Time.now.to_i}#{rand(1000)}"
       }
       p = URI.encode_www_form para
-
-      response = RestClient.get "#{url}?#{p}"
       pp "#{url}?#{p}"
+      response = RestClient.get "#{url}?#{p}"
+
       pp response
 
       response_json = JSON.parse response.body
