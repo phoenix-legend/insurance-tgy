@@ -40,7 +40,7 @@ module UploadTianTian
 
       next if is_next
 
-             
+
       url = "http://www.ttpai.cn/signup/ttp"
       para = {
           :name => CGI::escape(car_user_info.name),
@@ -56,8 +56,9 @@ module UploadTianTian
           :joinHmcActivity => 0,
           :_ => "#{Time.now.to_i}#{rand(1000)}"
       }
+      p = URI.encode_www_form para
 
-      response = RestClient.get url, para
+      response = RestClient.get "#{url}?#{p}"
       pp response
 
       response_json = JSON.parse response.body
