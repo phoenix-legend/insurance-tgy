@@ -1,7 +1,7 @@
 module UploadTianTian
   CITY = ["上海","成都","深圳","北京","南京", "广州", "武汉", "天津","苏州","杭州","东莞","重庆", "佛山"]
   def self.upload_tt
-    car_user_infos = UserSystem::CarUserInfo.where "upload_status = 'weishangchuan' and id > 230776 "
+    car_user_infos = UserSystem::CarUserInfo.where "tt_upload_status = 'weishangchuan' and id > 230776 "
     car_user_infos.each do |car_user_info|
       next if car_user_info.phone.blank?
       is_next = false
