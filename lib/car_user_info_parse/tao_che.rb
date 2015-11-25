@@ -84,7 +84,7 @@ module TaoChe
           detail_content = Nokogiri::HTML(detail_content)
           name = detail_content.css('.shjtit')[0].text.strip
           pp name
-          phone = detail_content.css('.cyxqshj p')[1].text.match /\d{11}/.to_s
+          phone = detail_content.css('.xqdinh p')[1].text.match /\d{11}/.to_s
           pp phone
           note = (detail_content.css('.mjmstext')[0].text rescue '')
           pp note
