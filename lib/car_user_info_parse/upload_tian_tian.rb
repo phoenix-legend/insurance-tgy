@@ -73,7 +73,12 @@ module UploadTianTian
       }
       p = URI.encode_www_form para
       pp "#{url}?#{p}"
-      response = RestClient.get "#{url}?#{p}"
+
+      real_url = "#{url}?#{p}"
+      response = `curl '#{real_url}' -H 'Host: www.ttpai.cn' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:42.0) Gecko/20100101 Firefox/42.0' -H 'Accept: */*' -H 'Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3' -H 'Accept-Encoding: gzip, deflate' -H 'Referer: http://m.ttpai.cn/client/?utm_source=txnews&utm_medium=ttCPA&utm_term=&utm_content=&utm_campaign=1&source=5-89-999' -H 'Cookie: client=223.104.211.157; _ga=GA1.2.1868676395.1448423625; utmSource=%7B%22utmSource%22%3A%22txnews%22%2C%22utmMedium%22%3A%22ttCPA%22%2C%22utmCampaign%22%3A%221%22%2C%22utmContent%22%3A%22%22%2C%22utmTerm%22%3A%22%22%7D; ttpai=3e8e6fc2731a9ddb326ca4ccb2b945b4; ttpZoneId=SH_2; ttpZoneHanZi=%E4%B8%8A%E6%B5%B7_%E4%B8%8A%E6%B5%B7; JSESSIONID=4AFC3AD6473952FCA541C5E0CA91447B-n1; _gat=1; _gat_ttpaim=1; _gat_ttpai=1; ttp=%7B%22iv%22%3A%22qpNYYvg37YiiRAH8%2FKL0EQ%3D%3D%22%2C%22v%22%3A1%2C%22iter%22%3A1000%2C%22ks%22%3A128%2C%22ts%22%3A64%2C%22mode%22%3A%22ccm%22%2C%22adata%22%3A%22%22%2C%22cipher%22%3A%22aes%22%2C%22salt%22%3A%22mLNPGC5uGks%3D%22%2C%22ct%22%3A%22%2B%2BZTz8xb2mlej%2BoDyw%3D%3D%22%7D' -H 'Connection: keep-alive'`
+      ec = Encoding::Converter.new("gbk", "UTF-8")
+      response = ec.convert(response)
+      # response = RestClient.get "#{url}?#{p}"
 
       pp response
 
