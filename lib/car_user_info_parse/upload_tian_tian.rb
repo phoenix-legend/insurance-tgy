@@ -74,6 +74,7 @@ module UploadTianTian
       p = URI.encode_www_form para
 
       response = RestClient.get "#{url}?#{p}"
+      pp "#{url}?#{p}"
       pp response
 
       response_json = JSON.parse response.body
