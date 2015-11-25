@@ -42,11 +42,26 @@ module UploadTianTian
 
 
       url = "http://www.ttpai.cn/signup/ttp"
+      # para = {
+      #     :name => CGI::escape(car_user_info.name),
+      #     :mobile => car_user_info.phone,
+      #     :city => CGI::escape(car_user_info.city_chinese),
+      #     :brand => CGI::escape(car_user_info.che_xing),
+      #     :source => '5-89-659',
+      #     :utmSource => 'txnews',
+      #     :utmMedium => 'ttCPA',
+      #     :utmCampaign => 1,
+      #     :utmContent => '',
+      #     :utmTerm => '',
+      #     :joinHmcActivity => 0,
+      #     :_ => "#{Time.now.to_i}#{rand(1000)}"
+      # }
+
       para = {
-          :name => CGI::escape(car_user_info.name),
+          :name => car_user_info.name,
           :mobile => car_user_info.phone,
-          :city => CGI::escape(car_user_info.city_chinese),
-          :brand => CGI::escape(car_user_info.che_xing),
+          :city => car_user_info.city_chinese,
+          :brand => car_user_info.che_xing,
           :source => '5-89-659',
           :utmSource => 'txnews',
           :utmMedium => 'ttCPA',
