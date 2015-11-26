@@ -1,5 +1,67 @@
 module UploadTianTian
-  CITY = ["上海","成都","深圳","北京","南京", "广州", "武汉", "天津","苏州","杭州","东莞","重庆", "佛山"]
+  CITY = ["上海", "成都", "深圳", "北京", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆", "佛山"]
+
+  # 需要上传的数据。
+  def self.need_upload_tt
+    car_user_infos = UserSystem::CarUserInfo.where "tt_upload_status = 'weishangchuan' and id > 230776 and phone is not null"
+    real_user_infos = car_user_infos.select do |car_user_info|
+      is_select = true
+
+      if car_user_info.phone.blank?
+        is_select = false
+      end
+
+      unless car_user_info.note.blank?
+        ["诚信", '到店', '精品车', '本公司', '五菱', '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线', '依维柯'].each do |word|
+          if car_user_info.note.include? word
+            is_select = false
+          end
+        end
+      end
+
+      unless UploadTianTian::CITY.include? car_user_info.city_chinese
+        is_select = false
+      end
+      ["0000", "1111", "2222", "3333", "4444", "5555", "6666", "7777", "8888", "9999"].each do |p|
+        if car_user_info.phone.include? p
+          is_select = false
+        end
+      end
+
+      ['经理', '总'].each do |name_key|
+        is_select = false if car_user_info.name.include? name_key
+      end
+
+      # 车价小于1万的，跳过
+      unless car_user_info.price.blank?
+        car_user_info.price.gsub!('万', '')
+        is_select = false if car_user_info.price.to_f <= 1.0
+      end
+      # 车年龄大于10年的，跳过
+      unless car_user_info.che_ling.blank?
+        che_ling = car_user_info.che_ling.to_i
+        is_select = false if Time.now.year-che_ling>=10
+      end
+
+      is_select
+
+    end
+    real_user_infos
+  end
+
+  def self.update_car_user_info options
+    car_user_info = UserSystem::CarUserInfo.find options[:id]
+    car_user_info.tt_code = options["code"]
+    car_user_info.tt_error = options["error"]
+    car_user_info.tt_message = options["message"]
+    car_user_info.tt_result = options["result"]
+    if car_user_info.tt_code == '200' and car_user_info.tt_error == false
+      car_user_info.tt_upload_status = 'success'
+    end
+    car_user_info.save!
+  end
+
+
   def self.upload_tt
     car_user_infos = UserSystem::CarUserInfo.where "tt_upload_status = 'weishangchuan' and id > 230776 "
     car_user_infos.each do |car_user_info|

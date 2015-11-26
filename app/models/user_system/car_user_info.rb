@@ -15,7 +15,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   #城市所对应的拼音。 主要用于从淘车网更新数据。
   PINYIN_CITY = {"dongguan" => "东莞", "foshan" => "佛山", "guangzhou" => "广州", "shenzhen" => "深圳", "jinan" => "济南", "qingdao" => "青岛", "hangzhou" => "杭州", "ningbo" => "宁波", "wenzhou" => "温州", "nanjing" => "南京", "suzhou" => "苏州", "wuxi" => "无锡", "shijiazhuang" => "石家庄", "tangshan" => "唐山", "zhengzhou" => "郑州", "beijing" => "北京", "dalian" => "大连", "shenyang" => "沈阳", "shanghai" => "上海", "chongqing" => "重庆", "fuzhou" => "福州", "xiamen" => "厦门", "wuhan" => "武汉", "changsha" => "长沙", "haerbin" => "哈尔滨", "xian" => "西安", "chengdu" => "成都", "taiyuan" => "太原", "tianjin" => "天津", "chongqing" => "重庆"}
   #好车需要上传的城市
-  IMPORTENT_CITY = ["北京","成都","大连","东莞","福州","广州","杭州","重庆","南京","宁波","青岛","上海","沈阳","苏州","天津","温州","武汉","西安","哈尔滨"]
+  IMPORTENT_CITY = ["北京", "成都", "大连", "东莞", "福州", "广州", "杭州", "重庆", "南京", "宁波", "青岛", "上海", "沈阳", "苏州", "天津", "温州", "武汉", "西安", "哈尔滨"]
 
   SI_CHENGSHI = ['上海', '无锡', '苏州', '南京']
 
@@ -105,10 +105,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     code = code.strip
     pp code
-     if code.blank?
-       pp '获取验证码失败'
-       return '333333', session_key
-     end
+    if code.blank?
+      pp '获取验证码失败'
+      return '333333', session_key
+    end
     code_match = code.match /\A(\d{4})\Z/
     puts '获取'
 
@@ -167,8 +167,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                 else
                   'yy-aiyi-150513'
                 end
-
-      
 
 
       para = {
@@ -245,7 +243,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     pp '.........che168明细更新完成'
 
 
-
     if run_list
       begin
         TaoChe.get_car_user_list
@@ -282,7 +279,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     rescue Exception => e
       pp e
     end
-
 
 
     begin
@@ -428,6 +424,26 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     file_path
   end
 
+  def update_brand
+    return unless self.brand.blank?
+    UserSystem::CarBrand.all.each do |brand|
+      if self.che_xing.match Regexp.new(brand.name)
+        self.brand = brand.name
+        self.save!
+        break
+      end
+    end
+
+    return unless self.brand.blank?
+
+    UserSystem::CarType.all.each do |t|
+      if self.che_xing.match Regexp.new(t.name)
+          self.brand = t.car_brand.name
+          self.save!
+          break
+      end
+    end
+  end
 
 
   #H6 数据

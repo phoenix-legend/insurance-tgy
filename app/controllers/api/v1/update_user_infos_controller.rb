@@ -28,4 +28,11 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
     car_user_info.save!
   end
 
+
+
+  #获取天天渠道需要提交的数据
+  def get_need_update_tt_info
+    @user_infos = UploadTianTian.need_upload_tt
+  end
+
 end
