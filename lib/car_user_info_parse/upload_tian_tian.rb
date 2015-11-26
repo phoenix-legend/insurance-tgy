@@ -9,6 +9,8 @@ module UploadTianTian
 
       if car_user_info.phone.blank?
         is_select = false
+        car_user_info.tt_upload_status = '不上传'
+        car_user_info.save!
       end
 
       unless car_user_info.note.blank?
