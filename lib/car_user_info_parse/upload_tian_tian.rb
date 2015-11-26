@@ -3,7 +3,7 @@ module UploadTianTian
 
   # 需要上传的数据。
   def self.need_upload_tt
-    car_user_infos = UserSystem::CarUserInfo.where "tt_upload_status = 'weishangchuan' and id > #{UserSystem::CarUserInfo::CURRENT_ID} and phone is not null"
+    car_user_infos = UserSystem::CarUserInfo.where "tt_upload_status = 'weishangchuan' and id > #{UserSystem::CarUserInfo::CURRENT_ID} and phone is not null and brand is not null"
     real_user_infos = car_user_infos.select do |car_user_info|
       is_select = true
 
@@ -76,8 +76,6 @@ module UploadTianTian
       infos["data"].each do |info|
         next if info["brand"].blank?
         next if info["brand"].blank?
-        pp "做假休息中，假装我现在在录入...#{Time.now}"
-        sleep 10
         tj_response = `curl 'http://www.ttpai.cn/signup/ttp?name=#{CGI::escape(info["name"])}&mobile=13472446647&city=#{CGI::escape(info["city"])}&brand=#{CGI::escape(info["brand"])}&source=5-89-659&utmSource=txnews&utmMedium=ttCPA&utmCampaign=1&utmContent=&utmTerm=&joinHmcActivity=0&_=1448502224086'  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:42.0) Gecko/20100101 Firefox/42.0' -H 'Cookie: ttpai=#{ttpai}'`
         tj_response = JSON.parse tj_response
         pp tj_response
@@ -87,6 +85,8 @@ module UploadTianTian
                                      result: tj_response["result"],
                                      id: info["id"]
         pp response_p
+        pp "做假休息中，假装我现在在录入...#{Time.now}"
+        sleep 10
       end
     rescue Exception => e
       pp e
