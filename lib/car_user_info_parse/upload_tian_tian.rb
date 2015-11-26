@@ -16,6 +16,8 @@ module UploadTianTian
       unless car_user_info.note.blank?
         ["诚信", '到店', '精品车', '本公司', '五菱', '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线', '依维柯'].each do |word|
           if car_user_info.note.include? word
+            car_user_info.tt_upload_status = '经销商，不上传'
+            car_user_info.save!
             is_select = false
           end
         end
