@@ -60,7 +60,7 @@ module UploadTianTian
     car_user_info.tt_error = options["error"]
     car_user_info.tt_message = options["message"]
     car_user_info.tt_result = options["result"]
-    if car_user_info.tt_code == 200 and car_user_info.tt_error == "false"
+    if car_user_info.tt_code.to_i == 200 and car_user_info.tt_error == "false"
       car_user_info.tt_upload_status = 'success'
     else
       car_user_info.tt_upload_status = 'shibai'
