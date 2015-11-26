@@ -3,13 +3,11 @@ module UploadTianTian
 
   # 需要上传的数据。
   def self.need_upload_tt
-    car_user_infos = UserSystem::CarUserInfo.where "tt_upload_status = 'weishangchuan' and id > 230776 and phone is not null"
+    car_user_infos = UserSystem::CarUserInfo.where "tt_upload_status = 'weishangchuan' and id > #{UserSystem::CarUserInfo::CURRENT_ID} and phone is not null"
     real_user_infos = car_user_infos.select do |car_user_info|
       is_select = true
 
       if car_user_info.phone.blank?
-        car_user_info.tt_upload_status = '不上传'
-        car_user_info.save!
         is_select = false
       end
 

@@ -2,7 +2,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   require 'rest-client'
   require 'pp'
 
-  CURRENT_ID = 230776
+  CURRENT_ID = 232026
 
   EMAIL_STATUS = {0 => '待导', 1 => '已导', 2 => '不导入'}
   CHANNEL = {'che168' => 'yy-huayang-141219-012', 'taoche' => 'yy-huayang-141219-011'}
