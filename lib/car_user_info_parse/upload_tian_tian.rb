@@ -56,7 +56,7 @@ module UploadTianTian
     car_user_info.tt_error = options["error"]
     car_user_info.tt_message = options["message"]
     car_user_info.tt_result = options["result"]
-    if car_user_info.tt_code == '200' and car_user_info.tt_error == false
+    if car_user_info.tt_code == 200 and car_user_info.tt_error == false
       car_user_info.tt_upload_status = 'success'
     else
       car_user_info.tt_upload_status = 'shibai'
@@ -72,13 +72,18 @@ module UploadTianTian
       next if info["brand"].blank?
       next if info["brand"].blank?
       tj_response = `curl 'http://www.ttpai.cn/signup/ttp?name=#{CGI::escape(info["name"])}&mobile=13472446647&city=#{CGI::escape(info["city"])}&brand=#{CGI::escape(info["brand"])}&source=5-89-659&utmSource=txnews&utmMedium=ttCPA&utmCampaign=1&utmContent=&utmTerm=&joinHmcActivity=0&_=1448502224086'  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:42.0) Gecko/20100101 Firefox/42.0' -H 'Cookie: ttpai=#{ttpai}'`
-      tj_response = JSON.parse tj_response.body
-      RestClient.post 'http://183.61.111.228:4000/api/v1/update_user_infos/update_tt_info.json', code: tj_response["code"],
+      tj_response = JSON.parse tj_response
+      pp tj_response
+      response_p = RestClient.post 'http://183.61.111.228:4000/api/v1/update_user_infos/update_tt_info.json', code: tj_response["code"],
                       error: tj_response["error"],
                       message: tj_response["message"],
                       result: tj_response["result"],
-                      id: tj_response["result"]
+                      id: info["id"]
+      pp response_p
     end
+    sleep 5
+    pp '休息'
+    UploadTianTian.upload_tt2 ttpai
   end
 
 
