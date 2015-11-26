@@ -116,6 +116,7 @@ Rails.application.routes.draw do
           get :yiwaixian
           post :yiwaixian
           get :get_need_update_tt_info
+          post :update_tt_info
         end
       end
     end

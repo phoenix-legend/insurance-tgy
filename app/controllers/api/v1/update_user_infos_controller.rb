@@ -35,4 +35,8 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
     @user_infos = UploadTianTian.need_upload_tt
   end
 
+  def update_tt_info
+    UploadTianTian.update_car_user_info params
+  end
+
 end

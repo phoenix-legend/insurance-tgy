@@ -2,6 +2,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   require 'rest-client'
   require 'pp'
 
+  CURRENT_ID = 230776
+
   EMAIL_STATUS = {0 => '待导', 1 => '已导', 2 => '不导入'}
   CHANNEL = {'che168' => 'yy-huayang-141219-012', 'taoche' => 'yy-huayang-141219-011'}
   ALL_CITY = {"441900" => "东莞", "440600" => "佛山", "440100" => "广州",
@@ -124,7 +126,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # UserSystem::CarUserInfo.upload_to_haoche
   def self.upload_to_haoche
-    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > 230776 and fabushijian > '2015-11-24'"
+    car_user_infos = UserSystem::CarUserInfo.where "(upload_status = 'weidaoru' or (upload_status = 'shibai' and shibaiyuanyin = 'AuthCode is Wrong--E013')) and id > #{UserSystem::CarUserInfo::CURRENT_ID} and fabushijian > '2015-11-24'"
 
     car_user_infos.each do |car_user_info|
       next if car_user_info.phone.blank?
@@ -287,6 +289,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     rescue Exception => e
       pp e
     end
+
+    begin
+      UserSystem::CarUserInfo.update_all_brand
+        pp '更新品牌结束'
+    rescue Exception => e
+      pp e
+    end
     #   sleep 60*4
     # end
   end
@@ -426,7 +435,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   def self.update_all_brand
-   cuis = UserSystem::CarUserInfo.all
+   cuis = UserSystem::CarUserInfo.where("id > #{UserSystem::CarUserInfo::CURRENT_ID} and brand is  null and phone is not null")
    cuis.each_with_index  do |cui, i|
       cui.update_brand
       pp "完成 #{i}/#{cuis.length}"
