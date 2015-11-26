@@ -115,6 +115,7 @@ Rails.application.routes.draw do
           post :update_car_user_info
           get :yiwaixian
           post :yiwaixian
+          get :get_need_update_tt_info
         end
       end
     end

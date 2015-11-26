@@ -424,6 +424,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     file_path
   end
 
+
+  def self.update_all_brand
+   cuis = UserSystem::CarUserInfo.all
+   cuis.each_with_index  do |cui, i|
+      cui.update_brand
+      pp "完成 #{i}/#{cuis.length}"
+    end
+  end
+
   def update_brand
     return unless self.brand.blank?
     UserSystem::CarBrand.all.each do |brand|
