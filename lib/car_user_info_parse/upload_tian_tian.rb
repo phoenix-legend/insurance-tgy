@@ -70,23 +70,30 @@ module UploadTianTian
 
   # UploadTianTian.upload_tt2 "7493a57511603de524e196e6f78a051e"
   def self.upload_tt2 ttpai
-    response = RestClient.get 'http://183.61.111.228:4000/api/v1/update_user_infos/get_need_update_tt_info.json'
-    infos = JSON.parse response.body
-    infos["data"].each do |info|
-      next if info["brand"].blank?
-      next if info["brand"].blank?
-      tj_response = `curl 'http://www.ttpai.cn/signup/ttp?name=#{CGI::escape(info["name"])}&mobile=13472446647&city=#{CGI::escape(info["city"])}&brand=#{CGI::escape(info["brand"])}&source=5-89-659&utmSource=txnews&utmMedium=ttCPA&utmCampaign=1&utmContent=&utmTerm=&joinHmcActivity=0&_=1448502224086'  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:42.0) Gecko/20100101 Firefox/42.0' -H 'Cookie: ttpai=#{ttpai}'`
-      tj_response = JSON.parse tj_response
-      pp tj_response
-      response_p = RestClient.post 'http://183.61.111.228:4000/api/v1/update_user_infos/update_tt_info.json', code: tj_response["code"],
-                      error: tj_response["error"],
-                      message: tj_response["message"],
-                      result: tj_response["result"],
-                      id: info["id"]
-      pp response_p
+    begin
+      response = RestClient.get 'http://183.61.111.228:4000/api/v1/update_user_infos/get_need_update_tt_info.json'
+      infos = JSON.parse response.body
+      infos["data"].each do |info|
+        next if info["brand"].blank?
+        next if info["brand"].blank?
+        pp "做假休息中，假装我现在在录入...#{Time.now}"
+        sleep 10
+        tj_response = `curl 'http://www.ttpai.cn/signup/ttp?name=#{CGI::escape(info["name"])}&mobile=13472446647&city=#{CGI::escape(info["city"])}&brand=#{CGI::escape(info["brand"])}&source=5-89-659&utmSource=txnews&utmMedium=ttCPA&utmCampaign=1&utmContent=&utmTerm=&joinHmcActivity=0&_=1448502224086'  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:42.0) Gecko/20100101 Firefox/42.0' -H 'Cookie: ttpai=#{ttpai}'`
+        tj_response = JSON.parse tj_response
+        pp tj_response
+        response_p = RestClient.post 'http://183.61.111.228:4000/api/v1/update_user_infos/update_tt_info.json', code: tj_response["code"],
+                                     error: tj_response["error"],
+                                     message: tj_response["message"],
+                                     result: tj_response["result"],
+                                     id: info["id"]
+        pp response_p
+      end
+    rescue Exception => e
+      pp e
     end
-    sleep 5
-    pp '休息'
+
+    pp "现在没事了，休息中，等待新数据的出现-----#{Time.now}"
+    sleep 10
     UploadTianTian.upload_tt2 ttpai
   end
 
