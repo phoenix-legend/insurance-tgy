@@ -20,6 +20,8 @@ module UploadTianTian
       end
 
       unless UploadTianTian::CITY.include? car_user_info.city_chinese
+        car_user_info.tt_upload_status = '城市不对'
+        car_user_info.save!
         is_select = false
       end
       ["0000", "1111", "2222", "3333", "4444", "5555", "6666", "7777", "8888", "9999"].each do |p|
