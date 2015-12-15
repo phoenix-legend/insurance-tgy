@@ -82,7 +82,7 @@ module Che168
           name = connect_info.css("span").text.strip
           phone = connect_info.attributes["data-telno"].value.strip
           note = detail_content.css("#js-message")[0].text.strip
-          time = detail_content.css(".carousel-images h2")[0].text.gsub("发布", '').strip
+          time = detail_content.css(".carousel-images h2")[0].text.gsub("发布", '').strip[0..9]
           price = detail_content.css(".info-price")[0].text.gsub("¥", '').strip
 
           response = RestClient.post "http://localhost:4000/api/v1/update_user_infos/update_car_user_info", {id: car_user_info.id,
