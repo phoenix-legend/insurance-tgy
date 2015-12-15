@@ -73,15 +73,15 @@ module UploadTianTian
 
   def self.for_true_upload_tt2
     while true do
-      UploadTianTian.upload_tt2 "7493a57511603de524e196e6f78a051e"
+      UploadTianTian.upload_tt2 "7d53d76c30b4fe91b141fe789a967199"
       pp "现在没事了，休息中，等待新数据的出现-----#{Time.now}"
-      sleep 10
+      sleep 30
     end
 
   end
 
 
-# UploadTianTian.upload_tt2 "7493a57511603de524e196e6f78a051e"
+# UploadTianTian.upload_tt2 "7d53d76c30b4fe91b141fe789a967199"
 def self.upload_tt2 ttpai
   begin
     response = RestClient.get 'http://183.61.111.228:4000/api/v1/update_user_infos/get_need_update_tt_info.json'
@@ -89,7 +89,8 @@ def self.upload_tt2 ttpai
     infos["data"].each do |info|
       next if info["brand"].blank?
       next if info["brand"].blank?
-      tj_response = `curl 'http://www.ttpai.cn/signup/ttp?name=#{CGI::escape(info["name"])}&mobile=13472446647&city=#{CGI::escape(info["city"])}&brand=#{CGI::escape(info["brand"])}&source=5-89-659&utmSource=txnews&utmMedium=ttCPA&utmCampaign=1&utmContent=&utmTerm=&joinHmcActivity=0&_=1448502224086'  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:42.0) Gecko/20100101 Firefox/42.0' -H 'Cookie: ttpai=#{ttpai}'`
+      #             curl 'http://www.ttpai.cn/signup/ttp?name=%E5%BC%A0%E4%B8%89&mobile=13472446647&city=%E4%B8%8A%E6%B5%B7&brand=%E5%AE%9D%E9%A9%AC&source=5-89-659&utmSource=txnews&utmMedium=ttCPA&utmCampaign=1&utmContent=&utmTerm=&joinHmcActivity=0&_=1448502224085&ttpai=1' -H 'Host: www.ttpai.cn' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:42.0) Gecko/20100101 Firefox/42.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3' -H 'Accept-Encoding: gzip, deflate' -H 'Cookie: ttpai=7d53d76c30b4fe91b141fe789a967199; client=223.104.5.234' -H 'Connection: keep-alive'
+      tj_response = `curl 'http://www.ttpai.cn/signup/ttp?name=#{CGI::escape(info["name"])}&mobile=13472446647&city=#{CGI::escape(info["city"])}&brand=#{CGI::escape(info["brand"])}&source=5-89-659&utmSource=txnews&utmMedium=ttCPA&utmCampaign=1&utmContent=&utmTerm=&joinHmcActivity=0&_=1448502224085'  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:42.0) Gecko/20100101 Firefox/42.0' -H 'Cookie: ttpai=#{ttpai}'`
       tj_response = JSON.parse tj_response
       pp tj_response
       response_p = RestClient.post 'http://183.61.111.228:4000/api/v1/update_user_infos/update_tt_info.json', code: tj_response["code"],
@@ -99,7 +100,7 @@ def self.upload_tt2 ttpai
                                    id: info["id"]
       pp response_p
       pp "做假休息中，假装我现在在录入...#{Time.now}"
-      sleep 10
+      sleep 15
     end
   rescue Exception => e
     pp e
