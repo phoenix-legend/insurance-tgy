@@ -79,11 +79,11 @@ module Che168
           detail_content = response.body
           detail_content = Nokogiri::HTML(detail_content)
           connect_info = detail_content.css("#callPhone")[0]
-          name = connect_info.css("em").text.strip
+          name = connect_info.css("span").text.strip
           phone = connect_info.attributes["data-telno"].value.strip
-          note = detail_content.css(".seller-message #js-message")[0].text.strip
-          time = detail_content.css(".price .time")[0].text.gsub("发布", '').strip
-          price = detail_content.css(".price em strong")[0].text.gsub("¥", '').strip
+          note = detail_content.css("#js-message")[0].text.strip
+          time = detail_content.css(".carousel-images h2")[0].text.gsub("发布", '').strip
+          price = detail_content.css(".info-price")[0].text.gsub("¥", '').strip
 
           response = RestClient.post "http://localhost:4000/api/v1/update_user_infos/update_car_user_info", {id: car_user_info.id,
                                                                                                              name: name,
