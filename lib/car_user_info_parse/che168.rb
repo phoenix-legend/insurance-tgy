@@ -81,7 +81,7 @@ module Che168
           connect_info = detail_content.css("#callPhone")[0]
           name = connect_info.css("span").text.strip
           phone = connect_info.attributes["data-telno"].value.strip
-          note = detail_content.css("#js-message")[0].text.strip
+          note = begin detail_content.css("#js-message")[0].text.strip rescue '' end
           time = detail_content.css(".carousel-images h2")[0].text.gsub("发布", '').strip[0..9]
           price = detail_content.css(".info-price")[0].text.gsub("¥", '').strip
 
