@@ -290,12 +290,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       pp e
     end
 
-    begin
-      UserSystem::CarUserInfo.update_all_brand
-        pp '更新品牌结束'
-    rescue Exception => e
-      pp e
-    end
+    # begin
+    #   UserSystem::CarUserInfo.update_all_brand
+    #     pp '更新品牌结束'
+    # rescue Exception => e
+    #   pp e
+    # end
     #   sleep 60*4
     # end
   end
