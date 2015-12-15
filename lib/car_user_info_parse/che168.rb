@@ -75,7 +75,7 @@ module Che168
           # detail_content = `curl '#{car_user_info.detail_url}'`
           pp car_user_info.detail_url
           response = RestClient.get(car_user_info.detail_url)
-
+          pp
           detail_content = response.body
           detail_content = Nokogiri::HTML(detail_content)
           connect_info = detail_content.css("#callPhone")[0]
