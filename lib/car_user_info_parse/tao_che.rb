@@ -13,7 +13,7 @@ module TaoChe
           pp "现在跑.. #{areaname}"
           pp pinyin
           1.upto 2 do |i|
-            pp "现在跑.. #{areaname}  第 #{i}页"
+            pp "现在跑淘车.. #{areaname}  第 #{i}页"
             pp "http://#{pinyin}.m.taoche.com/buycar/pges1bxcdza/?orderid=1&page=#{i}"
             response = RestClient.get "http://#{pinyin}.m.taoche.com/buycar/pges1bxcdza/?orderid=1&page=#{i}"
             content = response.body
@@ -83,22 +83,29 @@ module TaoChe
           detail_content = response.body
           detail_content = Nokogiri::HTML(detail_content)
           name = detail_content.css('.shjtit')[0].text.strip
-          pp name
-          phone = detail_content.css('.xqdinh p')[1].text.match /\d{11}/.to_s
-          pp phone
-          note = (detail_content.css('.mjmstext')[0].text rescue '')
-          pp note
-          price = detail_content.css('.jiagmain p em')[0].text.match(/[\d.]{1,10}/).to_s
-          pp price
-          fabushijian = detail_content.css('.chytext p')[0].text.gsub('发布','').strip
-          pp fabushijian
 
-          response = RestClient.post "http://localhost:4000/api/v1/update_user_infos/update_car_user_info", {id: car_user_info.id,
-                                                                                                             name: name,
-                                                                                                             phone: phone,
-                                                                                                             note: note,
-                                                                                                             price: price,
-                                                                                                             fabushijian: fabushijian}
+          phone = (detail_content.css('.xqdinh p')[1].text.match /\d{11}/).to_s
+
+          note = (detail_content.css('.mjmstext')[0].text rescue '')
+
+          price = detail_content.css('.jiagmain p em')[0].text.match(/[\d.]{1,10}/).to_s
+
+          fabushijian = '2010-10-01'#detail_content.css('.chytext p')[0].text.gsub('发布','').strip
+
+
+          # response = RestClient.post "http://localhost:4000/api/v1/update_user_infos/update_car_user_info", {id: car_user_info.id,
+          #                                                                                                    name: name,
+          #                                                                                                    phone: phone,
+          #                                                                                                    note: note,
+          #                                                                                                    price: price,
+          #                                                                                                    fabushijian: fabushijian}
+
+          UserSystem::CarUserInfo.update_detail id: car_user_info.id,
+                                                name: name,
+                                                phone: phone.to_s,
+                                                note: note,
+                                                price: price,
+                                                fabushijian: fabushijian
 
         rescue Exception => e
           pp e

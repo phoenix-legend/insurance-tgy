@@ -11,6 +11,7 @@ class Cms::BaseController < ApplicationController
   def current_user
     return nil if session[:employee_id].blank?
     ::Personal::Employee.find(session[:employee_id])
+
   end
 
 
