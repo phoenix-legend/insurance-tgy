@@ -1,4 +1,4 @@
-module Baixing
+module Wuba
 
   # Baixing.get_car_user_list
   def self.get_car_user_list
