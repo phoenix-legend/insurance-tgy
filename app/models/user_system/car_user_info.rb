@@ -39,6 +39,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆"
   }
 
+  WUBA_CITY = {
+      "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州",
+      "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆"
+  }
+
+  # WUBA_CITY = {
+  #     "sh" => '上海'
+  # }
+
 
   def self.create_car_user_info options
     user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]
@@ -94,7 +103,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
     if car_user_info.is_cheshang == 0
-      ['经理', '总', '商家', '赶集'].each do |name_key|
+      ['经理', '总', '商家', '赶集', '瓜子'].each do |name_key|
         if car_user_info.name.include? name_key
           car_user_info.is_cheshang = 1
           car_user_info.save!

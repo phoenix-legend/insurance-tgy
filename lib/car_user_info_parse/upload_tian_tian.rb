@@ -73,6 +73,8 @@ module UploadTianTian
     qudao = "23-23-1"
     if car_user_info.site_name == 'baixing'
       qudao = "23-23-4"
+    elsif car_user_info.site_name == '58'
+      qudao = "23-23-5"
     end
 
     if is_select
@@ -139,11 +141,9 @@ module UploadTianTian
     car_user_infos.each do |car_user_info|
       source = "23-23-1"
       if car_user_info.site_name == 'baixing'
-        if car_user_info.created_at < '2016-02-19 10:10:59'
-          source = "23-32-4"
-        else
-          source = "23-23-4"
-        end
+        source = "23-23-4"
+      elsif car_user_info.site_name == 'baixing'
+        source = "23-23-5"
       end
       url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{source}"
       response = RestClient.get url
@@ -210,10 +210,9 @@ module UploadTianTian
     pp "本月意向率：#{(yx_month_counts.to_f/tj_month_counts.to_f).round(3)*100}%"
 
 
-
     pp "------------------------今天各渠道意向率-----------------------------------------"
     # 赶集网成交率
-    ['ganji', 'baixing', 'che168', 'taoche'].each do |s|
+    ['ganji', 'baixing', 'che168', 'taoche', '58'].each do |s|
       yixiang = UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and site_name = '#{s}' and created_at > ? and created_at < ?", Date.today.chinese_format, Date.tomorrow.chinese_format).count
       tijiao = UserSystem::CarUserInfo.where("tt_id is not null and site_name = '#{s}'  and created_at > ? and created_at < ?", Date.today.chinese_format, Date.tomorrow.chinese_format).count
       pp "#{s}: #{yixiang}/#{tijiao}=#{(yixiang.to_f/tijiao.to_f).round(3)*100}%"
@@ -221,14 +220,14 @@ module UploadTianTian
 
     pp "------------------------总体各渠道意向率-----------------------------------------"
     # 赶集网成交率
-    ['ganji', 'baixing', 'che168', 'taoche'].each do |s|
+    ['ganji', 'baixing', 'che168', 'taoche', '58'].each do |s|
       yixiang = UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and site_name = '#{s}'").count
       tijiao = UserSystem::CarUserInfo.where("tt_id is not null and site_name = '#{s}'").count
       pp "#{s}: #{yixiang}/#{tijiao}=#{(yixiang.to_f/tijiao.to_f).round(3)*100}%"
     end
 
 
-  ''
+    ''
   end
 
 
