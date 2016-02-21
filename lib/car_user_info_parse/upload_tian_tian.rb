@@ -13,10 +13,7 @@ module UploadTianTian
   end
 
   def self.upload_tt
-    # domain = "sandbox.openapi.ttpai.cn"
-    # s = "256a18c39baf24f120a191c9454e4f03"
-    domain = "openapi.ttpai.cn"
-    s = "1579089ae5ae1d9b559f3082c4e44148"
+
     user_infos = UploadTianTian.need_upload
     user_infos.each do |user_info|
       UploadTianTian.upload_one_tt user_info
@@ -79,6 +76,8 @@ module UploadTianTian
     end
 
     if is_select
+      # domain = "sandbox.openapi.ttpai.cn"
+      # s = "256a18c39baf24f120a191c9454e4f03"
       domain = "openapi.ttpai.cn"
       s = "1579089ae5ae1d9b559f3082c4e44148"
       user_info = car_user_info

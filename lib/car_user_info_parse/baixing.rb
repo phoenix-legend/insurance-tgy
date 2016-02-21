@@ -67,6 +67,11 @@ module Baixing
         # car_user_info = UserSystem::CarUserInfo.find 178505
         pp car_user_info.detail_url
         response = RestClient.get(car_user_info.detail_url)
+        if response.match /此信息未通过审核/
+          car_user_info.need_update = false
+          car_user_info.save
+          next
+        end
         pp
         detail_content1 = response.body
         detail_content = Nokogiri::HTML(detail_content1)
