@@ -189,7 +189,7 @@ module UploadTianTian
     i
   end
 
-  # UploadTianTian.get_not_status
+  # UploadTianTian.get_now_status
   def self.get_now_status shishi=false
     last_day = 29
     if shishi
