@@ -199,6 +199,20 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
   end
 
+  def self.run_58
+    begin
+      Wuba.get_car_user_list
+    rescue Exception => e
+      pp e
+    end
+
+    begin
+      Wuba.update_detail
+    rescue Exception => e
+      pp e
+    end
+  end
+
   def self.run_ganji
     begin
       Ganji.get_car_user_list
