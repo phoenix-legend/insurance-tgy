@@ -142,7 +142,7 @@ module UploadTianTian
       source = "23-23-1"
       if car_user_info.site_name == 'baixing'
         source = "23-23-4"
-      elsif car_user_info.site_name == 'baixing'
+      elsif car_user_info.site_name == '58'
         source = "23-23-5"
       end
       url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{source}"
