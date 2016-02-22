@@ -143,7 +143,7 @@ module UploadTianTian
       threads.delete_if { |thread| thread.status == false }
       if threads.length > 40
         pp "现在共有#{threads.length}个线程正在运行"
-        sleep 3
+        sleep 1
       end
       t = Thread.new do
         source = "23-23-1"
