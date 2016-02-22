@@ -51,7 +51,7 @@
             <td><%= source_name %></td>
             <td><%= tijiaoshu %></td>
             <td><%= chenggongshu %></td>
-            <td><%= ((((chenggongshu.to_f/tijiaoshu)*10000).to_i).to_f/100).round(2) %>%</td>
+            <td><%= (chenggongshu.to_f/tijiaoshu).round(4)*100 %>%</td>
           </tr>
 
 
@@ -67,7 +67,7 @@
         <td>---</td>
         <td><%= all_tijiaoshu %></td>
         <td><%= all_chenggongshu %></td>
-        <td><%= ((((all_chenggongshu.to_f/all_tijiaoshu)*10000).to_i).to_f/100).round(2) %>%</td>
+        <td><%= (chenggongshu.to_f/tijiaoshu).round(4)*100 %>%</td>
       </tr>
 
   <%
