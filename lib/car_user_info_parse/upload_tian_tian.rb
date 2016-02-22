@@ -157,10 +157,9 @@ module UploadTianTian
         response = RestClient.get url
         response = JSON.parse response
         pp response["result"]["invite"]
-        if not response["result"]["invite"].blank?
-          car_user_info.tt_yaoyue = response["result"]["invite"] if (not response["result"]["invite"].blank? and car_user_info.tt_yaoyue.blank?)
-          car_user_info.tt_jiance = response["result"]["detection"] if not response["result"]["detection"].blank?
-          car_user_info.tt_chengjiao = response["result"]["deal"] if not response["result"]["deal"].blank?
+        if not response["result"]["invite"].blank? and car_user_info.tt_yaoyue.blank?
+          car_user_info.tt_yaoyue = response["result"]["invite"]
+          car_user_info.tt_yaoyue_time = DateTime.now.chinese_format
           car_user_info.save!
           i = i+1
         end
