@@ -1,3 +1,19 @@
+
+<%
+   last_day = 29
+   yx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and created_at > ? and created_at < ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
+  tj_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
+%>
+本月意向数：<%=yx_month_counts%>
+本月提交数：<%=tj_month_counts%>
+
+<%
+
+   zyx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功'").count
+   ztj_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null").count
+%>
+总意向数：<%=zyx_month_counts%>
+总提交数：<%=ztj_month_counts%>
 <table width="100%" class="table">
   <tr>
     <td width="29%">日期</td>
@@ -8,7 +24,7 @@
   </tr>
   <%
 
-     1.upto(60) do |i|
+     0.upto(60) do |i|
        d = Date.today - i
        next if d < Date.new(2016, 2, 15)
        ['58', 'ganji', 'baixing', 'che168', 'taoche'].each do |source|
@@ -35,13 +51,27 @@
             <td><%= source_name %></td>
             <td><%= tijiaoshu %></td>
             <td><%= chenggongshu %></td>
-            <td><%= (chenggongshu.to_f/tijiaoshu).round(4)*100 %>%</td>
+            <td><%= ((((chenggongshu.to_f/tijiaoshu)*10000).to_i).to_f/100).round(2) %>%</td>
           </tr>
 
 
       <%
-         end
-         end %>
+         end%>
+
+      <%
+         all_tijiaoshu = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ?", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         all_chenggongshu = UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ?", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+      %>
+      <tr class=<%= if i%2 == 0 then '"yinying"' else 'noyinying' end%>>
+        <td><%= d.chinese_format_day %></td>
+        <td>---</td>
+        <td><%= all_tijiaoshu %></td>
+        <td><%= all_chenggongshu %></td>
+        <td><%= ((((all_chenggongshu.to_f/all_tijiaoshu)*10000).to_i).to_f/100).round(2) %>%</td>
+      </tr>
+
+  <%
+     end%>
 
 </table>
 
