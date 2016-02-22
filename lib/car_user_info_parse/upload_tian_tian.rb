@@ -243,7 +243,7 @@ module UploadTianTian
       tijiao = ::UserSystem::CarUserInfo.where("tt_id is not null and site_name = '#{s}'").count
       pp "#{s}: #{yixiang}/#{tijiao}=#{(yixiang.to_f/tijiao.to_f).round(3)*100}%"
     end
-
+    pp "现在时间：#{Time.now.chinese_format}"
 
     ''
   end
