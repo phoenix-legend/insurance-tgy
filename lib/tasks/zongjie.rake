@@ -5,4 +5,8 @@ namespace :zongjie do
 	end
 
 
+	desc "每天更新班级状态  rake zongjie:all RAILS_ENV=production"
+	task :all1 => :environment do
+		UploadTianTian.get_now_status
+	end
 end
