@@ -13,8 +13,8 @@
        next if d < Date.new(2016, 2, 15)
        ['58', 'ganji', 'baixing', 'che168', 'taoche'].each do |source|
 
-         tijiaoshu = UserSystem::CarUserInfo.where("tt_id is not null and created_at > ? and created_at < ?", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
-         chenggongshu = UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ?", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         tijiaoshu = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and created_at > ? and created_at < ?", source,"#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         chenggongshu = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ?",source, "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
          source_name = case source
                          when 'taoche'
                            '淘车'
