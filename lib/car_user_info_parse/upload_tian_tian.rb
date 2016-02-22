@@ -6,7 +6,7 @@ module UploadTianTian
   # 需要上传的数据。
   def self.need_upload
     pp '开始批量上传'
-    car_user_infos = UserSystem::CarUserInfo.where "tt_upload_status = 'weishangchuan' and id > #{UserSystem::CarUserInfo::CURRENT_ID} and phone is not null and brand is not null and is_cheshang = 0"
+    car_user_infos = ::UserSystem::CarUserInfo.where "tt_upload_status = 'weishangchuan' and id > #{::UserSystem::CarUserInfo::CURRENT_ID} and phone is not null and brand is not null and is_cheshang = 0"
     pp "本次批量上传#{car_user_infos.length}个"
     pp "*************************************"
     car_user_infos
@@ -121,7 +121,7 @@ module UploadTianTian
 
 
   def self.update_car_user_info options
-    car_user_info = UserSystem::CarUserInfo.find options[:id]
+    car_user_info = ::UserSystem::CarUserInfo.find options[:id]
     car_user_info.tt_code = options["code"]
     car_user_info.tt_error = options["error"]
     car_user_info.tt_message = options["message"]
@@ -136,7 +136,7 @@ module UploadTianTian
 
   # UploadTianTian.query_order
   def self.query_order
-    car_user_infos = UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null").order(id: :desc)
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null").order(id: :desc)
     i = 0
     threads = []
     car_user_infos.each do |car_user_info|
@@ -181,7 +181,7 @@ module UploadTianTian
 
   # UploadTianTian.query_order_baixing
   def self.query_order_baixing
-    car_user_infos = UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and site_name = 'baixing'").order(id: :desc)
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and site_name = 'baixing'").order(id: :desc)
     i = 0
     car_user_infos.each do |car_user_info|
       source = "23-23-4"
@@ -202,6 +202,8 @@ module UploadTianTian
     i
   end
 
+
+
   # UploadTianTian.get_now_status
   def self.get_now_status shishi=false
     last_day = 29
@@ -217,8 +219,8 @@ module UploadTianTian
     # end
 
     pp "-----------------------------------------------------------------"
-    yx_month_counts = UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and created_at > ? and created_at < ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
-    tj_month_counts = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
+    yx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and created_at > ? and created_at < ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
+    tj_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
     pp "本月意向总数：#{yx_month_counts}"
     pp "本月意向率：#{(yx_month_counts.to_f/tj_month_counts.to_f).round(3)*100}%"
 
@@ -226,16 +228,16 @@ module UploadTianTian
     pp "------------------------今天各渠道意向率-----------------------------------------"
     # 赶集网成交率
     ['ganji', 'baixing', 'che168', 'taoche', '58'].each do |s|
-      yixiang = UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and site_name = '#{s}' and created_at > ? and created_at < ?", Date.today.chinese_format, Date.tomorrow.chinese_format).count
-      tijiao = UserSystem::CarUserInfo.where("tt_id is not null and site_name = '#{s}'  and created_at > ? and created_at < ?", Date.today.chinese_format, Date.tomorrow.chinese_format).count
+      yixiang = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and site_name = '#{s}' and created_at > ? and created_at < ?", Date.today.chinese_format, Date.tomorrow.chinese_format).count
+      tijiao = ::UserSystem::CarUserInfo.where("tt_id is not null and site_name = '#{s}'  and created_at > ? and created_at < ?", Date.today.chinese_format, Date.tomorrow.chinese_format).count
       pp "#{s}: #{yixiang}/#{tijiao}=#{(yixiang.to_f/tijiao.to_f).round(3)*100}%"
     end
 
     pp "------------------------总体各渠道意向率-----------------------------------------"
     # 赶集网成交率
     ['ganji', 'baixing', 'che168', 'taoche', '58'].each do |s|
-      yixiang = UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and site_name = '#{s}'").count
-      tijiao = UserSystem::CarUserInfo.where("tt_id is not null and site_name = '#{s}'").count
+      yixiang = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and site_name = '#{s}'").count
+      tijiao = ::UserSystem::CarUserInfo.where("tt_id is not null and site_name = '#{s}'").count
       pp "#{s}: #{yixiang}/#{tijiao}=#{(yixiang.to_f/tijiao.to_f).round(3)*100}%"
     end
     pp "现在时间：#{Time.now.chinese_format}"

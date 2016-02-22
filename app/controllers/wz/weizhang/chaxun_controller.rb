@@ -1,4 +1,9 @@
 class Wz::Weizhang::ChaxunController < Wz::WangzhanController
+
+  def car_user_info
+
+  end
+
   def index
     product_id = ::OrderSystem::Product.find_by_server_name("weizhang").id
     @product = ::OrderSystem::Product.find product_id

@@ -99,6 +99,7 @@ Rails.application.routes.draw do
     namespace :weizhang do
       resources :chaxun do
         collection do
+          get :car_user_info
           get :no_weizhang
           post :result
         end
@@ -128,6 +129,7 @@ Rails.application.routes.draw do
   get '/dwz', to: 'dwz/haoche_stat/promation#index'
 
   get '/i/:template_name/:qudao_name', to: "wz/order_system/products#index"
+  get 'baobiao', to: 'wz/weizhang/chaxun#car_user_info'
 
 
   # The priority is based upon order of creation: first created -> highest priority.
