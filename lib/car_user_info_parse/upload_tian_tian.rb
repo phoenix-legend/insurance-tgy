@@ -136,33 +136,49 @@ module UploadTianTian
 
   # UploadTianTian.query_order
   def self.query_order
-    car_user_infos = UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and site_name <> 'baixing'").order(id: :desc)
+    car_user_infos = UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null").order(id: :desc)
     i = 0
+    threads = []
     car_user_infos.each do |car_user_info|
-      source = "23-23-1"
-      if car_user_info.site_name == 'baixing'
-        source = "23-23-4"
-      elsif car_user_info.site_name == '58'
-        source = "23-23-5"
+      threads.delete_if { |thread| thread.status == false }
+      if threads.length > 30
+        pp "现在共有#{threads.length}个线程正在运行"
+        sleep 3
       end
-      url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{source}"
-      response = RestClient.get url
-      response = JSON.parse response
-      pp response["result"]["invite"]
-      if not response["result"]["invite"].blank?
-        car_user_info.tt_yaoyue = response["result"]["invite"] if (not response["result"]["invite"].blank? and car_user_info.tt_yaoyue.blank?)
-        car_user_info.tt_jiance = response["result"]["detection"] if not response["result"]["detection"].blank?
-        car_user_info.tt_chengjiao = response["result"]["deal"] if not response["result"]["deal"].blank?
-        car_user_info.save!
-        i = i+1
+      t = Thread.new do
+        source = "23-23-1"
+        if car_user_info.site_name == 'baixing'
+          source = "23-23-4"
+        elsif car_user_info.site_name == '58'
+          source = "23-23-5"
+        end
+        pp "#{car_user_info.site_name}~#{source}"
+        url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{source}"
+        response = RestClient.get url
+        response = JSON.parse response
+        pp response["result"]["invite"]
+        if not response["result"]["invite"].blank?
+          car_user_info.tt_yaoyue = response["result"]["invite"] if (not response["result"]["invite"].blank? and car_user_info.tt_yaoyue.blank?)
+          car_user_info.tt_jiance = response["result"]["detection"] if not response["result"]["detection"].blank?
+          car_user_info.tt_chengjiao = response["result"]["deal"] if not response["result"]["deal"].blank?
+          car_user_info.save!
+          i = i+1
+        end
       end
-
+      threads << t
+      1.upto(2000) do
+        sleep(1)
+        # pp '休息.......'
+        threads.delete_if { |thread| thread.status == false }
+        break if threads.blank?
+      end
     end
 
-    j = UploadTianTian.query_order_baixing
-    pp "百姓网#{j}个"
+
+    # j = UploadTianTian.query_order_baixing
+    # pp "百姓网#{j}个"
     pp "本次新增#{i}个。 "
-    pp "总共#{i+j}个"
+    # pp "总共#{i+j}个"
   end
 
 
