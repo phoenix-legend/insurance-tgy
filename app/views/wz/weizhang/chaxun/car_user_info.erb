@@ -27,7 +27,8 @@
   </tr>
   <%
 
-     0.upto(60) do |i|
+     day_number = params[:d]||3
+     0.upto(day_number.to_i) do |i|
        d = Date.today - i
        next if d < Date.new(2016, 2, 15)
        ['58', 'ganji', 'baixing', 'che168', 'taoche'].each do |source|
