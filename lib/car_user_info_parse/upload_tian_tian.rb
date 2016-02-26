@@ -141,9 +141,10 @@ module UploadTianTian
     threads = []
     car_user_infos.each do |car_user_info|
       threads.delete_if { |thread| thread.status == false }
-      if threads.length > 15
-        sleep 1
+      if threads.length > 30
+        sleep 2
       end
+      pp "现在有#{car_user_infos.length}个线程"
       t = Thread.new do
         source = "23-23-1"
         if car_user_info.site_name == 'baixing'
@@ -155,9 +156,9 @@ module UploadTianTian
         response = RestClient.get url
         response = JSON.parse response
         pp response["result"]["invite"]
-	pp car_user_info.tt_id
+        pp car_user_info.tt_id
         pp '..........................'
-	if not response["result"]["invite"].blank? and car_user_info.tt_yaoyue.blank?
+        if not response["result"]["invite"].blank? and car_user_info.tt_yaoyue.blank?
           car_user_info.tt_yaoyue = response["result"]["invite"]
           car_user_info.tt_yaoyue_time = DateTime.now.chinese_format
           car_user_info.save!
@@ -206,7 +207,6 @@ module UploadTianTian
   end
 
 
-
   # UploadTianTian.get_now_status
   def self.get_now_status shishi=false
     last_day = 29
@@ -251,7 +251,7 @@ module UploadTianTian
   # module UploadTianTian
 
 
-    #UploadTianTian.yiloushuju
+  #UploadTianTian.yiloushuju
   def self.yiloushuju
     d = '2016-02-19'
     cuis = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and created_at > '#{d} 00:00:00' and created_at < '#{d} 23:59:59'")
