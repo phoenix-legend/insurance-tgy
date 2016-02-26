@@ -138,14 +138,14 @@ module UploadTianTian
   def self.query_order
     car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null").order(id: :desc)
     i = 0
-    threads = []
+    # threads = []
     car_user_infos.each do |car_user_info|
-      threads.delete_if { |thread| thread.status == false }
-      if threads.length > 30
-        sleep 2
-      end
-      pp "现在有#{threads.length}个线程"
-      t = Thread.new do
+      # threads.delete_if { |thread| thread.status == false }
+      # if threads.length > 30
+      #   sleep 2
+      # end
+      # pp "现在有#{threads.length}个线程"
+      # t = Thread.new do
         source = "23-23-1"
         if car_user_info.site_name == 'baixing'
           source = "23-23-4"
@@ -164,16 +164,16 @@ module UploadTianTian
           car_user_info.save!
           i = i+1
         end
-      end
-      threads << t
+      # end
+      # threads << t
 
     end
-    1.upto(2000) do
-      sleep(1)
-      # pp '休息.......'
-      threads.delete_if { |thread| thread.status == false }
-      break if threads.blank?
-    end
+    # 1.upto(2000) do
+    #   sleep(1)
+    #   # pp '休息.......'
+    #   threads.delete_if { |thread| thread.status == false }
+    #   break if threads.blank?
+    # end
 
 
     # j = UploadTianTian.query_order_baixing
