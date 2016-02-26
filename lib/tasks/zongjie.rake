@@ -3,7 +3,7 @@ namespace :zongjie do
 	task :all => :environment do
 		jincheng = `ps -ef | grep zongjie:all`
 		match_data = jincheng.split /\n/
-		if match_data.length > 3
+		if match_data.length > 4
 			pp '前一次未执行完毕，退出任务'
 		else
 			UploadTianTian.get_now_status true
