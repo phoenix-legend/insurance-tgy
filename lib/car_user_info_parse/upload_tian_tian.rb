@@ -144,7 +144,7 @@ module UploadTianTian
       if threads.length > 30
         sleep 2
       end
-      pp "现在有#{car_user_infos.length}个线程"
+      pp "现在有#{threads.length}个线程"
       t = Thread.new do
         source = "23-23-1"
         if car_user_info.site_name == 'baixing'
