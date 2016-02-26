@@ -278,6 +278,42 @@ module UploadTianTian
 
   end
 
+  def self.yiloushuju2
+    d = '2016-02-24'
+    cuis = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and created_at > '#{d} 00:00:00' and created_at < '#{d} 23:59:59'")
+    success = 0
+    weizhi = 0
+    shibai = 0
+    cuis.each do |car_user_info|
+      source = "23-23-1"
+      if car_user_info.site_name == 'baixing'
+        source = "23-23-4"
+      elsif car_user_info.site_name == '58'
+        source = "23-23-5"
+      end
+      url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{source}"
+
+      response = RestClient.get url
+      response = JSON.parse response
+      if response["result"]["invite"]=='成功'
+        success = success+1
+      end
+      if response["result"]["invite"]=='失败'
+        shibai = shibai+1
+      end
+      if response["result"]["invite"].blank?
+        weizhi = weizhi+1
+      end
+
+      if response["result"]["invite"]=='失败'
+        pp "id:#{car_user_info.tt_id},意向：#{aaa response["result"]["invite"]}, 到检：#{aaa response["result"]["detection"]}, 拍卖：#{aaa response["result"]["auction"]},成交：#{aaa response["result"]["deal"]},渠道：#{source},日期：#{d}"
+      end
+
+    end
+    pp "成功#{success}个，未知#{weizhi}个,失败#{shibai}个，总共#{cuis.length}个"
+
+  end
+
   def self.aaa str
     if str.blank?
       "未知"
