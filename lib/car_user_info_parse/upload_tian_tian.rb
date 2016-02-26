@@ -141,7 +141,7 @@ module UploadTianTian
     threads = []
     car_user_infos.each do |car_user_info|
       threads.delete_if { |thread| thread.status == false }
-      if threads.length > 40
+      if threads.length > 15
         sleep 1
       end
       t = Thread.new do
@@ -154,7 +154,10 @@ module UploadTianTian
         url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{source}"
         response = RestClient.get url
         response = JSON.parse response
-        if not response["result"]["invite"].blank? and car_user_info.tt_yaoyue.blank?
+        pp response["result"]["invite"]
+	pp car_user_info.tt_id
+        pp '..........................'
+	if not response["result"]["invite"].blank? and car_user_info.tt_yaoyue.blank?
           car_user_info.tt_yaoyue = response["result"]["invite"]
           car_user_info.tt_yaoyue_time = DateTime.now.chinese_format
           car_user_info.save!
