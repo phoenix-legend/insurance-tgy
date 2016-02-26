@@ -14,7 +14,7 @@ module Wuba
 
         begin
           pp "现在跑58.. #{areaname}"
-          1.upto 2 do |i|
+          1.upto 5 do |i|
             # i = 1
           url  = "http://#{areaid}.58.com/ershouche/0/pn#{i}/"
           pp url
@@ -88,7 +88,7 @@ module Wuba
       next unless car_user_info.phone.blank?
       next if car_user_info.detail_url.match /zhineng/
 
-      if threads.length > 30
+      if threads.length > 15
         sleep 2
       end
       threads.delete_if { |thread| thread.status == false }

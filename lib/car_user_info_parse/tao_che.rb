@@ -4,7 +4,7 @@ module TaoChe
     threads = []
     city_hash.each_pair do |pinyin, areaname|
       threads.delete_if { |thread| thread.status == false }
-      if threads.length > 30
+      if threads.length > 15
         pp "现在共有#{threads.length}个线程正在运行"
         sleep 3
       end
@@ -66,7 +66,7 @@ module TaoChe
     car_user_infos.each do |car_user_info|
       next unless car_user_info.name.blank?
       next unless car_user_info.phone.blank?
-      if threads.length > 30
+      if threads.length > 15
         sleep 2
       end
       threads.delete_if { |thread| thread.status == false }

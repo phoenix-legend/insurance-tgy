@@ -17,12 +17,23 @@
   <%= form_tag('/wz/order_system/products/create_appointment', method: 'post') do %>
 
       <ul style="">
-        <li>
+        <!--<li>-->
           <label>车牌号:</label><%= text_field_tag :car_number, get_show_value('', v3: @car_number, v2: session[:car_number], v1: session_content[:car_number]), class: "form_ipt", placeholder: "如沪A12345" %>
+        <!--</li>-->
+        <li style="border-bottom: none">
+          <label>姓名:</label><%= text_field_tag :name, get_show_value('', v1: session_content[:name], v2: session[:name]), class: "form_ipt", placeholder: "姓名" %>
         </li>
 
         <li style="border-bottom: none">
-          <label>手机号:</label><%= text_field_tag :phone, get_show_value('', v1: session_content[:phone], v2: session[:phone]), class: "form_ipt", placeholder: "请输入" %>
+          <label>手机号:</label><%= text_field_tag :phone, get_show_value('', v1: session_content[:phone], v2: session[:phone]), class: "form_ipt", placeholder: "请输入11位手机号" %>
+        </li>
+
+        <li style="border-bottom: none">
+          <label>城市:</label><%= text_field_tag :city, get_show_value('', v1: session_content[:city], v2: session[:city]), class: "form_ipt", placeholder: "请输入城市" %>
+        </li>
+
+        <li style="border-bottom: none">
+          <label>车辆品牌:</label><%= text_field_tag :brand, get_show_value('', v1: session_content[:brand], v2: session[:brand]), class: "form_ipt", placeholder: "请输入品牌型号" %>
         </li>
       </ul>
 

@@ -9,7 +9,7 @@ module Che168
     threads = []
     city_hash.each_pair do |areaid, areaname|
       threads.delete_if { |thread| thread.status == false }
-      if threads.length > 30
+      if threads.length > 15
         pp "现在共有#{threads.length}个线程正在运行"
         sleep 3
       end
@@ -66,7 +66,7 @@ module Che168
       next unless car_user_info.name.blank?
       next unless car_user_info.phone.blank?
       next if car_user_info.detail_url.match /m\.hao\.autohome\.com\.cn/
-      if threads.length > 30
+      if threads.length > 15
         sleep 2
       end
       threads.delete_if { |thread| thread.status == false }
