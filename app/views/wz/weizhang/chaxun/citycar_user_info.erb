@@ -20,7 +20,7 @@
      all_citys = UserSystem::CarUserInfo::WUBA_CITY.values
      a = 0
 
-     cuis = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ?", "#{date} 00:00:00", "#{date} 23:59:59").
+     cuis = UserSystem::CarUserInfo.where("phone is not null  and created_at > ? and created_at < ?", "#{date} 00:00:00", "#{date} 23:59:59").
              group(:site_name, :city_chinese).
              select(:site_name, :city_chinese, "count(*) as c")#.order('c asc')
 
