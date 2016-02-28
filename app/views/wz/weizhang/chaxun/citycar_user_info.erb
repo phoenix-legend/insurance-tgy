@@ -81,12 +81,13 @@
     <td><%= cui.city_chinese %></td>
     <td><%= cui.c %></td>
     <%
+       cc1 = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ? and city_chinese = '#{cui.city_chinese}' and site_name = '#{cui.site_name}'", "#{date} 00:00:00", "#{date} 23:59:59").count
        cc = UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and created_at > ? and created_at < ? and city_chinese = '#{cui.city_chinese}' and site_name = '#{cui.site_name}'", "#{date} 00:00:00", "#{date} 23:59:59").count
     %>
-    <td><%= cc %>
+    <td><%= cc1/cc %>
     </td>
 
-    <td><%= if cui.c == 0 then 'NaN' else (((cc.to_f/cui.c)*10000).to_i).to_f/100 end %>%
+    <td><%= if cc1 == 0 then 'NaN' else (((cc.to_f/cc1)*10000).to_i).to_f/100 end %>%
     </td>
   </tr>
 
