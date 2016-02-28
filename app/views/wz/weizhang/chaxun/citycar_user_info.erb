@@ -1,0 +1,133 @@
+<%
+   py = if params[:py].blank?
+          0
+        else
+          params[:py].to_i
+        end
+   date = (Date.today - py).chinese_format_day
+
+%>
+<table width="100%" class="table">
+  <tr>
+    <td width="29%">日期</td>
+    <td width="17%">来源</td>
+    <td width="18%">城市</td>
+    <td width="18%">成功数</td>
+    <td width="18%">意向数</td>
+    <td width="18%">转化率</td>
+  </tr>
+  <%
+     a = 0
+
+     cuis = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ?", "#{date} 00:00:00", "#{date} 23:59:59").
+             group(:site_name, :city_chinese).
+             select(:site_name, :city_chinese, "count(*) as c")#.order('c asc')
+     cuis = cuis.all.group_by{|cui| cui.site_name}
+     cuis.each_pair do|k,v|
+       source = k
+       v = v.sort{|v1, v2| v1.c <=> v2.c}
+     v.each_with_index  do |cui,i|
+
+     source_name = case source
+                     when 'taoche'
+                       '淘车'
+                     when 'che168'
+                       '168'
+                     when '58'
+                       '58'
+                     when 'ganji'
+                       '赶集'
+                     when 'baixing'
+                       '百姓'
+                   end
+     a = a+1
+  %>
+
+
+  <tr class=<%= if a%2 == 0 then
+                  '"yinying"'
+                else
+                  'noyinying'
+                end %>>
+    <td><%= date %></td>
+    <td><%= source_name %></td>
+    <td><%= cui.city_chinese %></td>
+    <td><%= cui.c %></td>
+    <%
+       cc = UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and created_at > ? and created_at < ? and city_chinese = '#{cui.city_chinese}' and site_name = '#{cui.site_name}'", "#{date} 00:00:00", "#{date} 23:59:59").count
+    %>
+    <td><%= cc %>
+    </td>
+
+    <td><%= if cui.c == 0 then 'NaN' else (((cc.to_f/cui.c)*10000).to_i).to_f/100 end %>%
+    </td>
+  </tr>
+
+
+
+
+
+  <% end %>
+
+      <tr class=<%= if a%2 == 0 then
+                      '"yinying"'
+                    else
+                      'noyinying'
+                    end %>>
+        <td>--</td>
+        <td>--</td>
+        <td>--</td>
+        <td>--</td>
+        <td>--</td>
+        <td>--</td>
+        <td>--</td>
+      </tr>
+  <% end %>
+
+</table>
+
+<style type="text/css">
+    body, table {
+        font-size: 12px;
+    }
+
+    table {
+        table-layout: fixed;
+        empty-cells: show;
+        border-collapse: collapse;
+        margin: 0 auto;
+    }
+
+    td {
+        height: 30px;
+    }
+
+    h1, h2, h3 {
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .table {
+        border: 1px solid #cad9ea;
+        color: #666;
+    }
+
+    .table th {
+        background-repeat: repeat-x;
+        height: 30px;
+    }
+
+    .table td, .table th {
+        border: 1px solid #cad9ea;
+        padding: 0 1em 0;
+    }
+
+    .yinying {
+        background-color: #f5fafe;
+    }
+
+    .noyinying {
+        background-color: #FFFFFF;
+    }
+</style>

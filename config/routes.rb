@@ -129,7 +129,8 @@ Rails.application.routes.draw do
   get '/dwz', to: 'dwz/haoche_stat/promation#index'
 
   get '/i/:template_name/:qudao_name', to: "wz/order_system/products#index"
-  get 'baobiao', to: 'wz/weizhang/chaxun#car_user_info'
+  get 'baobiaocx', to: 'wz/weizhang/chaxun#car_user_info'
+  get 'baobiaocity', to: 'wz/weizhang/chaxun#citycar_user_info'
 
 
   # The priority is based upon order of creation: first created -> highest priority.
