@@ -26,15 +26,25 @@ module Wuba
             car_number = trs.length
             exists_car_number = 0
             trs.each do |tr|
+              chexing = ''
               next if tr.to_s.match /google|7天可退/
-
-
               begin
                 chexing = tr.css('td .t')[0].text
               rescue
                 pp tr.to_s
+                pp 'Exception  车型获取失败'
+                next
               end
-              price = tr.css('.tc .pri')[0].text
+
+              price = 2
+              begin
+                price = tr.css('.tc .pri')[0].text
+              rescue
+                pp tr.to_s
+                pp 'Exception  价格获取失败'
+                next
+              end
+
               cheling = tr.css('.t p')[0].children[0].text
               cheling = cheling.gsub(/购于|年|\n|\r|\s/, '')
               milage = tr.css('.t p')[0].children[2].text

@@ -388,14 +388,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     file_path
   end
 
-
-  # def self.update_all_brand
-  #   cui = UserSystem::CarUserInfo.where("brand is not null").order(id: :desc).first
-  #   cuis = UserSystem::CarUserInfo.where("id > #{cui.id} and brand is  null and phone is not null")
-  #   cuis.each_with_index do |cui, i|
-  #     cui.update_brand
-  #     pp "完成 #{i}/#{cuis.length}"
-  #   end
+  # class UserSystem::CarUserInfo < ActiveRecord::Base
+  def self.update_all_brand
+    # cui = UserSystem::CarUserInfo.where("brand is not null").order(id: :desc).first
+    # cuis = UserSystem::CarUserInfo.where("id > #{cui.id} and brand is  null and phone is not null")
+    cuis = UserSystem::CarUserInfo.where("id > 172006 and brand is  null and phone is not null")
+    cuis.each_with_index do |cui, i|
+      cui.update_brand
+      pp "完成 #{i}/#{cuis.length}"
+    end
+  end
   # end
 
   def update_brand
