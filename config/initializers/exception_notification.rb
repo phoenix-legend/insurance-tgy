@@ -20,7 +20,7 @@ ExceptionNotification.configure do |config|
     config.add_notifier :email, {
       :email_prefix         => "[错误] ",
       :sender_address       => %{"Notifier" <noreply@ikidstv.com>},
-      :exception_recipients => %w{ericliu@ikidstv.com xiaopeng.chen@ikidstv.com},
+      :exception_recipients => %w{ericliu@ikidstv.com},
       :ignore_exceptions    => ['BusinessException'] + ExceptionNotifier.ignored_exceptions
     }
   end
