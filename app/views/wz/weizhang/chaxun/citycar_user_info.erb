@@ -17,29 +17,56 @@
     <td width="18%">转化率</td>
   </tr>
   <%
+     all_citys = UserSystem::CarUserInfo::WUBA_CITY.values
      a = 0
 
      cuis = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ?", "#{date} 00:00:00", "#{date} 23:59:59").
              group(:site_name, :city_chinese).
              select(:site_name, :city_chinese, "count(*) as c")#.order('c asc')
+
      cuis = cuis.all.group_by{|cui| cui.site_name}
      cuis.each_pair do|k,v|
+       black_citys = all_citys - (v.collect &:city_chinese)
        source = k
+       source_name = case source
+                       when 'taoche'
+                         '淘车'
+                       when 'che168'
+                         '168'
+                       when '58'
+                         '58'
+                       when 'ganji'
+                         '赶集'
+                       when 'baixing'
+                         '百姓'
+                     end
+       black_citys.each do|bc|
+         a = a+1
+       %>
+
+          <tr class=<%= if a%2 == 0 then
+                          '"yinying"'
+                        else
+                          'noyinying'
+                        end %>>
+            <td><%= date %></td>
+            <td><%= source_name %></td>
+            <td><%= bc %></td>
+            <td><%= 0 %></td>
+
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+
+
+
+       <%
+          end
        v = v.sort{|v1, v2| v1.c <=> v2.c}
      v.each_with_index  do |cui,i|
 
-     source_name = case source
-                     when 'taoche'
-                       '淘车'
-                     when 'che168'
-                       '168'
-                     when '58'
-                       '58'
-                     when 'ganji'
-                       '赶集'
-                     when 'baixing'
-                       '百姓'
-                   end
+
      a = a+1
   %>
 
