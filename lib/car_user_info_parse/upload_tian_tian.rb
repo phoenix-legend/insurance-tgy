@@ -104,6 +104,8 @@ module UploadTianTian
       id = begin
         response["result"]["id"] rescue -1
       end
+      user_info.tt_source = qudao
+      user_info.tt_created_day = user_info.created_at.chinese_format_day
       user_info.tt_id = id
       user_info.tt_code = error
       user_info.tt_message = message
@@ -183,28 +185,7 @@ module UploadTianTian
   end
 
 
-  # UploadTianTian.query_order_baixing
-  def self.query_order_baixing
-    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and site_name = 'baixing'").order(id: :desc)
-    i = 0
-    car_user_infos.each do |car_user_info|
-      source = "23-23-4"
-      url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{source}"
-      response = RestClient.get url
-      response = JSON.parse response
-      pp response["result"]["invite"]
-      if not response["result"]["invite"].blank?
-        car_user_info.tt_yaoyue = response["result"]["invite"] if (not response["result"]["invite"].blank? and car_user_info.tt_yaoyue.blank?)
-        car_user_info.tt_jiance = response["result"]["detection"] if not response["result"]["detection"].blank?
-        car_user_info.tt_chengjiao = response["result"]["deal"] if not response["result"]["deal"].blank?
-        car_user_info.save!
-        i = i+1
-      end
 
-    end
-    pp "本次新增#{i}个。 "
-    i
-  end
 
 
   # UploadTianTian.get_now_status
@@ -281,9 +262,10 @@ module UploadTianTian
 
   end
 
-  def self.yiloushuju2
-    d = '2016-02-24'
-    cuis = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and created_at > '#{d} 00:00:00' and created_at < '#{d} 23:59:59'")
+  # module UploadTianTian
+  def self.yiloushuju2 d=nil
+    d = d||'2016-02-24'
+    cuis = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and tt_yaoyue_time > '#{d} 00:00:00' and tt_yaoyue_time < '#{d} 23:59:59'")
     success = 0
     weizhi = 0
     shibai = 0
@@ -309,13 +291,14 @@ module UploadTianTian
       end
 
       if response["result"]["invite"]=='失败'
-        pp "id:#{car_user_info.tt_id},意向：#{aaa response["result"]["invite"]}, 到检：#{aaa response["result"]["detection"]}, 拍卖：#{aaa response["result"]["auction"]},成交：#{aaa response["result"]["deal"]},渠道：#{source},日期：#{d}"
+        # pp "id:#{car_user_info.tt_id},意向：#{UploadTianTian.aaa response["result"]["invite"]}, 到检：#{UploadTianTian.aaa response["result"]["detection"]}, 拍卖：#{UploadTianTian.aaa response["result"]["auction"]},成交：#{UploadTianTian.aaa response["result"]["deal"]},渠道：#{source},日期：#{d}"
       end
 
     end
-    pp "成功#{success}个，未知#{weizhi}个,失败#{shibai}个，总共#{cuis.length}个"
+    pp "#{d}: 成功#{success}个，未知#{weizhi}个,失败#{shibai}个，总共#{cuis.length}个"
 
   end
+  # end
 
   def self.aaa str
     if str.blank?
@@ -323,6 +306,28 @@ module UploadTianTian
     else
       str
     end
+  end
+
+  def self.get_qudao_zongjie
+      cuis = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_source is null")
+      cuis.each do |cui|
+        source = "23-23-1"
+        if cui.site_name == 'baixing'
+          source = "23-23-4"
+        elsif cui.site_name == '58'
+          source = "23-23-5"
+        end
+        pp cui.id
+        cui.tt_source = source
+        cui.tt_created_day = cui.created_at.chinese_format_day
+        cui.tt_yaoyue_day = cui.tt_yaoyue_time.chinese_format_day unless cui.tt_yaoyue_time.blank?
+        cui.save!
+      end
+
+      #  统计某个渠道某天有多少提交，多少成功意向
+      # select tt_yaoyue_day,tt_source, count(*) from car_user_infos where tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day is not null group by tt_source, tt_yaoyue_day order by tt_yaoyue_day asc
+      #
+      # select tt_created_day,tt_source, count(*) from car_user_infos where tt_id is not null and tt_created_day is not null group by tt_source, tt_created_day order by tt_created_day asc
   end
 
 

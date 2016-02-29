@@ -17,9 +17,11 @@
   <%= form_tag('/wz/order_system/products/create_appointment', method: 'post') do %>
 
       <ul style="">
-        <!--<li>-->
+        <li>
+
           <label>车牌号:</label><%= text_field_tag :car_number, get_show_value('', v3: @car_number, v2: session[:car_number], v1: session_content[:car_number]), class: "form_ipt", placeholder: "如沪A12345" %>
-        <!--</li>-->
+          
+        </li>
         <li style="border-bottom: none">
           <label>姓名:</label><%= text_field_tag :name, get_show_value('', v1: session_content[:name], v2: session[:name]), class: "form_ipt", placeholder: "姓名" %>
         </li>

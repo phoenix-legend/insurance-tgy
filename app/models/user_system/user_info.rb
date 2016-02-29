@@ -75,7 +75,7 @@ class UserSystem::UserInfo < ActiveRecord::Base
       product_id = options[:product_id]
       BusinessException.raise '产品ID不存在' if product_id.blank?
       options = get_arguments_options options, [:gender, :birthday, :engine_no, :vin_no, :month, :name, :phone, :channel, :car_number, :car_price, :city]
-      BusinessException.raise '车牌号不能为空' if options[:car_number].blank?
+      # BusinessException.raise '车牌号不能为空' if options[:car_number].blank?
 
 
       # 如果是查询违章，无车架号和发动机号不能查询。
