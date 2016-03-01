@@ -1,7 +1,7 @@
 
 <%
-   last_day = 29
-   yx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and created_at >= ? and created_at <= ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
+   last_day = 31
+   yx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_time >= ? and tt_yaoyue_time <= ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
   tj_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and created_at >= ? and created_at <= ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
 %>
 本月意向数：<%=yx_month_counts%>
