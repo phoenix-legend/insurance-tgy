@@ -28,17 +28,17 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "dongguan" => "东莞", "chongqing" => "重庆"
   }
 
-  # BAIXING_PINYIN_CITY = {
-  #     "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
-  #     "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
-  #     "dongguan" => "东莞", "chongqing" => "重庆"
-  # }
-
   BAIXING_PINYIN_CITY = {
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
-      "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
+      "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
       "dongguan" => "东莞", "chongqing" => "重庆"
   }
+
+  # BAIXING_PINYIN_CITY = {
+  #     "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
+  #     "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
+  #     "dongguan" => "东莞", "chongqing" => "重庆"
+  # }
 
   GANJI_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州",
@@ -129,6 +129,18 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       if not car_user_info.phone.match /^[0-9]{11}$/
         car_user_info.need_update = false
         car_user_info.is_cheshang = 1
+        car_user_info.save!
+      end
+    end
+
+    if car_user_info.site_name == '58'
+      invert_wuba_city = UserSystem::CarUserInfo::WUBA_CITY.invert
+      sx = invert_wuba_city[car_user_info.city_chinese]
+      zhengze = "http://#{sx}.58.com"
+      url_sx = car_user_info.detail_url.match Regexp.new zhengze
+      unless url_sx
+        car_user_info.need_update = false
+        car_user_info.is_cheshang = 2
         car_user_info.save!
       end
     end
