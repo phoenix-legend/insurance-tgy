@@ -2,7 +2,7 @@
   <%= image_tag(("/uploads/images/#{@product.detail_image}" unless @product.detail_image.blank?), :width => "100%") %>
   <div style="position: absolute; left: 15px; bottom: 8px; color: #FFFFFF; font-weight: normal;">
     <p style="font-size: 17px; line-height: 24px; font-weight: bold;"><%= @product.adds_words %></p>
-    <p style="font-size: 13px;">已有<span style="font-size: 15px;"><%= @product.sale_number %></span>人抢购</p>
+    <p style="font-size: 13px;">已有<span style="font-size: 15px;"><%= @product.sale_number %></span>人参与</p>
   </div>
   <!--<div style="background-color: RGBA(0,0,0,0.6); padding-left: 15px; padding-right: 20px; height: 30px; position: absolute; right: 0px; bottom: 20px; color: #fff; font-size: 19px;">
     <span style="font-size: 14px;">￥</span><%= @product.price %>
