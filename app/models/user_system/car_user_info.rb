@@ -28,9 +28,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "dongguan" => "东莞", "chongqing" => "重庆"
   }
 
+  # BAIXING_PINYIN_CITY = {
+  #     "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
+  #     "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
+  #     "dongguan" => "东莞", "chongqing" => "重庆"
+  # }
+
   BAIXING_PINYIN_CITY = {
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
-      "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
+      "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
       "dongguan" => "东莞", "chongqing" => "重庆"
   }
 
