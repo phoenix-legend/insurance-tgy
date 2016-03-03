@@ -75,7 +75,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info.note = params[:note]
     car_user_info.fabushijian = params[:fabushijian]
     if not params[:licheng].blank?
-      car_user_info.milage = params[:licheng].gsub('万公里','')
+      car_user_info.milage = params[:licheng].gsub('万公里', '')
     end
     if not params[:price].blank?
       car_user_info.price = params[:price]
@@ -91,7 +91,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info.save!
 
     if car_user_info.is_cheshang == 0
-      ["诚信", '到店', '精品车','车行','第一车网','车业', '信息编号', '本公司', '五菱', '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线', '依维柯'].each do |word|
+      ["诚信", '到店', '精品车', '车行', '第一车网', '车业', '信息编号', '本公司', '五菱', '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线', '依维柯'].each do |word|
         if car_user_info.note.include? word
           car_user_info.is_cheshang = 1
           car_user_info.save!
@@ -144,7 +144,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         car_user_info.save!
       end
     end
-
 
 
     pp "准备更新品牌#{car_user_info.phone}~~#{car_user_info.name}"
@@ -412,10 +411,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # cuis = UserSystem::CarUserInfo.where("id > #{cui.id} and brand is  null and phone is not null")
     cuis = UserSystem::CarUserInfo.where("id > 172006 and brand is  null and phone is not null")
     cuis.each_with_index do |cui, i|
-      cui.update_brand
+      begin
+        cui.update_brand
+      rescue Exception
+        cui.update_brand
+      end
       pp "完成 #{i}/#{cuis.length}"
     end
   end
+
   # end
 
   def update_brand
