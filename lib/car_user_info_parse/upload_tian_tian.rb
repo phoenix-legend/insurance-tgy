@@ -163,6 +163,7 @@ module UploadTianTian
         if not response["result"]["invite"].blank? and car_user_info.tt_yaoyue.blank?
           car_user_info.tt_yaoyue = response["result"]["invite"]
           car_user_info.tt_yaoyue_time = DateTime.now.chinese_format
+          car_user_info.tt_yaoyue_day = car_user_info.tt_yaoyue_time.chinese_format_day
           car_user_info.save!
           i = i+1
         end
@@ -194,13 +195,6 @@ module UploadTianTian
     if shishi
       UploadTianTian.query_order
     end
-    # pp '-----------------------------------------------------------------'
-    # pp '今天各渠道提交数量总数：'
-    # today_counts = UserSystem::CarUserInfo.where("tt_id is not null and created_at > ? and created_at < ?", Date.today.chinese_format, Date.tomorrow.chinese_format).
-    #     group("site_name").select("count(*) as count, site_name as site_name")
-    # today_counts.each do |tc|
-    #   pp "#{tc.site_name}: #{tc.count} 个"
-    # end
 
     pp "-----------------------------------------------------------------"
     yx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and created_at > ? and created_at < ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
@@ -229,41 +223,9 @@ module UploadTianTian
     ''
   end
 
-  # module UploadTianTian
-
-
-  #UploadTianTian.yiloushuju
-  def self.yiloushuju
-    d = '2016-02-19'
-    cuis = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and created_at > '#{d} 00:00:00' and created_at < '#{d} 23:59:59'")
-    success = 0
-    weizhi = 0
-    cuis.each do |car_user_info|
-      source = "23-23-1"
-      if car_user_info.site_name == 'baixing'
-        source = "23-23-4"
-      elsif car_user_info.site_name == '58'
-        source = "23-23-5"
-      end
-      url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{source}"
-
-      response = RestClient.get url
-      response = JSON.parse response
-      if response["result"]["invite"]=='成功'
-        success = success+1
-      end
-      if response["result"]["invite"].blank?
-        weizhi = weizhi+1
-      end
-
-      pp "id:#{car_user_info.tt_id},意向：#{aaa response["result"]["invite"]}, 到检：#{aaa response["result"]["detection"]}, 拍卖：#{aaa response["result"]["auction"]},成交：#{aaa response["result"]["deal"]},渠道：#{source},日期：#{d}"
-    end
-    pp "成功#{success}个，未知#{weizhi}个，总共#{cuis.length}个"
-
-  end
 
   # module UploadTianTian
-  def self.yiloushuju2 d=nil
+  def self.yiloushuju d=nil
     d = d||'2016-02-24'
     cuis = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and tt_yaoyue_time > '#{d} 00:00:00' and tt_yaoyue_time < '#{d} 23:59:59'")
     success = 0
@@ -309,25 +271,43 @@ module UploadTianTian
   end
 
   def self.get_qudao_zongjie
-      cuis = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_source is null")
-      cuis.each do |cui|
-        source = "23-23-1"
-        if cui.site_name == 'baixing'
-          source = "23-23-4"
-        elsif cui.site_name == '58'
-          source = "23-23-5"
+        cuis = ::UserSystem::CarUserInfo.where("tt_yaoyue = '成功' and tt_yaoyue_day is null")
+        cuis.each do |cui|
+          source = "23-23-1"
+          if cui.site_name == 'baixing'
+            source = "23-23-4"
+          elsif cui.site_name == '58'
+            source = "23-23-5"
+          end
+          pp cui.id
+          cui.tt_source = source if cui.tt_source.blank?
+          cui.tt_created_day = cui.created_at.chinese_format_day if cui.tt_created_day.blank?
+          cui.tt_yaoyue_day = cui.tt_yaoyue_time.chinese_format_day unless cui.tt_yaoyue_time.blank?
+          cui.save!
         end
-        pp cui.id
-        cui.tt_source = source
-        cui.tt_created_day = cui.created_at.chinese_format_day
-        cui.tt_yaoyue_day = cui.tt_yaoyue_time.chinese_format_day unless cui.tt_yaoyue_time.blank?
-        cui.save!
-      end
 
       #  统计某个渠道某天有多少提交，多少成功意向
       # select tt_yaoyue_day,tt_source, count(*) from car_user_infos where tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day is not null group by tt_source, tt_yaoyue_day order by tt_yaoyue_day asc
       #
       # select tt_created_day,tt_source, count(*) from car_user_infos where tt_id is not null and tt_created_day is not null group by tt_source, tt_created_day order by tt_created_day asc
+  end
+
+
+  def self.tttt
+    cuis = ::UserSystem::CarUserInfo.where("tt_yaoyue = '成功' and site_name = '58'")
+
+    invert_wuba_city = UserSystem::CarUserInfo::WUBA_CITY.invert
+    aa = 0
+    cuis.each do |cui|
+      sx = invert_wuba_city[cui.city_chinese]
+      zhengze = "http://(#{sx}).58.com"
+      a = cui.detail_url.match Regexp.new zhengze
+      if a.blank?
+        pp "#{cui.city_chinese},#{cui.detail_url}"
+        aa = aa+1
+      end
+    end
+    pp aa
   end
 
 
