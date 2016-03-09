@@ -194,6 +194,7 @@ module UploadTianTian
     last_day = 29
     if shishi
       UploadTianTian.query_order
+      UserSystem::CarUserInfo.get_kaixin_info
     end
 
     pp "-----------------------------------------------------------------"

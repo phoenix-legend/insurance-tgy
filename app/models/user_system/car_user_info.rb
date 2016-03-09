@@ -316,7 +316,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-  #获取20个城市的代码及名称
+  #获取20个城市的代码及名称, 针对che168网站
   # UserSystem::CarUserInfo.get_city_code_name
   def self.get_city_code_name
     provinces = {"440000" => "广东", "370000" => "山东", "330000" => "浙江", "320000" => "江苏", "130000" => "河北", "410000" => "河南", "110000" => "北京", "210000" => "辽宁", "310000" => "上海", "500000" => "重庆", "350000" => "福建", "450000" => "广西", "520000" => "贵州", "620000" => "甘肃", "460000" => "海南", "420000" => "湖北", "430000" => "湖南", "230000" => "黑龙江", "360000" => "江西", "220000" => "吉林", "150000" => "内蒙古", "640000" => "宁夏", "630000" => "青海", "610000" => "陕西", "510000" => "四川", "140000" => "山西", "120000" => "天津", "650000" => "新疆", "540000" => "西藏", "530000" => "云南", "34000" => "安徽"}
@@ -337,34 +337,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-  # 获取需要发送邮件的车主信息
-  def self.need_send_mail_car_user_infos
-    car_user_infos = self.where(email_status: 0)
-    cities = ::UserSystem::CarUserInfo::ALL_CITY.values
-    result_car_users = []
-    car_user_infos.each do |car_user_info|
-      # 只从这20个城市中发
-      unless cities.include? car_user_info.city_chinese
-        car_user_info.update_attributes email_status: 2
-        next
-      end
-      # 车龄大于等于10年，这个则不发邮件，将改车主信息置为不发邮件状态
-      if Time.now.year - (car_user_info.che_ling.to_i rescue 0) >= 10
-        car_user_info.update_attributes email_status: 2
-        next
-      end
 
-      # 车龄大于等于10年，这个则不发邮件，将改车主信息置为不发邮件状态
-      if car_user_info.phone.blank?
-        car_user_info.update_attributes email_status: 2
-        next
-      end
-
-      # car_user_info.update_attributes email_status: 1
-      result_car_users << car_user_info
-    end
-    result_car_users
-  end
 
   # 生成每小时xls
   def self.generate_xls_of_car_user_info car_user_infos
@@ -441,6 +414,44 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         break
       end
     end
+  end
+
+  # class UserSystem::CarUserInfo < ActiveRecord::Base
+  # 为开新临时导出上海的成功数据，导前一天的数据, 邮件给KK， OO 和我。
+  # UserSystem::CarUserInfo.get_kaixin_info
+  def self.get_kaixin_info
+    cuis = UserSystem::CarUserInfo.where("id > 172006 and city_chinese = '上海' and tt_yaoyue = '成功' and tt_yaoyue_day = ? and tt_chengjiao is null", Date.today)
+    return if cuis.length == 0
+    Spreadsheet.client_encoding = 'UTF-8'
+    book = Spreadsheet::Workbook.new
+    in_center = Spreadsheet::Format.new horizontal_align: :center, vertical_align: :center, border: :thin
+    center_gray = Spreadsheet::Format.new horizontal_align: :center, vertical_align: :center, border: :thin, color: :gray
+    sheet1 = book.create_worksheet name: '车主信息数据'
+    ['姓名', '电话', '品牌', '城市'].each_with_index do |content, i|
+      sheet1.row(0)[i] = content
+    end
+    current_row = 1
+    cuis.each do |car_user_info|
+      [car_user_info.name, car_user_info.phone, car_user_info.brand, car_user_info.city_chinese].each_with_index do |content, i|
+        sheet1.row(current_row)[i] = content
+      end
+      current_row += 1
+      car_user_info.tt_chengjiao = 'kaixin'
+      car_user_info.save!
+    end
+    dir = Rails.root.join('public', 'downloads')
+    Dir.mkdir dir unless Dir.exist? dir
+    file_path = File.join(dir, "#{Time.now.strftime("%Y%m%dT%H%M%S")}上海信息数据.xls")
+    book.write file_path
+    file_path
+
+    MailSend.send_car_user_infos('379576382@qq.com;37020447@qq.com;yoyolt3@163.com',
+                                 '13472446647@163.com',
+                                 cuis.count,
+                                 "最新数据-#{Time.now.chinese_format}",
+                                 [file_path]
+    ).deliver
+
   end
 end
 __END__
