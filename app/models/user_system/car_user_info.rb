@@ -447,7 +447,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     book.write file_path
     file_path
 
-    MailSend.send_car_user_infos('379576382@qq.com;37020447@qq.com;yoyolt3@163.com',
+    MailSend.send_car_user_infos('37020447@qq.com;yoyolt3@163.com',
                                  '13472446647@163.com',
                                  i,
                                  "最新数据-#{Time.now.chinese_format}",
