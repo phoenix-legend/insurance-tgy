@@ -1,7 +1,6 @@
 class MailSend < BaseMailer
 
   def send_car_user_infos  receiver, copy_receivers, record_number,zhuti, file_paths
-#    attachments = {}
     file_paths.each do |file_path|
       file_name = file_path.split('/')[-1]
       attachments["#{file_name}.xls"] = File.read( file_path )
