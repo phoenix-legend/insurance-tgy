@@ -431,10 +431,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       sheet1.row(0)[i] = content
     end
     current_row = 1
+    i = 0
     cuis.each do |car_user_info|
       [car_user_info.name, car_user_info.phone, car_user_info.brand, car_user_info.city_chinese].each_with_index do |content, i|
         sheet1.row(current_row)[i] = content
       end
+      i = i+1
       current_row += 1
       car_user_info.tt_chengjiao = 'kaixin'
       car_user_info.save!
@@ -447,7 +449,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     MailSend.send_car_user_infos('379576382@qq.com;37020447@qq.com;yoyolt3@163.com',
                                  '13472446647@163.com',
-                                 cuis.count,
+                                 i,
                                  "最新数据-#{Time.now.chinese_format}",
                                  [file_path]
     ).deliver
