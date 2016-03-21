@@ -1,6 +1,14 @@
 class UserSystem::CarUserInfo < ActiveRecord::Base
   require 'rest-client'
   require 'pp'
+
+  validates_format_of :phone, :with => EricTools::RegularConstants::MobilePhone, message: '手机号格式不正确', allow_blank: true,  :if => Proc.new {|cui| cui.site_name == 'zuoxi'}
+  validates_presence_of :name, message: '请填写姓名',  :if => Proc.new {|cui| cui.site_name == 'zuoxi'}
+  validates_presence_of :brand, message: '请填写品牌',  :if => Proc.new {|cui| cui.site_name == 'zuoxi'}
+  validates_presence_of :city_chinese, message: '请填写城市',  :if => Proc.new {|cui| cui.site_name == 'zuoxi'}
+
+
+
   # CURRENT_ID = 171550  第一次导入
   CURRENT_ID = 172006
 
@@ -64,16 +72,26 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     return 0
   end
 
+  def self.create_car_user_info_and_return_id options
+    user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]
+    return user_infos.first if user_infos.length > 0
+    car_user_info = UserSystem::CarUserInfo.new options
+    car_user_info.save!
+    return car_user_info
+  end
+
   def self.update_detail params
     pp params
     car_user_info = UserSystem::CarUserInfo.find params[:id]
     user_infos_number = UserSystem::CarUserInfo.where(phone: params[:phone]).count
 
 
-    car_user_info.name = params[:name]
+    car_user_info.name = params[:name] unless params[:name].blank?
     car_user_info.phone = params[:phone]
     car_user_info.note = params[:note]
-    car_user_info.fabushijian = params[:fabushijian]
+    car_user_info.fabushijian = params[:fabushijian] unless params[:fabushijian].blank?
+    car_user_info.save!
+
     if not params[:licheng].blank?
       car_user_info.milage = params[:licheng].gsub('万公里', '')
     end
@@ -91,7 +109,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info.save!
 
     if car_user_info.is_cheshang == 0
-      ["诚信", '到店', '精品车', '车行', '第一车网', '车业', '信息编号', '本公司', '五菱', '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线', '依维柯'].each do |word|
+      ["诚信", '到店', '精品车', '车行', '第一车网', '车业', '信息编号', '本公司',  '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线', '依维柯'].each do |word|
         if car_user_info.note.include? word
           car_user_info.is_cheshang = 1
           car_user_info.save!

@@ -37,7 +37,7 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
   end
 
   def new_appointment
-    @car_number = ::OrderSystem::Region.find_by_name(get_city).car_number_prefix rescue ''
+    # @car_number = ::OrderSystem::Region.find_by_name(get_city).car_number_prefix rescue ''
     @product = ::OrderSystem::Product.find_by_id params[:id]
   end
 
@@ -45,21 +45,40 @@ class Wz::OrderSystem::ProductsController < Wz::WangzhanController
     begin
       session[:car_number] = params[:car_number]
       session[:phone] = params[:phone]
+      session[:name] = params[:name]
       @car_number = params[:car_number]
       @phone = params[:phone]
-      user = ::UserSystem::UserInfo.create_user_info params.permit(:car_number, :phone, :product_id)
+      # user = ::UserSystem::UserInfo.create_user_info params.permit(:car_number, :phone, :product_id)
+      BusinessException.raise '手机号不能为空' if params[:phone].blank?
+      params1 = params.permit(:name, :phone, :city_chinese, :brand)
+      params1[:che_xing] = params1[:brand]
+      params1[:che_ling] = '2015'
+      params1[:note] = '座席不知道'
+      params1[:detail_url] = "http://m.zuoxi.com/#{Time.now.chinese_format}"
+      params1[:site_name] = 'zuoxi'
+      params1[:milage] = 8
+      params1[:fabushijian] = Time.now.chinese_format_day
+      params1[:price] = 8
+      params1[:need_update] = false
+      phone = params1[:phone]
+      params1[:phone] = nil
+
+      cui = UserSystem::CarUserInfo.create_car_user_info_and_return_id params1
+      UserSystem::CarUserInfo.update_detail id: cui.id,
+                                            note: '座席不知道',
+                                            name: cui.name,
+                                            phone: phone
+
+
       product = ::OrderSystem::Product.find_by_id params[:product_id].to_i
       case product.server_name.to_s
         when 'baoyang'
-          # param = user.get_xieche_param
-          # redirect_to "http://www.xieche.com.cn/mobilecar-carservice?param=#{CGI.escape param}" and return
           redirect_to 'http://t.cn/RL7pt6K' and return
         when 'lvqingqi'
           redirect_to 'http://t.cn/RL7N7Iv' and return
         when 'zuche'
           redirect_to 'http://www.udache.com/app/mDriverReg/index?channel=10&channelId=22733' and return
       end
-
       if product.return_page == 'download_app'
         redirect_to "/wz/order_system/products/appointment_success?product_id=#{product.id}"
         return

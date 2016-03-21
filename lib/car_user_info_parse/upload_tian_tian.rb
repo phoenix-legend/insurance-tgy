@@ -53,25 +53,25 @@ module UploadTianTian
     end
 
     # 车价小于1万的，跳过
-    unless car_user_info.price.blank?
-      car_user_info.price.gsub!('万', '')
-      if car_user_info.price.to_f <= 1.0
-        car_user_info.tt_upload_status = '金额小于1万'
-        is_select = false
-      end
-    end
+    # unless car_user_info.price.blank?
+    #   car_user_info.price.gsub!('万', '')
+    #   if car_user_info.price.to_f <= 1.0
+    #     car_user_info.tt_upload_status = '金额小于1万'
+    #     is_select = false
+    #   end
+    # end
     # 车年龄大于10年的，跳过
-    unless car_user_info.che_ling.blank?
-      che_ling = car_user_info.che_ling.to_i
-      if Time.now.year-che_ling>15
-        car_user_info.tt_upload_status = '车年龄大于15年'
-        is_select = false
-      end
-    end
+    # unless car_user_info.che_ling.blank?
+    #   che_ling = car_user_info.che_ling.to_i
+    #   if Time.now.year-che_ling>15
+    #     car_user_info.tt_upload_status = '车年龄大于15年'
+    #     is_select = false
+    #   end
+    # end
     car_user_info.save!
 
     qudao = "23-23-1"
-    if car_user_info.site_name == 'baixing'
+    if car_user_info.site_name == 'baixing' or car_user_info.site_name == 'zuoxi'
       qudao = "23-23-4"
     elsif car_user_info.site_name == '58'
       qudao = "23-23-5"
@@ -148,13 +148,13 @@ module UploadTianTian
       # end
       # pp "现在有#{threads.length}个线程"
       # t = Thread.new do
-        source = "23-23-1"
-        if car_user_info.site_name == 'baixing'
-          source = "23-23-4"
-        elsif car_user_info.site_name == '58'
-          source = "23-23-5"
-        end
-        url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{source}"
+      #   source = "23-23-1"
+      #   if car_user_info.site_name == 'baixing' or
+      #     source = "23-23-4"
+      #   elsif car_user_info.site_name == '58'
+      #     source = "23-23-5"
+      #   end
+        url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
         response = RestClient.get url
         response = JSON.parse response
         pp response["result"]["invite"]
@@ -184,8 +184,6 @@ module UploadTianTian
     pp "本次新增#{i}个。 "
     # pp "总共#{i+j}个"
   end
-
-
 
 
 
@@ -233,13 +231,13 @@ module UploadTianTian
     weizhi = 0
     shibai = 0
     cuis.each do |car_user_info|
-      source = "23-23-1"
-      if car_user_info.site_name == 'baixing'
-        source = "23-23-4"
-      elsif car_user_info.site_name == '58'
-        source = "23-23-5"
-      end
-      url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{source}"
+      # source = "23-23-1"
+      # if car_user_info.site_name == 'baixing'
+      #   source = "23-23-4"
+      # elsif car_user_info.site_name == '58'
+      #   source = "23-23-5"
+      # end
+      url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
 
       response = RestClient.get url
       response = JSON.parse response
@@ -272,10 +270,10 @@ module UploadTianTian
   end
 
   def self.get_qudao_zongjie
-        cuis = ::UserSystem::CarUserInfo.where("tt_yaoyue = '成功' and tt_yaoyue_day is null")
+        cuis = ::UserSystem::CarUserInfo.where("tt_yaoyue = '成功' and tt_source is null")
         cuis.each do |cui|
           source = "23-23-1"
-          if cui.site_name == 'baixing'
+          if cui.site_name == 'baixing' or cui.site_name == 'zuoxi'
             source = "23-23-4"
           elsif cui.site_name == '58'
             source = "23-23-5"
@@ -283,7 +281,7 @@ module UploadTianTian
           pp cui.id
           cui.tt_source = source if cui.tt_source.blank?
           cui.tt_created_day = cui.created_at.chinese_format_day if cui.tt_created_day.blank?
-          cui.tt_yaoyue_day = cui.tt_yaoyue_time.chinese_format_day unless cui.tt_yaoyue_time.blank?
+          # cui.tt_yaoyue_day = cui.tt_yaoyue_time.chinese_format_day unless cui.tt_yaoyue_time.blank?
           cui.save!
         end
 
@@ -294,6 +292,7 @@ module UploadTianTian
   end
 
 
+  # 检查有多少数据的城市与真实城市不相符
   def self.tttt
     cuis = ::UserSystem::CarUserInfo.where("tt_yaoyue = '成功' and site_name = '58'")
 
@@ -311,5 +310,56 @@ module UploadTianTian
     pp aa
   end
 
+  # module UploadTianTian
+    # UploadTianTian.xiazai_tt_detail_by_day '2016-03-01', '2016-03-10'
+  def self.xiazai_tt_detail_by_day start_day = '2016-03-01', end_day = '2016-03-10'
+    Spreadsheet.client_encoding = 'UTF-8'
+    book = Spreadsheet::Workbook.new
+    ['23-23-1','23-23-4','23-23-5'].each_with_index do |qudao,i|
+      cuis = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_source = '#{qudao}' and tt_yaoyue_day >= '#{start_day}' and  tt_yaoyue_day <= '#{end_day}' and tt_yaoyue = '成功' and tt_yaoyue_day is not null")
+      cuis.order(tt_yaoyue_day: :asc, tt_source: :asc)
+      sheet1 = book.create_worksheet name: "#{qudao}意向列表"
+      ['ID', '渠道', '邀约日期','状态'].each_with_index do |content, i|
+        sheet1.row(0)[i] = content
+      end
+      current_row = 1
+      cuis.each do |car_user_info|
+        [car_user_info.tt_id, car_user_info.tt_source, car_user_info.tt_yaoyue_day, car_user_info.tt_yaoyue].each_with_index do |content, i|
+          sheet1.row(current_row)[i] = content
+        end
+        current_row += 1
+      end
+    end
+    dir = Rails.root.join('public', 'downloads')
+    Dir.mkdir dir unless Dir.exist? dir
+    file_path = File.join(dir, "#{Time.now.strftime("%Y%m%dT%H%M%S")}导出的成功邀约数据#{start_day}~#{end_day}.xls")
+    book.write file_path
+    file_path
+  end
 
+
+    # UploadTianTian.query_order_shibai
+  #  把失败的数据，再更新一遍，以便从失败中捡漏
+  def self.query_order_shibai
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '失败'").order(id: :desc)
+    i = 0
+    car_user_infos.each do |car_user_info|
+      url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
+      response = RestClient.get url
+      response = JSON.parse response
+
+      pp response["result"]["invite"]
+      pp car_user_info.tt_id
+      pp '..........................'
+      next if response["result"]["invite"] == '失败'
+      if  !response["result"]["invite"].blank? and car_user_info.tt_yaoyue == '失败'
+        car_user_info.tt_yaoyue = response["result"]["invite"]
+        car_user_info.tt_yaoyue_time = DateTime.now.chinese_format
+        car_user_info.tt_yaoyue_day = car_user_info.tt_yaoyue_time.chinese_format_day
+        car_user_info.save!
+        i = i+1
+      end
+    end
+    pp "本次新增#{i}个。 "
+  end
 end
