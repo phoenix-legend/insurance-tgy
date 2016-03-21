@@ -31,7 +31,7 @@
      0.upto(day_number.to_i) do |i|
        d = Date.today - i
        next if d < Date.new(2016, 2, 15)
-       ['58', 'ganji', 'baixing', 'che168', 'taoche'].each do |source|
+       ['58', 'ganji', 'baixing', 'che168', 'taoche','zuoxi'].each do |source|
 
          tijiaoshu = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and created_at > ? and created_at < ?", source,"#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
          chenggongshu = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ?",source, "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
@@ -46,6 +46,8 @@
                            '赶集'
                          when 'baixing'
                            '百姓'
+                         when 'zuoxi'
+                            '座席'
                        end
   %>
 
