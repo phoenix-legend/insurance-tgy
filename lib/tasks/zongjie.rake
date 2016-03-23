@@ -16,4 +16,11 @@ namespace :zongjie do
 	task :all1 => :environment do
 		UploadTianTian.get_now_status
 	end
+
+	desc "每天更新班级状态  rake zongjie:chewang RAILS_ENV=production"
+	task :chewang => :environment do
+		UserSystem::CarUserInfo.get_info_to_chewang
+	end
+
+
 end
