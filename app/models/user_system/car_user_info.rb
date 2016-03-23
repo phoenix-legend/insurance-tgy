@@ -473,6 +473,58 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     ).deliver
 
   end
+
+
+  # class UserSystem::CarUserInfo < ActiveRecord::Base
+  # 导出数据给车王。
+  # 现在只要天津和上海数据。每天下午3点定时导出前一天下午3点到今天下午3点的数据。
+  # UserSystem::CarUserInfo.get_info_to_chewang
+  def self.get_info_to_chewang
+
+    Spreadsheet.client_encoding = 'UTF-8'
+    book = Spreadsheet::Workbook.new
+    record_number = 0
+    ['天津','上海'].each do |city|
+      sheet1 = book.create_worksheet name: "#{city}数据"
+      ['姓名', '电话', '品牌', '城市'].each_with_index do |content, i|
+        sheet1.row(0)[i] = content
+      end
+      row = 0
+      cuis = UserSystem::CarUserInfo.where("id > 172006 and city_chinese = ? and tt_upload_status = '已上传' and tt_code in (0,1) and created_at > ? and created_at < ?", city,"#{Date.yesterday.chinese_format_day} 15:00:00", "#{Date.today.chinese_format_day} 15:00:00")
+      cuis.each_with_index  do |car_user_info, current_row|
+
+        if car_user_info.city_chinese == '上海'
+          unless ['别克','福特','MG','荣威','雪佛兰'].include? car_user_info.brand
+            next
+          end
+        end
+
+        record_number = record_number+1
+        row = row+1
+        [car_user_info.name.gsub('(个人)',''), car_user_info.phone, car_user_info.brand, car_user_info.city_chinese].each_with_index do |content, i|
+
+          sheet1.row(row)[i] = content
+
+        end
+
+      end
+    end
+
+
+    dir = Rails.root.join('public', 'downloads')
+    Dir.mkdir dir unless Dir.exist? dir
+    file_path = File.join(dir, "#{Time.now.strftime("%Y%m%dT%H%M%S")}车王信息数据.xls")
+    book.write file_path
+    file_path
+
+    MailSend.send_car_user_infos('37020447@qq.com;yoyolt3@163.com',
+                                 '13472446647@163.com',
+                                 record_number,
+                                 "车王最新数据-#{Time.now.chinese_format}",
+                                 [file_path]
+    ).deliver
+
+  end
 end
 __END__
 ***********备份的代码*******************
