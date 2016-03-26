@@ -88,7 +88,11 @@ module UploadTianTian
       return if car_user_info.tt_upload_status != 'weishangchuan'
       params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
       params << [:mobile, UploadTianTian.escape2(user_info.phone)]
-      params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
+      # 临时导入北京数据，但提交时显示天津
+      if user_info.city_chinese == '北京'
+        pp "真实城市为北京，实际城市为#{user_info.city_chinese.gsub('北京','天津')}"
+      end
+      params << [:city, UploadTianTian.escape2(user_info.city_chinese.gsub('北京','天津'))]
       params << [:brand, UploadTianTian.escape2(user_info.brand)]
       pp "渠道为#{qudao}"
       params << [:source, UploadTianTian.escape2(qudao)]
