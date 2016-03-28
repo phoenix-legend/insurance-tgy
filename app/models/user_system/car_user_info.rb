@@ -25,7 +25,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   #             "140100" => "太原", "120100" => "天津", "340100" => '合肥'}
 
   ALL_CITY = {"310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州",
-              "420100" => "武汉", "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆", "110100" => "北京",}
+              "420100" => "武汉", "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆"}
 
 
   #城市所对应的拼音。 主要用于从淘车网更新数据。
@@ -33,13 +33,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   PINYIN_CITY = {
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
-      "dongguan" => "东莞", "chongqing" => "重庆", "bejing" => '北京'
+      "dongguan" => "东莞", "chongqing" => "重庆"
   }
 
   BAIXING_PINYIN_CITY = {
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
-      "dongguan" => "东莞", "chongqing" => "重庆", "bejing" => '北京'
+      "dongguan" => "东莞", "chongqing" => "重庆"
   }
 
   # BAIXING_PINYIN_CITY = {
@@ -50,7 +50,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   GANJI_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州",
-      "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "bj" => "北京"
+      "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆"
   }
 
   WUBA_CITY = {
