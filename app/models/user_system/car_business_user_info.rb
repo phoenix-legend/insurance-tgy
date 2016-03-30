@@ -11,6 +11,7 @@ class UserSystem::CarBusinessUserInfo < ActiveRecord::Base
 
   # 根据关键词判断是否为车商
   def self.add_business_user_info_phone car_user_info
+    return if car_user_info.phone.blank?
     is_cheshang = false
     if is_cheshang == false
       UserSystem::CarBusinessUserInfo::BusinessWords.each do |word|
@@ -49,9 +50,9 @@ class UserSystem::CarBusinessUserInfo < ActiveRecord::Base
     end
 
     if is_cheshang
-      cbui = UserSystem::CarBusinessUserInfo.find_by_phone cbui.phone
+      cbui = UserSystem::CarBusinessUserInfo.find_by_phone car_user_info.phone
       if cbui.blank?
-        cbui = UserSystem::CarBusinessUserInfo.new :phone => cbui.phone
+        cbui = UserSystem::CarBusinessUserInfo.new :phone => car_user_info.phone
         cbui.save!
       end
     end
