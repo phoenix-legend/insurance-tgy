@@ -195,7 +195,7 @@ module UploadTianTian
     last_day = 29
     if shishi
       UploadTianTian.query_order
-      UserSystem::CarUserInfo.get_kaixin_info # 给开新那边导数据
+      #UserSystem::CarUserInfo.get_kaixin_info # 给开新那边导数据
     end
 
     pp "-----------------------------------------------------------------"
