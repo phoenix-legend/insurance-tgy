@@ -50,6 +50,11 @@ module Wuba
               milage = tr.css('.t p')[0].children[2].text
               milage = milage.gsub(/万|公里/, '')
               url = tr.css('td .t')[0].attributes["href"].value
+              begin
+                next if url.match /http:\/\/short/
+              rescue
+
+              end
 
               result = UserSystem::CarUserInfo.create_car_user_info che_xing: chexing,
                                                                     price: price,
