@@ -92,6 +92,14 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info.fabushijian = params[:fabushijian] unless params[:fabushijian].blank?
     car_user_info.save!
 
+    begin
+      # 先更新车商信息，后续就可以去掉4个车商条件了。
+      UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
+    rescue Exception => e
+      pp '更新商家电话号码出错'
+      pp e
+    end
+
     if not params[:licheng].blank?
       car_user_info.milage = params[:licheng].gsub('万公里', '')
     end
@@ -102,9 +110,18 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     if not params[:brand].blank?
       car_user_info.brand = params[:brand]
     end
+
+    #规则一： 如果在car_user_infos中出现，就算作车商。  即将被淘汰
     if user_infos_number > 0
+      # car_user_info.is_cheshang = 1    # 临时作废这种方式
+    end
+
+    #规则二： 如果在car_business_user中出现，就算作车商，即将启用. 此规则比规则一要略松散一些
+    cbui = UserSystem::CarBusinessUserInfo.find_by_phone car_user_info.phone
+    unless cbui.blank?
       car_user_info.is_cheshang = 1
     end
+
     car_user_info.need_update = false
     car_user_info.save!
 
