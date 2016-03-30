@@ -193,6 +193,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       car_user_info.update_brand
     rescue Exception => e
       car_user_info.destroy
+      pp '更新品牌失败，已删除'
       return
     end
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
