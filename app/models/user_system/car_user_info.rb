@@ -525,6 +525,31 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     ).deliver
 
   end
+
+
+  # 尝试获取车商电话
+  def self.try_get_cheshang_phone
+    a = {}
+    ["诚信", '到店', '精品车', '车行', '第一车网', '车业', '信息编号', '本公司',  '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线'].each do |word|
+      cuis = UserSystem::CarUserInfo.where("note like ?", "%#{word}%")
+      cuis.each do |cui|
+        if a[cui.phone].nil?
+          a[cui.phone] = []
+        end
+        a[cui.phone] << cui.id
+      end
+    end
+    pp a.keys
+    a.each_pair
+    pp '...............'*10
+    d = 0
+    a.each_pair{|k,v|
+    pp "#{k}, #{v.uniq.length}" if v.uniq.length > 10
+      d = d + v.uniq.length
+    }
+    pp '...............'*10
+    pp d
+  end
 end
 __END__
 ***********备份的代码*******************
