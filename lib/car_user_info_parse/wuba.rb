@@ -52,6 +52,13 @@ module Wuba
               url = tr.css('td .t')[0].attributes["href"].value
               begin
                 next if url.match /http:\/\/short/
+
+                # 如果58抓到的数据不是当前城市的，直接不进数据库
+                zhengze = "http://#{areaid}.58.com"
+                url_sx = url.match Regexp.new zhengze
+                if url_sx.blank?
+                  next
+                end
               rescue
 
               end
