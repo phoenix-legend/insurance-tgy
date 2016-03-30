@@ -12,6 +12,8 @@ class UserSystem::CarBusinessUserInfo < ActiveRecord::Base
   # 根据关键词判断是否为车商
   def self.add_business_user_info_phone car_user_info
     return if car_user_info.phone.blank?
+    return if car_user_info.name.blank?
+    return if car_user_info.note.blank?
     is_cheshang = false
     if is_cheshang == false
       UserSystem::CarBusinessUserInfo::BusinessWords.each do |word|
