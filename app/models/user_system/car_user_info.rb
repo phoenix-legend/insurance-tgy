@@ -189,7 +189,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
     pp "准备更新品牌#{car_user_info.phone}~~#{car_user_info.name}"
-    car_user_info.update_brand
+    begin
+      car_user_info.update_brand
+    rescue Exception => e
+      car_user_info.destroy
+      return
+    end
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
     UploadTianTian.upload_one_tt car_user_info
   end
