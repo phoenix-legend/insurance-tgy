@@ -16,8 +16,8 @@ module Wuba
           pp "现在跑58.. #{areaname}"
           1.upto 5 do |i|
             # i = 1
-          url  = "http://#{areaid}.58.com/ershouche/0/pn#{i}/"
-          pp url
+            url = "http://#{areaid}.58.com/ershouche/0/pn#{i}/"
+            pp url
             content = RestClient.get url
             content = content.body
             break if content.blank?
@@ -51,7 +51,12 @@ module Wuba
               milage = milage.gsub(/万|公里/, '')
               url = tr.css('td .t')[0].attributes["href"].value
               begin
-                next if url.match /http:\/\/short/
+                if url.match /http:\/\/short/
+                  url_short = url
+                  url = Wuba.get_normal_url_by_short_url_and_city url, areaid
+                  pp "翻译58shorturl #{url_short} 为 #{url}"
+                  next if url.blank?
+                end
 
                 # 如果58抓到的数据不是当前城市的，直接不进数据库
                 zhengze = "http://#{areaid}.58.com"
@@ -127,7 +132,9 @@ module Wuba
           detail_content = Nokogiri::HTML(detail_content)
           time = detail_content.css('.mtit_con_left .time').text
           name = detail_content.css('.lineheight_2').children[3].text
-          note = begin detail_content.css('.part_detail').children[2].text.gsub(/\t|\r|\n/,'') rescue '暂无' end
+          note = begin
+            detail_content.css('.part_detail').children[2].text.gsub(/\t|\r|\n/, '') rescue '暂无'
+          end
 
 
           id = car_user_info.detail_url.match /ershouche\/(\d{8,15})x\.shtml/
@@ -136,7 +143,7 @@ module Wuba
           id_response = id_response.body
           id_response = Nokogiri::HTML(id_response)
           phone = id_response.css('.nums').text
-          phone = phone.gsub('-','')
+          phone = phone.gsub('-', '')
           UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                                 name: name,
                                                 phone: phone,
@@ -162,6 +169,24 @@ module Wuba
       break if threads.blank?
     end
 
+  end
+
+  def self.get_normal_url_by_short_url_and_city short_url, city_code
+    begin
+      params = URI.decode_www_form(short_url)
+      params_hash = {}
+      params.each do |p|
+        params_hash[p[0]] = p[1]
+      end
+      entry_id = params_hash["entinfo"]
+      entry_id = entry_id.split('_')[0]
+      url = "http://#{city_code}.58.com/ershouche/#{entry_id}x.shtml"
+      return url
+    rescue Exception => e
+      pp e
+      pp '解析short url  出错'
+      return nil
+    end
   end
 
 
