@@ -314,7 +314,7 @@ module UploadTianTian
   end
 
   # 指定日期区间的意向数据。
-  # UploadTianTian.xiazai_tt_detail_by_day '2016-03-01', '2016-03-21'
+  # UploadTianTian.xiazai_tt_detail_by_day '2016-03-01', '2016-03-31'
   def self.xiazai_tt_detail_by_day start_day = '2016-03-01', end_day = '2016-03-10'
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
