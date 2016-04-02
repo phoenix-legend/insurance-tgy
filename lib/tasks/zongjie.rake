@@ -19,7 +19,10 @@ namespace :zongjie do
 
 	desc "每天更新班级状态  rake zongjie:chewang RAILS_ENV=production"
 	task :chewang => :environment do
+		# 现在是每天下午更新车王
 		UserSystem::CarUserInfo.get_info_to_chewang
+		# 跑完车王以后，把之前失败的再跑一遍，用于捡漏
+		UploadTianTian.query_order_shibai
 	end
 
 
