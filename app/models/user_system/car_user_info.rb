@@ -10,7 +10,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   # CURRENT_ID = 171550  第一次导入
-  CURRENT_ID = 172006
+  CURRENT_ID = 472006
 
   EMAIL_STATUS = {0 => '待导', 1 => '已导', 2 => '不导入'}
   # ALL_CITY = {"441900" => "东莞", "440600" => "佛山", "440100" => "广州",
@@ -465,7 +465,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
   # class UserSystem::CarUserInfo < ActiveRecord::Base
-  # 为开新临时导出上海的成功数据，导前一天的数据, 邮件给KK， OO 和我。
+  # 为开新临时导出上海的成功数据，导前一天的数据, 邮件给KK， OO 和我。  业务现已停止
   # UserSystem::CarUserInfo.get_kaixin_info
   def self.get_kaixin_info
     cuis = UserSystem::CarUserInfo.where("id > 172006 and city_chinese = '上海' and tt_yaoyue = '成功' and tt_yaoyue_day = ? and tt_chengjiao is null", Date.today)

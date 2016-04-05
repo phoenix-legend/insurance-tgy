@@ -62,7 +62,8 @@ module TaoChe
 
   def self.update_detail
     threads = []
-    car_user_infos = UserSystem::CarUserInfo.where need_update: true, site_name: 'taoche'
+    # car_user_infos = UserSystem::CarUserInfo.where need_update: true, site_name: 'taoche'
+    car_user_infos = UserSystem::CarUserInfo.where ["need_update = ? and site_name = ? and id > ?", true, 'taoche', UserSystem::CarUserInfo::CURRENT_ID]
     car_user_infos.each do |car_user_info|
       next unless car_user_info.name.blank?
       next unless car_user_info.phone.blank?

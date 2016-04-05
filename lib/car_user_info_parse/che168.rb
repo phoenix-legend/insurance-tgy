@@ -61,7 +61,8 @@ module Che168
 
   def self.update_detail
     threads = []
-    car_user_infos = UserSystem::CarUserInfo.where need_update: true, site_name: 'che168'
+    # car_user_infos = UserSystem::CarUserInfo.where need_update: true, site_name: 'che168'
+    car_user_infos = UserSystem::CarUserInfo.where ["need_update = ? and site_name = ? and id > ?", true, 'che168', UserSystem::CarUserInfo::CURRENT_ID]
     car_user_infos.each do |car_user_info|
       next unless car_user_info.name.blank?
       next unless car_user_info.phone.blank?

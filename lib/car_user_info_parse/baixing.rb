@@ -56,7 +56,9 @@ module Baixing
   # Baixing.update_detail
   def self.update_detail
 
-    car_user_infos = UserSystem::CarUserInfo.where need_update: true, site_name: 'baixing'
+    # car_user_infos = UserSystem::CarUserInfo.where need_update: true, site_name: 'baixing'
+    car_user_infos = UserSystem::CarUserInfo.where ["need_update = ? and site_name = ? and id > ?", true, 'baixing', UserSystem::CarUserInfo::CURRENT_ID]
+
     car_user_infos.each do |car_user_info|
       sleep 1
       next unless car_user_info.name.blank?
