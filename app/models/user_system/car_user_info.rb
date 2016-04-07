@@ -83,7 +83,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   def self.update_detail params
     pp params
     car_user_info = UserSystem::CarUserInfo.find params[:id]
-    user_infos_number = UserSystem::CarUserInfo.where(phone: params[:phone]).count
+    # user_infos_number = UserSystem::CarUserInfo.where(phone: params[:phone]).count
 
 
     car_user_info.name = params[:name] unless params[:name].blank?
@@ -92,13 +92,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info.fabushijian = params[:fabushijian] unless params[:fabushijian].blank?
     car_user_info.save!
 
-    begin
-      # 先更新车商信息，后续就可以去掉4个车商条件了。
-      UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
-    rescue Exception => e
-      pp '更新商家电话号码出错'
-      pp e
-    end
+    # begin
+    #   # 先更新车商信息，后续就可以去掉4个车商条件了。
+    #   UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
+    # rescue Exception => e
+    #   pp '更新商家电话号码出错'
+    #   pp e
+    # end
 
     if not params[:licheng].blank?
       car_user_info.milage = params[:licheng].gsub('万公里', '')
@@ -111,62 +111,72 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       car_user_info.brand = params[:brand]
     end
 
-    #规则一： 如果在car_user_infos中出现，就算作车商。  即将被淘汰
-    if user_infos_number > 0
-      # car_user_info.is_cheshang = 1    # 临时作废这种方式
+
+
+    begin
+      UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
+    rescue Exception => e
+      pp '更新商家电话号码出错'
+      pp e
     end
+
+    #规则一： 如果在car_user_infos中出现，就算作车商。  即将被淘汰
+    # if user_infos_number > 0
+    # car_user_info.is_cheshang = 1    # 临时作废这种方式
+    # end
 
     #规则二： 如果在car_business_user中出现，就算作车商，即将启用. 此规则比规则一要略松散一些
     cbui = UserSystem::CarBusinessUserInfo.find_by_phone car_user_info.phone
     unless cbui.blank?
       car_user_info.is_cheshang = 1
+      car_user_info.need_update = false
+      car_user_info.save!
     end
 
-    car_user_info.need_update = false
-    car_user_info.save!
 
-    if car_user_info.is_cheshang == 0
-      ["诚信", '到店', '精品车', '车行', '第一车网', '车业', '信息编号', '本公司',  '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线', '依维柯'].each do |word|
-        if car_user_info.note.include? word
-          car_user_info.is_cheshang = 1
-          car_user_info.save!
-        end
-      end
-    end
 
-    if car_user_info.is_cheshang == 0
-      ["0000", "1111", "2222", "3333", "4444", "5555", "6666", "7777", "8888", "9999"].each do |p|
-        if car_user_info.phone.include? p
-          car_user_info.is_cheshang = 1
-          car_user_info.save!
-        end
-      end
-    end
+    # if car_user_info.is_cheshang == 0
+    #   ["诚信", '到店', '精品车', '车行', '第一车网', '车业', '信息编号', '本公司',  '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线', '依维柯'].each do |word|
+    #     if car_user_info.note.include? word
+    #       car_user_info.is_cheshang = 1
+    #       car_user_info.save!
+    #     end
+    #   end
+    # end
 
-    if car_user_info.is_cheshang == 0
-      ['经理', '总', '商家', '赶集', '瓜子'].each do |name_key|
-        if car_user_info.name.include? name_key
-          car_user_info.is_cheshang = 1
-          car_user_info.save!
-        end
-      end
-    end
+    # if car_user_info.is_cheshang == 0
+    #   ["0000", "1111", "2222", "3333", "4444", "5555", "6666", "7777", "8888", "9999"].each do |p|
+    #     if car_user_info.phone.include? p
+    #       car_user_info.is_cheshang = 1
+    #       car_user_info.save!
+    #     end
+    #   end
+    # end
 
-    if car_user_info.is_cheshang == 0
-      if car_user_info.phone.match /^400/
-        car_user_info.need_update = false
-        car_user_info.is_cheshang = 1
-        car_user_info.save!
-      end
-    end
+    # if car_user_info.is_cheshang == 0
+    #   ['经理', '总', '商家', '赶集', '瓜子'].each do |name_key|
+    #     if car_user_info.name.include? name_key
+    #       car_user_info.is_cheshang = 1
+    #       car_user_info.save!
+    #     end
+    #   end
+    # end
 
-    if car_user_info.is_cheshang == 0
-      if not car_user_info.phone.match /^[0-9]{11}$/
-        car_user_info.need_update = false
-        car_user_info.is_cheshang = 1
-        car_user_info.save!
-      end
-    end
+    # if car_user_info.is_cheshang == 0
+    #   if car_user_info.phone.match /^400/
+    #     car_user_info.need_update = false
+    #     car_user_info.is_cheshang = 1
+    #     car_user_info.save!
+    #   end
+    # end
+    #
+    # if car_user_info.is_cheshang == 0
+    #   if not car_user_info.phone.match /^[0-9]{11}$/
+    #     car_user_info.need_update = false
+    #     car_user_info.is_cheshang = 1
+    #     car_user_info.save!
+    #   end
+    # end
 
     if car_user_info.site_name == '58'
       invert_wuba_city = UserSystem::CarUserInfo::WUBA_CITY.invert
@@ -178,13 +188,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         car_user_info.is_cheshang = 2
         car_user_info.save!
       end
-    end
-
-    begin
-      UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
-    rescue Exception => e
-      pp '更新商家电话号码出错'
-      pp e
     end
 
 
@@ -551,6 +554,67 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                  '13472446647@163.com',
                                  record_number,
                                  "车王最新数据-#{Time.now.chinese_format}",
+                                 [file_path]
+    ).deliver
+
+  end
+
+
+  # class UserSystem::CarUserInfo < ActiveRecord::Base
+  # 导出北京数据
+  # UserSystem::CarUserInfo.get_info_to_chewang
+  def self.get_info_to_youche
+
+    Spreadsheet.client_encoding = 'UTF-8'
+    book = Spreadsheet::Workbook.new
+    phones = []
+    record_number = 0
+    ['北京','天津'].each do |city|
+      sheet1 = book.create_worksheet name: "#{city}数据"
+      ['姓名', '电话', '品牌', '城市'].each_with_index do |content, i|
+        sheet1.row(0)[i] = content
+      end
+      row = 0
+      cuis = UserSystem::CarUserInfo.where("id > 172006 and city_chinese = ? and created_at > ? and created_at < ?", city,"#{Date.yesterday.chinese_format_day} 18:00:00", "#{Date.today.chinese_format_day} 18:00:00")
+      cuis.each_with_index  do |car_user_info, current_row|
+        # car_user_info.name = car_user_info.name.gsub('联系TA','先生女士')
+        # car_user_info.save!
+
+
+        cbui = UserSystem::CarBusinessUserInfo.find_by_phone car_user_info.phone
+        unless cbui.blank?
+          next
+        end
+
+        next if car_user_info.phone.blank?
+        next if car_user_info.name.blank?
+        next if car_user_info.brand .blank?
+
+        next if phones.include? car_user_info.phone
+        phones << car_user_info.phone
+
+        record_number = record_number+1
+        row = row+1
+        [car_user_info.name.gsub('(个人)','').gsub('联系TA','先生女士'), car_user_info.phone, car_user_info.brand, car_user_info.city_chinese].each_with_index do |content, i|
+
+          sheet1.row(row)[i] = content
+
+        end
+
+      end
+    end
+
+
+    dir = Rails.root.join('public', 'downloads')
+    Dir.mkdir dir unless Dir.exist? dir
+    file_path = File.join(dir, "#{Time.now.strftime("%Y%m%dT%H%M%S")}UC信息数据.xls")
+    book.write file_path
+    file_path
+
+    MailSend.send_car_user_infos('13472446647@163.com',
+                                 '',
+                                 record_number,
+                                 "UC最新数据-#{Time.now.chinese_format}",
                                  [file_path]
     ).deliver
 
