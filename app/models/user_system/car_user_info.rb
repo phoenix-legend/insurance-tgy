@@ -133,6 +133,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       car_user_info.save!
     end
 
+    car_user_info.need_update = false
+
 
 
     # if car_user_info.is_cheshang == 0
