@@ -152,41 +152,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UploadTianTian.upload_one_tt car_user_info
   end
 
-  def self.send_email
-    ::UserSystem::CarUserInfoSendEmail.transaction do
-      #晚上不发邮件
-      return if Time.now.hour < 9
-      return if Time.now.hour > 21
-      # 同一个小时不发两次邮件
-      return if ::UserSystem::CarUserInfoSendEmail.had_send_email_in_current_hour?
-
-      send_car_user_infos = self.need_send_mail_car_user_infos
-
-      # 若需发送的数据量为0，则不发送邮件
-      return if send_car_user_infos.blank?
-
-      success_count = send_car_user_infos.count { |info| !info.bookid.blank? }
-      cunzai_count = send_car_user_infos.count { |info| info.upload_status == 'yicunzai' and info.bookid.blank? }
-      shibai_count = send_car_user_infos.count { |info| info.upload_status == 'shibai' }
-      budaoru_count = send_car_user_infos.count { |info| info.upload_status == 'weidaoru' }
-
-      zhuti = "#{success_count}成功#{cunzai_count}存在#{shibai_count}失败#{budaoru_count}不导"
-
-      # 发送邮件
-      if Time.now > Time.parse("#{Time.now.chinese_format_day} 21:00:00")
-        MailSend.send_car_user_infos('chenkai@baohe001.com;tanguanyu@baohe001.com;yuanyuan@baohe001.com',
-                                     '13472446647@163.com',
-                                     send_car_user_infos.count,
-                                     zhuti,
-                                     [self.generate_xls_of_car_user_info(send_car_user_infos)]
-        ).deliver
-      end
-
-      send_car_user_infos.each { |u| u.update email_status: 1 }
-      # 发完邮件，将对应的车主信息的邮件状态置为已发(1)
-      ''
-    end
-  end
+  
 
   def self.run_che168
     begin
