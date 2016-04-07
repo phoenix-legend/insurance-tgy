@@ -86,7 +86,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # user_infos_number = UserSystem::CarUserInfo.where(phone: params[:phone]).count
 
 
-    car_user_info.name = params[:name] unless params[:name].blank?
+    car_user_info.name = params[:name].gsub('联系TA','先生女士') unless params[:name].blank?
     car_user_info.phone = params[:phone]
     car_user_info.note = params[:note]
     car_user_info.fabushijian = params[:fabushijian] unless params[:fabushijian].blank?
