@@ -90,15 +90,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info.phone = params[:phone]
     car_user_info.note = params[:note]
     car_user_info.fabushijian = params[:fabushijian] unless params[:fabushijian].blank?
-    car_user_info.save!
-
-    # begin
-    #   # 先更新车商信息，后续就可以去掉4个车商条件了。
-    #   UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
-    # rescue Exception => e
-    #   pp '更新商家电话号码出错'
-    #   pp e
-    # end
 
     if not params[:licheng].blank?
       car_user_info.milage = params[:licheng].gsub('万公里', '')
@@ -110,6 +101,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     if not params[:brand].blank?
       car_user_info.brand = params[:brand]
     end
+    car_user_info.save!
 
 
 
@@ -134,51 +126,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
     car_user_info.need_update = false
-
-
-
-    # if car_user_info.is_cheshang == 0
-    #   ["诚信", '到店', '精品车', '车行', '第一车网', '车业', '信息编号', '本公司',  '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线', '依维柯'].each do |word|
-    #     if car_user_info.note.include? word
-    #       car_user_info.is_cheshang = 1
-    #       car_user_info.save!
-    #     end
-    #   end
-    # end
-
-    # if car_user_info.is_cheshang == 0
-    #   ["0000", "1111", "2222", "3333", "4444", "5555", "6666", "7777", "8888", "9999"].each do |p|
-    #     if car_user_info.phone.include? p
-    #       car_user_info.is_cheshang = 1
-    #       car_user_info.save!
-    #     end
-    #   end
-    # end
-
-    # if car_user_info.is_cheshang == 0
-    #   ['经理', '总', '商家', '赶集', '瓜子'].each do |name_key|
-    #     if car_user_info.name.include? name_key
-    #       car_user_info.is_cheshang = 1
-    #       car_user_info.save!
-    #     end
-    #   end
-    # end
-
-    # if car_user_info.is_cheshang == 0
-    #   if car_user_info.phone.match /^400/
-    #     car_user_info.need_update = false
-    #     car_user_info.is_cheshang = 1
-    #     car_user_info.save!
-    #   end
-    # end
-    #
-    # if car_user_info.is_cheshang == 0
-    #   if not car_user_info.phone.match /^[0-9]{11}$/
-    #     car_user_info.need_update = false
-    #     car_user_info.is_cheshang = 1
-    #     car_user_info.save!
-    #   end
-    # end
 
     if car_user_info.site_name == '58'
       invert_wuba_city = UserSystem::CarUserInfo::WUBA_CITY.invert
