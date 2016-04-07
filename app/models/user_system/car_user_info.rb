@@ -86,11 +86,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # user_infos_number = UserSystem::CarUserInfo.where(phone: params[:phone]).count
 
 
+    #更新数据模块
     car_user_info.name = params[:name].gsub('联系TA','先生女士') unless params[:name].blank?
     car_user_info.phone = params[:phone]
     car_user_info.note = params[:note]
     car_user_info.fabushijian = params[:fabushijian] unless params[:fabushijian].blank?
-
     if not params[:licheng].blank?
       car_user_info.milage = params[:licheng].gsub('万公里', '')
     end
@@ -101,6 +101,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     if not params[:brand].blank?
       car_user_info.brand = params[:brand]
     end
+    car_user_info.need_update = false
     car_user_info.save!
 
 
@@ -125,7 +126,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       car_user_info.save!
     end
 
-    car_user_info.need_update = false
+
 
     if car_user_info.site_name == '58'
       invert_wuba_city = UserSystem::CarUserInfo::WUBA_CITY.invert
@@ -152,7 +153,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UploadTianTian.upload_one_tt car_user_info
   end
 
-  
+
 
   def self.run_che168
     begin
