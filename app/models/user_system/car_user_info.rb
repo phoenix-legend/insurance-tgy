@@ -2,11 +2,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   require 'rest-client'
   require 'pp'
 
-  validates_format_of :phone, :with => EricTools::RegularConstants::MobilePhone, message: '手机号格式不正确', allow_blank: true,  :if => Proc.new {|cui| cui.site_name == 'zuoxi'}
-  validates_presence_of :name, message: '请填写姓名',  :if => Proc.new {|cui| cui.site_name == 'zuoxi'}
-  validates_presence_of :brand, message: '请填写品牌',  :if => Proc.new {|cui| cui.site_name == 'zuoxi'}
-  validates_presence_of :city_chinese, message: '请填写城市',  :if => Proc.new {|cui| cui.site_name == 'zuoxi'}
-
+  validates_format_of :phone, :with => EricTools::RegularConstants::MobilePhone, message: '手机号格式不正确', allow_blank: true, :if => Proc.new { |cui| cui.site_name == 'zuoxi' }
+  validates_presence_of :name, message: '请填写姓名', :if => Proc.new { |cui| cui.site_name == 'zuoxi' }
+  validates_presence_of :brand, message: '请填写品牌', :if => Proc.new { |cui| cui.site_name == 'zuoxi' }
+  validates_presence_of :city_chinese, message: '请填写城市', :if => Proc.new { |cui| cui.site_name == 'zuoxi' }
 
 
   # CURRENT_ID = 171550  第一次导入
@@ -26,7 +25,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   ALL_CITY = {"310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州",
               "420100" => "武汉", "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆",
-              "110100" => "北京", "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛", "320200" => "无锡"}  # 缺镇江  常州
+              "110100" => "北京", "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛", "320200" => "无锡"} # 缺镇江  常州
 
 
   #城市所对应的拼音。 主要用于从淘车网更新数据。
@@ -34,13 +33,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   PINYIN_CITY = {
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
-      "dongguan" => "东莞", "chongqing" => "重庆","beijing" => "北京","zhengzhou" => '郑州','changsha' => '长沙', 'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "changzhou" => "常州"
+      "dongguan" => "东莞", "chongqing" => "重庆", "beijing" => "北京", "zhengzhou" => '郑州', 'changsha' => '长沙', 'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "changzhou" => "常州"
   }
 
   BAIXING_PINYIN_CITY = {
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
-      "dongguan" => "东莞", "chongqing" => "重庆","beijing" => "北京","zhengzhou" => '郑州','changsha' => '长沙', 'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "changzhou" => "常州"
+      "dongguan" => "东莞", "chongqing" => "重庆", "beijing" => "北京", "zhengzhou" => '郑州', 'changsha' => '长沙', 'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "changzhou" => "常州"
   }
 
   # BAIXING_PINYIN_CITY = {
@@ -51,12 +50,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   GANJI_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州",
-      "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", 'bj' => '北京', 'zz' => '郑州','cs' => '长沙', 'xa' => '西安','qd' => '青岛','zhenjiang' => '镇江', "wx" => "无锡","changzhou" => "常州"
+      "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", 'bj' => '北京', 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', "wx" => "无锡", "changzhou" => "常州"
   }
 
   WUBA_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州",
-      "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", 'bj' => '北京', 'zz' => '郑州','cs' => '长沙', 'xa' => '西安','qd' => '青岛','zj' => '镇江', "wx" => "无锡","cz" => "常州"
+      "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", 'bj' => '北京', 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "wx" => "无锡", "cz" => "常州"
   }
 
   # WUBA_CITY = {
@@ -86,7 +85,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info = UserSystem::CarUserInfo.find params[:id]
 
     #更新数据模块
-    car_user_info.name = params[:name].gsub('联系TA','先生女士') unless params[:name].blank?
+    car_user_info.name = params[:name].gsub('联系TA', '先生女士') unless params[:name].blank?
     car_user_info.phone = params[:phone]
     car_user_info.note = params[:note]
     car_user_info.fabushijian = params[:fabushijian] unless params[:fabushijian].blank?
@@ -145,7 +144,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
 
-
     pp "准备更新品牌#{car_user_info.phone}~~#{car_user_info.name}"
     begin
       car_user_info.update_brand
@@ -157,7 +155,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
     UploadTianTian.upload_one_tt car_user_info
   end
-
 
 
   def self.run_che168
@@ -309,8 +306,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-
-
   # 生成每小时xls
   def self.generate_xls_of_car_user_info car_user_infos
     Spreadsheet.client_encoding = 'UTF-8'
@@ -438,25 +433,25 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
     record_number = 0
-    ['天津','上海'].each do |city|
+    ['天津', '上海'].each do |city|
       sheet1 = book.create_worksheet name: "#{city}数据"
       ['姓名', '电话', '品牌', '城市'].each_with_index do |content, i|
         sheet1.row(0)[i] = content
       end
       row = 0
-      cuis = UserSystem::CarUserInfo.where("id > 172006 and city_chinese = ? and milage < 9 and  tt_upload_status = '已上传' and tt_code in (0,1) and created_at > ? and created_at < ?", city,"#{Date.yesterday.chinese_format_day} 15:00:00", "#{Date.today.chinese_format_day} 15:00:00")
-      cuis.each_with_index  do |car_user_info, current_row|
+      cuis = UserSystem::CarUserInfo.where("id > 172006 and city_chinese = ? and milage < 9 and  tt_upload_status = '已上传' and tt_code in (0,1) and created_at > ? and created_at < ?", city, "#{Date.yesterday.chinese_format_day} 15:00:00", "#{Date.today.chinese_format_day} 15:00:00")
+      cuis.each_with_index do |car_user_info, current_row|
         next if car_user_info.is_repeat_one_month
 
         if car_user_info.city_chinese == '上海'
-          unless ['别克','福特','MG','荣威','雪佛兰'].include? car_user_info.brand
+          unless ['别克', '福特', 'MG', '荣威', '雪佛兰'].include? car_user_info.brand
             next
           end
         end
 
         record_number = record_number+1
         row = row+1
-        [car_user_info.name.gsub('(个人)',''), car_user_info.phone, car_user_info.brand, car_user_info.city_chinese].each_with_index do |content, i|
+        [car_user_info.name.gsub('(个人)', ''), car_user_info.phone, car_user_info.brand, car_user_info.city_chinese].each_with_index do |content, i|
 
           sheet1.row(row)[i] = content
 
@@ -491,14 +486,14 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     book = Spreadsheet::Workbook.new
     phones = []
     record_number = 0
-    ['北京','天津'].each do |city|
+    ['北京', '天津'].each do |city|
       sheet1 = book.create_worksheet name: "#{city}数据"
       ['姓名', '电话', '品牌', '城市'].each_with_index do |content, i|
         sheet1.row(0)[i] = content
       end
       row = 0
-      cuis = UserSystem::CarUserInfo.where("id > 172006 and city_chinese = ? and created_at > ? and created_at < ?", city,"#{Date.yesterday.chinese_format_day} 18:00:00", "#{Date.today.chinese_format_day} 18:00:00")
-      cuis.each_with_index  do |car_user_info, current_row|
+      cuis = UserSystem::CarUserInfo.where("id > 172006 and city_chinese = ? and created_at > ? and created_at < ?", city, "#{Date.yesterday.chinese_format_day} 18:00:00", "#{Date.today.chinese_format_day} 18:00:00")
+      cuis.each_with_index do |car_user_info, current_row|
         # car_user_info.name = car_user_info.name.gsub('联系TA','先生女士')
         # car_user_info.save!
 
@@ -510,14 +505,14 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
         next if car_user_info.phone.blank?
         next if car_user_info.name.blank?
-        next if car_user_info.brand .blank?
+        next if car_user_info.brand.blank?
 
         next if phones.include? car_user_info.phone
         phones << car_user_info.phone
 
         record_number = record_number+1
         row = row+1
-        [car_user_info.name.gsub('(个人)','').gsub('联系TA','先生女士'), car_user_info.phone, car_user_info.brand, car_user_info.city_chinese].each_with_index do |content, i|
+        [car_user_info.name.gsub('(个人)', '').gsub('联系TA', '先生女士'), car_user_info.phone, car_user_info.brand, car_user_info.city_chinese].each_with_index do |content, i|
 
           sheet1.row(row)[i] = content
 
@@ -542,6 +537,25 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   end
 
+  def self.phone_city
+
+    UserSystem::CarUserInfo.where("phone_city is null and id > 500000 and phone is not null").order(id: :desc).find_each do |cui|
+      begin
+        next unless cui.phone_city.blank?
+        response = RestClient.get "http://virtual.paipai.com/extinfo/GetMobileProductInfo?mobile=#{cui.phone}&amount=10000&callname=getPhoneNumInfoExtCallback"
+        ec = Encoding::Converter.new("gb18030", "UTF-8")
+        response = ec.convert response
+        matchs = response.match /cityname:'(.*)'/
+        cityname = matchs[1].to_s
+        next if cityname.blank?
+        cui.phone_city = cityname
+        cui.save!
+      rescue Exception => e
+      end
+    end
+
+
+  end
 
 
 end
@@ -566,3 +580,10 @@ __END__
         is_next = true if car_user_info.name.include? name_key
       end
 
+
+
+response = RestClient.get 'http://virtual.paipai.com/extinfo/GetMobileProductInfo?mobile=13472446647&amount=10000&callname=getPhoneNumInfoExtCallback'
+ec = Encoding::Converter.new("gb18030", "UTF-8")
+response = ec.convert response
+matchs = response.match /cityname:'(.*)'/
+cityname = matchs[1].to_s
