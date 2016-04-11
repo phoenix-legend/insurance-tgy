@@ -1,5 +1,5 @@
 class UserSystem::CarBusinessUserInfo < ActiveRecord::Base
-  BusinessWords = ["诚信", '到店', '精品车', '车行', '第一车网', '车业', '信息编号', '本公司', '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线']
+  BusinessWords = ["诚信", '到店', '精品车', '车行', '第一车网', '车业', '信息编号', '本公司', '提档', '双保险', '可按揭', '该车为', '铲车', '首付', '全顺', '该车', '按揭', '热线', '瓜子']
 
   def self.init_business_user_info
     # 尝试获取车商电话
@@ -32,12 +32,22 @@ class UserSystem::CarBusinessUserInfo < ActiveRecord::Base
     end
 
     if is_cheshang == false
-      ['经理', '总', '商家', '赶集', '瓜子', '二手车', '黄牛', '销售', '顾问'].each do |name_key|
+      ['经理', '总', '商家', '赶集', '瓜子', '二手车', '黄牛', '销售', '顾问', '阳光车网', '客服', '车王', '看图', '看内容', '最多填写6字', '优车', '车置宝', '天天', '标题', '大爷'].each do |name_key|
         if car_user_info.name.include? name_key
           is_cheshang = true
         end
       end
     end
+
+    # if is_cheshang == false
+    #   if /^[a-z|A-Z|0-9|-|_]+$/.match car_user_info.name
+    #     is_cheshang = true
+    #   end
+    #
+    # if /[0-9]+/.match car_user_info.name
+    #   is_cheshang = true
+    # end
+    # end
 
     if is_cheshang == false
       if car_user_info.phone.match /^400/
@@ -58,5 +68,55 @@ class UserSystem::CarBusinessUserInfo < ActiveRecord::Base
         cbui.save!
       end
     end
+  end
+
+
+  def self.is_pachong car_user_info
+
+    return if car_user_info.phone.blank?
+    return if car_user_info.name.blank?
+    return if car_user_info.note.blank?
+
+
+    ['第一车网', '信息编号', '瓜子'].each do |word|
+      if car_user_info.note.include? word
+        return true
+      end
+    end
+
+
+    ["400733009"].each do |p|
+      if car_user_info.phone.include? p
+        return true
+      end
+    end
+
+
+    ["第一车网"].each do |p|
+      if car_user_info.che_xing.include? p
+        return true
+      end
+    end
+
+
+    if /^[a-z|A-Z|0-9|-|_]+$/.match car_user_info.name
+      return true
+    end
+
+    if /[0-9]+/.match car_user_info.name
+      return true
+    end
+
+    ['商家', '赶集', '瓜子', '销售', '百姓', '顾问', '阳光车网', '客服', '车王', '看图', '58', '五八', '之家', '内容', '最多填写6字', '优车', '车置宝', '天天', '标题', '大爷'].each do |name_key|
+      if car_user_info.name.include? name_key
+        return true
+      end
+    end
+
+    if car_user_info.phone.match /^400/
+      return true
+    end
+
+    return false
   end
 end

@@ -83,8 +83,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   def self.update_detail params
     pp params
     car_user_info = UserSystem::CarUserInfo.find params[:id]
-    # user_infos_number = UserSystem::CarUserInfo.where(phone: params[:phone]).count
-
 
     #更新数据模块
     car_user_info.name = params[:name].gsub('联系TA','先生女士') unless params[:name].blank?
@@ -104,8 +102,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info.need_update = false
     car_user_info.save!
 
-
-
+    # 更新车商库
     begin
       UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
     rescue Exception => e
@@ -113,20 +110,20 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       pp e
     end
 
-    #规则一： 如果在car_user_infos中出现，就算作车商。  即将被淘汰
-    # if user_infos_number > 0
-    # car_user_info.is_cheshang = 1    # 临时作废这种方式
-    # end
-
-    #规则二： 如果在car_business_user中出现，就算作车商，即将启用. 此规则比规则一要略松散一些
+    #如果在car_business_user中出现，就算作车商
     cbui = UserSystem::CarBusinessUserInfo.find_by_phone car_user_info.phone
     unless cbui.blank?
       car_user_info.is_cheshang = 1
+      car_user_info.is_real_cheshang = true
       car_user_info.need_update = false
       car_user_info.save!
     end
 
-
+    is_pachong = UserSystem::CarBusinessUserInfo.is_pachong car_user_info
+    if is_pachong
+      car_user_info.is_pachong = true
+      car_user_info.save!
+    end
 
     if car_user_info.site_name == '58'
       invert_wuba_city = UserSystem::CarUserInfo::WUBA_CITY.invert
@@ -134,8 +131,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       zhengze = "http://#{sx}.58.com"
       url_sx = car_user_info.detail_url.match Regexp.new zhengze
       unless url_sx
-        car_user_info.need_update = false
         car_user_info.is_cheshang = 2
+        car_user_info.is_city_match = false
         car_user_info.save!
       end
     end
