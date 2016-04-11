@@ -138,6 +138,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
     end
 
+    unless car_user_info.phone.blank?
+      phone_number_one_month = UserSystem::CarUserInfo.where("phone = ? and created_at > ?", car_user_info.phone, (Time.now.months_ago 1).chinese_format).count
+      car_user_info.is_repeat_one_month = phone_number_one_month>1
+      car_user_info.save!
+    end
+
+
 
     pp "准备更新品牌#{car_user_info.phone}~~#{car_user_info.name}"
     begin
