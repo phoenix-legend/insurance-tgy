@@ -446,6 +446,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       row = 0
       cuis = UserSystem::CarUserInfo.where("id > 172006 and city_chinese = ? and milage < 9 and  tt_upload_status = '已上传' and tt_code in (0,1) and created_at > ? and created_at < ?", city,"#{Date.yesterday.chinese_format_day} 15:00:00", "#{Date.today.chinese_format_day} 15:00:00")
       cuis.each_with_index  do |car_user_info, current_row|
+        next if car_user_info.is_repeat_one_month
 
         if car_user_info.city_chinese == '上海'
           unless ['别克','福特','MG','荣威','雪佛兰'].include? car_user_info.brand
