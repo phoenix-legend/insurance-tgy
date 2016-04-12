@@ -39,10 +39,10 @@ module UploadTianTian
       is_select = false
     end
 
-    if car_user_info.is_repeat_one_month
-      car_user_info.tt_upload_status = '自判重复'
-      is_select = false
-    end
+    # if car_user_info.is_repeat_one_month
+    #   car_user_info.tt_upload_status = '自判重复'
+    #   is_select = false
+    # end
 
     if car_user_info.name.blank?
       is_select = false
