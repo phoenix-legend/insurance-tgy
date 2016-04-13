@@ -23,13 +23,13 @@ class UserSystem::CarBusinessUserInfo < ActiveRecord::Base
       end
     end
 
-    if is_cheshang == false
-      ["0000", "1111", "2222", "3333", "4444", "5555", "6666", "7777", "8888", "9999"].each do |p|
-        if car_user_info.phone.include? p
-          is_cheshang = true
-        end
-      end
-    end
+    # if is_cheshang == false
+    #   ["0000", "1111", "2222", "3333", "4444", "5555", "6666", "7777", "8888", "9999"].each do |p|
+    #     if car_user_info.phone.include? p
+    #       is_cheshang = true
+    #     end
+    #   end
+    # end
 
     if is_cheshang == false
       ['经理', '总', '商家', '赶集', '瓜子', '二手车', '黄牛', '销售', '顾问', '阳光车网', '客服', '车王', '看图', '看内容', '最多填写6字', '优车', '车置宝', '天天', '标题', '大爷'].each do |name_key|

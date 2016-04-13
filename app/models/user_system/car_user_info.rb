@@ -555,6 +555,22 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
 
+    ts = []
+    phones.each do |phone|
+      begin
+      response = RestClient.get "http://life.tenpay.com/cgi-bin/mobile/MobileQueryAttribution.cgi?chgmobile=#{phone}"
+
+      ec = Encoding::Converter.new("gb18030", "UTF-8")
+      response = ec.convert response
+      pp response
+      matchs = response.match /<city>(.*)<\/city>/
+      cityname = matchs[1].to_s
+      ts << cityname
+      rescue
+        next
+        end
+    end
+
   end
 
 
