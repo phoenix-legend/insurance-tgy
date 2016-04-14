@@ -9,7 +9,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   # CURRENT_ID = 171550  第一次导入
-  CURRENT_ID = 472006
+  CURRENT_ID = 539767
 
   EMAIL_STATUS = {0 => '待导', 1 => '已导', 2 => '不导入'}
   # ALL_CITY = {"441900" => "东莞", "440600" => "佛山", "440100" => "广州",
