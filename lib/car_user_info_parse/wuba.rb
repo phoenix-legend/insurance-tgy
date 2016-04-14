@@ -1,7 +1,7 @@
 module Wuba
 
   # Wuba.get_car_user_list
-  def self.get_car_user_list
+  def self.get_car_user_list lest_number = 3
     city_hash = ::UserSystem::CarUserInfo::WUBA_CITY
     threads = []
     city_hash.each_pair do |areaid, areaname|
@@ -14,7 +14,7 @@ module Wuba
 
         begin
           pp "现在跑58.. #{areaname}"
-          1.upto 4 do |i|
+          1.upto 5 do |i|
             # i = 1
             url = "http://#{areaid}.58.com/ershouche/0/pn#{i}/"
             pp url
@@ -77,7 +77,7 @@ module Wuba
                                                                     site_name: '58'
               exists_car_number = exists_car_number + 1 if result == 1
             end
-            if car_number - exists_car_number < 3
+            if car_number - exists_car_number < lest_number
               pp '58 本页数据全部存在，跳出'
               break
             end

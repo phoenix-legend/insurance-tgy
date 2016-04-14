@@ -593,6 +593,31 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         end
     end
 
+
+
+    month_ago  = Time.now - 3.days
+    h = {}
+    while true do
+      n = UserSystem::CarUserInfo.where("created_at > ? and created_at < ? and site_name = '58' and city_chinese in ('上海', '成都', '深圳', '南京', '广州', '武汉', '天津', '苏州', '杭州', '东莞', '重庆')", "#{month_ago.chinese_format_day} #{month_ago.hour}:00:00", "#{month_ago.chinese_format_day} #{month_ago.hour}:59:59").count
+      if h[month_ago.hour].blank?
+        h[month_ago.hour] = []
+      end
+      h[month_ago.hour] << n
+      month_ago = month_ago + 1.hour
+      break if Time.now < month_ago
+    end
+
+    h_new = {}
+    h.each_pair do |k,v|
+      h_new[k] = (v.sum.to_f / v.length).to_i
+    end
+
+    # hours = c(15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
+    # numb = c(112, 113, 109, 92, 87, 82, 80, 69, 53, 35, 18, 10, 6, 4, 4, 9, 19, 42, 81, 108, 122, 92, 113, 109)
+
+    # hours = c(15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
+    # numb = c(101, 92, 97, 75, 70, 76, 62, 63, 47, 40, 18, 13, 7, 7, 5, 9, 17, 44, 77, 106, 113, 85, 106, 93)
+
   end
 
 
