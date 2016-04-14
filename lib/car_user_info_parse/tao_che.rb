@@ -67,8 +67,8 @@ module TaoChe
     car_user_infos.each do |car_user_info|
       next unless car_user_info.name.blank?
       next unless car_user_info.phone.blank?
-      if threads.length > 15
-        sleep 2
+      if threads.length > 30
+        sleep 1
       end
       threads.delete_if { |thread| thread.status == false }
       t = Thread.new do

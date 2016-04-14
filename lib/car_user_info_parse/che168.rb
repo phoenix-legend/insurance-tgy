@@ -9,9 +9,9 @@ module Che168
     threads = []
     city_hash.each_pair do |areaid, areaname|
       threads.delete_if { |thread| thread.status == false }
-      if threads.length > 15
+      if threads.length > 30
         pp "现在共有#{threads.length}个线程正在运行"
-        sleep 3
+        sleep 1
       end
       t = Thread.new do
         begin
@@ -38,7 +38,7 @@ module Che168
                                                                     site_name: 'che168'
               exists_car_number = exists_car_number + 1 if result == 1
             end
-            if car_number - exists_car_number < 5
+            if car_number - exists_car_number < 3
               puts 'che 168 本页数据全部存在，跳出'
               break
             end

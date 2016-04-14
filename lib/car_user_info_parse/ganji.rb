@@ -67,7 +67,7 @@ module Ganji
               exists_car_number = exists_car_number + 1 if result == 1
             end
             # 这里的数字代表还有几个是新的。 如果还有8辆以上是新车，继续翻页。 8以下，不翻。
-            if car_number - exists_car_number < 8
+            if car_number - exists_car_number < 3
               puts '赶集 本页数据全部存在，跳出'
               break
             end
@@ -99,8 +99,8 @@ module Ganji
 
 
 
-      if threads.length > 15
-        sleep 2
+      if threads.length > 30
+        sleep 1
       end
       threads.delete_if { |thread| thread.status == false }
       t = Thread.new do
