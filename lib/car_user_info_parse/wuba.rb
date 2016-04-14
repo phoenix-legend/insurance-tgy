@@ -14,7 +14,7 @@ module Wuba
 
         begin
           pp "现在跑58.. #{areaname}"
-          1.upto 4 do |i|
+          1.upto 2 do |i|
             # i = 1
             url = "http://#{areaid}.58.com/ershouche/0/pn#{i}/"
             pp url
