@@ -79,7 +79,7 @@ module Wuba
             end
             if car_number - exists_car_number < 3
               pp '58 本页数据全部存在，跳出'
-              break  
+              break
             end
 
           end
