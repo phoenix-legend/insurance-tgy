@@ -8,10 +8,7 @@ namespace :pachongchongwuba do
 
 		else
 			pp '前一次已完成， GO RUN'
-			while true do
-				sleep 1
-				UserSystem::CarUserInfo.run_58
-			end
+			UserSystem::CarUserInfo.run_58
 		end
 	end
 end
