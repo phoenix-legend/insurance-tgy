@@ -14,7 +14,7 @@ module Wuba
 
         begin
           pp "现在跑58.. #{areaname}"
-          1.upto 5 do |i|
+          1.upto 4 do |i|
             # i = 1
             url = "http://#{areaid}.58.com/ershouche/0/pn#{i}/"
             pp url
@@ -79,7 +79,7 @@ module Wuba
             end
             if car_number - exists_car_number < 3
               pp '58 本页数据全部存在，跳出'
-              break
+              # break   #不管怎么样， 都要抓够4页
             end
 
           end
