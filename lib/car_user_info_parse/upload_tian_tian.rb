@@ -146,7 +146,7 @@ module UploadTianTian
     car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null").order(id: :desc)
     i = 0
     # threads = []
-    car_user_infos.each do |car_user_info|
+    car_user_infos.find_each do |car_user_info|
       # threads.delete_if { |thread| thread.status == false }
       # if threads.length > 30
       #   sleep 2
@@ -347,7 +347,7 @@ module UploadTianTian
   def self.query_order_shibai
     car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '失败'").order(id: :desc)
     i = 0
-    car_user_infos.each do |car_user_info|
+    car_user_infos.find_each do |car_user_info|
       url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
       response = RestClient.get url
       response = JSON.parse response
