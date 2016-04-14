@@ -1,7 +1,7 @@
 module Wuba
 
   # Wuba.get_car_user_list
-  def self.get_car_user_list lest_number = 3
+  def self.get_car_user_list lest_number = 8
     city_hash = ::UserSystem::CarUserInfo::WUBA_CITY
     threads = []
     city_hash.each_pair do |areaid, areaname|
