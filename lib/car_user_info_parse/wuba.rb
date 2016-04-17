@@ -31,6 +31,7 @@ module Wuba
               begin
                 chexing = tr.css('td .t')[0].text
               rescue
+                car_number = car_number -1
                 pp tr.to_s
                 pp 'Exception  车型获取失败'
                 next
@@ -40,6 +41,7 @@ module Wuba
               begin
                 price = tr.css('.tc .pri')[0].text
               rescue
+                car_number = car_number -1
                 pp tr.to_s
                 pp 'Exception  价格获取失败'
                 next
