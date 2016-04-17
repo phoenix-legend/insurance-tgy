@@ -219,7 +219,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       rescue Exception => e
         pp e
       end
-      pp '再来一遍'
+      pp '再来一遍。。。'
     end
   end
 
