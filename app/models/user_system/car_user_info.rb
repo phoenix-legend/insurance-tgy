@@ -207,16 +207,19 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
   def self.run_58
-    begin
-      Wuba.get_car_user_list
-    rescue Exception => e
-      pp e
-    end
+    [1..1000].each do |i|
+      begin
+        Wuba.get_car_user_list
+      rescue Exception => e
+        pp e
+      end
 
-    begin
-      Wuba.update_detail
-    rescue Exception => e
-      pp e
+      begin
+        Wuba.update_detail
+      rescue Exception => e
+        pp e
+      end
+      pp '再来一遍'
     end
   end
 
