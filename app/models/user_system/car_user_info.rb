@@ -215,7 +215,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
 
       begin
-        Wuba.update_detail
+        #Wuba.update_detail
       rescue Exception => e
         pp e
       end
