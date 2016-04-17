@@ -14,7 +14,7 @@ module Wuba
 
         begin
           pp "现在跑58.. #{areaname}"
-          1.upto 5 do |i|
+          1.upto 10 do |i|
             # i = 1
             url = "http://#{areaid}.58.com/ershouche/0/pn#{i}/"
             pp url
@@ -75,6 +75,15 @@ module Wuba
                                                                     detail_url: url.split('?')[0],
                                                                     city_chinese: areaname,
                                                                     site_name: '58'
+
+              if result == 0
+                u = url.split('?')[0]
+
+                unless u.blank?
+                  c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
+                  Wuba.update_one_detail c.id if not c.blank?
+                end
+              end
               exists_car_number = exists_car_number + 1 if result == 1
             end
             if car_number - exists_car_number < lest_number
@@ -172,23 +181,66 @@ module Wuba
 
   end
 
-  def self.get_normal_url_by_short_url_and_city short_url, city_code
+  # Wuba.update_detail
+  def self.update_one_detail car_user_info_id
+    car_user_info = UserSystem::CarUserInfo.find car_user_info_id
+
+    return unless car_user_info.name.blank?
+    return unless car_user_info.phone.blank?
+    return if car_user_info.detail_url.match /zhineng/
+
+
     begin
-      params = URI.decode_www_form(short_url)
-      params_hash = {}
-      params.each do |p|
-        params_hash[p[0]] = p[1]
+      puts '更新明细'
+      pp car_user_info.detail_url
+      response = RestClient.get(car_user_info.detail_url)
+
+      detail_content = response.body
+      detail_content = Nokogiri::HTML(detail_content)
+      time = detail_content.css('.mtit_con_left .time').text
+      name = detail_content.css('.lineheight_2').children[3].text
+      note = begin
+        detail_content.css('.part_detail').children[2].text.gsub(/\t|\r|\n/, '') rescue '暂无'
       end
-      entry_id = params_hash["entinfo"]
-      entry_id = entry_id.split('_')[0]
-      url = "http://#{city_code}.58.com/ershouche/#{entry_id}x.shtml"
-      return url
+
+      id = car_user_info.detail_url.match /ershouche\/(\d{8,15})x\.shtml/
+      id = id[1]
+      id_response = RestClient.get("http://app.58.com/api/windex/scandetail/car/#{id}/")
+      id_response = id_response.body
+      id_response = Nokogiri::HTML(id_response)
+      phone = id_response.css('.nums').text
+      phone = phone.gsub('-', '')
+      UserSystem::CarUserInfo.update_detail id: car_user_info.id,
+                                            name: name,
+                                            phone: phone,
+                                            note: note,
+                                            fabushijian: time
     rescue Exception => e
       pp e
-      pp '解析short url  出错'
-      return nil
+      pp $@
+      car_user_info.need_update = false
+      car_user_info.save
     end
+end
+
+
+def self.get_normal_url_by_short_url_and_city short_url, city_code
+  begin
+    params = URI.decode_www_form(short_url)
+    params_hash = {}
+    params.each do |p|
+      params_hash[p[0]] = p[1]
+    end
+    entry_id = params_hash["entinfo"]
+    entry_id = entry_id.split('_')[0]
+    url = "http://#{city_code}.58.com/ershouche/#{entry_id}x.shtml"
+    return url
+  rescue Exception => e
+    pp e
+    pp '解析short url  出错'
+    return nil
   end
+end
 
 
 end

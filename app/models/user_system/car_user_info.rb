@@ -58,7 +58,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   }
 
 
-
   # GANJI_CITY = {
   #     "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州",
   #     "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", 'bj' => '北京', 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', "wx" => "无锡", "changzhou" => "常州"
@@ -76,7 +75,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   WUBA_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州",
-      "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆"#, 'bj' => '北京'
+      "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆" #, 'bj' => '北京'
 
   }
 
@@ -580,25 +579,24 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     ts = []
     phones.each do |phone|
       begin
-      response = RestClient.get "http://life.tenpay.com/cgi-bin/mobile/MobileQueryAttribution.cgi?chgmobile=#{phone}"
+        response = RestClient.get "http://life.tenpay.com/cgi-bin/mobile/MobileQueryAttribution.cgi?chgmobile=#{phone}"
 
-      ec = Encoding::Converter.new("gb18030", "UTF-8")
-      response = ec.convert response
-      pp response
-      matchs = response.match /<city>(.*)<\/city>/
-      cityname = matchs[1].to_s
-      ts << cityname
+        ec = Encoding::Converter.new("gb18030", "UTF-8")
+        response = ec.convert response
+        pp response
+        matchs = response.match /<city>(.*)<\/city>/
+        cityname = matchs[1].to_s
+        ts << cityname
       rescue
         next
-        end
+      end
     end
 
 
-
-    month_ago  = Time.now - 3.days
+    month_ago = Time.now - 3.days
     h = {}
     while true do
-      n = UserSystem::CarUserInfo.where("created_at > ? and created_at < ? and site_name = '58' and city_chinese in ('上海', '成都', '深圳', '南京', '广州', '武汉', '天津', '苏州', '杭州', '东莞', '重庆')", "#{month_ago.chinese_format_day} #{month_ago.hour}:00:00", "#{month_ago.chinese_format_day} #{month_ago.hour}:59:59").count
+      n = UserSystem::CarUserInfo.where("created_at > ? and site_name = '58' and created_at < ? and site_name = '58' and city_chinese in ('上海', '成都', '深圳', '南京', '广州', '武汉', '天津', '苏州', '杭州', '东莞', '重庆')", "#{month_ago.chinese_format_day} #{month_ago.hour}:00:00", "#{month_ago.chinese_format_day} #{month_ago.hour}:59:59").count
       if h[month_ago.hour].blank?
         h[month_ago.hour] = []
       end
@@ -608,9 +606,28 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
     h_new = {}
-    h.each_pair do |k,v|
+    h.each_pair do |k, v|
       h_new[k] = (v.sum.to_f / v.length).to_i
     end
+
+
+    h = {}
+    days = ['2016-03-28', '2016-03-29', '2016-04-11', '2016-04-12', '2016-04-15']
+    a = ""
+    (10..22).each do |hour|
+      days.each do |day|
+        n = UserSystem::CarUserInfo.where("created_at > ? and site_name = '58' and created_at < ? and site_name = '58' and city_chinese in ('上海', '成都', '深圳', '南京', '广州', '武汉', '天津', '苏州', '杭州', '东莞', '重庆')", "#{day} #{hour}:00:00", "#{day} #{hour}:59:59").count
+        h["#{day} #{hour}"] = n
+        a = "#{a} #{"#{day} #{hour}点"} #{n}"
+      end
+
+      a = "#{a}
+"
+
+    end
+
+
+
 
     # hours = c(15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
     # numb = c(112, 113, 109, 92, 87, 82, 80, 69, 53, 35, 18, 10, 6, 4, 4, 9, 19, 42, 81, 108, 122, 92, 113, 109)
