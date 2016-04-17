@@ -220,6 +220,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         pp e
       end
       pp '再来一遍。。。'
+      pp "现在时间 #{Time.now.chinese_format}"
     end
   end
 
