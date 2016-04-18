@@ -1,4 +1,5 @@
 class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
+  belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
   CITY = ["上海","常州","郑州","无锡","长沙","苏州","南京","重庆","武汉","青岛","北京","西安","成都","杭州","深圳"]
 
   TestUrl = 'http://open.jzl.mychebao.com/apiService.hs'

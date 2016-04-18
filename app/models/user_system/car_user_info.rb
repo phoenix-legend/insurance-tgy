@@ -158,7 +158,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
     UploadTianTian.upload_one_tt car_user_info
 
-    if car_user_info.is_pachong == false and ChezhibaoCarUserInfo::CITY.include?(car_user_info.city_chinese)
+    if car_user_info.is_pachong == false and UserSystem::ChezhibaoCarUserInfo::CITY.include?(car_user_info.city_chinese)
       #数据回传到车置宝
       UserSystem::ChezhibaoCarUserInfo.create_czb_car_info name: car_user_info.name,
                                                            phone: car_user_info.phone,
