@@ -158,20 +158,23 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
     UploadTianTian.upload_one_tt car_user_info
 
-    #数据回传到车置宝
-    UserSystem::ChezhibaoCarUserInfo.create_czb_car_info name: car_user_info.name,
-                                                         phone: car_user_info.phone,
-                                                         brand: car_user_info.brand,
-                                                         city_chinese: car_user_info.city_chinese,
-                                                         che_ling: car_user_info.che_ling,
-                                                         car_user_info_id: car_user_info.id,
-                                                         milage: car_user_info.milage,
-                                                         price: car_user_info.price,
-                                                         is_real_cheshang: car_user_info.is_real_cheshang,
-                                                         is_city_match: car_user_info.is_city_match,
-                                                         is_pachong: car_user_info.is_pachong,
-                                                         is_repeat_one_month: car_user_info.is_repeat_one_month,
-                                                         czb_upload_status: '未上传'
+    if car_user_info.is_pachong == false
+      #数据回传到车置宝
+      UserSystem::ChezhibaoCarUserInfo.create_czb_car_info name: car_user_info.name,
+                                                           phone: car_user_info.phone,
+                                                           brand: car_user_info.brand,
+                                                           city_chinese: car_user_info.city_chinese,
+                                                           che_ling: car_user_info.che_ling,
+                                                           car_user_info_id: car_user_info.id,
+                                                           milage: car_user_info.milage,
+                                                           price: car_user_info.price,
+                                                           is_real_cheshang: car_user_info.is_real_cheshang,
+                                                           is_city_match: car_user_info.is_city_match,
+                                                           is_pachong: car_user_info.is_pachong,
+                                                           is_repeat_one_month: car_user_info.is_repeat_one_month,
+                                                           czb_upload_status: '未上传'
+    end
+
 
   end
 
