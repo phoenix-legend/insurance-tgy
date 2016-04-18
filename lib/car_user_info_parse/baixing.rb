@@ -9,7 +9,7 @@ module Baixing
       begin
         pp "现在跑..百姓 #{areaname}"
         1.upto 3 do |i|
-          sleep 1
+          sleep 2
           url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}"
 
           content = RestClient.get url
