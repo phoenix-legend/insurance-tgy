@@ -7,7 +7,8 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
 
   TestUrl = 'http://open.jzl.mychebao.com/apiService.hs'
   ProcuctionUrl = 'http://open.mychebao.com/apiService.hs'
-  KEY = 'jhcsvtjh'
+  KEY = 'jhsdhsrr'
+  # KEY = 'jhcsvtjh'
   CLIENT = 'k78242T1'
 
   # 创建车置宝车主信息
@@ -25,24 +26,28 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
 
 
 
-  def self.test
+  def self.upload_czb czb_car_user_info
+    if czb_car_user_info.phone.blank?  or czb_car_user_info.brand.blank?
+      czb_car_user_info.czb_upload_status = '信息不完整'
+      czb_car_user_info.save!
+      return
+    end
     require 'digest/md5'
-    phone = '13472446647'
-    encrypt_phone = encrypt phone
-    brand = '别克'
-    before_md5 = "phone=#{encrypt_phone}&brand=#{brand}&model=#{brand}&city=2072&source=458&key=#{KEY}"
-    pp "签名前 #{before_md5}"
+    encrypt_phone = encrypt czb_car_user_info.phone
+    before_md5 = "phone=#{encrypt_phone}&brand=福特&model=福克斯&city=2072&source=458&key=#{KEY}"
+    pp "签名前: #{before_md5}"
     after_md5 = Digest::MD5.hexdigest(before_md5)
-    pp "签名后 #{after_md5}"
+    pp "签名后: #{after_md5.upcase}"
     response = RestClient.post TestUrl, {
-                                          service: 'unify.data.query.car',
+                                          service: 'unify.data.push.car',
                                           client: CLIENT,
                                           phone: encrypt_phone,
-                                          brand: brand,
-                                          model: brand,
+                                          brand: '福特',
+                                          model: '福克斯',
+                                          type: '',
                                           city: 2072,
                                           source: 458,
-                                          datasign: after_md5
+                                          datasign: after_md5.upcase
                                       }
     response = JSON.parse response
     pp response

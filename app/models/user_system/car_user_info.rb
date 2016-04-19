@@ -39,8 +39,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   }
 
 
-
-
   BAIXING_PINYIN_CITY = {
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
@@ -56,14 +54,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   }
 
 
-
   WUBA_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州",
       "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆",
       'bj' => '北京', 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "wx" => "无锡", "cz" => "常州"
   }
-
-
 
 
   def self.create_car_user_info options
@@ -172,7 +167,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                                            is_city_match: car_user_info.is_city_match,
                                                            is_pachong: car_user_info.is_pachong,
                                                            is_repeat_one_month: car_user_info.is_repeat_one_month,
-                                                           czb_upload_status: '未上传'
+                                                           czb_upload_status: '未上传',
+                                                           cx: car_user_info.cx
     end
 
 
@@ -390,6 +386,18 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   def update_brand
     return unless self.brand.blank?
+
+    UserSystem::CarType.all.each do |t|
+      if self.che_xing.match Regexp.new(t.name)
+        self.brand = t.car_brand.name
+        self.cx = t.name
+        self.save!
+        break
+      end
+    end
+
+    return unless self.brand.blank?
+
     UserSystem::CarBrand.all.each do |brand|
       if self.che_xing.match Regexp.new(brand.name)
         self.brand = brand.name
@@ -398,15 +406,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
     end
 
-    return unless self.brand.blank?
-
-    UserSystem::CarType.all.each do |t|
-      if self.che_xing.match Regexp.new(t.name)
-        self.brand = t.car_brand.name
-        self.save!
-        break
-      end
-    end
   end
 
   # class UserSystem::CarUserInfo < ActiveRecord::Base
@@ -627,11 +626,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
 
       a = "#{a}
-"
+      "
 
     end
-
-
 
 
     # hours = c(15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
