@@ -199,28 +199,28 @@ module UploadTianTian
       #UserSystem::CarUserInfo.get_kaixin_info # 给开新那边导数据
     end
 
-    pp "-----------------------------------------------------------------"
-    yx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and created_at > ? and created_at < ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
-    tj_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
-    pp "本月意向总数：#{yx_month_counts}"
-    pp "本月意向率：#{(yx_month_counts.to_f/tj_month_counts.to_f).round(3)*100}%"
-
-
-    pp "------------------------今天各渠道意向率-----------------------------------------"
-    # 赶集网成交率
-    ['ganji', 'baixing', 'che168', 'taoche', '58'].each do |s|
-      yixiang = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and site_name = '#{s}' and created_at > ? and created_at < ?", Date.today.chinese_format, Date.tomorrow.chinese_format).count
-      tijiao = ::UserSystem::CarUserInfo.where("tt_id is not null and site_name = '#{s}'  and created_at > ? and created_at < ?", Date.today.chinese_format, Date.tomorrow.chinese_format).count
-      pp "#{s}: #{yixiang}/#{tijiao}=#{(yixiang.to_f/tijiao.to_f).round(3)*100}%"
-    end
-
-    pp "------------------------总体各渠道意向率-----------------------------------------"
-    # 赶集网成交率
-    ['ganji', 'baixing', 'che168', 'taoche', '58'].each do |s|
-      yixiang = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and site_name = '#{s}'").count
-      tijiao = ::UserSystem::CarUserInfo.where("tt_id is not null and site_name = '#{s}'").count
-      pp "#{s}: #{yixiang}/#{tijiao}=#{(yixiang.to_f/tijiao.to_f).round(3)*100}%"
-    end
+    # pp "-----------------------------------------------------------------"
+    # yx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and created_at > ? and created_at < ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
+    # tj_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
+    # pp "本月意向总数：#{yx_month_counts}"
+    # pp "本月意向率：#{(yx_month_counts.to_f/tj_month_counts.to_f).round(3)*100}%"
+    #
+    #
+    # pp "------------------------今天各渠道意向率-----------------------------------------"
+    # # 赶集网成交率
+    # ['ganji', 'baixing', 'che168', 'taoche', '58'].each do |s|
+    #   yixiang = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and site_name = '#{s}' and created_at > ? and created_at < ?", Date.today.chinese_format, Date.tomorrow.chinese_format).count
+    #   tijiao = ::UserSystem::CarUserInfo.where("tt_id is not null and site_name = '#{s}'  and created_at > ? and created_at < ?", Date.today.chinese_format, Date.tomorrow.chinese_format).count
+    #   pp "#{s}: #{yixiang}/#{tijiao}=#{(yixiang.to_f/tijiao.to_f).round(3)*100}%"
+    # end
+    #
+    # pp "------------------------总体各渠道意向率-----------------------------------------"
+    # # 赶集网成交率
+    # ['ganji', 'baixing', 'che168', 'taoche', '58'].each do |s|
+    #   yixiang = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and site_name = '#{s}'").count
+    #   tijiao = ::UserSystem::CarUserInfo.where("tt_id is not null and site_name = '#{s}'").count
+    #   pp "#{s}: #{yixiang}/#{tijiao}=#{(yixiang.to_f/tijiao.to_f).round(3)*100}%"
+    # end
     pp "现在时间：#{Time.now.chinese_format}"
 
     ''

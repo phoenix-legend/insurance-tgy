@@ -3,12 +3,10 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
 
   CITY_HASH = {"北京" => 1867, "重庆" => 1898, "青岛" => 1931, "郑州" => 1970, "武汉" => 2002, '长沙' => 2024,
                "深圳" => 2053, "南京" => 2072, "无锡" => 2073, "苏州" => 2076, "镇江" => 2082, "成都" => 2102, "杭州" => 2123, "西安" => 2176,
-               "上海" =>1889, '常州' => 2075}
+               "上海" => 1889, '常州' => 2075}
 
 
-
-
-  TestUrl = 'http://open.jzl.mychebao.com/apiService.hs'
+  # TestUrl = 'http://open.jzl.mychebao.com/apiService.hs'
   ProcuctionUrl = 'http://open.mychebao.com/apiService.hs'
   # KEY = 'jhsdhsrr'
   KEY = 'jhcsvtjh'
@@ -20,22 +18,29 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
     czb = UserSystem::ChezhibaoCarUserInfo.new options
     czb.save!
 
+    czb.created_day = czb.created_at.chinese_format_day
+    czb.save!
+
     UserSystem::ChezhibaoCarUserInfo.upload_czb czb
   end
 
   # 获取所有城市
   def self.get_citys
-    response = RestClient.post ProcuctionUrl, { service: 'unify.data.load.city',
-                                                client: CLIENT}
+    response = RestClient.post ProcuctionUrl, {service: 'unify.data.load.city',
+                                               client: CLIENT}
     response = JSON.parse response
   end
 
-
-
+  def self.upload_all_zhb
+    cuis = UserSystem::ChezhibaoCarUserInfo.where("czb_upload_status  in ('非法请求', '未上传')")
+    cuis.each do |c|
+      UserSystem::ChezhibaoCarUserInfo.upload_czb c
+    end
+  end
 
 
   def self.upload_czb czb_car_user_info
-    if czb_car_user_info.phone.blank?  or czb_car_user_info.brand.blank?
+    if czb_car_user_info.phone.blank? or czb_car_user_info.brand.blank?
       czb_car_user_info.czb_upload_status = '信息不完整'
       czb_car_user_info.save!
       return
@@ -105,14 +110,53 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
   end
 
   def self.query_data
-    response = RestClient.post ProcuctionUrl, {
-                                                service: 'unify.data.query.car',
-                                                client: CLIENT,
-                                                carid: UserSystem::ChezhibaoCarUserInfo.encrypt('2013'),
-                                                source: '458'
-                                            }
-    response = JSON.parse response
-    pp response
+    ids = ""
+    i = 0
+    cuis = UserSystem::ChezhibaoCarUserInfo.where("czb_id is not null and czb_status is null")
+    cuis.find_each do |cui|
+      i=i+1
+      if ids.blank?
+        ids << cui.czb_id
+      else
+        ids << ",#{cui.czb_id}"
+      end
+      # 每200个更新一次
+      if i%200 ==0
+        query_and_update_czb_id ids
+        i = 0
+        ids = 0
+      end
+    end
+    if i>0
+      query_and_update_czb_idids
+    end
+  end
+
+
+  def self.query_and_update_czb_id ids
+    return if ids.blank?
+    response = RestClient.post ProcuctionUrl, {service: 'unify.data.query.car',
+                                               client: CLIENT,
+                                               carid: UserSystem::ChezhibaoCarUserInfo.encrypt(ids),
+                                               source: SOURCE}
+    if response["resultCode"] == 1
+      response["resultData"].each do |data|
+        cui = UserSystem::ChezhibaoCarUserInfo.where("czb_id = ?", data["carid"]).first
+        cui.czb_status = data["status"]
+        cui.czb_status_message = data["statusMsg"]
+        cui.yaoyue_time = Time.now
+        cui.yaoyue_day = Date.today
+        if [2, 3,5,6, 7,8].include?  data["status"]
+          cui.czb_yaoyue = '成功'
+        elsif [1,4].include? data["status"]
+          cui.czb_yaoyue = '失败'
+        end
+        cui.save!
+      end
+    else
+      pp 'WARN:  接口更新异常'
+      pp response["resultMessage"]
+    end
   end
 
   def self.encrypt str

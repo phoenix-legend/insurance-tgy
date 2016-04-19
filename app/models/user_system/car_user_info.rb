@@ -61,6 +61,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   } #, "cz" => "常州"
 
 
+
+
   def self.create_car_user_info options
     user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]
     return 1 if user_infos.length > 0
