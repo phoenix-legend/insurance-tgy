@@ -234,7 +234,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   def self.run_58 sub_city_party = 0
     [1..1000].each do |i|
       begin
-        Wuba.get_car_user_list sub_city_party
+        Wuba.get_car_user_list 20,sub_city_party
       rescue Exception => e
         pp e
       end
