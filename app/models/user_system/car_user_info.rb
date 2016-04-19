@@ -26,7 +26,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   ALL_CITY = {"310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州",
               "420100" => "武汉", "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆",
               "110100" => "北京", "410100" => "郑州", "430100" => "长沙",
-              "610100" => "西安", "370200" => "青岛", "320200" => "无锡", "320400" => '常州'}
+              "610100" => "西安", "370200" => "青岛", "320200" => "无锡"} #, "320400" => '常州'
 
 
   #城市所对应的拼音。 主要用于从淘车网更新数据。
@@ -35,30 +35,30 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
       "dongguan" => "东莞", "chongqing" => "重庆", "beijing" => "北京", "zhengzhou" => '郑州', 'changsha' => '长沙',
-      'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "changzhou" => "常州"
-  }
+      'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡"
+  } #, "changzhou" => "常州"
 
 
   BAIXING_PINYIN_CITY = {
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
       "dongguan" => "东莞", "chongqing" => "重庆", "beijing" => "北京", "zhengzhou" => '郑州', 'changsha' => '长沙',
-      'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "changzhou" => "常州"
-  }
+      'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡"
+  } #, "changzhou" => "常州"
 
 
   GANJI_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州",
       "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", 'bj' => '北京',
-      'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', "wx" => "无锡", "changzhou" => "常州"
-  }
+      'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', "wx" => "无锡"
+  } #, "changzhou" => "常州"
 
 
   WUBA_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州",
       "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆",
-      'bj' => '北京', 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "wx" => "无锡", "cz" => "常州"
-  }
+      'bj' => '北京', 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "wx" => "无锡"
+  } #, "cz" => "常州"
 
 
   def self.create_car_user_info options
@@ -154,21 +154,28 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UploadTianTian.upload_one_tt car_user_info
 
     if car_user_info.is_pachong == false and UserSystem::ChezhibaoCarUserInfo::CITY.include?(car_user_info.city_chinese)
-      #数据回传到车置宝
-      UserSystem::ChezhibaoCarUserInfo.create_czb_car_info name: car_user_info.name,
-                                                           phone: car_user_info.phone,
-                                                           brand: car_user_info.brand,
-                                                           city_chinese: car_user_info.city_chinese,
-                                                           che_ling: car_user_info.che_ling,
-                                                           car_user_info_id: car_user_info.id,
-                                                           milage: car_user_info.milage,
-                                                           price: car_user_info.price,
-                                                           is_real_cheshang: car_user_info.is_real_cheshang,
-                                                           is_city_match: car_user_info.is_city_match,
-                                                           is_pachong: car_user_info.is_pachong,
-                                                           is_repeat_one_month: car_user_info.is_repeat_one_month,
-                                                           czb_upload_status: '未上传',
-                                                           cx: car_user_info.cx
+      begin
+        #数据回传到车置宝
+        UserSystem::ChezhibaoCarUserInfo.create_czb_car_info name: car_user_info.name,
+                                                             phone: car_user_info.phone,
+                                                             brand: car_user_info.brand,
+                                                             city_chinese: car_user_info.city_chinese,
+                                                             che_ling: car_user_info.che_ling,
+                                                             car_user_info_id: car_user_info.id,
+                                                             milage: car_user_info.milage,
+                                                             price: car_user_info.price,
+                                                             is_real_cheshang: car_user_info.is_real_cheshang,
+                                                             is_city_match: car_user_info.is_city_match,
+                                                             is_pachong: car_user_info.is_pachong,
+                                                             is_repeat_one_month: car_user_info.is_repeat_one_month,
+                                                             czb_upload_status: '未上传',
+                                                             cx: car_user_info.cx,
+                                                             site_name: car_user_info.site_name
+      rescue Exception => e
+        pp '更新车置宝异常'
+        pp e
+      end
+
     end
 
 
