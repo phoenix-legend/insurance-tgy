@@ -84,7 +84,7 @@ class UserSystem::CarBusinessUserInfo < ActiveRecord::Base
       end
     end
 
-    if not car_user_info.chexing.blank?
+    if not car_user_info.che_xing.blank?
       ["第一车网"].each do |p|
         if car_user_info.che_xing.include? p
           return true
