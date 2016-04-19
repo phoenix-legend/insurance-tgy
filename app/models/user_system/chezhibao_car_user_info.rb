@@ -49,41 +49,11 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
   end
 
   def self.encrypt str
-    require 'openssl'
-    require 'base64'
-    alg = 'DES-EDE3-CBC'
-    k = "jhcsvtjh"
 
-
-    dk = "jhcsvtjh"
-    # dk = '11451e1f'#Digest::MD5.hexdigest(k)#"k78242T1"
-    #
-    des = OpenSSL::Cipher::Cipher.new(alg)
-    iv = des.random_iv
-    des.pkcs5_keyivgen(k,iv)
-
-    des.encrypt
-
-
-    cipher = des.update(str)
-    cipher << des.final
-    pp cipher.length
-    pp cipher.unpack('H*')[0]
-    return Base64.encode64(cipher) #Base64编码，才能保存到数据库
-
-    # des =  OpenSSL::Cipher::Cipher.new('des-ede3')
-    # des.decrypt
-    # des.key = k # this step is where i'm having problems at
-    # cipher = des.update(encrypted) + des.final
-    # return Base64.encode64(cipher)
-
-    # des = OpenSSL::Cipher::Cipher.new("DES-ECB")
-    # des.encrypt
-    # des.key = k
-    # result = des.update(str)
-    # result << des.final
-    #
-    # return Base64.encode64(result)
+    response = `java -classpath #{Rails.root.to_s}/lib/a/commons-codec-1.10.jar:#{Rails.root.to_s}/lib a.Des #{str} #{KEY}`
+    response = response.split("\n")[1]
+    response = response.split("：")[1]
+    response
   end
 end
 __END__
