@@ -55,10 +55,29 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   WUBA_CITY = {
-      "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州",
-      "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆",
-      'bj' => '北京', 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "wx" => "无锡"
+      "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州","wh" => "武汉",
+      "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡","cq" => "重庆",
+      'bj' => '北京', 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江'
   } #, "cz" => "常州"
+
+  def self.get_58_sub_cities sub_party = 0
+    case sub_party
+      when 0
+        {
+            "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州","wh" => "武汉",
+        }
+      when 1
+        {
+            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡","cq" => "重庆",
+        }
+      else
+        {
+            'bj' => '北京', 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江'
+        }
+    end
+  end
+
+
 
 
 
@@ -212,10 +231,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
   end
 
-  def self.run_58
+  def self.run_58 sub_city_party = 0
     [1..1000].each do |i|
       begin
-        Wuba.get_car_user_list
+        Wuba.get_car_user_list sub_city_party
       rescue Exception => e
         pp e
       end

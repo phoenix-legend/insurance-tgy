@@ -1,8 +1,10 @@
 module Wuba
 
   # Wuba.get_car_user_list
-  def self.get_car_user_list lest_number = 20
-    city_hash = ::UserSystem::CarUserInfo::WUBA_CITY
+  # 增加分城市功能
+  def self.get_car_user_list lest_number = 20, sub_city_party = 0
+    # city_hash = ::UserSystem::CarUserInfo::WUBA_CITY
+    city_hash = ::UserSystem::CarUserInfo.get_58_sub_cities sub_city_party
     threads = []
     city_hash.each_pair do |areaid, areaname|
       threads.delete_if { |thread| thread.status == false }

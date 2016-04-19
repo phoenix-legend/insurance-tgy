@@ -26,6 +26,10 @@ module UploadTianTian
 
     car_user_info = car_user_info.reload
 
+    if not car_user_info.tt_id.blank?
+      return # 如果已经提交，就不再提交
+    end
+
     if car_user_info.phone.blank?
       is_select = false
     end
@@ -51,6 +55,8 @@ module UploadTianTian
     if car_user_info.brand.blank?
       is_select = false
     end
+
+
 
     unless UploadTianTian::CITY.include? car_user_info.city_chinese
       car_user_info.tt_upload_status = '城市不对'

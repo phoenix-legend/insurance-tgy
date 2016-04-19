@@ -9,7 +9,7 @@ namespace :pachong3chongwuba do
 
 		else
 			pp '前一次已完成， GO RUN'
-			UserSystem::CarUserInfo.run_58
+			UserSystem::CarUserInfo.run_58 1
 		end
 	end
 end
