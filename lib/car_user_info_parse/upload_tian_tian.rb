@@ -117,7 +117,7 @@ module UploadTianTian
       end
       user_info.tt_source = qudao
       user_info.tt_created_day = user_info.created_at.chinese_format_day
-      user_info.tt_id = id
+      user_info.tt_id = id  if not id.blank?
       user_info.tt_code = error
       user_info.tt_message = message
       user_info.tt_upload_status = '已上传'
