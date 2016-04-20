@@ -61,6 +61,7 @@ module Baixing
 
     car_user_infos.each do |car_user_info|
       sleep 1
+      car_user_info = car_user_info.reload
       next unless car_user_info.name.blank?
       next unless car_user_info.phone.blank?
 
