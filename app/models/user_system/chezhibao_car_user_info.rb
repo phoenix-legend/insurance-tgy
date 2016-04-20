@@ -1,9 +1,12 @@
 class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
 
-  CITY_HASH = {"北京" => 1867, "重庆" => 1898, "青岛" => 1931, "郑州" => 1970, "武汉" => 2002, '长沙' => 2024,
-               "深圳" => 2053, "南京" => 2072, "无锡" => 2073, "苏州" => 2076, "镇江" => 2082, "成都" => 2102, "杭州" => 2123, "西安" => 2176,
-               "上海" => 1889, '常州' => 2075}
+  # CITY_HASH = {"北京" => 1867, "重庆" => 1898, "青岛" => 1931, "郑州" => 1970, "武汉" => 2002, '长沙' => 2024,
+  #              "深圳" => 2053, "南京" => 2072, "无锡" => 2073, "苏州" => 2076, "镇江" => 2082, "成都" => 2102, "杭州" => 2123, "西安" => 2176,
+  #              "上海" => 1889, '常州' => 2075}
+
+  CITY_HASH = {
+                "南京" => 2072, "无锡" => 2073, "苏州" => 2076, '常州' => 2075}
 
 
   # TestUrl = 'http://open.jzl.mychebao.com/apiService.hs'
@@ -23,7 +26,7 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
     czb.created_day = czb.created_at.chinese_format_day
     czb.save!
 
-    #UserSystem::ChezhibaoCarUserInfo.upload_czb czb
+    UserSystem::ChezhibaoCarUserInfo.upload_czb czb
   end
 
   # 获取所有城市
