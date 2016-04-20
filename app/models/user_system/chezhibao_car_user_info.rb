@@ -23,7 +23,7 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
     czb.created_day = czb.created_at.chinese_format_day
     czb.save!
 
-    UserSystem::ChezhibaoCarUserInfo.upload_czb czb
+    #UserSystem::ChezhibaoCarUserInfo.upload_czb czb
   end
 
   # 获取所有城市
