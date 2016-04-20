@@ -9,9 +9,11 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
   # TestUrl = 'http://open.jzl.mychebao.com/apiService.hs'
   ProcuctionUrl = 'http://open.mychebao.com/apiService.hs'
   # KEY = 'jhsdhsrr'
-  KEY = 'jhcsvtjh'
+  # KEY = 'jhcsvtjh'
+  KEY = 'pkbfeauv'
+  SOURCE = 459
   CLIENT = 'k78242T1'
-  SOURCE = 458
+
 
   # 创建车置宝车主信息
   def self.create_czb_car_info options
