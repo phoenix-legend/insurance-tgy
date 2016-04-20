@@ -48,6 +48,12 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
       return
     end
 
+    if ['58','ganji'].include? czb_car_user_info.site_name
+      czb_car_user_info.czb_upload_status = '先不进58，赶集'
+      czb_car_user_info.save!
+      return
+    end
+
     if not CITY_HASH.keys.include? czb_car_user_info.city_chinese
       pp '城市不对'
       czb_car_user_info.czb_upload_status = '城市不对'
