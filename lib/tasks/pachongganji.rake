@@ -3,7 +3,7 @@ namespace :pachongchongganji do
 	task :all => :environment do
 		jincheng = `ps -ef | grep pachongchongganji`
 		match_data = jincheng.split /\n/
-		if match_data.length > 4
+		if match_data.length > 21
 			pp '前一次未执行完毕，退出任务'
 
 		else
