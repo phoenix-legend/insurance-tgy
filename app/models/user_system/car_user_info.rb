@@ -269,19 +269,21 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
   def self.run_ganji party = 0
-    begin
-      Ganji.get_car_user_list party
-    rescue Exception => e
-      pp e
-    end
+    [1..1000].each do |i|
+      begin
+        Ganji.get_car_user_list party
+      rescue Exception => e
+        pp e
+      end
 
-    begin
-      # Ganji.update_detail
-    rescue Exception => e
-      pp e
+      begin
+        # Ganji.update_detail
+      rescue Exception => e
+        pp e
+      end
+      pp '赶集再来一遍。。。'
+      pp "现在赶集时间 #{Time.now.chinese_format}"
     end
-    pp '赶集再来一遍。。。'
-    pp "现在赶集时间 #{Time.now.chinese_format}"
   end
 
   def self.run_baixing
