@@ -1,14 +1,14 @@
 module Ganji
 
   # Ganji.get_car_user_list
-  def self.get_car_user_list
-    city_hash = ::UserSystem::CarUserInfo::GANJI_CITY
+  def self.get_car_user_list party = 0
+    city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
     threads = []
     city_hash.each_pair do |areaid, areaname|
       threads.delete_if { |thread| thread.status == false }
-      if threads.length > 15
+      if threads.length > 20
         pp "现在共有#{threads.length}个线程正在运行"
-        sleep 3
+        sleep 1
       end
       t = Thread.new do
         begin
@@ -63,6 +63,17 @@ module Ganji
                                                                     price: price,
                                                                     site_name: 'ganji',
                                                                     is_cheshang: is_cheshang
+
+              if result == 0
+                u = detail_url.split('?')[0]
+
+                unless u.blank?
+                  c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
+                  Wuba.update_one_detail c.id if not c.blank?
+                end
+              end
+
+
 
               exists_car_number = exists_car_number + 1 if result == 1
             end
@@ -165,6 +176,65 @@ module Ganji
       threads.delete_if { |thread| thread.status == false }
       break if threads.blank?
     end
+
+  end
+
+
+  def self.update_one_detail car_user_info_id
+    car_user_info = UserSystem::CarUserInfo.find car_user_info_id
+
+    return unless car_user_info.name.blank?
+    return unless car_user_info.phone.blank?
+    return if car_user_info.detail_url.match /zhineng/
+
+
+    begin
+      puts '开始跑明细'
+      pp car_user_info.detail_url
+      response = RestClient.get(car_user_info.detail_url)
+      detail_content = response.body
+      detail_content = Nokogiri::HTML(detail_content)
+      note, phone , name = '', '', ''
+      ps = detail_content.css('.detail-describe p')
+      return if ps.blank?
+      ps.each do |p|
+        text = begin p.text rescue '' end
+        case text
+          when /联系人：/
+            name = text
+          when /电话：/
+            phone = text
+          when /详细信息：/
+            note = text
+        end
+      end
+      brand = ps[1].css('a').text
+
+      note = note.gsub('详细信息：','')
+      name = name.gsub('联系人：', '')
+      phone = phone.gsub('电话：','')
+      fabushijian = detail_content.css('.mod-detail .detail-meta span')[0].text
+      fabushijian = fabushijian.gsub("发布:", '')
+      fabushijian = fabushijian.gsub("\n", '')
+      fabushijian = fabushijian.gsub("\r", '')
+      fabushijian = fabushijian.gsub("  ", '')
+      fabushijian = "2016-#{fabushijian}"
+
+
+      UserSystem::CarUserInfo.update_detail id: car_user_info.id,
+                                            name: name,
+                                            phone: phone,
+                                            note: note,
+                                            fabushijian: fabushijian,
+                                            brand: brand
+
+    rescue Exception => e
+      pp e
+      pp $@
+      car_user_info.need_update = false
+      car_user_info.save
+    end
+
 
   end
 

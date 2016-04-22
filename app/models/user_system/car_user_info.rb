@@ -48,10 +48,29 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   GANJI_CITY = {
-      "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州",
-      "wh" => "武汉", "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", 'bj' => '北京',
-      'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', "wx" => "无锡"
+      "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉",
+       "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "wx" => "无锡",
+      'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', 'bj' => '北京'
   } #, "changzhou" => "常州"
+  def self.get_ganji_sub_cities sub_party = 0
+    case sub_party
+      when 0
+        {
+            "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉"
+        }
+      when 1
+        {
+            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "wx" => "无锡"
+        }
+      else
+        {
+            'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', 'bj' => '北京'
+        }
+    end
+  end
+
+
+
 
 
   WUBA_CITY = {
@@ -249,17 +268,21 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
   end
 
-  def self.run_ganji
-    begin
-      Ganji.get_car_user_list
-    rescue Exception => e
-      pp e
-    end
+  def self.run_ganji party = 0
+    [1..1000].each do |i|
+      begin
+        Ganji.get_car_user_list party
+      rescue Exception => e
+        pp e
+      end
 
-    begin
-      Ganji.update_detail
-    rescue Exception => e
-      pp e
+      begin
+        # Ganji.update_detail
+      rescue Exception => e
+        pp e
+      end
+      pp '赶集再来一遍。。。'
+      pp "现在赶集时间 #{Time.now.chinese_format}"
     end
   end
 

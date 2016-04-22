@@ -1,9 +1,9 @@
-namespace :pachongchongganji do
-	desc "每天更新班级状态  rake pachongchongganji:all RAILS_ENV=production"
+namespace :pachong2chongganji do
+	desc "每天更新班级状态  rake pachong2chongganji:all RAILS_ENV=production"
 	task :all => :environment do
-		jincheng = `ps -ef | grep pachongchongganji`
+		jincheng = `ps -ef | grep pachong2chongganji`
 		match_data = jincheng.split /\n/
-		if match_data.length > 21
+		if match_data.length > 8
 			pp '前一次未执行完毕，退出任务'
 
 		else
