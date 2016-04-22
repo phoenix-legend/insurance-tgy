@@ -132,14 +132,14 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
         ids << ",#{cui.czb_id}"
       end
       # 每200个更新一次
-      if i%200 ==0
-        query_and_update_czb_id ids
+      if i%20 ==0
+        UserSystem::ChezhibaoCarUserInfo.query_and_update_czb_id ids
         i = 0
-        ids = 0
+        ids = ""
       end
     end
     if i>0
-      query_and_update_czb_idids
+      UserSystem::ChezhibaoCarUserInfo.query_and_update_czb_id ids
     end
   end
 
@@ -150,6 +150,7 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
                                                client: CLIENT,
                                                carid: UserSystem::ChezhibaoCarUserInfo.encrypt(ids),
                                                source: SOURCE}
+    response = JSON.parse response
     if response["resultCode"] == 1
       response["resultData"].each do |data|
         cui = UserSystem::ChezhibaoCarUserInfo.where("czb_id = ?", data["carid"]).first

@@ -69,7 +69,7 @@ module Ganji
 
                 unless u.blank?
                   c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
-                  Wuba.update_one_detail c.id if not c.blank?
+                  Ganji.update_one_detail c.id if not c.blank?
                 end
               end
 
