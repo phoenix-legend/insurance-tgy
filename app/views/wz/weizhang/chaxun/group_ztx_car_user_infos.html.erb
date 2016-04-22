@@ -1,0 +1,36 @@
+<h1 style="text-align: center">下载页面</h1>
+<h6 style="color: red;text-align: center"><%= flash[:alert].blank? ? '' : flash[:alert] %></h6>
+  <center>
+  <table>
+    <thead>
+    <th>文件名</th><th>提交日期</th><th>密码</th><th>操作</th>
+    </thead>
+    <% @group_car_user_infos.each do |group| %>
+        <tr>
+            <%= form_tag "/wz/weizhang/chaxun/ztx_car_user_infos_download" do %>
+                <%= hidden_field_tag 'id', group.id %>
+                <td><%= group.name %></td>
+                <td><%= group.post_date.to_s %></td>
+                <td><label>验证密码</label><%= password_field_tag 'password', '' %></td>
+                <td><%= submit_tag '下载' %></td>
+            <% end %>
+        </tr>
+    <% end %>
+
+  </table>
+    <center>
+
+<style>
+    table{border-collapse:collapse;border-spacing:0;border-left:1px solid #888;border-top:1px solid #888;background:#efefef;}
+    th,td{border-right:1px solid #888;border-bottom:1px solid #888;padding:5px 15px;}
+    th{font-weight:bold;background:#ccc;}
+    body{text-align: center;}
+    #center{ margin-right: auto;
+        margin-left: auto;
+        /*height:200px;*/
+        /*background:#f00;*/
+        /*width:400px;*/
+        vertical-align:middle;
+    }
+
+</style>

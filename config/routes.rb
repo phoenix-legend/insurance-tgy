@@ -102,6 +102,13 @@ Rails.application.routes.draw do
           get :car_user_info
           get :no_weizhang
           post :result
+
+          get :ztx_car_user_infos
+          post :ztx_car_user_infos
+
+          get :group_ztx_car_user_infos
+          post :ztx_car_user_infos_download
+
         end
       end
     end

@@ -8,6 +8,44 @@ class Wz::Weizhang::ChaxunController < Wz::WangzhanController
 
   end
 
+  def ztx_car_user_infos
+    begin
+      if request.post?
+        BusinessException.raise '请提交文件' if params[:excel].blank?
+        UserSystem::ZtxCarUserInfo.save_and_post_car_user_infos params[:excel], Time.now.to_date
+        flash[:success] = '上传完毕'
+        redirect_to action: :ztx_car_user_infos
+      else
+        @group_car_user_infos = UserSystem::GroupCarUserInfo.all.order(created_at: :desc)
+      end
+    rescue Exception => e
+      dispose_exception e
+      flash[:alert] = get_notice
+      redirect_to action: :ztx_car_user_infos
+    end
+  end
+
+
+  def group_ztx_car_user_infos
+    @group_car_user_infos = UserSystem::GroupCarUserInfo.all.order(created_at: :desc)
+  end
+
+  def ztx_car_user_infos_download
+    begin
+    if params[:password] == "146098"
+      file_name = UserSystem::GroupCarUserInfo.find(params[:id]).download
+      send_file file_name
+    else
+      BusinessException.raise '密码不对'
+    end
+
+    rescue Exception => e
+      dispose_exception e
+      flash[:alert] = get_notice
+      redirect_to action: :ztx_car_user_infos
+    end
+  end
+
   def index
     product_id = ::OrderSystem::Product.find_by_server_name("weizhang").id
     @product = ::OrderSystem::Product.find product_id
