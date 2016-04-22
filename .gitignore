@@ -53,5 +53,7 @@ solr/default/data
 db/schema.rb
 #bin/
 /dump/*.*
-
+public/temp
+public/temp/
+public/temp/*.*
 /.vagrant

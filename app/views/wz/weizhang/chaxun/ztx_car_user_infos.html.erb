@@ -1,0 +1,103 @@
+<% unless flash[:alert].blank? %>
+<h6 style="color: red;text-align: center"><%= flash[:alert].blank? ? '' : flash[:alert] %></h6>
+<% end %>
+<% unless flash[:success].blank? %>
+    <h6 style="color: red;text-align: center"><%= flash[:success].blank? ? '' : flash[:success] %></h6>
+<% end %>
+
+<br/>
+<h1 style="text-align: center">ztx提交车信息</h1>
+<br/>
+<%= form_tag '/wz/weizhang/chaxun/ztx_car_user_infos', multipart: true do %>
+<div style="text-align: center">
+    <h4>选择要提交的excel文件</h4>
+    <%= file_field_tag :excel %>
+</div>
+    <div style="text-align: center">
+    <span style="text-align: center"> <%= submit_tag '提交', class: 'button orange' %></span>
+    </div>
+<% end %>
+
+ <br/><br/>
+
+<h1 style="text-align: center">下载</h1>
+
+<center>
+  <table>
+    <thead>
+    <th>文件名</th><th>提交日期</th><th>密码</th><th>操作</th>
+    </thead>
+    <% @group_car_user_infos.each do |group| %>
+        <tr>
+          <%= form_tag "/wz/weizhang/chaxun/ztx_car_user_infos_download" do %>
+              <%= hidden_field_tag 'id', group.id %>
+              <td><%= group.name %></td>
+              <td><%= group.post_date.to_s %></td>
+              <td><label>验证密码</label><%= password_field_tag 'password', '' %></td>
+              <td><%= submit_tag '下载', class: 'button orange' %></td>
+          <% end %>
+        </tr>
+    <% end %>
+
+  </table>
+  <center>
+
+    <style>
+        table{border-collapse:collapse;border-spacing:0;border-left:1px solid #888;border-top:1px solid #888;background:#efefef;}
+        th,td{border-right:1px solid #888;border-bottom:1px solid #888;padding:5px 15px;}
+        th{font-weight:bold;background:#ccc;}
+        body{text-align: center;}
+        #center{ margin-right: auto;
+            margin-left: auto;
+            /*height:200px;*/
+            /*background:#f00;*/
+            /*width:400px;*/
+            vertical-align:middle;
+        }
+
+
+        .button {
+            display: inline-block;
+            outline: none;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            font: 14px/100% Arial, Helvetica, sans-serif;
+            padding: .5em 2em .55em;
+            text-shadow: 0 1px 1px rgba(0,0,0,.3);
+            -webkit-border-radius: .5em;
+            -moz-border-radius: .5em;
+            border-radius: .5em;
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+            -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+            box-shadow: 0 1px 2px rgba(0,0,0,.2);
+        }
+        .button:hover {
+            text-decoration: none;
+        }
+        .button:active {
+            position: relative;
+            top: 1px;
+        }
+
+        .orange {
+            color: #fef4e9;
+            border: solid 1px #da7c0c;
+            background: #f78d1d;
+            background: -webkit-gradient(linear, left top, left bottom, from(#faa51a), to(#f47a20));
+            background: -moz-linear-gradient(top,  #faa51a,  #f47a20);
+            filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a', endColorstr='#f47a20');
+        }
+        .orange:hover {
+            background: #f47c20;
+            background: -webkit-gradient(linear, left top, left bottom, from(#f88e11), to(#f06015));
+            background: -moz-linear-gradient(top,  #f88e11,  #f06015);
+            filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f88e11', endColorstr='#f06015');
+        }
+        .orange:active {
+            color: #fcd3a5;
+            background: -webkit-gradient(linear, left top, left bottom, from(#f47a20), to(#faa51a));
+            background: -moz-linear-gradient(top,  #f47a20,  #faa51a);
+            filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f47a20', endColorstr='#faa51a');
+        }
+    </style>
