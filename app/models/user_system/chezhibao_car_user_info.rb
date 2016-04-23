@@ -51,8 +51,8 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
       return
     end
 
-    if ['58','ganji'].include? czb_car_user_info.site_name
-      czb_car_user_info.czb_upload_status = '先不进58，赶集'
+    if ['58','ganji','che168'].include? czb_car_user_info.site_name
+      czb_car_user_info.czb_upload_status = '先不进58，赶集,168'
       czb_car_user_info.save!
       return
     end
