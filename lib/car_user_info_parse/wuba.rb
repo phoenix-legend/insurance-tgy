@@ -51,7 +51,7 @@ module Wuba
 
               cheling = tr.css('.t p')[0].children[0].text
               cheling = cheling.gsub(/购于|年|\n|\r|\s/, '')
-              milage = tr.css('.t p')[0].children[2].text
+              milage = begin tr.css('.t p')[0].children[2].text rescue '8.0' end
               milage = milage.gsub(/万|公里/, '')
               url = tr.css('td .t')[0].attributes["href"].value
               begin

@@ -57,7 +57,6 @@ module UploadTianTian
     end
 
 
-
     unless UploadTianTian::CITY.include? car_user_info.city_chinese
       car_user_info.tt_upload_status = '城市不对'
       is_select = false
@@ -117,7 +116,7 @@ module UploadTianTian
       end
       user_info.tt_source = qudao
       user_info.tt_created_day = user_info.created_at.chinese_format_day
-      user_info.tt_id = id  if not id.blank?
+      user_info.tt_id = id if not id.blank?
       user_info.tt_code = error
       user_info.tt_message = message
       user_info.tt_upload_status = '已上传'
@@ -165,18 +164,18 @@ module UploadTianTian
       #   elsif car_user_info.site_name == '58'
       #     source = "23-23-5"
       #   end
-        url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
-        response = RestClient.get url
-        response = JSON.parse response
-        pp "#{response["result"]["invite"]} ~~  #{car_user_info.tt_id}"
+      url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
+      response = RestClient.get url
+      response = JSON.parse response
+      pp "#{response["result"]["invite"]} ~~  #{car_user_info.tt_id}"
 
-        if not response["result"]["invite"].blank? and car_user_info.tt_yaoyue.blank?
-          car_user_info.tt_yaoyue = response["result"]["invite"]
-          car_user_info.tt_yaoyue_time = DateTime.now.chinese_format
-          car_user_info.tt_yaoyue_day = car_user_info.tt_yaoyue_time.chinese_format_day
-          car_user_info.save!
-          i = i+1
-        end
+      if not response["result"]["invite"].blank? and car_user_info.tt_yaoyue.blank?
+        car_user_info.tt_yaoyue = response["result"]["invite"]
+        car_user_info.tt_yaoyue_time = DateTime.now.chinese_format
+        car_user_info.tt_yaoyue_day = car_user_info.tt_yaoyue_time.chinese_format_day
+        car_user_info.save!
+        i = i+1
+      end
       # end
       # threads << t
 
@@ -194,7 +193,6 @@ module UploadTianTian
     pp "本次新增#{i}个。 "
     # pp "总共#{i+j}个"
   end
-
 
 
   # UploadTianTian.get_now_status  参数为是否实时
@@ -269,6 +267,7 @@ module UploadTianTian
     pp "#{d}: 成功#{success}个，未知#{weizhi}个,失败#{shibai}个，总共#{cuis.length}个"
 
   end
+
   # end
 
   def self.aaa str
@@ -280,25 +279,25 @@ module UploadTianTian
   end
 
   def self.get_qudao_zongjie
-        cuis = ::UserSystem::CarUserInfo.where("tt_yaoyue = '成功' and tt_source is null")
-        cuis.each do |cui|
-          source = "23-23-1"
-          if cui.site_name == 'baixing' or cui.site_name == 'zuoxi'
-            source = "23-23-4"
-          elsif cui.site_name == '58'
-            source = "23-23-5"
-          end
-          pp cui.id
-          cui.tt_source = source if cui.tt_source.blank?
-          cui.tt_created_day = cui.created_at.chinese_format_day if cui.tt_created_day.blank?
-          # cui.tt_yaoyue_day = cui.tt_yaoyue_time.chinese_format_day unless cui.tt_yaoyue_time.blank?
-          cui.save!
-        end
+    cuis = ::UserSystem::CarUserInfo.where("tt_yaoyue = '成功' and tt_source is null")
+    cuis.each do |cui|
+      source = "23-23-1"
+      if cui.site_name == 'baixing' or cui.site_name == 'zuoxi'
+        source = "23-23-4"
+      elsif cui.site_name == '58'
+        source = "23-23-5"
+      end
+      pp cui.id
+      cui.tt_source = source if cui.tt_source.blank?
+      cui.tt_created_day = cui.created_at.chinese_format_day if cui.tt_created_day.blank?
+      # cui.tt_yaoyue_day = cui.tt_yaoyue_time.chinese_format_day unless cui.tt_yaoyue_time.blank?
+      cui.save!
+    end
 
-      #  统计某个渠道某天有多少提交，多少成功意向
-      # select tt_yaoyue_day,tt_source, count(*) from car_user_infos where tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day is not null group by tt_source, tt_yaoyue_day order by tt_yaoyue_day asc
-      #
-      # select tt_created_day,tt_source, count(*) from car_user_infos where tt_id is not null and tt_created_day is not null group by tt_source, tt_created_day order by tt_created_day asc
+    #  统计某个渠道某天有多少提交，多少成功意向
+    # select tt_yaoyue_day,tt_source, count(*) from car_user_infos where tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day is not null group by tt_source, tt_yaoyue_day order by tt_yaoyue_day asc
+    #
+    # select tt_created_day,tt_source, count(*) from car_user_infos where tt_id is not null and tt_created_day is not null group by tt_source, tt_created_day order by tt_created_day asc
   end
 
 
@@ -325,11 +324,11 @@ module UploadTianTian
   def self.xiazai_tt_detail_by_day start_day = '2016-03-01', end_day = '2016-03-10'
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
-    ['23-23-1','23-23-4','23-23-5'].each_with_index do |qudao,i|
+    ['23-23-1', '23-23-4', '23-23-5'].each_with_index do |qudao, i|
       cuis = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_source = '#{qudao}' and tt_yaoyue_day >= '#{start_day}' and  tt_yaoyue_day <= '#{end_day}' and tt_yaoyue = '成功' and tt_yaoyue_day is not null")
       cuis.order(tt_yaoyue_day: :asc, tt_source: :asc)
       sheet1 = book.create_worksheet name: "#{qudao}意向列表"
-      ['ID', '渠道', '邀约日期','状态'].each_with_index do |content, i|
+      ['ID', '渠道', '邀约日期', '状态'].each_with_index do |content, i|
         sheet1.row(0)[i] = content
       end
       current_row = 1
@@ -348,7 +347,7 @@ module UploadTianTian
   end
 
 
-    # UploadTianTian.query_order_shibai
+  # UploadTianTian.query_order_shibai
   #  把失败的数据，再更新一遍，以便从失败中捡漏
   def self.query_order_shibai
     car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '失败'").order(id: :desc)
@@ -362,7 +361,7 @@ module UploadTianTian
       pp car_user_info.tt_id
       pp '..........................'
       next if response["result"]["invite"] == '失败'
-      if  !response["result"]["invite"].blank? and car_user_info.tt_yaoyue == '失败'
+      if !response["result"]["invite"].blank? and car_user_info.tt_yaoyue == '失败'
         car_user_info.tt_yaoyue = response["result"]["invite"]
         car_user_info.tt_yaoyue_time = DateTime.now.chinese_format
         car_user_info.tt_yaoyue_day = car_user_info.tt_yaoyue_time.chinese_format_day
@@ -371,5 +370,38 @@ module UploadTianTian
       end
     end
     pp "本次新增#{i}个。 "
+  end
+
+
+
+  # 真正提交上去的和单竞争对手比较
+  def self.really_jiao_bijiao  is_detail = false
+    ['58','ganji','baixing','che168','taoche'].each do |site_name|
+      pp "----------------------开始#{site_name}-----------------"
+
+      all_number = 0
+      our_number = 0
+      cuis = UserSystem::CarUserInfo.where("site_name = '#{site_name}' and tt_upload_status = '已上传' and id > 553263 and is_repeat_one_month = false").order(id: :desc).limit(400).
+          select("id, name , phone, tt_upload_status,city_chinese, tt_id, tt_message, brand, created_at, site_name,is_repeat_one_month ")
+      a = []
+      cuis.each do |cui|
+        if cui.tt_id.blank?
+          count = UserSystem::CarUserInfo.where("phone = ? and id < ?", cui.phone, cui.id).count
+          if count == 0
+            a<< "        #{cui.tt_message}"
+            all_number += 1
+          end
+        else
+          a<< "#{cui.tt_id}#{cui.tt_message}"
+          all_number += 1
+          our_number += 1
+        end
+      end
+      pp a if is_detail
+      pp "总数量 #{all_number}, 我们的数量 #{our_number}"
+      pp our_number.to_f / all_number
+    end
+
+    return ''
   end
 end

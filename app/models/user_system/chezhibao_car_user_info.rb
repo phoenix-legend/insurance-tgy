@@ -120,6 +120,7 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
     pp response
   end
 
+  # UserSystem::ChezhibaoCarUserInfo.query_data
   def self.query_data
     ids = ""
     i = 0
@@ -169,6 +170,22 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
       pp 'WARN:  接口更新异常'
       pp response["resultMessage"]
     end
+  end
+
+  def self.q
+
+    d = Date.parse('2016-04-17')
+    while true
+      count_maoshuju = UserSystem::ChezhibaoCarUserInfo.where("czb_id is not null and created_at >= '#{d.chinese_format_day} 00:00:00' and created_at <= '#{d.chinese_format_day} 23:59:59'").count
+      count_chenggong = UserSystem::ChezhibaoCarUserInfo.where("czb_id is not null and yaoyue_day = ? and czb_yaoyue = '成功'", d).count
+      pp "#{d} 成功数据/毛数据 = #{count_chenggong}/#{count_maoshuju} = #{if count_maoshuju == 0 then 'NaN' else (((count_chenggong.to_f/count_maoshuju)*10000).to_i).to_f/100 end}%"
+
+      d = d+1.day
+      break if Date.today < d
+    end
+
+
+
   end
 
   def self.encrypt str
