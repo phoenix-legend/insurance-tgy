@@ -20,6 +20,10 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
 
   # 创建车置宝车主信息
   def self.create_czb_car_info options
+
+    cui = UserSystem::ChezhibaoCarUserInfo.find_by_car_user_info_id options[:car_user_info_id]
+    return unless cui.blank?
+
     czb = UserSystem::ChezhibaoCarUserInfo.new options
     czb.save!
 

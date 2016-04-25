@@ -1,11 +1,12 @@
 module Che168
 
   # Che168.get_car_user_list
-  def self.get_car_user_list
+  def self.get_car_user_list party = 0
     car_price_start = 1
     car_price_end = 1000
     number_per_page = 10
-    city_hash = ::UserSystem::CarUserInfo::ALL_CITY
+    # city_hash = ::UserSystem::CarUserInfo::ALL_CITY
+    city_hash = ::UserSystem::CarUserInfo.get_che168_sub_cities party
     threads = []
     city_hash.each_pair do |areaid, areaname|
       threads.delete_if { |thread| thread.status == false }
@@ -36,6 +37,16 @@ module Che168
                                                                     detail_url: url,
                                                                     city_chinese: areaname,
                                                                     site_name: 'che168'
+
+              if result == 0
+                u = url
+
+                unless u.blank?
+                  c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
+                  Che168.update_one_detail c.id if not c.blank?
+                end
+              end
+
               exists_car_number = exists_car_number + 1 if result == 1
             end
             if car_number - exists_car_number < 3
@@ -116,6 +127,46 @@ module Che168
       break if threads.blank?
     end
 
+  end
+
+
+  def self.update_one_detail car_user_info_id
+    car_user_info = UserSystem::CarUserInfo.find car_user_info_id
+
+    return unless car_user_info.name.blank?
+    return unless car_user_info.phone.blank?
+    return if car_user_info.detail_url.match /m\.hao\.autohome\.com\.cn/
+
+    begin
+
+
+      # detail_content = `curl '#{car_user_info.detail_url}'`
+      pp car_user_info.detail_url
+      response = RestClient.get(car_user_info.detail_url)
+      detail_content = response.body
+      detail_content = Nokogiri::HTML(detail_content)
+      connect_info = detail_content.css("#callPhone")[0]
+      name = connect_info.css("span").text.strip
+      phone = connect_info.attributes["data-telno"].value.strip
+      note = begin
+        detail_content.css("#js-message")[0].text.strip rescue ''
+      end
+      time = detail_content.css(".carousel-images h2")[0].text.gsub("发布", '').strip[0..9]
+      price = detail_content.css(".info-price")[0].text.gsub("¥", '').strip
+
+      UserSystem::CarUserInfo.update_detail id: car_user_info.id,
+                                            name: name,
+                                            phone: phone,
+                                            note: note,
+                                            price: price,
+                                            fabushijian: time
+
+    rescue Exception => e
+      pp e
+      pp $@
+      car_user_info.need_update = false
+      car_user_info.save
+    end
   end
 
 
