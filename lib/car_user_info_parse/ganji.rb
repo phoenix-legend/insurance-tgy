@@ -197,7 +197,9 @@ module Ganji
       detail_content = Nokogiri::HTML(detail_content)
       note, phone, name = '', '', ''
       ps = detail_content.css('.detail-describe p')
-      return if ps.blank?
+      if ps.blank?
+        pp ps
+      end
       ps.each do |p|
         text = begin
           p.text rescue ''
