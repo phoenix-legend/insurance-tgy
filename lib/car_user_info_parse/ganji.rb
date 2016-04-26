@@ -63,6 +63,8 @@ module Ganji
                                                                     price: price,
                                                                     site_name: 'ganji',
                                                                     is_cheshang: is_cheshang
+              pp "result  = #{result}"
+              pp detail_url.split('?')[0]
 
               if result == 0
                 u = detail_url.split('?')[0]
@@ -70,6 +72,8 @@ module Ganji
                 unless u.blank?
                   c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
                   Ganji.update_one_detail c.id if not c.blank?
+                else
+                  pp "赶集没找到url:#{u}"
                 end
               end
 
