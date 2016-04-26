@@ -204,8 +204,8 @@ module Ganji
         ps = detail_content.css('.detail-describe p')
         if ps.blank?
           pp "ps 为空，网页异常"
-          car_user_info.need_update = false
-          car_user_info.save
+          car_user_info.destroy!
+          return
         end
       end
       ps.each do |p|
