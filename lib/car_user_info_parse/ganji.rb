@@ -63,10 +63,11 @@ module Ganji
                                                                     price: price,
                                                                     site_name: 'ganji',
                                                                     is_cheshang: is_cheshang
-              pp "result  = #{result}"
-              pp detail_url.split('?')[0]
+
 
               if result == 0
+                pp "result  = #{result}"
+                pp detail_url.split('?')[0]
                 u = detail_url.split('?')[0]
 
                 unless u.blank?
