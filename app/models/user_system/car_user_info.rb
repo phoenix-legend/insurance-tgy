@@ -119,6 +119,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     return 0
   end
 
+  def self.create_car_user_info2 options
+    user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]
+    return nil if user_infos.length > 0
+
+    car_user_info = UserSystem::CarUserInfo.new options
+    car_user_info.save!
+    car_user_info.id
+  end
+
   def self.create_car_user_info_and_return_id options
     user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]
     return user_infos.first if user_infos.length > 0

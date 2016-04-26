@@ -55,28 +55,21 @@ module Ganji
               if cheshang == '[好车]'
                 is_cheshang = 1
               end
-              result = UserSystem::CarUserInfo.create_car_user_info che_xing: chexing,
-                                                                    che_ling: cheling,
-                                                                    milage: licheng,
-                                                                    detail_url: detail_url.split('?')[0],
-                                                                    city_chinese: areaname,
-                                                                    price: price,
-                                                                    site_name: 'ganji',
-                                                                    is_cheshang: is_cheshang
+              cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: chexing,
+                                                                     che_ling: cheling,
+                                                                     milage: licheng,
+                                                                     detail_url: detail_url.split('?')[0],
+                                                                     city_chinese: areaname,
+                                                                     price: price,
+                                                                     site_name: 'ganji',
+                                                                     is_cheshang: is_cheshang
 
 
-              if result == 0
-                pp "result  = #{result}"
-                pp detail_url.split('?')[0]
-                u = detail_url.split('?')[0]
 
-                unless u.blank?
-                  c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
-                  Ganji.update_one_detail c.id if not c.blank?
-                else
-                  pp "赶集没找到url:#{u}"
+
+                unless cui_id.blank?
+                  Ganji.update_one_detail cui_id
                 end
-              end
 
 
 
@@ -104,6 +97,7 @@ module Ganji
       break if threads.blank?
     end
   end
+
   # Ganji.update_detail
   def self.update_detail
     threads = []
@@ -112,7 +106,6 @@ module Ganji
     car_user_infos.each do |car_user_info|
       next unless car_user_info.name.blank?
       next unless car_user_info.phone.blank?
-
 
 
       if threads.length > 30
@@ -129,11 +122,13 @@ module Ganji
           pp
           detail_content = response.body
           detail_content = Nokogiri::HTML(detail_content)
-          note, phone , name = '', '', ''
+          note, phone, name = '', '', ''
           ps = detail_content.css('.detail-describe p')
           next if ps.blank?
           ps.each do |p|
-            text = begin p.text rescue '' end
+            text = begin
+              p.text rescue ''
+            end
             case text
               when /联系人：/
                 name = text
@@ -145,9 +140,9 @@ module Ganji
           end
           brand = ps[1].css('a').text
 
-          note = note.gsub('详细信息：','')
+          note = note.gsub('详细信息：', '')
           name = name.gsub('联系人：', '')
-          phone = phone.gsub('电话：','')
+          phone = phone.gsub('电话：', '')
           fabushijian = detail_content.css('.mod-detail .detail-meta span')[0].text
           fabushijian = fabushijian.gsub("发布:", '')
           fabushijian = fabushijian.gsub("\n", '')
@@ -199,11 +194,13 @@ module Ganji
       response = RestClient.get(car_user_info.detail_url)
       detail_content = response.body
       detail_content = Nokogiri::HTML(detail_content)
-      note, phone , name = '', '', ''
+      note, phone, name = '', '', ''
       ps = detail_content.css('.detail-describe p')
       return if ps.blank?
       ps.each do |p|
-        text = begin p.text rescue '' end
+        text = begin
+          p.text rescue ''
+        end
         case text
           when /联系人：/
             name = text
@@ -215,9 +212,9 @@ module Ganji
       end
       brand = ps[1].css('a').text
 
-      note = note.gsub('详细信息：','')
+      note = note.gsub('详细信息：', '')
       name = name.gsub('联系人：', '')
-      phone = phone.gsub('电话：','')
+      phone = phone.gsub('电话：', '')
       fabushijian = detail_content.css('.mod-detail .detail-meta span')[0].text
       fabushijian = fabushijian.gsub("发布:", '')
       fabushijian = fabushijian.gsub("\n", '')
