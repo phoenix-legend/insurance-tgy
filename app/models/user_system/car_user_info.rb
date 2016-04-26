@@ -209,6 +209,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
     UploadTianTian.upload_one_tt car_user_info
 
+    # 同步至车置宝
     if car_user_info.is_pachong == false and UserSystem::ChezhibaoCarUserInfo::CITY_HASH.keys.include?(car_user_info.city_chinese)
       begin
         #数据回传到车置宝
@@ -231,7 +232,31 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         pp '更新车置宝异常'
         pp e
       end
+    end
 
+    #同步至优车
+    if car_user_info.is_pachong == false and UserSystem::YoucheCarUserInfo::CITY.include?(car_user_info.city_chinese)
+      begin
+        #数据回传到优车
+        UserSystem::YoucheCarUserInfo.create_czb_car_info name: car_user_info.name,
+                                                             phone: car_user_info.phone,
+                                                             brand: car_user_info.brand,
+                                                             city_chinese: car_user_info.city_chinese,
+                                                             che_ling: car_user_info.che_ling,
+                                                             car_user_info_id: car_user_info.id,
+                                                             milage: car_user_info.milage,
+                                                             price: car_user_info.price,
+                                                             is_real_cheshang: car_user_info.is_real_cheshang,
+                                                             is_city_match: car_user_info.is_city_match,
+                                                             is_pachong: car_user_info.is_pachong,
+                                                             is_repeat_one_month: car_user_info.is_repeat_one_month,
+                                                             czb_upload_status: '未上传',
+                                                             site_name: car_user_info.site_name,
+                                                             created_day: car_user_info.tt_created_day
+      rescue Exception => e
+        pp '更新优车异常'
+        pp e
+      end
     end
 
 

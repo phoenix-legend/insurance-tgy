@@ -377,11 +377,13 @@ module UploadTianTian
   # 真正提交上去的和单竞争对手比较
   def self.really_jiao_bijiao  is_detail = false
     ['58','ganji','baixing','che168','taoche'].each do |site_name|
-      pp "----------------------开始#{site_name}-----------------"
-
       all_number = 0
       our_number = 0
-      cuis = UserSystem::CarUserInfo.where("site_name = '#{site_name}' and tt_upload_status = '已上传' and id > 553263 and is_repeat_one_month = false").order(id: :desc).limit(1000)
+      pp '---------'*10
+      pp site_name
+
+      cuis = UserSystem::CarUserInfo.where("site_name = '#{site_name}' and tt_upload_status = '已上传' and id > 553263 and is_repeat_one_month = false ")
+      .order(id: :desc).limit(1000).
           select("id, name , phone, tt_upload_status,city_chinese, tt_id, tt_message, brand, created_at, site_name,is_repeat_one_month ")
       a = []
       cuis.each do |cui|
