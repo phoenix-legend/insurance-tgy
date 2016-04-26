@@ -12,8 +12,8 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
     cui = UserSystem::YoucheCarUserInfo.new options
     cui.save!
 
-    czb.created_day = czb.created_at.chinese_format_day
-    czb.save!
+    cui.created_day = cui.created_at.chinese_format_day
+    cui.save!
 
     # UserSystem::YoucheCarUserInfo.upload_youche cui
   end
