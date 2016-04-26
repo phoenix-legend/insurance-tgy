@@ -73,7 +73,7 @@ module Ganji
 
 
 
-              exists_car_number = exists_car_number + 1 if result == 1
+              exists_car_number = exists_car_number + 1 if cui_id.blank?
             end
             # 这里的数字代表还有几个是新的。 如果还有8辆以上是新车，继续翻页。 8以下，不翻。
             if car_number - exists_car_number < 3
