@@ -381,7 +381,7 @@ module UploadTianTian
 
       all_number = 0
       our_number = 0
-      cuis = UserSystem::CarUserInfo.where("site_name = '#{site_name}' and tt_upload_status = '已上传' and id > 553263 and is_repeat_one_month = false").order(id: :desc).limit(1000).
+      cuis = UserSystem::CarUserInfo.where("site_name = '#{site_name}' and tt_upload_status = '已上传' and id > 553263 and is_repeat_one_month = false").order(id: :desc).limit(1000)
           select("id, name , phone, tt_upload_status,city_chinese, tt_id, tt_message, brand, created_at, site_name,is_repeat_one_month ")
       a = []
       cuis.each do |cui|

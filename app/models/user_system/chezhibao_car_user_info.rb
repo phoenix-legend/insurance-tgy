@@ -5,8 +5,7 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
   #              "深圳" => 2053, "南京" => 2072, "无锡" => 2073, "苏州" => 2076, "镇江" => 2082, "成都" => 2102, "杭州" => 2123, "西安" => 2176,
   #              "上海" => 1889, '常州' => 2075}
 
-  CITY_HASH = {
-                "南京" => 2072, "无锡" => 2073, "苏州" => 2076, '常州' => 2075}
+  CITY_HASH = { "南京" => 2072, "无锡" => 2073, "苏州" => 2076, '常州' => 2075}
 
 
   # TestUrl = 'http://open.jzl.mychebao.com/apiService.hs'
@@ -49,6 +48,8 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
 
 
   def self.upload_czb czb_car_user_info
+
+
     if czb_car_user_info.phone.blank? or czb_car_user_info.brand.blank?
       czb_car_user_info.czb_upload_status = '信息不完整'
       czb_car_user_info.save!

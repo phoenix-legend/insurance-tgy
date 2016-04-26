@@ -239,17 +239,23 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   def self.run_che168 sub_city_party = 0
-    begin
-      Che168.get_car_user_list sub_city_party
-    rescue Exception => e
-      pp e
+    [1..1000].each do |i|
+      begin
+        Che168.get_car_user_list sub_city_party
+      rescue Exception => e
+        pp e
+      end
+      pp '168再来一遍。。。'
+      pp "168现在时间 #{Time.now.chinese_format}"
     end
 
-    begin
-      # Che168.update_detail
-    rescue Exception => e
-      pp e
-    end
+
+
+    # begin
+    #   # Che168.update_detail
+    # rescue Exception => e
+    #   pp e
+    # end
   end
 
   def self.run_taoche
@@ -279,8 +285,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       rescue Exception => e
         pp e
       end
-      pp '再来一遍。。。'
-      pp "现在时间 #{Time.now.chinese_format}"
+      pp '58再来一遍。。。'
+      pp "58现在时间 #{Time.now.chinese_format}"
     end
   end
 
