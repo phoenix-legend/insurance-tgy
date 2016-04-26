@@ -189,9 +189,10 @@ module Ganji
 
 
     begin
-      puts '开始跑明细'
+      pp "开始跑明细 #{car_user_info.id}"
       pp car_user_info.detail_url
       response = RestClient.get(car_user_info.detail_url)
+      pp "开始跑明细 #{car_user_info.id}  url #{car_user_info.detail_url}"
       detail_content = response.body
       detail_content = Nokogiri::HTML(detail_content)
       note, phone, name = '', '', ''
@@ -210,6 +211,7 @@ module Ganji
             note = text
         end
       end
+      pp "开始跑明细 #{car_user_info.id}  获取完详细信息"
       brand = ps[1].css('a').text
 
       note = note.gsub('详细信息：', '')
@@ -222,7 +224,7 @@ module Ganji
       fabushijian = fabushijian.gsub("  ", '')
       fabushijian = "2016-#{fabushijian}"
 
-
+      pp "开始跑明细 #{car_user_info.id}  准备更新"
       UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                             name: name,
                                             phone: phone,
@@ -231,6 +233,7 @@ module Ganji
                                             brand: brand
 
     rescue Exception => e
+      pp '-------------------------------------'
       pp e
       pp $@
       car_user_info.need_update = false
