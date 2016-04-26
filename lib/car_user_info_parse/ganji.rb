@@ -190,15 +190,23 @@ module Ganji
 
     begin
       pp "开始跑明细 #{car_user_info.id}"
-      pp car_user_info.detail_url
+
       response = RestClient.get(car_user_info.detail_url)
-      pp "开始跑明细 #{car_user_info.id}  url #{car_user_info.detail_url}"
       detail_content = response.body
       detail_content = Nokogiri::HTML(detail_content)
       note, phone, name = '', '', ''
       ps = detail_content.css('.detail-describe p')
       if ps.blank?
-        pp ps
+        response = RestClient.get(car_user_info.detail_url)
+        detail_content = response.body
+        detail_content = Nokogiri::HTML(detail_content)
+        note, phone, name = '', '', ''
+        ps = detail_content.css('.detail-describe p')
+        if ps.blank?
+          pp "ps 为空，网页异常"
+          car_user_info.need_update = false
+          car_user_info.save
+        end
       end
       ps.each do |p|
         text = begin
@@ -213,7 +221,7 @@ module Ganji
             note = text
         end
       end
-      pp "开始跑明细 #{car_user_info.id}  获取完详细信息"
+
       brand = ps[1].css('a').text
 
       note = note.gsub('详细信息：', '')
