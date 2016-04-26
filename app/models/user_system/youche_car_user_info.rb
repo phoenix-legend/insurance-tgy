@@ -4,7 +4,7 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
   CITY = ['天津', '北京']
 
   # 创建车置宝车主信息
-  def self.create_czb_car_info options
+  def self.create_car_info options
 
     cui = UserSystem::YoucheCarUserInfo.find_by_car_user_info_id options[:car_user_info_id]
     return unless cui.blank?

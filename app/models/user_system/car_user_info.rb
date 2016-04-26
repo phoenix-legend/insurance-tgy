@@ -23,15 +23,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   #             "230100" => "哈尔滨", "610100" => "西安", "510100" => "成都",
   #             "140100" => "太原", "120100" => "天津", "340100" => '合肥'}
 
-  ALL_CITY = {"310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州","420100" => "武汉",
-               "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆", "320200" => "无锡",
+  ALL_CITY = {"310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州", "420100" => "武汉",
+              "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆", "320200" => "无锡",
               "110100" => "北京", "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛"} #, "320400" => '常州'
 
   def self.get_che168_sub_cities sub_party = 0
     case sub_party
       when 0
         {
-            "310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州","420100" => "武汉"
+            "310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州", "420100" => "武汉"
         }
       when 1
         {
@@ -65,7 +65,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   GANJI_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉",
-       "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "wx" => "无锡",
+      "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "wx" => "无锡",
       'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', 'bj' => '北京'
   } #, "changzhou" => "常州"
   def self.get_ganji_sub_cities sub_party = 0
@@ -86,12 +86,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-
-
-
   WUBA_CITY = {
-      "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州","wh" => "武汉",
-      "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡","cq" => "重庆",
+      "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉",
+      "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆",
       'bj' => '北京', 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江'
   } #, "cz" => "常州"
 
@@ -99,11 +96,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     case sub_party
       when 0
         {
-            "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州","wh" => "武汉",
+            "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉",
         }
       when 1
         {
-            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡","cq" => "重庆",
+            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆",
         }
       else
         {
@@ -111,10 +108,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
     end
   end
-
-
-
-
 
 
   def self.create_car_user_info options
@@ -238,21 +231,21 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     if car_user_info.is_pachong == false and UserSystem::YoucheCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
         #数据回传到优车
-        UserSystem::YoucheCarUserInfo.create_czb_car_info name: car_user_info.name,
-                                                             phone: car_user_info.phone,
-                                                             brand: car_user_info.brand,
-                                                             city_chinese: car_user_info.city_chinese,
-                                                             che_ling: car_user_info.che_ling,
-                                                             car_user_info_id: car_user_info.id,
-                                                             milage: car_user_info.milage,
-                                                             price: car_user_info.price,
-                                                             is_real_cheshang: car_user_info.is_real_cheshang,
-                                                             is_city_match: car_user_info.is_city_match,
-                                                             is_pachong: car_user_info.is_pachong,
-                                                             is_repeat_one_month: car_user_info.is_repeat_one_month,
-                                                             czb_upload_status: '未上传',
-                                                             site_name: car_user_info.site_name,
-                                                             created_day: car_user_info.tt_created_day
+        UserSystem::YoucheCarUserInfo.create_car_info name: car_user_info.name,
+                                                      phone: car_user_info.phone,
+                                                      brand: car_user_info.brand,
+                                                      city_chinese: car_user_info.city_chinese,
+                                                      che_ling: car_user_info.che_ling,
+                                                      car_user_info_id: car_user_info.id,
+                                                      milage: car_user_info.milage,
+                                                      price: car_user_info.price,
+                                                      is_real_cheshang: car_user_info.is_real_cheshang,
+                                                      is_city_match: car_user_info.is_city_match,
+                                                      is_pachong: car_user_info.is_pachong,
+                                                      is_repeat_one_month: car_user_info.is_repeat_one_month,
+                                                      youche_upload_status: '未上传',
+                                                      site_name: car_user_info.site_name,
+                                                      created_day: car_user_info.tt_created_day
       rescue Exception => e
         pp '更新优车异常'
         pp e
@@ -273,7 +266,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       pp '168再来一遍。。。'
       pp "168现在时间 #{Time.now.chinese_format}"
     end
-
 
 
     # begin
@@ -300,7 +292,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   def self.run_58 sub_city_party = 0
     [1..1000].each do |i|
       begin
-        Wuba.get_car_user_list 20,sub_city_party
+        Wuba.get_car_user_list 20, sub_city_party
       rescue Exception => e
         pp e
       end
