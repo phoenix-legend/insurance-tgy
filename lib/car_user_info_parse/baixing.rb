@@ -2,6 +2,7 @@ module Baixing
 
   # Baixing.get_car_user_list
   def self.get_car_user_list
+    pp "现在时间:#{Time.now.chinese_format}"
     city_hash = ::UserSystem::CarUserInfo::BAIXING_PINYIN_CITY
 
     city_hash.each_pair do |areaid, areaname|
@@ -65,7 +66,7 @@ module Baixing
     car_user_infos = UserSystem::CarUserInfo.where ["need_update = ? and site_name = ? and id > ?", true, 'baixing', UserSystem::CarUserInfo::CURRENT_ID]
 
     car_user_infos.each do |car_user_info|
-      sleep 3
+
       car_user_info = car_user_info.reload
       next unless car_user_info.name.blank?
       next unless car_user_info.phone.blank?
@@ -75,6 +76,7 @@ module Baixing
         # car_user_info = UserSystem::CarUserInfo.find 689516
 
         detail_url = car_user_info.detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
+        sleep 3
         response = RestClient.get(detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
         if response.match /此信息未通过审核/
           car_user_info.need_update = false
