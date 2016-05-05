@@ -106,21 +106,22 @@ module Baixing
         licheng = info_hash["行驶里程："]
         name = info_hash["联系人姓名："]||'先生女士'
         phone =begin
-                 if detail_content.css("#contact-button")[0].blank?
-                   detail_content.css("#contact-button-bottom")[0].attributes["href"].value.gsub('tel:', '')
-                 else
-                   detail_content.css("#contact-button")[0].attributes["href"].value.gsub('tel:', '')
-                 end
+          if detail_content.css("#contact-button")[0].blank?
+            detail_content.css("#contact-button-bottom")[0].attributes["href"].value.gsub('tel:', '')
+          else
+            detail_content.css("#contact-button")[0].attributes["href"].value.gsub('tel:', '')
+          end
 
 
         rescue Exception => e
           pp 'xxx'*30
           sleep(5)
-                 pp e
-                 pp detail_url
-                 pp '获取电话失败'
-                 car_user_info.destroy
-                 next
+          pp e
+          pp detail_url
+          pp '获取电话失败'
+          car_user_info = car_user_info.reload
+          car_user_info.destroy if car_user_info.phone.blank?
+          next
         end
         fabushijian = '2010-01-01'
         note = detail_content.css('.eric_content').text
