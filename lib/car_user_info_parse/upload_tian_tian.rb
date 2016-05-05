@@ -321,7 +321,7 @@ module UploadTianTian
 
   # 指定日期区间的意向数据。
   # UploadTianTian.xiazai_tt_detail_by_day '2016-03-01', '2016-03-31'
-  def self.xiazai_tt_detail_by_day start_day = '2016-03-01', end_day = '2016-03-10'
+  def self.xiazai_tt_detail_by_day start_day = '2016-04-01', end_day = '2016-04-30'
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
     ['23-23-1', '23-23-4', '23-23-5'].each_with_index do |qudao, i|
@@ -373,17 +373,16 @@ module UploadTianTian
   end
 
 
-
   # 真正提交上去的和单竞争对手比较
-  def self.really_jiao_bijiao  is_detail = false
-    ['58','ganji','baixing','che168','taoche'].each do |site_name|
+  def self.really_jiao_bijiao is_detail = false
+    ['58', 'ganji', 'baixing', 'che168', 'taoche'].each do |site_name|
       all_number = 0
       our_number = 0
       pp '---------'*10
       pp site_name
 
       cuis = UserSystem::CarUserInfo.where("site_name = '#{site_name}' and tt_upload_status = '已上传' and id > 553263 and is_repeat_one_month = false ")
-      .order(id: :desc).limit(1000).
+                 .order(id: :desc).limit(100).
           select("id, name , phone, tt_upload_status,city_chinese, tt_id, tt_message, brand, created_at, site_name,is_repeat_one_month ")
       a = []
       cuis.each do |cui|
@@ -407,3 +406,11 @@ module UploadTianTian
     return ''
   end
 end
+
+__END__
+
+-----
+|\|/|
+-----
+|/|\|
+-----
