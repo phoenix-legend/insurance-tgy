@@ -119,7 +119,7 @@ module Baixing
           pp e
           pp detail_url
           pp '获取电话失败'
-          car_user_info = car_user_info.reload
+          car_user_info = begin car_user_info.reload rescue nil end
           car_user_info.destroy if car_user_info.phone.blank?
           next
         end
