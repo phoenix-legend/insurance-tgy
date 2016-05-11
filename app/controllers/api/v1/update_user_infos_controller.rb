@@ -45,7 +45,6 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
 
   def update_kouling_phone
     UserSystem::CarUserInfo.update_58_phone_detail params
-    render layout: false
   end
 
 end
