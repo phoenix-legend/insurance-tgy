@@ -110,6 +110,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
   end
 
+  #获取未提交口令
+  def self.get_wei_tijiao_kouling
+    car_infos = UserSystem::CarUserInfo.where("id > 800000 and site_name = '58' and wuba_kouling is not null and wuba_kouling_status = 'weitijiao'").limit(10)
+    return nil if car_infos.blank?
+
+  end
+
 
   def self.create_car_user_info options
     user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]

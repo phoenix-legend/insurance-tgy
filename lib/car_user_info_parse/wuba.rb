@@ -226,6 +226,9 @@ module Wuba
                                             note: note,
                                             fabushijian: time,
                                             wuba_kouling: kouling
+        unless kouling.blank?
+          UserSystem::KouLingCarUserInfo.create_kouling_car_user_info car_user_info.id
+        end
     rescue Exception => e
       pp e
       pp $@
