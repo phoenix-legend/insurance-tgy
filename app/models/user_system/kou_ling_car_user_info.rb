@@ -1,8 +1,34 @@
 class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
+  belongs_to :car_user_info
 
   def self.create_kouling_car_user_info car_user_info_id
     klcui = UserSystem::KouLingCarUserInfo.new :car_user_info_id => car_user_info_id
     klcui.save!
+  end
+
+  #获取未提交口令
+  def self.get_wei_tijiao_kouling deviceid = 'unknow'
+    UserSystem::KouLingCarUserInfo.transaction do
+      # return nil
+      kouling_car_infos = UserSystem::KouLingCarUserInfo.order(id: :desc).limit(10)
+      return nil if kouling_car_infos.blank?
+      number = rand(kouling_car_infos.length)
+      kouling = kouling_car_infos[number]
+      cui = kouling.car_user_info
+      if cui.blank?
+        kouling.destroy
+        return nil
+      end
+
+      # kouling.destroy
+      cui.wuba_kouling_status = 'yitijiao'
+      cui.wuba_kouling_tijiao_shouji_time = Time.now.chinese_format
+      cui.wuba_kouling_deviceid = deviceid
+      cui.save!
+      return cui
+    end
+
+
   end
 
 end

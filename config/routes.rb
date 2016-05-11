@@ -125,6 +125,7 @@ Rails.application.routes.draw do
           post :yiwaixian
           get :get_need_update_tt_info
           post :update_tt_info
+          get :get_cui_kouling
         end
       end
     end

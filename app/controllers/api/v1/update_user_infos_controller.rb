@@ -31,12 +31,17 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
 
 
   #获取天天渠道需要提交的数据
-  def get_need_update_tt_info
-    @user_infos = UploadTianTian.need_upload_tt
-  end
+  # def get_need_update_tt_info
+  #   @user_infos = UploadTianTian.need_upload_tt
+  # end
 
   def update_tt_info
     UploadTianTian.update_car_user_info params
+  end
+
+  def get_cui_kouling
+    @cui = UserSystem::KouLingCarUserInfo.get_wei_tijiao_kouling params[:deviceid]
+
   end
 
 end
