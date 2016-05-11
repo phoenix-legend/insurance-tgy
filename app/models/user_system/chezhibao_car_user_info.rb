@@ -17,6 +17,33 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
   CLIENT = 'k78242T1'
 
 
+  def self.create_info_from_car_user_info car_user_info
+    if false and car_user_info.is_pachong == false and UserSystem::ChezhibaoCarUserInfo::CITY_HASH.keys.include?(car_user_info.city_chinese)
+      begin
+        #数据回传到车置宝
+        UserSystem::ChezhibaoCarUserInfo.create_czb_car_info name: car_user_info.name,
+                                                             phone: car_user_info.phone,
+                                                             brand: car_user_info.brand,
+                                                             city_chinese: car_user_info.city_chinese,
+                                                             che_ling: car_user_info.che_ling,
+                                                             car_user_info_id: car_user_info.id,
+                                                             milage: car_user_info.milage,
+                                                             price: car_user_info.price,
+                                                             is_real_cheshang: car_user_info.is_real_cheshang,
+                                                             is_city_match: car_user_info.is_city_match,
+                                                             is_pachong: car_user_info.is_pachong,
+                                                             is_repeat_one_month: car_user_info.is_repeat_one_month,
+                                                             czb_upload_status: '未上传',
+                                                             cx: car_user_info.cx,
+                                                             site_name: car_user_info.site_name
+      rescue Exception => e
+        pp '更新车置宝异常'
+        pp e
+      end
+    end
+  end
+
+
   # 创建车置宝车主信息
   def self.create_czb_car_info options
 
@@ -125,7 +152,7 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
     pp response
   end
 
-  # UserSystem::ChezhibaoCarUserInfo.query_data
+  # UserSystem::ChezhibaoCarUserInfo.query_data  从车置宝批量查询数据
   def self.query_data
     ids = ""
     i = 0
@@ -150,6 +177,7 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
   end
 
 
+  # 从车置宝根据id查询数据
   def self.query_and_update_czb_id ids
     return if ids.blank?
     response = RestClient.post ProcuctionUrl, {service: 'unify.data.query.car',
@@ -178,7 +206,6 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
   end
 
   def self.q
-
     d = Date.parse('2016-04-17')
     while true
       count_maoshuju = UserSystem::ChezhibaoCarUserInfo.where("czb_id is not null and created_at >= '#{d.chinese_format_day} 00:00:00' and created_at <= '#{d.chinese_format_day} 23:59:59'").count
@@ -188,9 +215,6 @@ class UserSystem::ChezhibaoCarUserInfo < ActiveRecord::Base
       d = d+1.day
       break if Date.today < d
     end
-
-
-
   end
 
   def self.encrypt str

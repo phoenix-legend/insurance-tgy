@@ -55,11 +55,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   } #, "changzhou" => "常州"
 
 
+  #减少百姓的量
   BAIXING_PINYIN_CITY = {
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
-      "dongguan" => "东莞", "chongqing" => "重庆", "beijing" => "北京", "zhengzhou" => '郑州', 'changsha' => '长沙',
-      'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡"
+      "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡"#,
+      # "beijing" => "北京", "zhengzhou" => '郑州', 'changsha' => '长沙', 'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江'
   } #, "changzhou" => "常州"
 
 
@@ -104,7 +105,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       else
         {
-            'bj' => '北京', 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江'
+            "cq" => "重庆", #'bj' => '北京', 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江'
         }
     end
   end
@@ -151,6 +152,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     if not params[:price].blank?
       car_user_info.price = params[:price]
     end
+    if not params[:wuba_kouling].blank?
+      car_user_info.wuba_kouling = params[:wuba_kouling]
+    end
 
     if not params[:brand].blank?
       car_user_info.brand = params[:brand]
@@ -162,7 +166,55 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info.need_update = false
     car_user_info.save!
 
-    # 更新车商库
+
+
+    if car_user_info.site_name == '58'
+      # 针对58， 做城市校验，因为此时还没有电话号码，所以不用校验重复等。
+      invert_wuba_city = UserSystem::CarUserInfo::WUBA_CITY.invert
+      sx = invert_wuba_city[car_user_info.city_chinese]
+      zhengze = "http://#{sx}.58.com"
+      url_sx = car_user_info.detail_url.match Regexp.new zhengze
+      unless url_sx
+        car_user_info.is_cheshang = 2
+        car_user_info.is_city_match = false
+        car_user_info.save!
+      end
+    end
+
+    # 针对非58 更新车商库
+    if car_user_info.site_name != '58'
+      UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info
+    end
+
+
+    car_user_info = car_user_info.reload
+
+    pp "准备更新品牌#{car_user_info.phone}~~#{car_user_info.name}"
+    begin
+      car_user_info.update_brand
+    rescue Exception => e
+      car_user_info.destroy
+      pp '更新品牌失败，已删除'
+      return
+    end
+
+
+    return if car_user_info.site_name == '58'   # 58数据先不上传，等待手机端提交过来
+    car_user_info = car_user_info.reload
+    pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
+    UploadTianTian.upload_one_tt car_user_info
+
+    # 同步至车置宝  车置宝作废
+    # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
+
+    #同步至优车
+    UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+
+
+  end
+
+  # 车商检验流程
+  def self.che_shang_jiao_yan car_user_info
     begin
       UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
     rescue Exception => e
@@ -185,87 +237,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       car_user_info.save!
     end
 
-    if car_user_info.site_name == '58'
-      invert_wuba_city = UserSystem::CarUserInfo::WUBA_CITY.invert
-      sx = invert_wuba_city[car_user_info.city_chinese]
-      zhengze = "http://#{sx}.58.com"
-      url_sx = car_user_info.detail_url.match Regexp.new zhengze
-      unless url_sx
-        car_user_info.is_cheshang = 2
-        car_user_info.is_city_match = false
-        car_user_info.save!
-      end
-    end
-
     unless car_user_info.phone.blank?
       phone_number_one_month = UserSystem::CarUserInfo.where("phone = ? and created_at > ? and tt_id is not null", car_user_info.phone, (Time.now.months_ago 1).chinese_format).count
       car_user_info.is_repeat_one_month = phone_number_one_month > 1
       car_user_info.save!
     end
-
-
-    pp "准备更新品牌#{car_user_info.phone}~~#{car_user_info.name}"
-    begin
-      car_user_info.update_brand
-    rescue Exception => e
-      car_user_info.destroy
-      pp '更新品牌失败，已删除'
-      return
-    end
-    pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
-    UploadTianTian.upload_one_tt car_user_info
-
-    # 同步至车置宝  车置宝作废
-    if false and car_user_info.is_pachong == false and UserSystem::ChezhibaoCarUserInfo::CITY_HASH.keys.include?(car_user_info.city_chinese)
-      begin
-        #数据回传到车置宝
-        UserSystem::ChezhibaoCarUserInfo.create_czb_car_info name: car_user_info.name,
-                                                             phone: car_user_info.phone,
-                                                             brand: car_user_info.brand,
-                                                             city_chinese: car_user_info.city_chinese,
-                                                             che_ling: car_user_info.che_ling,
-                                                             car_user_info_id: car_user_info.id,
-                                                             milage: car_user_info.milage,
-                                                             price: car_user_info.price,
-                                                             is_real_cheshang: car_user_info.is_real_cheshang,
-                                                             is_city_match: car_user_info.is_city_match,
-                                                             is_pachong: car_user_info.is_pachong,
-                                                             is_repeat_one_month: car_user_info.is_repeat_one_month,
-                                                             czb_upload_status: '未上传',
-                                                             cx: car_user_info.cx,
-                                                             site_name: car_user_info.site_name
-      rescue Exception => e
-        pp '更新车置宝异常'
-        pp e
-      end
-    end
-
-    #同步至优车
-    if car_user_info.is_pachong == false and UserSystem::YoucheCarUserInfo::CITY.include?(car_user_info.city_chinese)
-      begin
-        #数据回传到优车
-        UserSystem::YoucheCarUserInfo.create_car_info name: car_user_info.name,
-                                                      phone: car_user_info.phone,
-                                                      brand: car_user_info.brand,
-                                                      city_chinese: car_user_info.city_chinese,
-                                                      che_ling: car_user_info.che_ling,
-                                                      car_user_info_id: car_user_info.id,
-                                                      milage: car_user_info.milage,
-                                                      price: car_user_info.price,
-                                                      is_real_cheshang: car_user_info.is_real_cheshang,
-                                                      is_city_match: car_user_info.is_city_match,
-                                                      is_pachong: car_user_info.is_pachong,
-                                                      is_repeat_one_month: car_user_info.is_repeat_one_month,
-                                                      youche_upload_status: '未上传',
-                                                      site_name: car_user_info.site_name,
-                                                      created_day: car_user_info.tt_created_day
-      rescue Exception => e
-        pp '更新优车异常'
-        pp e
-      end
-    end
-
-
   end
 
 

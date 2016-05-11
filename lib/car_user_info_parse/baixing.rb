@@ -76,7 +76,7 @@ module Baixing
         # car_user_info = UserSystem::CarUserInfo.find 689516
 
         detail_url = car_user_info.detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
-        sleep 2
+        sleep 3
         response = RestClient.get(detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
         if response.match /此信息未通过审核/
           car_user_info.need_update = false
