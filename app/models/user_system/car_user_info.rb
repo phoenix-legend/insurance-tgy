@@ -205,13 +205,28 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info = car_user_info.reload
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
     UploadTianTian.upload_one_tt car_user_info
-
     # 同步至车置宝  车置宝作废
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
-
     #同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+  end
 
+  def self.update_58_phone_detail params
+    UserSystem::CarUserInfo.transaction do
+      car_user_info = UserSystem::CarUserInfo.find params[:id]
+      phone = params[:phone]
+      phone.gsub!('-','')
+      phone = phone.match(/\d{11}$/).to_s
+      car_user_info.phone = phone
+      car_user_info.wuba_kouling_shouji_huilai_time = Time.now.chinese_format
+      car_user_info.save!
+
+      UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info
+      car_user_info = car_user_info.reload
+      pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
+      UploadTianTian.upload_one_tt car_user_info
+      UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    end
 
   end
 

@@ -126,6 +126,8 @@ Rails.application.routes.draw do
           get :get_need_update_tt_info
           post :update_tt_info
           get :get_cui_kouling
+          get :update_kouling_phone
+          post :update_kouling_phone
         end
       end
     end

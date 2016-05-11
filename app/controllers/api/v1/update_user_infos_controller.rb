@@ -41,7 +41,11 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
 
   def get_cui_kouling
     @cui = UserSystem::KouLingCarUserInfo.get_wei_tijiao_kouling params[:deviceid]
+  end
 
+  def update_kouling_phone
+    UserSystem::CarUserInfo.update_58_phone_detail params
+    render layout: false
   end
 
 end

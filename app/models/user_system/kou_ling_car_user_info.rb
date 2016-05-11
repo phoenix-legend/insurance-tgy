@@ -20,7 +20,7 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
         return nil
       end
 
-      # kouling.destroy
+      kouling.destroy
       cui.wuba_kouling_status = 'yitijiao'
       cui.wuba_kouling_tijiao_shouji_time = Time.now.chinese_format
       cui.wuba_kouling_deviceid = deviceid
