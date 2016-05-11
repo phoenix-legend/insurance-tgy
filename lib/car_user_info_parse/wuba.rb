@@ -222,7 +222,7 @@ module Wuba
       kouling = kouling.match(/http(.)*$/)[0]
       UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                             name: name,
-                                            phone: phone,
+                                            # phone: phone,
                                             note: note,
                                             fabushijian: time,
                                             wuba_kouling: kouling
