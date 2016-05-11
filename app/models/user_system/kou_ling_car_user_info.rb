@@ -31,6 +31,17 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
 
   end
 
+
+  # 异常数据回笼处理  有时手机端会出现get掉的数据不给post回来，这种情况下，就得重新放回来，分发给手机
+  def self.hui_long
+    x = UserSystem::KouLingCarUserInfo.limit 1
+    return unless x.blank?
+    cuis = UserSystem::CarUserInfo.where("wuba_kouling_status = 'yitijiao' and wuba_kouling_shouji_huilai_time is null and wuba_kouling_tijiao_shouji_time < ?",(Time.now-40.seconds))
+    cuis.each do |cui|
+      UserSystem::KouLingCarUserInfo.create_kouling_car_user_info cui.id
+    end
+  end
+
 end
 __END__
 ***********备份的代码*******************
