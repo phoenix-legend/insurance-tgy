@@ -91,7 +91,7 @@ module Baixing
         phone = detail_content.css(".num")[0].text
         che_xing = detail_content.css(".title h1").text
         name = '先生女士'
-        note = detail_content.css(".eric_content")[0].text
+        note = begin detail_content.css(".eric_content")[0].text rescue '' end
         fabushijian = '2010-01-01'
         UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                               name: name,
