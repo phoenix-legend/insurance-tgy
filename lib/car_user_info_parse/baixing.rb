@@ -67,6 +67,8 @@ module Baixing
 
     car_user_infos.each do |car_user_info|
 
+      pp car_user_info.id
+      pp car_user_info.detail_url
       # car_user_info = car_user_info.reload
       next unless car_user_info.name.blank?
       next unless car_user_info.phone.blank?
