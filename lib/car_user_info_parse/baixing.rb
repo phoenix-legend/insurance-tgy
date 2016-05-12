@@ -15,7 +15,7 @@ module Baixing
 
           # url = "http://nanjing.baixing.com/m/ershouqiche/?page=1"
 
-          content = RestClient.get url
+          content = RestClient.get url,{'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
           content = content.body
           break if content.blank?
           content.gsub!('item-top', 'eric')
