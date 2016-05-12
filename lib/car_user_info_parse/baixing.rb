@@ -76,7 +76,7 @@ module Baixing
         # car_user_info = UserSystem::CarUserInfo.find 689516
 
         detail_url = car_user_info.detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
-        sleep 3
+        sleep 2
         response = RestClient.get(detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
         if response.match /此信息未通过审核/
           car_user_info.need_update = false
@@ -85,53 +85,20 @@ module Baixing
         end
 
         detail_content1 = response.body
-        detail_content1.gsub!('content normal-content', 'eric_content')
+        detail_content1.gsub!('content normal-content long-content', 'eric_content')
         detail_content = Nokogiri::HTML(detail_content1)
-
-        car_infos = detail_content.css("dl").children
-        info_hash = {}
-        name = nil
-        car_infos.each_with_index do |car_info, i|
-          if name.blank?
-            name = car_info.text
-            next
-          else
-            info_hash[name] = car_info.text
-            name = nil
-          end
-        end
-
-        brand = info_hash["品牌："]
-        che_xing = "#{brand} #{info_hash["车系列："]} #{info_hash["车型："]}"
-        licheng = info_hash["行驶里程："]
-        name = info_hash["联系人姓名："]||'先生女士'
-        phone =begin
-          if detail_content.css("#contact-button")[0].blank?
-            detail_content.css("#contact-button-bottom")[0].attributes["href"].value.gsub('tel:', '')
-          else
-            detail_content.css("#contact-button")[0].attributes["href"].value.gsub('tel:', '')
-          end
-
-
-        rescue Exception => e
-          pp 'xxx'*30
-          sleep(5)
-          pp e
-          pp detail_url
-          pp '获取电话失败'
-          car_user_info = begin car_user_info.reload rescue nil end
-          car_user_info.destroy if car_user_info.phone.blank?
-          next
-        end
+        licheng = '80000'
+        phone = detail_content.css(".num")[0].text
+        che_xing = detail_content.css(".title h1").text
+        name = '先生女士'
+        note = detail_content.css(".eric_content")[0].text
         fabushijian = '2010-01-01'
-        note = detail_content.css('.eric_content').text
-
         UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                               name: name,
                                               phone: phone,
                                               note: note,
                                               fabushijian: fabushijian,
-                                              brand: brand,
+                                              # brand: brand,
                                               che_xing: che_xing,
                                               milage: licheng
 
