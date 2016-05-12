@@ -25,17 +25,17 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   ALL_CITY = {"310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州", "420100" => "武汉",
               "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆", "320200" => "无锡",
-              "110100" => "北京", "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛"} #, "320400" => '常州'
+              "110100" => "北京", "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛","440600" => "佛山"} #, "320400" => '常州'
 
   def self.get_che168_sub_cities sub_party = 0
     case sub_party
       when 0
         {
-            "310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州", "420100" => "武汉"
+            "310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州", "420100" => "武汉","440600" => "佛山"
         }
       when 1
         {
-            "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆", "320200" => "无锡",
+            "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆", "320200" => "无锡"
         }
       else
         {
@@ -51,7 +51,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
       "dongguan" => "东莞", "chongqing" => "重庆", "beijing" => "北京", "zhengzhou" => '郑州', 'changsha' => '长沙',
-      'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡"
+      'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "foshan" => '佛山'
   } #, "changzhou" => "常州"
 
 
@@ -59,7 +59,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   BAIXING_PINYIN_CITY = {
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
-      "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡"#,
+      "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡","foshan" => '佛山'#,
       # "beijing" => "北京", "zhengzhou" => '郑州', 'changsha' => '长沙', 'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江'
   } #, "changzhou" => "常州"
 
@@ -67,7 +67,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   GANJI_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉",
       "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "wx" => "无锡",
-      'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', 'bj' => '北京'
+      'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', 'bj' => '北京', 'foshan' => '佛山'
   } #, "changzhou" => "常州"
   def self.get_ganji_sub_cities sub_party = 0
     case sub_party
@@ -77,7 +77,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       when 1
         {
-            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "wx" => "无锡"
+            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "wx" => "无锡", 'foshan' => '佛山'
         }
       else
         {
@@ -88,7 +88,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   WUBA_CITY = {
-      "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉",
+      "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉", "fs" => '佛山',
       "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆",
       'bj' => '北京', 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江'
   } #, "cz" => "常州"
@@ -97,11 +97,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     case sub_party
       when 0
         {
-            "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉",
+            "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉","fs" => '佛山'
         }
       when 1
         {
-            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆",
+            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆"
         }
       else
         {
