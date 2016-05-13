@@ -3,6 +3,72 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
 
   CITY = ['天津']
 
+  def self.upload_to_youche
+    ycuis = UserSystem::YoucheCarUserInfo.where("youche_upload_status = ? ",'未上传')
+    ycuis.each do |ycui|
+      is_select = true
+      if not ycui.youche_id.blank?
+        return       # 如果已经提交，就不再提交
+      end
+
+      if ycui.phone.blank?
+        ycui.youche_upload_status = '手机号不存在'
+        is_select = false
+      end
+
+      if ycui.youche_upload_status != '未上传'
+        is_select = false
+      end
+
+      if ycui.is_real_cheshang
+        ycui.youche_upload_status = '疑似车商'
+        is_select = false
+      end
+
+      if ycui.is_pachong
+        ycui.youche_upload_status = '疑似爬虫'
+        is_select = false
+      end
+
+      unless ycui.is_city_match
+        ycui.youche_upload_status = '城市不匹配'
+        is_select = false
+      end
+
+      if ycui.name.blank?
+        ycui.youche_upload_status = '没姓名'
+        is_select = false
+      end
+
+
+      unless UserSystem::YoucheCarUserInfo::CITY.include? ycui.city_chinese
+        ycui.youche_upload_status = '城市不对'
+        is_select = false
+      end
+      ycui.save!
+
+      if is_select
+        response = RestClient.post "http://http.api.youche.com/xuzuo/push_user", {owner_phone: ycui.phone,
+                                                                       owner_name: ycui.name.gsub('(个人)', ''),
+                                                                       addr: ycui.city_chinese,
+                                                                       brand: ycui.brand,
+                                                                       token: 'Ap4q0s31p'
+                                                                    }
+        response = JSON.parse response.body
+        pp response
+        ycui.youche_id = response["data"]["id"]
+        ycui.youche_upload_status = '已上传'
+        ycui.yaoyue_time = Time.now.chinese_format
+        ycui.yaoyue_day = Time.now.chinese_format_day
+        ycui.yc_status = response["status_msg"]
+        ycui.yc_status_message = response["status_msg"]
+        ycui.save!
+      end
+
+
+    end
+  end
+
   def self.create_user_info_from_car_user_info car_user_info
     if car_user_info.is_pachong == false and UserSystem::YoucheCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
@@ -29,7 +95,7 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
     end
   end
 
-  # 创建车置宝车主信息
+  # 创建优车车主信息
   def self.create_car_info options
 
     cui = UserSystem::YoucheCarUserInfo.find_by_car_user_info_id options[:car_user_info_id]

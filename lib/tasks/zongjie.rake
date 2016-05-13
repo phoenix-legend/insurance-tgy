@@ -23,6 +23,22 @@ namespace :zongjie do
 	end
 
 
+	desc "回拢58遗漏数据  rake zongjie:uploadyouche RAILS_ENV=production"
+	task :uploadyouche => :environment do
+		jincheng = `ps -ef | grep zongjie:uploadyouche`
+		match_data = jincheng.split /\n/
+		if match_data.length > 4
+			pp '前一次未执行完毕，退出任务'
+		else
+			UserSystem::YoucheCarUserInfo.upload_to_youche
+		end
+	end
+
+
+
+
+
+
 	desc "每天晚新天天数据状态  rake zongjie:all1 RAILS_ENV=production"
 	task :all1 => :environment do
 		UploadTianTian.get_now_status

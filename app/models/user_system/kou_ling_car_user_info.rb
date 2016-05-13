@@ -38,7 +38,7 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
     pp Time.now.chinese_format
     x = UserSystem::KouLingCarUserInfo.limit 1
     return unless x.blank?
-    cuis = UserSystem::CarUserInfo.where("wuba_kouling_status = 'yitijiao' and wuba_kouling_shouji_huilai_time is null and wuba_kouling_tijiao_shouji_time < ? and created_at > ? and email_status < 20",(Time.now-40.seconds),(Time.now - 12.hours))
+    cuis = UserSystem::CarUserInfo.where("wuba_kouling_status = 'yitijiao' and wuba_kouling_shouji_huilai_time is null and wuba_kouling_tijiao_shouji_time < ? and created_at > ? and email_status < 15",(Time.now-40.seconds),(Time.now - 12.hours))
     cuis.each do |cui|
       UserSystem::KouLingCarUserInfo.create_kouling_car_user_info cui.id
     end
