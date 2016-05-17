@@ -58,14 +58,40 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
         pp response
         ycui.youche_id = response["data"]["id"]
         ycui.youche_upload_status = '已上传'
-        ycui.yaoyue_time = Time.now.chinese_format
-        ycui.yaoyue_day = Time.now.chinese_format_day
+
         ycui.yc_status = response["status_msg"]
         ycui.yc_status_message = response["status_msg"]
         ycui.save!
       end
 
 
+    end
+  end
+
+
+  def self.query_youche_status
+    i = 0
+    j = 0
+    ycuis = UserSystem::YoucheCarUserInfo.where("youche_id is not null and youche_yaoyue is null ")
+    ycuis.each do |ycui|
+      response = RestClient.get "http://http.api.youche.com/xuzuo/query_user?id=#{ycui.youche_id}&token=Ap4q0s31p"
+      response = JSON.parse response.body
+      pp response
+      if response["data"]["user_status_msg"] == '有效'
+        i += 1
+        ycui.youche_yaoyue = '有效'
+        ycui.yaoyue_time = Time.now.chinese_format
+        ycui.yaoyue_day = Time.now.chinese_format_day
+        ycui.save!
+      end
+
+      if response["data"]["user_status_msg"] == '无效'
+        j += 1
+        ycui.youche_yaoyue = '无效'
+        ycui.yaoyue_time = Time.now.chinese_format
+        ycui.yaoyue_day = Time.now.chinese_format_day
+        ycui.save!
+      end
     end
   end
 
@@ -99,6 +125,9 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
   def self.create_car_info options
 
     cui = UserSystem::YoucheCarUserInfo.find_by_car_user_info_id options[:car_user_info_id]
+    return unless cui.blank?
+
+    cui = UserSystem::YoucheCarUserInfo.find_by_phone options[:phone]
     return unless cui.blank?
 
     cui = UserSystem::YoucheCarUserInfo.new options
