@@ -69,7 +69,9 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
   end
 
 
+  # UserSystem::YoucheCarUserInfo.query_youche_status
   def self.query_youche_status
+    return if Time.now.min > 10
     i = 0
     j = 0
     ycuis = UserSystem::YoucheCarUserInfo.where("youche_id is not null and youche_yaoyue is null ")

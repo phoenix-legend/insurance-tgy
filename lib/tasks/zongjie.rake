@@ -11,7 +11,7 @@ namespace :zongjie do
 	end
 
 
-	desc "回拢58遗漏数据  rake zongjie:huilong RAILS_ENV=production"
+	desc "回拢58遗漏数据,把手机端获取手机号失效的数据再回收，查询  rake zongjie:huilong RAILS_ENV=production"
 	task :huilong => :environment do
 		jincheng = `ps -ef | grep zongjie:huilong`
 		match_data = jincheng.split /\n/
@@ -23,7 +23,7 @@ namespace :zongjie do
 	end
 
 
-	desc "回拢58遗漏数据  rake zongjie:uploadyouche RAILS_ENV=production"
+	desc "把数据上传到优车，目前频率10分钟/次  rake zongjie:uploadyouche RAILS_ENV=production"
 	task :uploadyouche => :environment do
 		jincheng = `ps -ef | grep zongjie:uploadyouche`
 		match_data = jincheng.split /\n/
@@ -31,6 +31,7 @@ namespace :zongjie do
 			pp '前一次未执行完毕，退出任务'
 		else
 			UserSystem::YoucheCarUserInfo.upload_to_youche
+			UserSystem::YoucheCarUserInfo.query_youche_status
 		end
 	end
 
