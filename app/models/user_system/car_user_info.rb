@@ -31,7 +31,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
               "410300"=> "洛阳", "411300"=>"南阳", "410700"=>"新乡",
               "430300"=>"湘潭","430200"=>"株洲","430700"=>"常德","430600"=>"岳阳",
               "210100"=>"沈阳","210200"=>"大连","210800"=>"营口",
-              "350100" => "福州", "350200" => "厦门","350500" => "泉州"
+              "350100" => "福州", "350200" => "厦门","350500" => "泉州",
+              "220100"=>"长春",  "230100"=>"哈尔滨",  "230600"=>"大庆",  "340100"=>"合肥", "340200"=>"芜湖","450100"=>"南宁","360100"=>"南昌"
   } #,
 
   def self.get_che168_sub_cities sub_party = 0
@@ -51,7 +52,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
              "130100" => "石家庄", "130200" => "唐山", "140100" => "太原","610400"=>"咸阳","610300"=>"宝鸡","410300"=> "洛阳", "411300"=>"南阳", "410700"=>"新乡",
              "430300"=>"湘潭","430200"=>"株洲","430700"=>"常德","430600"=>"岳阳",
              "210100"=>"沈阳","210200"=>"大连","210800"=>"营口",
-             "350100" => "福州", "350200" => "厦门","350500" => "泉州"
+             "350100" => "福州", "350200" => "厦门","350500" => "泉州",
+             "220100"=>"长春",  "230100"=>"哈尔滨",  "230600"=>"大庆",  "340100"=>"合肥", "340200"=>"芜湖","450100"=>"南宁","360100"=>"南昌"
         }
     end
   end
@@ -68,7 +70,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "xianyang"=>"咸阳","baoji"=>"宝鸡","luoyang"=> "洛阳", "nanyang"=>"南阳", "xinxiang"=>"新乡",
       "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yueyang"=>"岳阳",
       "shenyang"=>"沈阳","dalian"=>"大连","yingkou"=>"营口",
-      "fuzhou" => "福州", "xiamen" => "厦门","quanzhou" => "泉州"
+      "fuzhou" => "福州", "xiamen" => "厦门","quanzhou" => "泉州",
+      "changchun"=>"长春",  "haerbin"=>"哈尔滨",  "daqing"=>"大庆",  "hefei"=>"合肥", "wuhu"=>"芜湖","nanning"=>"南宁","nanchang"=>"南昌"
   }
 
 
@@ -82,7 +85,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "xianyang"=>"咸阳","baoji"=>"宝鸡","luoyang"=> "洛阳", "nanyang"=>"南阳", "xinxiang"=>"新乡",
       "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yueyang"=>"岳阳",
       "shenyang"=>"沈阳","dalian"=>"大连","yingkou"=>"营口",
-      "fuzhou" => "福州", "xiamen" => "厦门","quanzhou" => "泉州"
+      "fuzhou" => "福州", "xiamen" => "厦门","quanzhou" => "泉州",
+      "changchun"=>"长春",  "haerbin"=>"哈尔滨",  "daqing"=>"大庆",  "hefei"=>"合肥", "wuhu"=>"芜湖","nanning"=>"南宁","nanchang"=>"南昌"
   }
 
 
@@ -94,7 +98,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "xianyang"=>"咸阳","baoji"=>"宝鸡","luoyang"=> "洛阳", "nanyang"=>"南阳", "xinxiang"=>"新乡",
       "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yueyang"=>"岳阳",
       "sy"=>"沈阳","dl"=>"大连","yingkou"=>"营口",
-      "fz" => "福州", "xm" => "厦门","quanzhou" => "泉州"
+      "fz" => "福州", "xm" => "厦门","quanzhou" => "泉州",
+      "cc"=>"长春",  "hrb"=>"哈尔滨",  "daqing"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌"
 
   }
 
@@ -116,7 +121,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "ty" => "太原","xianyang"=>"咸阳","baoji"=>"宝鸡","luoyang"=> "洛阳", "nanyang"=>"南阳", "xinxiang"=>"新乡",
             "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yueyang"=>"岳阳",
             "sy"=>"沈阳","dl"=>"大连","yingkou"=>"营口",
-            "fz" => "福州", "xm" => "厦门","quanzhou" => "泉州"
+            "fz" => "福州", "xm" => "厦门","quanzhou" => "泉州",
+            "cc"=>"长春",  "hrb"=>"哈尔滨",  "daqing"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌"
         }
     end
   end
@@ -130,7 +136,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "xianyang"=>"咸阳","baoji"=>"宝鸡","luoyang"=> "洛阳", "ny"=>"南阳", "xx"=>"新乡",
       "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yy"=>"岳阳",
       "sy"=>"沈阳","dl"=>"大连","yk"=>"营口",
-      "fz" => "福州", "xm" => "厦门","qz" => "泉州"
+      "fz" => "福州", "xm" => "厦门","qz" => "泉州",
+      "cc"=>"长春",  "hrb"=>"哈尔滨",  "dq"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌"
   }
 
   def self.get_58_sub_cities sub_party = 0
@@ -150,7 +157,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "xianyang"=>"咸阳","baoji"=>"宝鸡","luoyang"=> "洛阳", "ny"=>"南阳", "xx"=>"新乡",
             "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yy"=>"岳阳",
             "sy"=>"沈阳","dl"=>"大连","yk"=>"营口",
-            "fz" => "福州", "xm" => "厦门","qz" => "泉州"
+            "fz" => "福州", "xm" => "厦门","qz" => "泉州",
+            "cc"=>"长春",  "hrb"=>"哈尔滨",  "dq"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌"
         }
     end
   end
@@ -457,10 +465,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   #获取20个城市的代码及名称, 针对che168网站
   # UserSystem::CarUserInfo.get_city_code_name
   def self.get_city_code_name
-    provinces = {"440000" => "广东", "370000" => "山东", "330000" => "浙江", "320000" => "江苏", "130000" => "河北", "410000" => "河南", "110000" => "北京", "210000" => "辽宁", "310000" => "上海", "500000" => "重庆", "350000" => "福建", "450000" => "广西", "520000" => "贵州", "620000" => "甘肃", "460000" => "海南", "420000" => "湖北", "430000" => "湖南", "230000" => "黑龙江", "360000" => "江西", "220000" => "吉林", "150000" => "内蒙古", "640000" => "宁夏", "630000" => "青海", "610000" => "陕西", "510000" => "四川", "140000" => "山西", "120000" => "天津", "650000" => "新疆", "540000" => "西藏", "530000" => "云南", "34000" => "安徽"}
+    provinces = {"440000" => "广东", "370000" => "山东", "330000" => "浙江", "320000" => "江苏", "130000" => "河北",
+                 "410000" => "河南", "110000" => "北京", "210000" => "辽宁", "310000" => "上海", "500000" => "重庆",
+                 "350000" => "福建", "450000" => "广西", "520000" => "贵州", "620000" => "甘肃", "460000" => "海南",
+                 "420000" => "湖北", "430000" => "湖南", "230000" => "黑龙江", "360000" => "江西", "220000" => "吉林",
+                 "150000" => "内蒙古", "640000" => "宁夏", "630000" => "青海", "610000" => "陕西", "510000" => "四川",
+                 "140000" => "山西", "120000" => "天津", "650000" => "新疆", "540000" => "西藏", "530000" => "云南", "34000" => "安徽"}
     # provinces = { "320000" => "江苏"}
     # provinces = {"130000" => "河北"}
-    provinces = { "350000" => "福建"}
+    provinces = { "340000" => "安徽","450000" => "广西","360000" => "江西"}
 
     city_hash = {}
     provinces.each_pair do |key, v|
@@ -468,14 +481,14 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       pp 'xxx'
       city_content = JSON.parse city_content.body
       pp city_content
-
-      city_content["item"].each do |city|
-        areaid, areaname = city["id"], city["value"]
-
-        # if ::UserSystem::CarUserInfo::ALL_CITY.values.include? areaname
-          city_hash[areaid] = areaname
-        # end
-      end
+      #
+      # city_content["item"].each do |city|
+      #   areaid, areaname = city["id"], city["value"]
+      #
+      #   # if ::UserSystem::CarUserInfo::ALL_CITY.values.include? areaname
+      #     city_hash[areaid] = areaname
+      #   # end
+      # end
     end
   end
 
