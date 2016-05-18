@@ -32,7 +32,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
               "430300"=>"湘潭","430200"=>"株洲","430700"=>"常德","430600"=>"岳阳",
               "210100"=>"沈阳","210200"=>"大连","210800"=>"营口",
               "350100" => "福州", "350200" => "厦门","350500" => "泉州",
-              "220100"=>"长春",  "230100"=>"哈尔滨",  "230600"=>"大庆",  "340100"=>"合肥", "340200"=>"芜湖","450100"=>"南宁","360100"=>"南昌"
+              "220100"=>"长春",  "230100"=>"哈尔滨",  "230600"=>"大庆",  "340100"=>"合肥", "340200"=>"芜湖","450100"=>"南宁","360100"=>"南昌",
+              "441300"=>"惠州", "441200"=>"肇庆", "442000"=>"中山", "330400"=>"嘉兴", "520100"=>"贵阳", "520300"=>"遵义", "150100"=>"呼和浩特", "650100"=>"乌鲁木齐", "510600"=>"德阳", "510700"=>"绵阳", "420600"=>"襄阳", "420500"=>"宜昌"
   } #,
 
   def self.get_che168_sub_cities sub_party = 0
@@ -53,7 +54,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
              "430300"=>"湘潭","430200"=>"株洲","430700"=>"常德","430600"=>"岳阳",
              "210100"=>"沈阳","210200"=>"大连","210800"=>"营口",
              "350100" => "福州", "350200" => "厦门","350500" => "泉州",
-             "220100"=>"长春",  "230100"=>"哈尔滨",  "230600"=>"大庆",  "340100"=>"合肥", "340200"=>"芜湖","450100"=>"南宁","360100"=>"南昌"
+             "220100"=>"长春",  "230100"=>"哈尔滨",  "230600"=>"大庆",  "340100"=>"合肥", "340200"=>"芜湖","450100"=>"南宁","360100"=>"南昌",
+             "441300"=>"惠州", "441200"=>"肇庆", "442000"=>"中山", "330400"=>"嘉兴", "520100"=>"贵阳", "520300"=>"遵义", "150100"=>"呼和浩特", "650100"=>"乌鲁木齐",
+             "510600"=>"德阳", "510700"=>"绵阳", "420600"=>"襄阳", "420500"=>"宜昌"
         }
     end
   end
@@ -71,7 +74,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yueyang"=>"岳阳",
       "shenyang"=>"沈阳","dalian"=>"大连","yingkou"=>"营口",
       "fuzhou" => "福州", "xiamen" => "厦门","quanzhou" => "泉州",
-      "changchun"=>"长春",  "haerbin"=>"哈尔滨",  "daqing"=>"大庆",  "hefei"=>"合肥", "wuhu"=>"芜湖","nanning"=>"南宁","nanchang"=>"南昌"
+      "changchun"=>"长春",  "haerbin"=>"哈尔滨",  "daqing"=>"大庆",  "hefei"=>"合肥", "wuhu"=>"芜湖","nanning"=>"南宁","nanchang"=>"南昌",
+      "huizhou"=>"惠州", "zhaoqing"=>"肇庆", "zhongshan"=>"中山", "jiaxing"=>"嘉兴",
+      "guiyang"=>"贵阳", "zunyi"=>"遵义", "huhehaote"=>"呼和浩特", "wulumuqi"=>"乌鲁木齐", "deyang"=>"德阳",
+      "mianyang"=>"绵阳", "xiangfan"=>"襄阳", "yichang"=>"宜昌"
   }
 
 
@@ -86,7 +92,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yueyang"=>"岳阳",
       "shenyang"=>"沈阳","dalian"=>"大连","yingkou"=>"营口",
       "fuzhou" => "福州", "xiamen" => "厦门","quanzhou" => "泉州",
-      "changchun"=>"长春",  "haerbin"=>"哈尔滨",  "daqing"=>"大庆",  "hefei"=>"合肥", "wuhu"=>"芜湖","nanning"=>"南宁","nanchang"=>"南昌"
+      "changchun"=>"长春",  "haerbin"=>"哈尔滨",  "daqing"=>"大庆",  "hefei"=>"合肥", "wuhu"=>"芜湖","nanning"=>"南宁","nanchang"=>"南昌",
+      "huizhou"=>"惠州", "zhaoqing"=>"肇庆", "zhongshan"=>"中山", "jiaxing"=>"嘉兴",
+      "guiyang"=>"贵阳", "zunyi"=>"遵义", "huhehaote"=>"呼和浩特", "wulumuqi"=>"乌鲁木齐", "deyang"=>"德阳",
+      "mianyang"=>"绵阳", "xiangfan"=>"襄阳", "yichang"=>"宜昌"
   }
 
 
@@ -99,7 +108,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yueyang"=>"岳阳",
       "sy"=>"沈阳","dl"=>"大连","yingkou"=>"营口",
       "fz" => "福州", "xm" => "厦门","quanzhou" => "泉州",
-      "cc"=>"长春",  "hrb"=>"哈尔滨",  "daqing"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌"
+      "cc"=>"长春",  "hrb"=>"哈尔滨",  "daqing"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌",
+      "huizhou"=>"惠州", "zhaoqing"=>"肇庆", "zhongshan"=>"中山", "jiaxing"=>"嘉兴",
+      "gy"=>"贵阳", "zunyi"=>"遵义", "nmg"=>"呼和浩特", "xj"=>"乌鲁木齐", "deyang"=>"德阳",
+      "mianyang"=>"绵阳", "xiangyang"=>"襄阳", "yichang"=>"宜昌"
 
   }
 
@@ -122,7 +134,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yueyang"=>"岳阳",
             "sy"=>"沈阳","dl"=>"大连","yingkou"=>"营口",
             "fz" => "福州", "xm" => "厦门","quanzhou" => "泉州",
-            "cc"=>"长春",  "hrb"=>"哈尔滨",  "daqing"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌"
+            "cc"=>"长春",  "hrb"=>"哈尔滨",  "daqing"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌",
+            "huizhou"=>"惠州", "zhaoqing"=>"肇庆", "zhongshan"=>"中山", "jiaxing"=>"嘉兴",
+            "gy"=>"贵阳", "zunyi"=>"遵义", "nmg"=>"呼和浩特", "xj"=>"乌鲁木齐", "deyang"=>"德阳",
+            "mianyang"=>"绵阳", "xiangyang"=>"襄阳", "yichang"=>"宜昌"
         }
     end
   end
@@ -137,7 +152,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yy"=>"岳阳",
       "sy"=>"沈阳","dl"=>"大连","yk"=>"营口",
       "fz" => "福州", "xm" => "厦门","qz" => "泉州",
-      "cc"=>"长春",  "hrb"=>"哈尔滨",  "dq"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌"
+      "cc"=>"长春",  "hrb"=>"哈尔滨",  "dq"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌",
+      "huizhou"=>"惠州", "zq"=>"肇庆", "zs"=>"中山", "jx"=>"嘉兴",
+      "gy"=>"贵阳", "zunyi"=>"遵义", "hu"=>"呼和浩特", "xj"=>"乌鲁木齐", "deyang"=>"德阳",
+      "mianyang"=>"绵阳", "xf"=>"襄阳", "yc"=>"宜昌"
   }
 
   def self.get_58_sub_cities sub_party = 0
@@ -158,7 +176,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yy"=>"岳阳",
             "sy"=>"沈阳","dl"=>"大连","yk"=>"营口",
             "fz" => "福州", "xm" => "厦门","qz" => "泉州",
-            "cc"=>"长春",  "hrb"=>"哈尔滨",  "dq"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌"
+            "cc"=>"长春",  "hrb"=>"哈尔滨",  "dq"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌",
+            "huizhou"=>"惠州", "zq"=>"肇庆", "zs"=>"中山", "jx"=>"嘉兴",
+            "gy"=>"贵阳", "zunyi"=>"遵义", "hu"=>"呼和浩特", "xj"=>"乌鲁木齐", "deyang"=>"德阳",
+            "mianyang"=>"绵阳", "xf"=>"襄阳", "yc"=>"宜昌"
         }
     end
   end
@@ -473,7 +494,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                  "140000" => "山西", "120000" => "天津", "650000" => "新疆", "540000" => "西藏", "530000" => "云南", "34000" => "安徽"}
     # provinces = { "320000" => "江苏"}
     # provinces = {"130000" => "河北"}
-    provinces = { "340000" => "安徽","450000" => "广西","360000" => "江西"}
+    provinces = {"440000" => "广东","330000" => "浙江", "520000" => "贵州","150000" => "内蒙古","650000" => "新疆","510000" => "四川", "420000" => "湖北"}
 
     city_hash = {}
     provinces.each_pair do |key, v|
@@ -482,13 +503,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       city_content = JSON.parse city_content.body
       pp city_content
       #
-      # city_content["item"].each do |city|
-      #   areaid, areaname = city["id"], city["value"]
-      #
-      #   # if ::UserSystem::CarUserInfo::ALL_CITY.values.include? areaname
-      #     city_hash[areaid] = areaname
-      #   # end
-      # end
+      city_content["item"].each do |city|
+        areaid, areaname = city["id"], city["value"]
+
+        if ["绵阳","德阳","宜昌","襄阳","肇庆","惠州","中山","贵阳", "遵义","嘉兴","呼和浩特","乌鲁木齐"].include? areaname
+          city_hash[areaid] = areaname
+        end
+      end
     end
   end
 
