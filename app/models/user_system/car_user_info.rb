@@ -27,7 +27,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
               "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆", "320200" => "无锡",
                "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛","440600" => "佛山", "371000" => '威海',
                "370600" => '烟台',"370700" => '潍坊', "320400" => '常州',"320300" => '徐州', "320600" => '南通', "321000" => '扬州',"370100" => "济南",
-  "130100" => "石家庄", "130200" => "唐山", "140100" => "太原","610100"=>"西安","610400"=>"咸阳","610300"=>"宝鸡"} #,
+  "130100" => "石家庄", "130200" => "唐山", "140100" => "太原","610400"=>"咸阳","610300"=>"宝鸡"} #,
 
   def self.get_che168_sub_cities sub_party = 0
     case sub_party
@@ -43,7 +43,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         {
              "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛","371000" => '威海', "370600" => '烟台',"370700" => '潍坊',
              "320400" => '常州',"320300" => '徐州', "320600" => '南通', "321000" => '扬州',"370100" => "济南",
-             "130100" => "石家庄", "130200" => "唐山", "140100" => "太原","610100"=>"西安","610400"=>"咸阳","610300"=>"宝鸡"
+             "130100" => "石家庄", "130200" => "唐山", "140100" => "太原","610400"=>"咸阳","610300"=>"宝鸡"
         }
     end
   end
@@ -57,7 +57,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "dongguan" => "东莞", "chongqing" => "重庆", "beijing" => "北京", "zhengzhou" => '郑州', 'changsha' => '长沙',
       'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "foshan" => '佛山', "weihai" => '威海',"yantai" => '烟台', "weifang"=> '潍坊',
       "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州',"jinan" => "济南","shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
-      "xian"=>"西安","xianyang"=>"咸阳","baoji"=>"宝鸡"
+      "xianyang"=>"咸阳","baoji"=>"宝鸡"
   }
 
 
@@ -68,7 +68,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡","foshan" => '佛山',#,
       "zhengzhou" => '郑州', 'changsha' => '长沙', 'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "weihai" => '威海',"yantai" => '烟台', "weifang"=> '潍坊',
       "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州',"jinan" => "济南","shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
-      "xian"=>"西安","xianyang"=>"咸阳","baoji"=>"宝鸡"
+      "xianyang"=>"咸阳","baoji"=>"宝鸡"
   }
 
 
@@ -77,7 +77,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "wx" => "无锡",
       'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', 'foshan' => '佛山', "wei" => '威海',"yantai" => '烟台', "weifang"=> '潍坊',
       "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州',"jn" => "济南","sjz" => "石家庄", "tangshan" => "唐山", "ty" => "太原",
-      "xa"=>"西安","xianyang"=>"咸阳","baoji"=>"宝鸡"
+      "xianyang"=>"咸阳","baoji"=>"宝鸡"
   }
 
 
@@ -95,7 +95,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         {
             'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', "wei" => '威海',"yantai" => '烟台', "weifang"=> '潍坊',
             "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州',"jn" => "济南","sjz" => "石家庄", "tangshan" => "唐山",
-            "ty" => "太原","xa"=>"西安","xianyang"=>"咸阳","baoji"=>"宝鸡"
+            "ty" => "太原","xianyang"=>"咸阳","baoji"=>"宝鸡"
         }
     end
   end
@@ -106,7 +106,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆",
       'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "weihai" => '威海',"yt" => '烟台', "wf"=> '潍坊',
       "cz" => "常州", 'xz' => '徐州', "nt" => '南通',"yz" => '扬州',"jn" => "济南","sjz" => "石家庄", "ts" => "唐山", "ty" => "太原",
-      "xa"=>"西安","xianyang"=>"咸阳","baoji"=>"宝鸡"
+      "xianyang"=>"咸阳","baoji"=>"宝鸡"
   }
 
   def self.get_58_sub_cities sub_party = 0
@@ -123,7 +123,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         {
             'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "weihai" => '威海',"yt" => '烟台', "wf"=> '潍坊',
             "cz" => "常州", 'xz' => '徐州', "nt" => '南通',"yz" => '扬州',"jn" => "济南","sjz" => "石家庄", "ts" => "唐山", "ty" => "太原",
-            "xa"=>"西安","xianyang"=>"咸阳","baoji"=>"宝鸡"
+            "xianyang"=>"咸阳","baoji"=>"宝鸡"
         }
     end
   end
