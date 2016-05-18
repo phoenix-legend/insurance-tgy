@@ -763,6 +763,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     cuis = UserSystem::CarUserInfo.where("id > 910000 and phone is not null")
 
     cuis.each_with_index do |car_user_info, current_row|
+      UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
+      car_user_info = car_user_info.reload
       if car_user_info.phone.blank?
         a += 1
         next
