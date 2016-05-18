@@ -1,6 +1,6 @@
 module UploadTianTian
   # CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆"]
-  CITY = ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "重庆","佛山"]
+  CITY = ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "重庆", "佛山"]
 
   # CITY = ["上海"]
 
@@ -375,6 +375,7 @@ module UploadTianTian
 
 
   # 真正提交上去的和单竞争对手比较
+  # UploadTianTian.really_jiao_bijiao
   def self.really_jiao_bijiao is_detail = false
     ['58', 'ganji', 'baixing', 'che168', 'taoche'].each do |site_name|
       all_number = 0
@@ -405,6 +406,33 @@ module UploadTianTian
     end
 
     return ''
+  end
+
+
+  # 忽略掉重点城市以外， 临时使用
+  def self.couge
+    UserSystem::KouLingCarUserInfo.all.find_each do |kl|
+      begin
+        cui = kl.car_user_info
+        unless ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "重庆", "佛山"].include? cui.city_chinese
+            kl.destroy
+            cui.wuba_kouling_status = 'jiazhuangyitijiao'
+            cui.wuba_kouling_shouji_huilai_time = '2016-05-18 12:00:00'
+            cui.save!
+        end
+      rescue Exception => e
+        next
+      end
+    end
+
+
+    UserSystem::CarUserInfo.where("site_name = 'baixing' and need_update = ?", true).find_each do |cui|
+      unless ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "重庆", "佛山"].include? cui.city_chinese
+        cui.need_update = false
+        cui.save!
+      end
+    end
+
   end
 end
 

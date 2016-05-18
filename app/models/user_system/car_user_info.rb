@@ -25,22 +25,22 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   ALL_CITY = {"310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州", "420100" => "武汉",
               "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆", "320200" => "无锡",
-               "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛","440600" => "佛山", "371000" => '威海',
-               "370600" => '烟台',"370700" => '潍坊', "320400" => '常州',"320300" => '徐州', "320600" => '南通', "321000" => '扬州',"370100" => "济南",
-              "130100" => "石家庄", "130200" => "唐山", "140100" => "太原","610400"=>"咸阳","610300"=>"宝鸡",
-              "410300"=> "洛阳", "411300"=>"南阳", "410700"=>"新乡",
-              "430300"=>"湘潭","430200"=>"株洲","430700"=>"常德","430600"=>"岳阳",
-              "210100"=>"沈阳","210200"=>"大连","210800"=>"营口",
-              "350100" => "福州", "350200" => "厦门","350500" => "泉州",
-              "220100"=>"长春",  "230100"=>"哈尔滨",  "230600"=>"大庆",  "340100"=>"合肥", "340200"=>"芜湖","450100"=>"南宁","360100"=>"南昌",
-              "441300"=>"惠州", "441200"=>"肇庆", "442000"=>"中山", "330400"=>"嘉兴", "520100"=>"贵阳", "520300"=>"遵义", "150100"=>"呼和浩特", "650100"=>"乌鲁木齐", "510600"=>"德阳", "510700"=>"绵阳", "420600"=>"襄阳", "420500"=>"宜昌"
+              "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛", "440600" => "佛山", "371000" => '威海',
+              "370600" => '烟台', "370700" => '潍坊', "320400" => '常州', "320300" => '徐州', "320600" => '南通', "321000" => '扬州', "370100" => "济南",
+              "130100" => "石家庄", "130200" => "唐山", "140100" => "太原", "610400" => "咸阳", "610300" => "宝鸡",
+              "410300" => "洛阳", "411300" => "南阳", "410700" => "新乡",
+              "430300" => "湘潭", "430200" => "株洲", "430700" => "常德", "430600" => "岳阳",
+              "210100" => "沈阳", "210200" => "大连", "210800" => "营口",
+              "350100" => "福州", "350200" => "厦门", "350500" => "泉州",
+              "220100" => "长春", "230100" => "哈尔滨", "230600" => "大庆", "340100" => "合肥", "340200" => "芜湖", "450100" => "南宁", "360100" => "南昌",
+              "441300" => "惠州", "441200" => "肇庆", "442000" => "中山", "330400" => "嘉兴", "520100" => "贵阳", "520300" => "遵义", "150100" => "呼和浩特", "650100" => "乌鲁木齐", "510600" => "德阳", "510700" => "绵阳", "420600" => "襄阳", "420500" => "宜昌"
   } #,
 
   def self.get_che168_sub_cities sub_party = 0
     case sub_party
       when 0
         {
-            "310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州", "420100" => "武汉","440600" => "佛山"
+            "310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州", "420100" => "武汉", "440600" => "佛山"
         }
       when 1
         {
@@ -48,15 +48,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       else
         {
-             "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛","371000" => '威海', "370600" => '烟台',"370700" => '潍坊',
-             "320400" => '常州',"320300" => '徐州', "320600" => '南通', "321000" => '扬州',"370100" => "济南",
-             "130100" => "石家庄", "130200" => "唐山", "140100" => "太原","610400"=>"咸阳","610300"=>"宝鸡","410300"=> "洛阳", "411300"=>"南阳", "410700"=>"新乡",
-             "430300"=>"湘潭","430200"=>"株洲","430700"=>"常德","430600"=>"岳阳",
-             "210100"=>"沈阳","210200"=>"大连","210800"=>"营口",
-             "350100" => "福州", "350200" => "厦门","350500" => "泉州",
-             "220100"=>"长春",  "230100"=>"哈尔滨",  "230600"=>"大庆",  "340100"=>"合肥", "340200"=>"芜湖","450100"=>"南宁","360100"=>"南昌",
-             "441300"=>"惠州", "441200"=>"肇庆", "442000"=>"中山", "330400"=>"嘉兴", "520100"=>"贵阳", "520300"=>"遵义", "150100"=>"呼和浩特", "650100"=>"乌鲁木齐",
-             "510600"=>"德阳", "510700"=>"绵阳", "420600"=>"襄阳", "420500"=>"宜昌"
+            "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛", "371000" => '威海', "370600" => '烟台', "370700" => '潍坊',
+            "320400" => '常州', "320300" => '徐州', "320600" => '南通', "321000" => '扬州', "370100" => "济南",
+            "130100" => "石家庄", "130200" => "唐山", "140100" => "太原", "610400" => "咸阳", "610300" => "宝鸡", "410300" => "洛阳", "411300" => "南阳", "410700" => "新乡",
+            "430300" => "湘潭", "430200" => "株洲", "430700" => "常德", "430600" => "岳阳",
+            "210100" => "沈阳", "210200" => "大连", "210800" => "营口",
+            "350100" => "福州", "350200" => "厦门", "350500" => "泉州",
+            "220100" => "长春", "230100" => "哈尔滨", "230600" => "大庆", "340100" => "合肥", "340200" => "芜湖", "450100" => "南宁", "360100" => "南昌",
+            "441300" => "惠州", "441200" => "肇庆", "442000" => "中山", "330400" => "嘉兴", "520100" => "贵阳", "520300" => "遵义", "150100" => "呼和浩特", "650100" => "乌鲁木齐",
+            "510600" => "德阳", "510700" => "绵阳", "420600" => "襄阳", "420500" => "宜昌"
         }
     end
   end
@@ -68,16 +68,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
       "dongguan" => "东莞", "chongqing" => "重庆", "beijing" => "北京", "zhengzhou" => '郑州', 'changsha' => '长沙',
-      'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "foshan" => '佛山', "weihai" => '威海',"yantai" => '烟台', "weifang"=> '潍坊',
-      "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州',"jinan" => "济南","shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
-      "xianyang"=>"咸阳","baoji"=>"宝鸡","luoyang"=> "洛阳", "nanyang"=>"南阳", "xinxiang"=>"新乡",
-      "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yueyang"=>"岳阳",
-      "shenyang"=>"沈阳","dalian"=>"大连","yingkou"=>"营口",
-      "fuzhou" => "福州", "xiamen" => "厦门","quanzhou" => "泉州",
-      "changchun"=>"长春",  "haerbin"=>"哈尔滨",  "daqing"=>"大庆",  "hefei"=>"合肥", "wuhu"=>"芜湖","nanning"=>"南宁","nanchang"=>"南昌",
-      "huizhou"=>"惠州", "zhaoqing"=>"肇庆", "zhongshan"=>"中山", "jiaxing"=>"嘉兴",
-      "guiyang"=>"贵阳", "zunyi"=>"遵义", "huhehaote"=>"呼和浩特", "wulumuqi"=>"乌鲁木齐", "deyang"=>"德阳",
-      "mianyang"=>"绵阳", "xiangfan"=>"襄阳", "yichang"=>"宜昌"
+      'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "foshan" => '佛山', "weihai" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
+      "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jinan" => "济南", "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
+      "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
+      "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
+      "shenyang" => "沈阳", "dalian" => "大连", "yingkou" => "营口",
+      "fuzhou" => "福州", "xiamen" => "厦门", "quanzhou" => "泉州",
+      "changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥", "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
+      "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
+      "guiyang" => "贵阳", "zunyi" => "遵义", "huhehaote" => "呼和浩特", "wulumuqi" => "乌鲁木齐", "deyang" => "德阳",
+      "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌"
   }
 
 
@@ -85,33 +85,33 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   BAIXING_PINYIN_CITY = {
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
-      "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡","foshan" => '佛山',#,
-      "zhengzhou" => '郑州', 'changsha' => '长沙', 'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "weihai" => '威海',"yantai" => '烟台', "weifang"=> '潍坊',
-      "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州',"jinan" => "济南","shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
-      "xianyang"=>"咸阳","baoji"=>"宝鸡","luoyang"=> "洛阳", "nanyang"=>"南阳", "xinxiang"=>"新乡",
-      "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yueyang"=>"岳阳",
-      "shenyang"=>"沈阳","dalian"=>"大连","yingkou"=>"营口",
-      "fuzhou" => "福州", "xiamen" => "厦门","quanzhou" => "泉州",
-      "changchun"=>"长春",  "haerbin"=>"哈尔滨",  "daqing"=>"大庆",  "hefei"=>"合肥", "wuhu"=>"芜湖","nanning"=>"南宁","nanchang"=>"南昌",
-      "huizhou"=>"惠州", "zhaoqing"=>"肇庆", "zhongshan"=>"中山", "jiaxing"=>"嘉兴",
-      "guiyang"=>"贵阳", "zunyi"=>"遵义", "huhehaote"=>"呼和浩特", "wulumuqi"=>"乌鲁木齐", "deyang"=>"德阳",
-      "mianyang"=>"绵阳", "xiangfan"=>"襄阳", "yichang"=>"宜昌"
+      "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡", "foshan" => '佛山', #,
+      "zhengzhou" => '郑州', 'changsha' => '长沙', 'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "weihai" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
+      "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jinan" => "济南", "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
+      "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
+      "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
+      "shenyang" => "沈阳", "dalian" => "大连", "yingkou" => "营口",
+      "fuzhou" => "福州", "xiamen" => "厦门", "quanzhou" => "泉州",
+      "changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥", "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
+      "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
+      "guiyang" => "贵阳", "zunyi" => "遵义", "huhehaote" => "呼和浩特", "wulumuqi" => "乌鲁木齐", "deyang" => "德阳",
+      "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌"
   }
 
 
   GANJI_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉",
       "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "wx" => "无锡",
-      'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', 'foshan' => '佛山', "wei" => '威海',"yantai" => '烟台', "weifang"=> '潍坊',
-      "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州',"jn" => "济南","sjz" => "石家庄", "tangshan" => "唐山", "ty" => "太原",
-      "xianyang"=>"咸阳","baoji"=>"宝鸡","luoyang"=> "洛阳", "nanyang"=>"南阳", "xinxiang"=>"新乡",
-      "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yueyang"=>"岳阳",
-      "sy"=>"沈阳","dl"=>"大连","yingkou"=>"营口",
-      "fz" => "福州", "xm" => "厦门","quanzhou" => "泉州",
-      "cc"=>"长春",  "hrb"=>"哈尔滨",  "daqing"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌",
-      "huizhou"=>"惠州", "zhaoqing"=>"肇庆", "zhongshan"=>"中山", "jiaxing"=>"嘉兴",
-      "gy"=>"贵阳", "zunyi"=>"遵义", "nmg"=>"呼和浩特", "xj"=>"乌鲁木齐", "deyang"=>"德阳",
-      "mianyang"=>"绵阳", "xiangyang"=>"襄阳", "yichang"=>"宜昌"
+      'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', 'foshan' => '佛山', "wei" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
+      "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jn" => "济南", "sjz" => "石家庄", "tangshan" => "唐山", "ty" => "太原",
+      "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
+      "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
+      "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口",
+      "fz" => "福州", "xm" => "厦门", "quanzhou" => "泉州",
+      "cc" => "长春", "hrb" => "哈尔滨", "daqing" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
+      "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
+      "gy" => "贵阳", "zunyi" => "遵义", "nmg" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
+      "mianyang" => "绵阳", "xiangyang" => "襄阳", "yichang" => "宜昌"
 
   }
 
@@ -128,16 +128,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       else
         {
-            'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', "wei" => '威海',"yantai" => '烟台', "weifang"=> '潍坊',
-            "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州',"jn" => "济南","sjz" => "石家庄", "tangshan" => "唐山",
-            "ty" => "太原","xianyang"=>"咸阳","baoji"=>"宝鸡","luoyang"=> "洛阳", "nanyang"=>"南阳", "xinxiang"=>"新乡",
-            "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yueyang"=>"岳阳",
-            "sy"=>"沈阳","dl"=>"大连","yingkou"=>"营口",
-            "fz" => "福州", "xm" => "厦门","quanzhou" => "泉州",
-            "cc"=>"长春",  "hrb"=>"哈尔滨",  "daqing"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌",
-            "huizhou"=>"惠州", "zhaoqing"=>"肇庆", "zhongshan"=>"中山", "jiaxing"=>"嘉兴",
-            "gy"=>"贵阳", "zunyi"=>"遵义", "nmg"=>"呼和浩特", "xj"=>"乌鲁木齐", "deyang"=>"德阳",
-            "mianyang"=>"绵阳", "xiangyang"=>"襄阳", "yichang"=>"宜昌"
+            'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', "wei" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
+            "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jn" => "济南", "sjz" => "石家庄", "tangshan" => "唐山",
+            "ty" => "太原", "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
+            "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
+            "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口",
+            "fz" => "福州", "xm" => "厦门", "quanzhou" => "泉州",
+            "cc" => "长春", "hrb" => "哈尔滨", "daqing" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
+            "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
+            "gy" => "贵阳", "zunyi" => "遵义", "nmg" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
+            "mianyang" => "绵阳", "xiangyang" => "襄阳", "yichang" => "宜昌"
         }
     end
   end
@@ -146,23 +146,23 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   WUBA_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉", "fs" => '佛山',
       "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆",
-      'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "weihai" => '威海',"yt" => '烟台', "wf"=> '潍坊',
-      "cz" => "常州", 'xz' => '徐州', "nt" => '南通',"yz" => '扬州',"jn" => "济南","sjz" => "石家庄", "ts" => "唐山", "ty" => "太原",
-      "xianyang"=>"咸阳","baoji"=>"宝鸡","luoyang"=> "洛阳", "ny"=>"南阳", "xx"=>"新乡",
-      "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yy"=>"岳阳",
-      "sy"=>"沈阳","dl"=>"大连","yk"=>"营口",
-      "fz" => "福州", "xm" => "厦门","qz" => "泉州",
-      "cc"=>"长春",  "hrb"=>"哈尔滨",  "dq"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌",
-      "huizhou"=>"惠州", "zq"=>"肇庆", "zs"=>"中山", "jx"=>"嘉兴",
-      "gy"=>"贵阳", "zunyi"=>"遵义", "hu"=>"呼和浩特", "xj"=>"乌鲁木齐", "deyang"=>"德阳",
-      "mianyang"=>"绵阳", "xf"=>"襄阳", "yc"=>"宜昌"
+      'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "weihai" => '威海', "yt" => '烟台', "wf" => '潍坊',
+      "cz" => "常州", 'xz' => '徐州', "nt" => '南通', "yz" => '扬州', "jn" => "济南", "sjz" => "石家庄", "ts" => "唐山", "ty" => "太原",
+      "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "ny" => "南阳", "xx" => "新乡",
+      "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yy" => "岳阳",
+      "sy" => "沈阳", "dl" => "大连", "yk" => "营口",
+      "fz" => "福州", "xm" => "厦门", "qz" => "泉州",
+      "cc" => "长春", "hrb" => "哈尔滨", "dq" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
+      "huizhou" => "惠州", "zq" => "肇庆", "zs" => "中山", "jx" => "嘉兴",
+      "gy" => "贵阳", "zunyi" => "遵义", "hu" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
+      "mianyang" => "绵阳", "xf" => "襄阳", "yc" => "宜昌"
   }
 
   def self.get_58_sub_cities sub_party = 0
     case sub_party
       when 0
         {
-            "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉","fs" => '佛山'
+            "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉", "fs" => '佛山'
         }
       when 1
         {
@@ -170,16 +170,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       else
         {
-            'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "weihai" => '威海',"yt" => '烟台', "wf"=> '潍坊',
-            "cz" => "常州", 'xz' => '徐州', "nt" => '南通',"yz" => '扬州',"jn" => "济南","sjz" => "石家庄", "ts" => "唐山", "ty" => "太原",
-            "xianyang"=>"咸阳","baoji"=>"宝鸡","luoyang"=> "洛阳", "ny"=>"南阳", "xx"=>"新乡",
-            "xiangtan"=>"湘潭","zhuzhou"=>"株洲","changde"=>"常德","yy"=>"岳阳",
-            "sy"=>"沈阳","dl"=>"大连","yk"=>"营口",
-            "fz" => "福州", "xm" => "厦门","qz" => "泉州",
-            "cc"=>"长春",  "hrb"=>"哈尔滨",  "dq"=>"大庆",  "hf"=>"合肥", "wuhu"=>"芜湖","nn"=>"南宁","nc"=>"南昌",
-            "huizhou"=>"惠州", "zq"=>"肇庆", "zs"=>"中山", "jx"=>"嘉兴",
-            "gy"=>"贵阳", "zunyi"=>"遵义", "hu"=>"呼和浩特", "xj"=>"乌鲁木齐", "deyang"=>"德阳",
-            "mianyang"=>"绵阳", "xf"=>"襄阳", "yc"=>"宜昌"
+            'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "weihai" => '威海', "yt" => '烟台', "wf" => '潍坊',
+            "cz" => "常州", 'xz' => '徐州', "nt" => '南通', "yz" => '扬州', "jn" => "济南", "sjz" => "石家庄", "ts" => "唐山", "ty" => "太原",
+            "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "ny" => "南阳", "xx" => "新乡",
+            "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yy" => "岳阳",
+            "sy" => "沈阳", "dl" => "大连", "yk" => "营口",
+            "fz" => "福州", "xm" => "厦门", "qz" => "泉州",
+            "cc" => "长春", "hrb" => "哈尔滨", "dq" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
+            "huizhou" => "惠州", "zq" => "肇庆", "zs" => "中山", "jx" => "嘉兴",
+            "gy" => "贵阳", "zunyi" => "遵义", "hu" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
+            "mianyang" => "绵阳", "xf" => "襄阳", "yc" => "宜昌"
         }
     end
   end
@@ -187,10 +187,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   def tmp_renrenche
     # cities_all = ["深圳","广州","南京","成都","东莞","重庆","苏州","郑州","上海","威海","石家庄","武汉","沈阳","西安青岛","长沙","哈尔滨","长春","杭州","潍坊","厦门","佛山","大连","合肥","天津","绵阳","徐州","无锡","湘潭","株洲","宜昌","肇庆","洛阳 ","济南 ","贵阳 ","南宁 ","福州","咸阳","南阳","惠州","太原","常德","泉州","襄阳","宝鸡","中山","德阳","常州","南通扬州","新乡","烟台 ","嘉兴","大庆","营口呼和浩特","芜湖","唐山","遵义","乌鲁木齐","南昌","岳阳"]
     # 以下是测试数据
-    cities_all = ["深圳","广州","南京","成都","东莞","重庆","苏州","郑州","威海","石家庄","武汉","沈阳","西安","青岛","长沙","哈尔滨","长春","杭州","潍坊","厦门","佛山","大连","合肥","天津","绵阳","徐州","无锡","湘潭","株洲","宜昌","肇庆","洛阳 ","济南 ","贵阳 ","南宁 ","福州","咸阳","南阳","惠州","太原","常德","泉州","襄阳","宝鸡","中山","德阳","常州","南通","扬州","新乡","烟台","嘉兴","大庆","营口", "呼和浩特","芜湖","唐山","遵义","乌鲁木齐","南昌","岳阳"]
+    cities_all = ["深圳", "广州", "南京", "成都", "东莞", "重庆", "苏州","上海", "郑州", "威海", "石家庄", "武汉", "沈阳", "西安", "青岛", "长沙", "哈尔滨", "长春", "杭州", "潍坊", "厦门", "佛山", "大连", "合肥", "天津", "绵阳", "徐州", "无锡", "湘潭", "株洲", "宜昌", "肇庆", "洛阳 ", "济南 ", "贵阳 ", "南宁 ", "福州", "咸阳", "南阳", "惠州", "太原", "常德", "泉州", "襄阳", "宝鸡", "中山", "德阳", "常州", "南通", "扬州", "新乡", "烟台", "嘉兴", "大庆", "营口", "呼和浩特", "芜湖", "唐山", "遵义", "乌鲁木齐", "南昌", "岳阳"]
   end
-
-
 
 
   def self.create_car_user_info options
@@ -249,7 +247,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info.save!
 
 
-
     if car_user_info.site_name == '58'
       # 针对58， 做城市校验，因为此时还没有电话号码，所以不用校验重复等。
       invert_wuba_city = UserSystem::CarUserInfo::WUBA_CITY.invert
@@ -281,7 +278,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
 
-    return if car_user_info.site_name == '58'   # 58数据先不上传，等待手机端提交过来
+    return if car_user_info.site_name == '58' # 58数据先不上传，等待手机端提交过来
     car_user_info = car_user_info.reload
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
     UploadTianTian.upload_one_tt car_user_info
@@ -295,7 +292,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UserSystem::CarUserInfo.transaction do
       car_user_info = UserSystem::CarUserInfo.find params[:id]
       phone = params[:phone]
-      phone.gsub!('-','')
+      phone.gsub!('-', '')
       phone = phone.match(/\d{11}$/).to_s
       car_user_info.phone = phone
       car_user_info.wuba_kouling_shouji_huilai_time = Time.now.chinese_format
@@ -494,7 +491,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                  "140000" => "山西", "120000" => "天津", "650000" => "新疆", "540000" => "西藏", "530000" => "云南", "34000" => "安徽"}
     # provinces = { "320000" => "江苏"}
     # provinces = {"130000" => "河北"}
-    provinces = {"440000" => "广东","330000" => "浙江", "520000" => "贵州","150000" => "内蒙古","650000" => "新疆","510000" => "四川", "420000" => "湖北"}
+    provinces = {"440000" => "广东", "330000" => "浙江", "520000" => "贵州", "150000" => "内蒙古", "650000" => "新疆", "510000" => "四川", "420000" => "湖北"}
 
     city_hash = {}
     provinces.each_pair do |key, v|
@@ -506,7 +503,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       city_content["item"].each do |city|
         areaid, areaname = city["id"], city["value"]
 
-        if ["绵阳","德阳","宜昌","襄阳","肇庆","惠州","中山","贵阳", "遵义","嘉兴","呼和浩特","乌鲁木齐"].include? areaname
+        if ["绵阳", "德阳", "宜昌", "襄阳", "肇庆", "惠州", "中山", "贵阳", "遵义", "嘉兴", "呼和浩特", "乌鲁木齐"].include? areaname
           city_hash[areaid] = areaname
         end
       end
@@ -748,6 +745,90 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   end
 
+
+
+  # UserSystem::CarUserInfo.get_info_to_renren
+  def self.get_info_to_renren
+    cities_all = ["深圳", "广州", "南京", "成都", "东莞", "重庆", "苏州","上海", "郑州", "威海", "石家庄", "武汉", "沈阳", "西安", "青岛", "长沙", "哈尔滨", "长春", "杭州", "潍坊", "厦门", "佛山", "大连", "合肥", "天津", "绵阳", "徐州", "无锡", "湘潭", "株洲", "宜昌", "肇庆", "洛阳 ", "济南 ", "贵阳 ", "南宁 ", "福州", "咸阳", "南阳", "惠州", "太原", "常德", "泉州", "襄阳", "宝鸡", "中山", "德阳", "常州", "南通", "扬州", "新乡", "烟台", "嘉兴", "大庆", "营口", "呼和浩特", "芜湖", "唐山", "遵义", "乌鲁木齐", "南昌", "岳阳"]
+    Spreadsheet.client_encoding = 'UTF-8'
+    book = Spreadsheet::Workbook.new
+    phones = []
+    record_number = 0
+    a,b,c,d,e,f,g,h,ii,jj = 0,0,0,0,0,0,0,0,0,0
+    sheet1 = book.create_worksheet name: "人人车测试数据"
+    ['姓名', '电话', '品牌', '城市'].each_with_index do |content, i|
+      sheet1.row(0)[i] = content
+    end
+    row = 0
+    cuis = UserSystem::CarUserInfo.where("id > 910000 and phone is not null")
+
+    cuis.each_with_index do |car_user_info, current_row|
+      if car_user_info.phone.blank?
+        a += 1
+        next
+      end
+      if car_user_info.name.blank?
+        b += 1
+        next
+      end
+      if car_user_info.brand.blank?
+        c+=1
+        next
+      end
+      if car_user_info.is_cheshang == 1
+        d+=1
+        next
+      end
+      if car_user_info.is_real_cheshang
+        e+=1
+        next
+      end
+      if car_user_info.is_pachong
+        f += 1
+        next
+      end
+      unless  car_user_info.is_city_match
+        g +=1
+        next
+      end
+      unless cities_all.include? car_user_info.city_chinese # 判断城市是否包含
+        h += 1
+        next
+      end
+
+      #最要这个手机号出现过一次，就不导入
+      cuis = UserSystem::CarUserInfo.where("id < ? and phone = ?", car_user_info.id, car_user_info.phone)
+      if cuis.length > 0
+        ii+=1
+        next
+      end
+
+      jj+=1
+      record_number = record_number+1
+      row = row+1
+      [car_user_info.name.gsub('(个人)', '').gsub('联系TA', '先生女士'), car_user_info.phone, car_user_info.brand, car_user_info.city_chinese].each_with_index do |content, i|
+        sheet1.row(row)[i] = content
+      end
+    end
+
+
+    dir = Rails.root.join('public', 'downloads')
+    Dir.mkdir dir unless Dir.exist? dir
+    file_path = File.join(dir, "#{Time.now.strftime("%Y%m%dT%H%M%S")}RenRen信息数据.xls")
+    book.write file_path
+    file_path
+    pp a,b,c,d,e,f,g,h,ii,jj
+
+    # MailSend.send_car_user_infos('13472446647@163.com',
+    #                              '',
+    #                              record_number,
+    #                              "RenRen最新数据-#{Time.now.chinese_format}",
+    #                              [file_path]
+    # ).deliver
+
+  end
+
+  #获取手机号对应的城市 ， 废弃
   def self.phone_city
 
     UserSystem::CarUserInfo.where("phone_city is null and id > 500000 and phone is not null").order(id: :desc).find_each do |cui|
