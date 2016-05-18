@@ -26,7 +26,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   ALL_CITY = {"310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州", "420100" => "武汉",
               "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆", "320200" => "无锡",
                "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛","440600" => "佛山", "371000" => '威海',
-               "370600" => '烟台',"370700" => '潍坊', "320400" => '常州',"320300" => '徐州', "320600" => '南通', "321000" => '扬州'} #,
+               "370600" => '烟台',"370700" => '潍坊', "320400" => '常州',"320300" => '徐州', "320600" => '南通', "321000" => '扬州',"370100" => "济南",
+  "130100" => "石家庄", "130200" => "唐山", "140100" => "太原","610100"=>"西安","610400"=>"咸阳","610300"=>"宝鸡"} #,
 
   def self.get_che168_sub_cities sub_party = 0
     case sub_party
@@ -41,7 +42,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       else
         {
              "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛","371000" => '威海', "370600" => '烟台',"370700" => '潍坊',
-             "320400" => '常州',"320300" => '徐州', "320600" => '南通', "321000" => '扬州'
+             "320400" => '常州',"320300" => '徐州', "320600" => '南通', "321000" => '扬州',"370100" => "济南",
+             "130100" => "石家庄", "130200" => "唐山", "140100" => "太原","610100"=>"西安","610400"=>"咸阳","610300"=>"宝鸡"
         }
     end
   end
@@ -54,7 +56,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
       "dongguan" => "东莞", "chongqing" => "重庆", "beijing" => "北京", "zhengzhou" => '郑州', 'changsha' => '长沙',
       'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "foshan" => '佛山', "weihai" => '威海',"yantai" => '烟台', "weifang"=> '潍坊',
-      "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州'
+      "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州',"jinan" => "济南","shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
+      "xian"=>"西安","xianyang"=>"咸阳","baoji"=>"宝鸡"
   }
 
 
@@ -64,7 +67,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
       "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡","foshan" => '佛山',#,
       "zhengzhou" => '郑州', 'changsha' => '长沙', 'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "weihai" => '威海',"yantai" => '烟台', "weifang"=> '潍坊',
-      "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州'
+      "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州',"jinan" => "济南","shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
+      "xian"=>"西安","xianyang"=>"咸阳","baoji"=>"宝鸡"
   }
 
 
@@ -72,7 +76,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉",
       "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "wx" => "无锡",
       'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', 'foshan' => '佛山', "wei" => '威海',"yantai" => '烟台', "weifang"=> '潍坊',
-      "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州'
+      "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州',"jn" => "济南","sjz" => "石家庄", "tangshan" => "唐山", "ty" => "太原",
+      "xa"=>"西安","xianyang"=>"咸阳","baoji"=>"宝鸡"
   }
 
 
@@ -89,7 +94,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       else
         {
             'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', "wei" => '威海',"yantai" => '烟台', "weifang"=> '潍坊',
-            "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州'
+            "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通',"yangzhou" => '扬州',"jn" => "济南","sjz" => "石家庄", "tangshan" => "唐山",
+            "ty" => "太原","xa"=>"西安","xianyang"=>"咸阳","baoji"=>"宝鸡"
         }
     end
   end
@@ -99,7 +105,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉", "fs" => '佛山',
       "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆",
       'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "weihai" => '威海',"yt" => '烟台', "wf"=> '潍坊',
-      "cz" => "常州", 'xz' => '徐州', "nt" => '南通',"yz" => '扬州'
+      "cz" => "常州", 'xz' => '徐州', "nt" => '南通',"yz" => '扬州',"jn" => "济南","sjz" => "石家庄", "ts" => "唐山", "ty" => "太原",
+      "xa"=>"西安","xianyang"=>"咸阳","baoji"=>"宝鸡"
   }
 
   def self.get_58_sub_cities sub_party = 0
@@ -115,7 +122,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       else
         {
             'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "weihai" => '威海',"yt" => '烟台', "wf"=> '潍坊',
-            "cz" => "常州", 'xz' => '徐州', "nt" => '南通',"yz" => '扬州'
+            "cz" => "常州", 'xz' => '徐州', "nt" => '南通',"yz" => '扬州',"jn" => "济南","sjz" => "石家庄", "ts" => "唐山", "ty" => "太原",
+            "xa"=>"西安","xianyang"=>"咸阳","baoji"=>"宝鸡"
         }
     end
   end
@@ -423,7 +431,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   # UserSystem::CarUserInfo.get_city_code_name
   def self.get_city_code_name
     provinces = {"440000" => "广东", "370000" => "山东", "330000" => "浙江", "320000" => "江苏", "130000" => "河北", "410000" => "河南", "110000" => "北京", "210000" => "辽宁", "310000" => "上海", "500000" => "重庆", "350000" => "福建", "450000" => "广西", "520000" => "贵州", "620000" => "甘肃", "460000" => "海南", "420000" => "湖北", "430000" => "湖南", "230000" => "黑龙江", "360000" => "江西", "220000" => "吉林", "150000" => "内蒙古", "640000" => "宁夏", "630000" => "青海", "610000" => "陕西", "510000" => "四川", "140000" => "山西", "120000" => "天津", "650000" => "新疆", "540000" => "西藏", "530000" => "云南", "34000" => "安徽"}
-    provinces = { "320000" => "江苏"}
+    # provinces = { "320000" => "江苏"}
+    # provinces = {"130000" => "河北"}
+    provinces = {"610000" => "陕西"}
+
     city_hash = {}
     provinces.each_pair do |key, v|
       city_content = RestClient.get("http://m.che168.com/Handler/GetArea.ashx?pid=#{key}")
