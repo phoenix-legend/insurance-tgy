@@ -48,14 +48,14 @@ class UserSystem::CarBusinessUserInfo < ActiveRecord::Base
         end
       end
 
-      if is_cheshang == false
-        ['1111','2222','3333','4444','5555','6666','7777','8888','9999','0000'].each do |cfxz|
-          if  car_user_info.phone.include? cfxz
-            is_cheshang = true
-            break
-          end
-        end
-      end
+      # if is_cheshang == false
+      #   ['1111','2222','3333','4444','5555','6666','7777','8888','9999','0000'].each do |cfxz|
+      #     if  car_user_info.phone.include? cfxz
+      #       is_cheshang = true
+      #       break
+      #     end
+      #   end
+      # end
     end
 
 
