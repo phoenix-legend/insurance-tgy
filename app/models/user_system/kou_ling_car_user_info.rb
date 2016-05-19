@@ -4,13 +4,18 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
   def self.create_kouling_car_user_info car_user_info_id
     klcui = UserSystem::KouLingCarUserInfo.new :car_user_info_id => car_user_info_id
     klcui.save!
+    if ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "重庆", "佛山"].include? klcui.car_user_info.city_chinese
+      klcui.vip_flg = 'vip'
+      klcui.save!
+    end
   end
 
   #获取未提交口令
   def self.get_wei_tijiao_kouling deviceid = 'unknow'
     UserSystem::KouLingCarUserInfo.transaction do
       # return nil
-      kouling_car_infos = UserSystem::KouLingCarUserInfo.order(id: :desc).limit(10)
+      kouling_car_infos = UserSystem::KouLingCarUserInfo.where("vip_flg = ?", 'vip').order(id: :desc).limit(10)
+      kouling_car_infos = UserSystem::KouLingCarUserInfo.order(id: :desc).limit(10)  if kouling_car_infos.blank?
       return nil if kouling_car_infos.blank?
       number = rand(kouling_car_infos.length)
       kouling = kouling_car_infos[number]

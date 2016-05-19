@@ -773,6 +773,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         b += 1
         next
       end
+
+      if car_user_info.milage.to_i > 10
+        next
+      end
+
+      if car_user_info.che_ling.to_i < 2008
+        next
+      end
+
       if car_user_info.brand.blank?
         c+=1
         next
