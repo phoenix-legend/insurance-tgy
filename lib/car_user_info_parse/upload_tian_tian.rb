@@ -384,7 +384,7 @@ module UploadTianTian
       pp site_name
 
       cuis = UserSystem::CarUserInfo.where("site_name = '#{site_name}' and tt_upload_status = '已上传' and id > 553263 and is_repeat_one_month = false ")
-                 .order(id: :desc).limit(100).
+                 .order(id: :desc).limit(300).
           select("id, name , phone, tt_upload_status,city_chinese, tt_id, tt_message, brand, created_at, site_name,is_repeat_one_month ")
       a = []
       cuis.each do |cui|
@@ -414,11 +414,12 @@ module UploadTianTian
     UserSystem::KouLingCarUserInfo.all.find_each do |kl|
       begin
         cui = kl.car_user_info
-        unless ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "重庆", "佛山"].include? cui.city_chinese
-            kl.destroy
-            cui.wuba_kouling_status = 'jiazhuangyitijiao'
-            cui.wuba_kouling_shouji_huilai_time = '2016-05-18 12:00:00'
-            cui.save!
+        if ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "重庆", "佛山"].include? cui.city_chinese
+            kl.vip_flg = 'vip'
+          kl.save!
+        else
+          kl.vip_flg = 'normal'
+          kl.save!
         end
       rescue Exception => e
         next
