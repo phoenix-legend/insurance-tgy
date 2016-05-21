@@ -59,7 +59,7 @@ module Wuba
                 if url.match /http:\/\/short/
                   url_short = url
                   url = Wuba.get_normal_url_by_short_url_and_city url, areaid
-                  pp "翻译58shorturl #{url_short} 为 #{url}"
+                  # pp "翻译58shorturl #{url_short} 为 #{url}"
                   next if url.blank?
                 end
 
