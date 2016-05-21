@@ -28,7 +28,7 @@ module Baixing
             # price = car_info.css('.price').text
             # chexing = car_info.css('a').children[0].text
             is_cheshang = 0
-            result = UserSystem::CarUserInfo.create_car_user_info che_ling: "2010",
+            result = UserSystem::CarUserInfo.create_car_user_info che_ling: "3010",
                                                                   milage: 8.8,
                                                                   detail_url: detail_url,
                                                                   city_chinese: areaname,
@@ -75,13 +75,24 @@ module Baixing
 
       detail_content1 = response.body
       detail_content1.gsub!('content normal-content long-content', 'eric_content')
+      detail_content1.gsub!('content normal-content', 'eric_content')
+      detail_content1.gsub!('friendly datetime', 'fabushijian')
+
       detail_content = Nokogiri::HTML(detail_content1)
-      licheng = '80000'
+
       phone = detail_content.css(".num")[0].text
       che_xing = detail_content.css(".title h1").text
+      fabushijian = begin detail_content.css(".fabushijian").text rescue '2010-01-01' end
+
+      che_ling = begin detail_content.css(".detail .content .info").children[0].children[0].content rescue '3010-01' end
+      che_ling = che_ling.split('-')[0]
+      licheng = begin detail_content.css(".detail .content .info").children[1].children[0].content rescue '80000' end
+      licheng = licheng.gsub(/万|公里/, '')
+
+
       name = '先生女士'
       note = begin detail_content.css(".eric_content")[0].text rescue '' end
-      fabushijian = '2010-01-01'
+
       UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                             name: name,
                                             phone: phone,

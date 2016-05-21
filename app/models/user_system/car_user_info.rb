@@ -315,6 +315,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     if not params[:che_xing].blank?
       car_user_info.che_xing = params[:che_xing]
     end
+
+    if not params[:che_ling].blank?
+      car_user_info.che_ling = params[:che_ling]
+    end
     car_user_info.need_update = false
     car_user_info.save!
 
