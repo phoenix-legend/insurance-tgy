@@ -100,6 +100,7 @@ module Baixing
                                             fabushijian: fabushijian,
                                             # brand: brand,
                                             che_xing: che_xing,
+                                            che_ling: che_ling,
                                             milage: licheng
     rescue Exception => e
       pp e
