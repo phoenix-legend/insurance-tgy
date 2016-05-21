@@ -101,7 +101,7 @@ module Baixing
                                             # brand: brand,
                                             che_xing: che_xing,
                                             che_ling: che_ling,
-                                            milage: licheng
+                                            licheng: licheng
     rescue Exception => e
       pp e
       pp $@
