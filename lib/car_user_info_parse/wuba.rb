@@ -77,7 +77,7 @@ module Wuba
                                                                     price: price,
                                                                     che_ling: cheling,
                                                                     milage: milage,
-                                                                    detail_url: url.split('?')[0],
+                                                                    detail_url:   url.split('?')[0],
                                                                     city_chinese: areaname,
                                                                     site_name: '58'
 

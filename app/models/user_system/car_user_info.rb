@@ -121,6 +121,24 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡", "foshan" => '佛山'
   }
 
+  def self.get_baixing_sub_cities sub_party = 0
+    case sub_party
+      when 0
+        {
+            "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京"
+        }
+      when 1
+        {
+            "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州"
+        }
+      else
+        {
+
+            "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡", "foshan" => '佛山'
+        }
+    end
+  end
+
 
   #赶集人人车+天天拍
   GANJI_CITY_RENREN_ALL = {
@@ -452,9 +470,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
   end
 
-  def self.run_baixing
+  def self.run_baixing party = 0
     begin
-      Baixing.get_car_user_list
+      Baixing.get_car_user_list party
     rescue Exception => e
       pp e
     end

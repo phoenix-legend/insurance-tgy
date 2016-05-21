@@ -1,9 +1,10 @@
 module Baixing
 
   # Baixing.get_car_user_list
-  def self.get_car_user_list
+  def self.get_car_user_list party = 0
     pp "现在时间:#{Time.now.chinese_format}"
-    city_hash = ::UserSystem::CarUserInfo::BAIXING_PINYIN_CITY
+    # city_hash = ::UserSystem::CarUserInfo::BAIXING_PINYIN_CITY
+    city_hash = ::UserSystem::CarUserInfo.get_baixing_sub_cities party
     city_hash.each_pair do |areaid, areaname|
       begin
         pp "现在跑..百姓 #{areaname}"
