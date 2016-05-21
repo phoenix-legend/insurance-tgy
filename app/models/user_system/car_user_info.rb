@@ -460,7 +460,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
     begin
-      Baixing.update_detail
+      # Baixing.update_detail
     rescue Exception => e
       pp e
     end
@@ -793,6 +793,19 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # UserSystem::CarUserInfo.get_info_to_renren
   def self.get_info_to_renren
+
+    # 人人车优化笔记
+    # 1. 车龄在08年以前的， 12万公里以内，才从手机端获取数据。其它不获取数据。    对于58
+    # 2. 根据描述可以判断是车商的， 不再获取手机号      对于58
+    # 3. 小城市群分成四个组，再开2台服务器，用于快速抓取数据  对于58
+    # 4. 对于赶集， 小城市群分成四个组，再开1台服务器，用于快速抓取数据。  对于赶集
+    # 5. 对于百姓， 现在4台机器在跑， 把数据分成6个小组， 每台机器跑一组。 对于百姓
+    # 6. 对于百姓， 严格获取车龄和里程
+    # 7. 对于整体， 所有手机号过滤一遍，手机号重复率> 10 的， 全部进入车商库。
+    # 8. 对于整体， 只要在车商库中存在的，一律不提交
+    # 9. 对于没有车龄，里程数据的，一律不提交
+    # #
+
     cities_all = ["深圳", "广州", "南京", "成都", "东莞", "重庆", "苏州","上海", "郑州", "威海", "石家庄", "武汉", "沈阳", "西安", "青岛", "长沙", "哈尔滨", "长春", "杭州", "潍坊", "厦门", "佛山", "大连", "合肥", "天津", "绵阳", "徐州", "无锡", "湘潭", "株洲", "宜昌", "肇庆", "洛阳 ", "济南 ", "贵阳 ", "南宁 ", "福州", "咸阳", "南阳", "惠州", "太原", "常德", "泉州", "襄阳", "宝鸡", "中山", "德阳", "常州", "南通", "扬州", "新乡", "烟台", "嘉兴", "大庆", "营口", "呼和浩特", "芜湖", "唐山", "遵义", "乌鲁木齐", "南昌", "岳阳"]
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
@@ -886,15 +899,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   #获取手机号对应的城市 ， 废弃
   def self.phone_city
 
-    UserSystem::CarUserInfo.where("phone_city is null and id > 500000 and phone is not null").order(id: :desc).find_each do |cui|
+    UserSystem::CarUserInfo.where("phone_city is null and id > 500000 and phone is not null and tt_code is not null").order(id: :desc).find_each do |cui|
       begin
-        next unless cui.phone_city.blank?
-        response = RestClient.get "http://virtual.paipai.com/extinfo/GetMobileProductInfo?mobile=#{cui.phone}&amount=10000&callname=getPhoneNumInfoExtCallback"
-        ec = Encoding::Converter.new("gb18030", "UTF-8")
-        response = ec.convert response
-        matchs = response.match /cityname:'(.*)'/
-        cityname = matchs[1].to_s
-        next if cityname.blank?
+        cityname = UserSystem::YoucheCarUserInfo.get_city_name cui.phone
         cui.phone_city = cityname
         cui.save!
       rescue Exception => e
@@ -902,62 +909,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
 
-    ts = []
-    phones.each do |phone|
-      begin
-        response = RestClient.get "http://life.tenpay.com/cgi-bin/mobile/MobileQueryAttribution.cgi?chgmobile=#{phone}"
-
-        ec = Encoding::Converter.new("gb18030", "UTF-8")
-        response = ec.convert response
-        pp response
-        matchs = response.match /<city>(.*)<\/city>/
-        cityname = matchs[1].to_s
-        ts << cityname
-      rescue
-        next
-      end
-    end
-
-
-    month_ago = Time.now - 3.days
-    h = {}
-    while true do
-      n = UserSystem::CarUserInfo.where("created_at > ? and site_name = '58' and created_at < ? and site_name = '58' and city_chinese in ('上海', '成都', '深圳', '南京', '广州', '武汉', '天津', '苏州', '杭州', '东莞', '重庆')", "#{month_ago.chinese_format_day} #{month_ago.hour}:00:00", "#{month_ago.chinese_format_day} #{month_ago.hour}:59:59").count
-      if h[month_ago.hour].blank?
-        h[month_ago.hour] = []
-      end
-      h[month_ago.hour] << n
-      month_ago = month_ago + 1.hour
-      break if Time.now < month_ago
-    end
-
-    h_new = {}
-    h.each_pair do |k, v|
-      h_new[k] = (v.sum.to_f / v.length).to_i
-    end
-
-
-    h = {}
-    days = ['2016-03-28', '2016-03-29', '2016-04-11', '2016-04-12', '2016-04-15']
-    a = ""
-    (10..22).each do |hour|
-      days.each do |day|
-        n = UserSystem::CarUserInfo.where("created_at > ? and site_name = '58' and created_at < ? and site_name = '58' and city_chinese in ('上海', '成都', '深圳', '南京', '广州', '武汉', '天津', '苏州', '杭州', '东莞', '重庆')", "#{day} #{hour}:00:00", "#{day} #{hour}:59:59").count
-        h["#{day} #{hour}"] = n
-        a = "#{a} #{"#{day} #{hour}点"} #{n}"
-      end
-
-      a = "#{a}
-      "
-
-    end
-
-
-    # hours = c(15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
-    # numb = c(112, 113, 109, 92, 87, 82, 80, 69, 53, 35, 18, 10, 6, 4, 4, 9, 19, 42, 81, 108, 122, 92, 113, 109)
-
-    # hours = c(15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
-    # numb = c(101, 92, 97, 75, 70, 76, 62, 63, 47, 40, 18, 13, 7, 7, 5, 9, 17, 44, 77, 106, 113, 85, 106, 93)
 
   end
 

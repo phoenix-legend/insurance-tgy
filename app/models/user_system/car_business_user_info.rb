@@ -7,6 +7,14 @@ class UserSystem::CarBusinessUserInfo < ActiveRecord::Base
     cuis.each do |cui|
       UserSystem::CarBusinessUserInfo.add_business_user_info_phone cui
     end
+
+    ["15692135832",
+    "15110353256"].each do |phone|
+      p = UserSystem::CarBusinessUserInfo.where("phone = ?", phone)
+      next unless p.blank?
+      kk = UserSystem::CarBusinessUserInfo.new :phone => phone
+      kk.save
+    end
   end
 
   # 根据关键词判断是否为车商
