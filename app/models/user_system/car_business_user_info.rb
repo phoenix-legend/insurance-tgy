@@ -77,7 +77,11 @@ class UserSystem::CarBusinessUserInfo < ActiveRecord::Base
         cbui = UserSystem::CarBusinessUserInfo.new :phone => car_user_info.phone
         cbui.save!
       end
+      car_user_info.is_real_cheshang = true
+      car_user_info.save!
     end
+
+    is_cheshang
   end
 
 

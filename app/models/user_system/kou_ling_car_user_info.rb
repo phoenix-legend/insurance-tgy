@@ -49,6 +49,20 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
     end
   end
 
+  def self.XXX
+    UserSystem::KouLingCarUserInfo.where("vip_flg = 'normal'").each do |k|
+      cui = k.car_user_info
+      if cui.blank?
+
+        k.destroy!
+        next
+      end
+      cui.wuba_kouling_status = 'butiqu'
+      cui.save!
+
+    end
+  end
+
 end
 __END__
 ***********备份的代码*******************
