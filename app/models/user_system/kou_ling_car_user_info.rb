@@ -4,7 +4,7 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
   def self.create_kouling_car_user_info car_user_info_id
     klcui = UserSystem::KouLingCarUserInfo.new :car_user_info_id => car_user_info_id
     klcui.save!
-    if ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "重庆", "佛山","天津","武汉"].include? klcui.car_user_info.city_chinese
+    if ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "重庆", "佛山","天津","武汉", "无锡"].include? klcui.car_user_info.city_chinese
       klcui.vip_flg = 'vip'
       klcui.save!
     end
