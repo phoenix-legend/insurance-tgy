@@ -161,6 +161,8 @@ module Wuba
                                             wuba_kouling: kouling
 
       car_user_info = car_user_info.reload
+      UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info
+      car_user_info = car_user_info.reload
       if car_user_info.is_real_cheshang or car_user_info.is_pachong or !car_user_info.is_city_match
         car_user_info.wuba_kouling_status = 'cheshang-butijiao'
         car_user_info.save!
