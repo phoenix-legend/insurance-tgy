@@ -397,13 +397,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
     #如果在car_business_user中出现，就算作车商
-    cbui = UserSystem::CarBusinessUserInfo.find_by_phone car_user_info.phone
-    unless cbui.blank?
-      car_user_info.is_cheshang = 1
-      car_user_info.is_real_cheshang = true
-      car_user_info.need_update = false
-      car_user_info.save!
+    unless car_user_info.phone.blank?
+      cbui = UserSystem::CarBusinessUserInfo.find_by_phone car_user_info.phone
+      unless cbui.blank?
+        car_user_info.is_cheshang = 1
+        car_user_info.is_real_cheshang = true
+        car_user_info.need_update = false
+        car_user_info.save!
+      end
     end
+
 
     is_pachong = UserSystem::CarBusinessUserInfo.is_pachong car_user_info
     if is_pachong
