@@ -15,7 +15,7 @@ module Wuba
       t = Thread.new do
         begin
           pp "现在跑58.. #{areaname}"
-          1.upto 3 do |i|
+          1.upto 1 do |i|
             # i = 1
             url = "http://#{areaid}.58.com/ershouche/0/pn#{i}/"
             pp url
@@ -159,9 +159,19 @@ module Wuba
                                             note: note,
                                             fabushijian: time,
                                             wuba_kouling: kouling
+
+      car_user_info = car_user_info.reload
+      if car_user_info.is_real_cheshang or car_user_info.is_pachong or !car_user_info.is_city_match
+        car_user_info.wuba_kouling_status = 'cheshang-butijiao'
+        car_user_info.save!
+      else
+        # 只抓非车商手机号
         unless kouling.blank?
           UserSystem::KouLingCarUserInfo.create_kouling_car_user_info car_user_info.id
         end
+      end
+
+
     rescue Exception => e
       pp e
       pp $@

@@ -73,7 +73,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   #城市所对应的拼音。 主要用于从淘车网更新数据。
   # 淘车
   # PINYIN_CITY_RENREN_ALL = {
-      PINYIN_CITY = {
+  PINYIN_CITY = {
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
       "dongguan" => "东莞", "chongqing" => "重庆", "beijing" => "北京", "zhengzhou" => '郑州', 'changsha' => '长沙',
@@ -210,7 +210,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   #需要人人车的时候，用这个
-  WUBA_CITY_RENREN_ALL = {
+  # WUBA_CITY_RENREN_ALL = {
+      WUBA_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉", "fs" => '佛山',
       "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆",
       'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "weihai" => '威海', "yt" => '烟台', "wf" => '潍坊',
@@ -226,10 +227,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   }
 
   #不需要人人车的时候，用这个
-  WUBA_CITY = {
-      "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉", "fs" => '佛山',
-      "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆"
-  }
+  # WUBA_CITY = {
+  #     "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉", "fs" => '佛山',
+  #     "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆"
+  # }
 
   def self.get_58_sub_cities sub_party = 0
     case sub_party
@@ -243,7 +244,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       else
         {
-            "cq" => "重庆"
+            # "cq" => "重庆"
             # 需要人人车的时候，把重庆注释掉，把以下放开就好了，
             # 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "weihai" => '威海', "yt" => '烟台', "wf" => '潍坊',
             # "cz" => "常州", 'xz' => '徐州', "nt" => '南通', "yz" => '扬州', "jn" => "济南", "sjz" => "石家庄", "ts" => "唐山", "ty" => "太原",
@@ -252,9 +253,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             # "sy" => "沈阳", "dl" => "大连", "yk" => "营口",
             # "fz" => "福州", "xm" => "厦门", "qz" => "泉州",
             # "cc" => "长春", "hrb" => "哈尔滨", "dq" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
-            # "huizhou" => "惠州", "zq" => "肇庆", "zs" => "中山", "jx" => "嘉兴",
-            # "gy" => "贵阳", "zunyi" => "遵义", "hu" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
-            # "mianyang" => "绵阳", "xf" => "襄阳", "yc" => "宜昌"
+            "huizhou" => "惠州", "zq" => "肇庆", "zs" => "中山", "jx" => "嘉兴",
+            "gy" => "贵阳", "zunyi" => "遵义", "hu" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
+            "mianyang" => "绵阳", "xf" => "襄阳", "yc" => "宜昌"
         }
     end
   end
@@ -830,6 +831,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     # 人人车优化笔记
     # 1. 车龄在08年以前的， 12万公里以内，才从手机端获取数据。其它不获取数据。    对于58
+    # 1.1 带总、经理，老板 一律不获取手机号
     # 2. 根据描述可以判断是车商的， 不再获取手机号      对于58
     # 3. 小城市群分成四个组，再开2台服务器，用于快速抓取数据  对于58
     # 4. 对于赶集， 小城市群分成四个组，再开1台服务器，用于快速抓取数据。  对于赶集
@@ -840,6 +842,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # 9. 对于没有车龄，里程数据的，一律不提交
     # #
 
+    phones = []
     cities_all = ["深圳", "广州", "南京", "成都", "东莞", "重庆", "苏州", "上海", "郑州", "威海", "石家庄", "武汉", "沈阳", "西安", "青岛", "长沙", "哈尔滨", "长春", "杭州", "潍坊", "厦门", "佛山", "大连", "合肥", "天津", "绵阳", "徐州", "无锡", "湘潭", "株洲", "宜昌", "肇庆", "洛阳 ", "济南 ", "贵阳 ", "南宁 ", "福州", "咸阳", "南阳", "惠州", "太原", "常德", "泉州", "襄阳", "宝鸡", "中山", "德阳", "常州", "南通", "扬州", "新乡", "烟台", "嘉兴", "大庆", "营口", "呼和浩特", "芜湖", "唐山", "遵义", "乌鲁木齐", "南昌", "岳阳"]
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
@@ -847,11 +850,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     record_number = 0
     a, b, c, d, e, f, g, h, ii, jj = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     sheet1 = book.create_worksheet name: "人人车测试数据"
-    ['姓名', '电话', '品牌', '城市'].each_with_index do |content, i|
+    ['姓名', '电话', '品牌', '车系', '城市', "里程", "车龄"].each_with_index do |content, i|
       sheet1.row(0)[i] = content
     end
     row = 0
-    cuis = UserSystem::CarUserInfo.where("id > 910000 and phone is not null")
+    cuis = UserSystem::CarUserInfo.where("id > 987945 and phone is not null")
 
     cuis.each_with_index do |car_user_info, current_row|
       UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
@@ -865,8 +868,30 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         next
       end
 
+      if car_user_info.note.blank?
+        next
+      end
+
       if car_user_info.milage.to_i > 10
         next
+      end
+
+      if ['金杯', '五菱', '江淮'].include? car_user_info.brand
+        next
+      end
+
+
+      ['牌照','原漆','原版漆','当天开走','美女','车辆说明','选购','精品','驾-驶-证','车况原版','随时过户','来电有惊喜','值得拥有','包提档过户','车源','神州','分期','分 期','必须过户','抵押','原车主','店内服务','选购','微信','微 信','加微'].each do |kw|
+        if car_user_info.note.include? kw
+          next
+        end
+      end
+
+      # 名字是小字开头的，都是车商
+      ['图'].each do |kw|
+        if car_user_info.name.include? kw
+          next
+        end
       end
 
       if car_user_info.che_ling.to_i < 2008
@@ -877,6 +902,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         c+=1
         next
       end
+
+      if phones.include? car_user_info.phone
+        next
+      end
+
       if car_user_info.is_cheshang == 1
         d+=1
         next
@@ -898,17 +928,21 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         next
       end
 
+
       #最要这个手机号出现过一次，就不导入
-      cuis = UserSystem::CarUserInfo.where("id < ? and phone = ?", car_user_info.id, car_user_info.phone)
-      if cuis.length > 0
-        ii+=1
-        next
-      end
+      # cuis = UserSystem::CarUserInfo.where("id < ? and phone = ?", car_user_info.id, car_user_info.phone)
+      # if cuis.length > 0
+      #   ii+=1
+      #   next
+      # end
+      cbuis = UserSystem::CarBusinessUserInfo.find_by_phone car_user_info.phone
+      next unless cbuis.blank?
 
       jj+=1
       record_number = record_number+1
       row = row+1
-      [car_user_info.name.gsub('(个人)', '').gsub('联系TA', '先生女士'), car_user_info.phone, car_user_info.brand, car_user_info.city_chinese].each_with_index do |content, i|
+      phones << car_user_info.phone
+      [car_user_info.name.gsub('(个人)', '').gsub('联系TA', '先生女士'), car_user_info.phone, car_user_info.brand, car_user_info.cx, car_user_info.city_chinese, car_user_info.milage, car_user_info.che_ling, car_user_info.note].each_with_index do |content, i|
         sheet1.row(row)[i] = content
       end
     end
