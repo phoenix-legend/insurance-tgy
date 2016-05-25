@@ -59,7 +59,7 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
       end
       cui.wuba_kouling_status = 'butiqu'
       cui.save!
-
+      k.destroy!
     end
   end
 

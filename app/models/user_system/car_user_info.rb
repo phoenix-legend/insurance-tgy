@@ -211,7 +211,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   #需要人人车的时候，用这个
   # WUBA_CITY_RENREN_ALL = {
-      WUBA_CITY = {
+  WUBA_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉", "fs" => '佛山',
       "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆",
       'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "weihai" => '威海', "yt" => '烟台', "wf" => '潍坊',
@@ -857,7 +857,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       sheet1.row(0)[i] = content
     end
     row = 0
-    cuis = UserSystem::CarUserInfo.where("id > 987945 and phone is not null")
+    cuis = UserSystem::CarUserInfo.where("id > 994265 and phone is not null")
 
     cuis.each_with_index do |car_user_info, current_row|
       UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
@@ -879,23 +879,50 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         next
       end
 
+
       if ['金杯', '五菱', '江淮'].include? car_user_info.brand
         next
       end
 
 
-      ['牌照','原漆','原版漆','当天开走','美女','车辆说明','选购','精品','驾-驶-证','车况原版','随时过户','来电有惊喜','值得拥有','包提档过户','车源','神州','分期','分 期','必须过户','抵押','原车主','店内服务','选购','微信','微 信','加微'].each do |kw|
+      # 本车   私家车  手机号  心动  包你满意    一个螺丝
+      aaa = false
+      ['求购', '牌照', '批发', '私家一手车', '个体经商', '过不了户', '帮朋友', '外地',
+       '贷款', '女士一手车', '原漆', '原版漆', '当天开走', '美女', '车辆说明','车辆概述', '选购','一个螺丝',
+       '精品', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
+       '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信', '微 信',
+       '威信', '加微', '评估师点评', '车主自述','电话量大','包你满意','刷卡','纯正','抢购','心动','本车','送豪礼'].each do |kw|
         if car_user_info.note.include? kw
-          next
+          aaa = true
+          break
+        end
+      end
+      next if aaa
+
+      aaa = false
+      # 名字是小字开头的，都是车商
+      ['图', '哥', '旗舰', '汽车', '威信', '微信'].each do |kw|
+        if car_user_info.name.include? kw
+          aaa = true
+          break
         end
       end
 
-      # 名字是小字开头的，都是车商
-      ['图'].each do |kw|
-        if car_user_info.name.include? kw
-          next
-        end
+
+      # ["天窗","导航","倒车雷达","电动调节座椅","后视镜加热","后视镜电动调节","多功能方向盘","轮毂","dvd","行车记录","影像","蓝牙","CD","日行灯","一键升降窗","中控锁","防盗断油装置","全车LED灯","电动后视镜","电动门窗","DVD，","真皮","原车旅行架","脚垫","气囊","一键启动","无钥匙","四轮碟刹","自动空调，","倒镜自动收","GPS","电子手刹","换挡拨片","巡航定速"].each do |kw|
+      #
+      # end
+
+      next if aaa
+
+      if car_user_info.name.match /^小/ and car_user_info.name.length == 2
+        next
       end
+
+      if car_user_info.note.match /^出售/
+        next
+      end
+
 
       if car_user_info.che_ling.to_i < 2008
         next
@@ -980,6 +1007,18 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
 
+  end
+
+  def test
+    ids = []
+    UserSystem::CarUserInfo.where("1=1").find_each do |k|
+      next if k.note.blank?
+      i = 0
+      ["天窗", "导航", "倒车雷达", "电动调节座椅", "后视镜加热", "后视镜电动调节", "多功能方向盘", "轮毂", "dvd", "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜", "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "自动空调，", "倒镜自动收", "GPS", "电子手刹", "换挡拨片", "巡航定速"].each do |kw|
+        i+=1 if k.note.include? kw
+      end
+      ids << k.id if i > 6
+    end
   end
 
 
