@@ -132,23 +132,42 @@ module Wuba
     begin
       puts '更新明细'
       pp car_user_info.detail_url
-      response = RestClient.get(car_user_info.detail_url)
+      response = RestClient.get car_user_info.detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
 
       detail_content = response.body
+      detail_content.gsub!('intro-per intro-center','personname')
+      detail_content.gsub!('abstract-info-txt clear','fbsj')
+      detail_content.gsub!('detailinfo-box desClose','notenote')
+
+
       detail_content = Nokogiri::HTML(detail_content)
-      time = detail_content.css('.mtit_con_left .time').text
-      name = detail_content.css('.lineheight_2').children[3].text
-      note = begin
-        detail_content.css('.part_detail').children[2].text.gsub(/\t|\r|\n/, '') rescue '暂无'
-      end
+
+      name = detail_content.css('.personname').text
+      name.gsub!(/\(|\)|个人/,'')
+
+
+      time = detail_content.css('.fbsj').text
+      time.gsub!('发布：','')
+      time.strip!
+
+
+      note = begin detail_content.css('.notenote').text rescue '' end
+      note.gsub!('联系我时，请说是在58同城上看到的，谢谢！','')
+
+
+      # time = detail_content.css('.mtit_con_left .time').text
+      # name = detail_content.css('.lineheight_2').children[3].text
+      # note = begin
+      #   detail_content.css('.part_detail').children[2].text.gsub(/\t|\r|\n/, '') rescue '暂无'
+      # end
 
       id = car_user_info.detail_url.match /ershouche\/(\d{8,15})x\.shtml/
       id = id[1]
       id_response = RestClient.get("http://app.58.com/api/windex/scandetail/car/#{id}/")
       id_response = id_response.body
       id_response = Nokogiri::HTML(id_response)
-      phone = id_response.css('.nums').text
-      phone = phone.gsub('-', '')
+      # phone = id_response.css('.nums').text
+      # phone = phone.gsub('-', '')
 
 
       kouling = id_response.css('.info-short_url').text

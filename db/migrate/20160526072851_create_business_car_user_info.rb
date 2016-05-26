@@ -13,6 +13,7 @@ class CreateBusinessCarUserInfo < ActiveRecord::Migration
       t.string :price
       t.string :brand
       t.string :cx
+      t.string :milage
       t.timestamps
     end
   end
