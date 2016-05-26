@@ -167,7 +167,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
       "gy" => "贵阳", "zunyi" => "遵义", "nmg" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
       "mianyang" => "绵阳", "xiangyang" => "襄阳", "yichang" => "宜昌"
-
   }
   #赶集天天拍
   # GANJI_CITY = {
@@ -859,7 +858,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       sheet1.row(0)[i] = content
     end
     row = 0
-    cuis = UserSystem::CarUserInfo.where("id > 994265 and phone is not null")
+    cuis = UserSystem::CarUserInfo.where("id > 1003334 and phone is not null")
 
     cuis.each_with_index do |car_user_info, current_row|
       UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
@@ -872,6 +871,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         b += 1
         next
       end
+
+      chexing_guolv = false
+      ['电话','联系','精品','处理','过户','包你'].each do |kw|
+        if car_user_info.che_xing.include? kw
+          chexing_guolv = true
+          break
+        end
+      end
+      next if chexing_guolv
 
       if car_user_info.note.blank?
         next
@@ -892,7 +900,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       ['求购', '牌照', '批发', '私家一手车', '个体经商', '过不了户', '帮朋友', '外地',
        '贷款', '女士一手车', '原漆', '原版漆', '当天开走', '美女', '车辆说明', '车辆概述', '选购', '一个螺丝',
        '精品', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
-       '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信', '微 信',
+       '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信','wx', '微 信',
        '威信', '加微', '评估师点评', '车主自述', '电话量大', '包你满意', '刷卡', '纯正', '抢购', '心动', '本车', '送豪礼'].each do |kw|
         if car_user_info.note.include? kw
           aaa = true
@@ -909,13 +917,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
           break
         end
       end
-
-
-      # ["天窗","导航","倒车雷达","电动调节座椅","后视镜加热","后视镜电动调节","多功能方向盘","轮毂","dvd","行车记录","影像","蓝牙","CD","日行灯","一键升降窗","中控锁","防盗断油装置","全车LED灯","电动后视镜","电动门窗","DVD，","真皮","原车旅行架","脚垫","气囊","一键启动","无钥匙","四轮碟刹","自动空调，","倒镜自动收","GPS","电子手刹","换挡拨片","巡航定速"].each do |kw|
-      #
-      # end
-
       next if aaa
+
+      config_key_words = 0
+      ["天窗", "导航", "倒车雷达", "电动调节座椅", "后视镜加热", "后视镜电动调节", "多功能方向盘", "轮毂", "dvd",
+       "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜",
+       "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "空调",
+       "倒镜","后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速"].each do |kw|
+        config_key_words+=1 if car_user_info.note.include? kw
+      end
+      next if config_key_words > 6
 
       if car_user_info.name.match /^小/ and car_user_info.name.length == 2
         next
@@ -962,11 +973,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
       #最要这个手机号出现过一次，就不导入
-      # cuis = UserSystem::CarUserInfo.where("id < ? and phone = ?", car_user_info.id, car_user_info.phone)
-      # if cuis.length > 0
-      #   ii+=1
-      #   next
-      # end
+      cuis = UserSystem::CarUserInfo.where("id < ? and phone = ?", car_user_info.id, car_user_info.phone)
+      if cuis.length > 0
+        next
+      end
       cbuis = UserSystem::CarBusinessUserInfo.find_by_phone car_user_info.phone
       next unless cbuis.blank?
 
@@ -974,7 +984,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       record_number = record_number+1
       row = row+1
       phones << car_user_info.phone
-      [car_user_info.name.gsub('(个人)', '').gsub('联系TA', '先生女士'), car_user_info.phone, car_user_info.brand, car_user_info.cx, car_user_info.city_chinese, car_user_info.milage, car_user_info.che_ling, car_user_info.note].each_with_index do |content, i|
+      [car_user_info.name.gsub('(个人)', '').gsub('联系TA', '先生女士'), car_user_info.phone, car_user_info.brand, car_user_info.cx, car_user_info.city_chinese, car_user_info.milage, car_user_info.che_ling, car_user_info.note,car_user_info.che_xing, car_user_info.detail_url].each_with_index do |content, i|
         sheet1.row(row)[i] = content
       end
     end
@@ -1020,6 +1030,20 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         i+=1 if k.note.include? kw
       end
       ids << k.id if i > 6
+    end
+
+    phones = []
+    ids.each do |id|
+      cui = UserSystem::CarUserInfo.find id
+      next if phones.include? cui.phone
+      phones << cui.phone
+    end
+
+    phones.each do |phone|
+      p = UserSystem::CarBusinessUserInfo.where("phone = ?", phone)
+      next unless p.blank?
+      kk = UserSystem::CarBusinessUserInfo.new :phone => phone
+      kk.save
     end
   end
 
