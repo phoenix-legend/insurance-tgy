@@ -3,7 +3,6 @@ class UserSystem::BusinessCarUserInfo < ActiveRecord::Base
   require 'pp'
 
 
-
   def self.create_car_user_info options
     user_infos = UserSystem::BusinessCarUserInfo.where detail_url: options[:detail_url]
     return nil if user_infos.length > 0
@@ -13,14 +12,17 @@ class UserSystem::BusinessCarUserInfo < ActiveRecord::Base
     car_user_info.id
   end
 
-  UserSystem::BusinessCarUserInfo.pc
-  def self.pc lest_number = 3
-    city_hash = ::UserSystem::CarUserInfo::WUBA_CITY
+  #UserSystem::BusinessCarUserInfo.pc
+  def self.pc_wuba lest_number = 3
+    city_hash = ::UserSystem::CarUserInfo::WUBA_CITY.merge('wz' => '温州')
+    # city_hash = {'wz' => '温州'}
     city_hash.each_pair do |areaid, areaname|
-      pp "现在跑58.. #{areaname}"
+      pp "现在跑..58.. #{areaname}"
       1.upto 100 do |i|
+
         url = "http://#{areaid}.58.com/ershouche/1/pn#{i}/"
-        content = RestClient.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+        content = RestClient.get url
+
         content = content.body
         break if content.blank?
         content = Nokogiri::HTML(content)
@@ -75,22 +77,17 @@ class UserSystem::BusinessCarUserInfo < ActiveRecord::Base
           end
 
           result = UserSystem::BusinessCarUserInfo.create_car_user_info che_xing: chexing,
-                                                                price: price,
-                                                                che_ling: cheling,
-                                                                milage: milage,
-                                                                detail_url:   url.split('?')[0],
-                                                                city_chinese: areaname,
-                                                                site_name: '58'
+                                                                        price: price,
+                                                                        che_ling: cheling,
+                                                                        milage: milage,
+                                                                        detail_url: url.split('?')[0],
+                                                                        city_chinese: areaname,
+                                                                        site_name: '58'
 
           if not result.blank?
-            u = url.split('?')[0]
-
-            unless u.blank?
-              # c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
-              # Wuba.update_one_detail c.id if not c.blank?
-            end
+            update_business_wuba result
           end
-          exists_car_number = exists_car_number + 1 if result == 1
+          exists_car_number = exists_car_number + 1 unless result.blank?
         end
         if car_number - exists_car_number < lest_number
           pp '58 本页数据全部存在，跳出'
@@ -99,6 +96,71 @@ class UserSystem::BusinessCarUserInfo < ActiveRecord::Base
       end
 
     end
+  end
+
+
+  # UserSystem::BusinessCarUserInfo.update_business_wuba 1
+  def self.update_business_wuba car_user_info_id
+    car_user_info = UserSystem::BusinessCarUserInfo.find car_user_info_id
+    return unless car_user_info.phone.blank?
+    response = RestClient.get car_user_info.detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+
+    detail_content = response.body
+    detail_content.gsub!('intro-per', 'personname')
+    detail_content.gsub!('abstract-info-txt clear', 'fbsj')
+    detail_content.gsub!('detailinfo-box desClose', 'notenote')
+    detail_content.gsub!('meta-phone', 'phoneppp')
+
+
+    detail_content = Nokogiri::HTML(detail_content)
+
+    name = detail_content.css('.personname').text
+    name.gsub!(/\(|\)|个人|商家/, '')
+
+
+    time = detail_content.css('.fbsj').text
+    time.gsub!('发布：', '')
+    time.strip!
+
+    phone = time = detail_content.css('.phoneppp').text
+
+
+    note = begin
+      detail_content.css('.notenote').text rescue ''
+    end
+    note.gsub!('联系我时，请说是在58同城上看到的，谢谢！', '')
+
+    car_user_info.name = name
+    car_user_info.fabushijian = time
+    car_user_info.phone = phone
+    car_user_info.note = note
+    car_user_info.save!
+    car_user_info.update_brand
+
+  end
+
+  def update_brand
+    return unless self.brand.blank?
+
+    UserSystem::CarType.all.each do |t|
+      if self.che_xing.match Regexp.new(t.name)
+        self.brand = t.car_brand.name
+        self.cx = t.name
+        self.save!
+        break
+      end
+    end
+
+    return unless self.brand.blank?
+
+    UserSystem::CarBrand.all.each do |brand|
+      if self.che_xing.match Regexp.new(brand.name)
+        self.brand = brand.name
+        self.save!
+        break
+      end
+    end
+
   end
 
 end

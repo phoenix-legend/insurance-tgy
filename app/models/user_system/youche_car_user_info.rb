@@ -4,11 +4,11 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
   CITY = ['天津']
 
   def self.upload_to_youche
-    ycuis = UserSystem::YoucheCarUserInfo.where("youche_upload_status = ? ",'未上传')
+    ycuis = UserSystem::YoucheCarUserInfo.where("youche_upload_status = ? ", '未上传')
     ycuis.each do |ycui|
       is_select = true
       if not ycui.youche_id.blank?
-        return       # 如果已经提交，就不再提交
+        return # 如果已经提交，就不再提交
       end
 
       if ycui.phone.blank?
@@ -49,11 +49,11 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
 
       if is_select
         response = RestClient.post "http://http.api.youche.com/xuzuo/push_user", {owner_phone: ycui.phone,
-                                                                       owner_name: ycui.name.gsub('(个人)', ''),
-                                                                       addr: ycui.city_chinese,
-                                                                       brand: ycui.brand,
-                                                                       token: 'Ap4q0s31p'
-                                                                    }
+                                                                                  owner_name: ycui.name.gsub('(个人)', ''),
+                                                                                  addr: ycui.city_chinese,
+                                                                                  brand: ycui.brand,
+                                                                                  token: 'Ap4q0s31p'
+                                                                               }
         response = JSON.parse response.body
         pp response
         ycui.youche_id = response["data"]["id"]
@@ -142,7 +142,6 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
   end
 
 
-
   def self.batch_upload_youche
     UserSystem::YoucheCarUserInfo.where("youche_upload_status = '未上传' ").each do |yc_car_user_info|
       upload_youche yc_car_user_info
@@ -206,6 +205,7 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
     end
   end
 
+  # UserSystem::YoucheCarUserInfo.get_city_name ''
   def self.get_city_name phone
     begin
       response = RestClient.get "http://life.tenpay.com/cgi-bin/mobile/MobileQueryAttribution.cgi?chgmobile=#{phone}"

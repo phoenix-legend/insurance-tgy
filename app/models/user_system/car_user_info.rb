@@ -844,6 +844,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # 7. 对于整体， 所有手机号过滤一遍，手机号重复率> 10 的， 全部进入车商库。
     # 8. 对于整体， 只要在车商库中存在的，一律不提交
     # 9. 对于没有车龄，里程数据的，一律不提交
+    # 10. 手机号异地，一律不提交
+    # 11. 出现在车商信息中的，一律不提交
     # #
 
     phones = []
@@ -890,7 +892,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
 
 
-      if ['金杯', '五菱', '江淮'].include? car_user_info.brand
+      if ['金杯', '五菱汽车', '江淮','东风小康','依维柯','长安商用','福田','东风风神','东风','一汽'].include? car_user_info.brand
         next
       end
 
