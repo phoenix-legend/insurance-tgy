@@ -155,6 +155,7 @@ module Wuba
 
       time = detail_content.css('.fbsj').text
       time.gsub!('发布：','')
+      time.gsub!('放心租车牌','')
       time.strip!
 
 
