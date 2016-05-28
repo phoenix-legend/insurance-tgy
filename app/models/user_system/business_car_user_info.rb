@@ -25,7 +25,7 @@ class UserSystem::BusinessCarUserInfo < ActiveRecord::Base
       t = Thread.new do
         begin
           pp "现在跑赶集.. #{areaname}"
-          1.upto 50 do |i|
+          1.upto 5 do |i|
             url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=2&deal_type=1&page=#{i}"
             # url = "http://wap.ganji.com/bj/ershouche/?back=search&agent=1&deal_type=1&page=1"
             content = RestClient.get url
@@ -115,7 +115,7 @@ class UserSystem::BusinessCarUserInfo < ActiveRecord::Base
     # city_hash = {'wz' => '温州'}
     city_hash.each_pair do |areaid, areaname|
       pp "现在跑..58.. #{areaname}"
-      1.upto 20 do |i|
+      1.upto 5 do |i|
 
         url = "http://#{areaid}.58.com/ershouche/1/pn#{i}/"
         content = RestClient.get url
