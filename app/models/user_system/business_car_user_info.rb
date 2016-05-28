@@ -12,13 +12,110 @@ class UserSystem::BusinessCarUserInfo < ActiveRecord::Base
     car_user_info.id
   end
 
+  # UserSystem::BusinessCarUserInfo.pc_ganji
+  def self.pc_ganji
+    city_hash = ::UserSystem::CarUserInfo::GANJI_CITY
+    threads = []
+    city_hash.each_pair do |areaid, areaname|
+      threads.delete_if { |thread| thread.status == false }
+      if threads.length > 8
+        pp "现在共有#{threads.length}个线程正在运行"
+        sleep 2
+      end
+      t = Thread.new do
+        begin
+          pp "现在跑赶集.. #{areaname}"
+          1.upto 50 do |i|
+            url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=2&deal_type=1&page=#{i}"
+            # url = "http://wap.ganji.com/bj/ershouche/?back=search&agent=1&deal_type=1&page=1"
+            content = RestClient.get url
+            content = content.body
+            break if content.blank?
+
+            content = Nokogiri::HTML(content)
+            car_infos = content.css(".mod-list .list-item")
+            break if car_infos.blank?
+            car_number = car_infos.length
+            exists_car_number = 0
+            car_infos.each do |car_info|
+              p1 = car_info.css('p')[0]
+              detail_url = p1.css('a')[0].attributes["href"].value
+              chexing = p1.css('a')[0].text
+              cheshang = begin
+                p1.css('.fc-green')[0].text rescue ''
+              end
+
+
+              p2 = car_info.css('p')[1]
+              meta = p2.css('.meta')[0].text
+              meta = meta.gsub(' ', '')
+              meta = meta.gsub("\n", '')
+              meta = meta.gsub("\r", '')
+              cheling = begin
+                meta.split('/')[0] rescue ''
+              end
+              licheng = begin
+                meta.split('/')[1] rescue ''
+              end
+              cheling = cheling.gsub('年', '')
+              licheng = licheng.gsub('万公里', '')
+              cheling = 2016-cheling.to_i
+
+              price = p2.css('.price')[0].text
+              price = price.gsub('万元', '')
+
+
+              new_url = detail_url.split('?')[0]
+              if not new_url.match /^http/
+                new_url = "http://wap.ganji.com/#{areaid}/ershouche/#{new_url}?type=58"
+              end
+              cui_id = UserSystem::BusinessCarUserInfo.create_car_user_info che_xing: chexing,
+                                                                            che_ling: cheling,
+                                                                            milage: licheng,
+                                                                            detail_url: new_url,
+                                                                            city_chinese: areaname,
+                                                                            price: price,
+                                                                            site_name: 'ganji'
+
+
+
+              unless cui_id.blank?
+                update_ganji_one_detail cui_id
+              end
+
+
+              exists_car_number = exists_car_number + 1 if cui_id.blank?
+            end
+            # 这里的数字代表还有几个是新的。 如果还有8辆以上是新车，继续翻页。 8以下，不翻。
+            if car_number - exists_car_number < 3
+              puts '赶集 本页数据全部存在，跳出'
+              break
+            end
+          end
+          ActiveRecord::Base.connection.close
+        rescue Exception => e
+          pp e
+          ActiveRecord::Base.connection.close
+        end
+      end
+      threads << t
+    end
+
+    1.upto(2000) do
+      sleep(1)
+      # pp '休息.......'
+      threads.delete_if { |thread| thread.status == false }
+      break if threads.blank?
+    end
+  end
+
   #UserSystem::BusinessCarUserInfo.pc
   def self.pc_wuba lest_number = 3
     city_hash = ::UserSystem::CarUserInfo::WUBA_CITY.merge('wz' => '温州')
     # city_hash = {'wz' => '温州'}
     city_hash.each_pair do |areaid, areaname|
       pp "现在跑..58.. #{areaname}"
-      1.upto 100 do |i|
+      1.upto 20 do |i|
 
         url = "http://#{areaid}.58.com/ershouche/1/pn#{i}/"
         content = RestClient.get url
@@ -136,6 +233,80 @@ class UserSystem::BusinessCarUserInfo < ActiveRecord::Base
     car_user_info.note = note
     car_user_info.save!
     car_user_info.update_brand
+
+  end
+
+  def self.update_ganji_one_detail car_user_info_id
+    car_user_info = UserSystem::BusinessCarUserInfo.find car_user_info_id
+
+    return unless car_user_info.name.blank?
+    return unless car_user_info.phone.blank?
+    return if car_user_info.detail_url.match /zhineng/
+
+
+    begin
+      pp "开始跑明细 #{car_user_info.id}"
+
+      response = RestClient.get(car_user_info.detail_url)
+      detail_content = response.body
+      detail_content = Nokogiri::HTML(detail_content)
+      note, phone, name = '', '', ''
+      ps = detail_content.css('.detail-describe p')
+      if ps.blank?
+        response = RestClient.get(car_user_info.detail_url)
+        detail_content = response.body
+        detail_content = Nokogiri::HTML(detail_content)
+        note, phone, name = '', '', ''
+        ps = detail_content.css('.detail-describe p')
+        if ps.blank?
+          pp "ps 为空，网页异常"
+          # car_user_info.destroy!
+          return
+        end
+      end
+      ps.each do |p|
+        text = begin
+          p.text rescue ''
+        end
+        case text
+          when /联系人：/
+            name = text
+          when /电话：/
+            phone = text
+          when /详细信息：/
+            note = text
+        end
+      end
+
+      brand = ps[1].css('a').text
+
+      note = note.gsub('详细信息：', '')
+      name = name.gsub('联系人：', '')
+      phone = phone.gsub('电话：', '')
+      fabushijian = detail_content.css('.mod-detail .detail-meta span')[0].text
+      fabushijian = fabushijian.gsub("发布:", '')
+      fabushijian = fabushijian.gsub("\n", '')
+      fabushijian = fabushijian.gsub("\r", '')
+      fabushijian = fabushijian.gsub("  ", '')
+      fabushijian = "2016-#{fabushijian}"
+
+      pp "开始跑明细 #{car_user_info.id}  准备更新"
+
+      car_user_info.name = name
+      car_user_info.fabushijian = fabushijian
+      car_user_info.phone = phone
+      car_user_info.note = note
+      car_user_info.save!
+      car_user_info.update_brand
+
+    rescue Exception => e
+      pp '-------------------------------------'
+      pp e
+      pp $@
+
+      car_user_info.save
+    end
+
 
   end
 

@@ -2,7 +2,7 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
 
 
   def self.create_info options
-    iui = ::UserSystem::InternetUserInfo.where  phone: options[:phone]
+    iui = ::UserSystem::InternetUserInfo.where phone: options[:phone]
     return unless iui.blank?
     info = ::UserSystem::InternetUserInfo.new options
     info.save!
@@ -26,8 +26,9 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
   # UserSystem::InternetUserInfo.focus
   def self.focus
     # citys = ['sh', 'bj', 'sz', 'tj', 'gz', 'cd', 'cq', 'sjz', 'cs', 'hn', 'sanya', 'jn', 'qd', 'wh', 'xa', 'km', 'nj', 'hz', 'qhd', 'hrb', 'sy', 'zz', 'suzhou', 'fs']
-    citys = ['bj', 'sz', 'tj', 'gz', 'cd', 'cq', 'sjz', 'cs', 'hn', 'sanya', 'jn', 'qd', 'wh', 'xa', 'km', 'nj', 'hz', 'qhd', 'hrb', 'sy', 'zz', 'suzhou', 'fs']
-    # citys = ["sh"]
+    # citys = ['bj', 'sz', 'tj', 'gz', 'cd', 'cq', 'sjz', 'cs', 'hn', 'sanya', 'jn', 'qd', 'wh', 'xa', 'km', 'nj', 'hz', 'qhd', 'hrb', 'sy', 'zz', 'suzhou', 'fs']
+
+    citys = ["sh"]
     citys.each do |city_name|
       host = "#{city_name}.esf.focus.cn/"
       city_url = "#{city_name}.esf.focus.cn/agent/"
@@ -36,6 +37,8 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
       doc = Nokogiri::HTML(content)
       dl = doc.css(".wrap #topFilters .bd dl").first
       dl.css("dd a").each_with_index do |quyu, i|
+
+
         next if i == 0
         qu_href = quyu.attributes["href"].value
         qu_url = "#{host}#{qu_href}"
@@ -46,68 +49,67 @@ class UserSystem::InternetUserInfo < ActiveRecord::Base
         shangquan_content = `curl '#{qu_url}' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: global_wapandm_cookie=nswiidhghms8p127uf3mqb3r730ibj0104n; global_cookie=0bab37cc-1435648460044-66998e9a; __utmt_t0=1; __utmt_t1=1; __utmt_t2=1; __utma=147393320.1313865077.1435648464.1435761767.1435920774.7; __utmb=147393320.6.10.1435920774; __utmc=147393320; __utmz=147393320.1435648464.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); unique_cookie=U_tur6pl0ia82wx5ce0g35abr7j3vibni5jf0*2' -H 'Connection: keep-alive' --compressed`
         shangquan_doc = Nokogiri::HTML(shangquan_content)
         sq_dl = shangquan_doc.css(".wrap #topFilters .bd dl").first
-        sq_dl.css("dd .subarea a").each_with_index do |shangquan_url,i|
+        sq_dl.css("dd .subarea a").each_with_index do |shangquan_url, i|
           next if i == 0
           u = shangquan_url.attributes["href"].value
-          UserSystem::InternetUserInfo.focus_fanye city_name, "#{host}#{u}"
+          UserSystem::InternetUserInfo.focus_fanye city_name, "#{host}#{u}", quyu.text
         end
 
       end
     end
   end
 
-  def self.focus_fanye city, url
+  def self.focus_fanye city, url, quyu
     # city = 'sh'
     # url = "sh.esf.focus.cn/agent/q110a30067"
     old_content = '1'
-    (1..1000).each do |yema|
-      yema_url = "#{url}p#{yema}"
+    (1..800).each do |yema|
+      UserSystem::InternetUserInfo.transaction do
+        yema_url = "#{url}p#{yema}"
 
 
-      exists_url = ::UserSystem::InternetUserInfo.where list_url: yema_url
-      unless exists_url.blank?
-        pp "#{yema_url}已经存在，跳过"
-        next
+        exists_url = ::UserSystem::InternetUserInfo.where list_url: yema_url
+        unless exists_url.blank?
+          pp "#{yema_url}已经存在，跳过"
+          next
+        end
+
+        pp "正在抓取页面：#{yema_url}"
+
+        content = `curl '#{yema_url}' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: global_wapandm_cookie=nswiidhghms8p127uf3mqb3r730ibj0104n; global_cookie=0bab37cc-1435648460044-66998e9a; __utmt_t0=1; __utmt_t1=1; __utmt_t2=1; __utma=147393320.1313865077.1435648464.1435761767.1435920774.7; __utmb=147393320.6.10.1435920774; __utmc=147393320; __utmz=147393320.1435648464.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); unique_cookie=U_tur6pl0ia82wx5ce0g35abr7j3vibni5jf0*2' -H 'Connection: keep-alive' --compressed`
+        doc = Nokogiri::HTML(content)
+        items = doc.css("#listItem .items")
+        return if items.length == 0
+        pp "本页有数据#{items.length}条"
+
+
+        new_content = ""
+        items.each do |item|
+          name = item.css(".items_m div h2 a").children.first.text rescue ''
+          phone = item.css(".items_r em").children.first.text rescue ''
+          new_content = new_content + phone
+          ::UserSystem::InternetUserInfo.create_info name: name,
+                                                     phone: phone,
+                                                     city: city,
+                                                     category: '二手房',
+                                                     list_url: yema_url,
+                                                     detail_url: '经纪人页面',
+                                                     number_of_this_page: yema,
+                                                     wangzhan_name: 'focus.cn',
+                                                     city_name: quyu
+
+        end
+
+        if new_content == old_content
+          pp '跟上一页相同，跳过'
+          break;
+        end
+        old_content = new_content
       end
-
-      pp "正在抓取页面：#{yema_url}"
-
-      content = `curl '#{yema_url}' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: global_wapandm_cookie=nswiidhghms8p127uf3mqb3r730ibj0104n; global_cookie=0bab37cc-1435648460044-66998e9a; __utmt_t0=1; __utmt_t1=1; __utmt_t2=1; __utma=147393320.1313865077.1435648464.1435761767.1435920774.7; __utmb=147393320.6.10.1435920774; __utmc=147393320; __utmz=147393320.1435648464.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); unique_cookie=U_tur6pl0ia82wx5ce0g35abr7j3vibni5jf0*2' -H 'Connection: keep-alive' --compressed`
-      doc = Nokogiri::HTML(content)
-      items = doc.css("#listItem .items")
-      pp "本页有数据#{items.length}条"
-
-
-
-
-      new_content = ""
-      items.each do |item|
-        name = item.css(".items_m div h2 a").children.first.text rescue ''
-        phone = item.css(".items_r em").children.first.text rescue ''
-        new_content = new_content + phone
-        ::UserSystem::InternetUserInfo.create_info name: name,
-                                                   phone: phone,
-                                                   city: city,
-                                                   category: '二手房',
-                                                   list_url: yema_url,
-                                                   detail_url: '经纪人页面',
-                                                   number_of_this_page: yema,
-                                                   wangzhan_name: 'focus.cn'
-      end
-      if new_content == old_content
-        pp '跟上一页相同，跳过'
-        break;
-      end
-      old_content = new_content
     end
 
 
-
   end
-
-
-
-
 
 
   def self.get_all_city

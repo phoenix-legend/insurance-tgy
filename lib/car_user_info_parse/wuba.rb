@@ -122,6 +122,7 @@ module Wuba
 
   # Wuba.update_detail
   def self.update_one_detail car_user_info_id
+    # car_user_info_id = 1055829
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
 
     return unless car_user_info.name.blank?
@@ -135,9 +136,13 @@ module Wuba
       response = RestClient.get car_user_info.detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
 
       detail_content = response.body
-      detail_content.gsub!('intro-per intro-center','personname')
+      # detail_content.gsub!('intro-per intro-center','personname')
+      # detail_content.gsub!('intro-per','personname')
+      detail_content.gsub!('person-name','personname')
       detail_content.gsub!('abstract-info-txt clear','fbsj')
       detail_content.gsub!('detailinfo-box desClose','notenote')
+      detail_content.gsub!('person-phoneNumber','persophone')
+
 
 
       detail_content = Nokogiri::HTML(detail_content)
@@ -145,6 +150,8 @@ module Wuba
       name = detail_content.css('.personname').text
       name.gsub!(/\(|\)|个人/,'')
 
+      phone = detail_content.css('persophone').text
+      phone_is_shangjia = if (phone.match /\*/).nil? then  false else true end
 
       time = detail_content.css('.fbsj').text
       time.gsub!('发布：','')
@@ -160,6 +167,16 @@ module Wuba
       # note = begin
       #   detail_content.css('.part_detail').children[2].text.gsub(/\t|\r|\n/, '') rescue '暂无'
       # end
+      if phone_is_shangjia
+        # 对于商家，也不存在口令，直接return
+        UserSystem::CarUserInfo.update_detail id: car_user_info.id,
+                                              name: name,
+                                              phone: phone,
+                                              note: note,
+                                              fabushijian: time,
+                                              is_cheshang: "1"
+        return
+      end
 
       id = car_user_info.detail_url.match /ershouche\/(\d{8,15})x\.shtml/
       id = id[1]

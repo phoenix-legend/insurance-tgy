@@ -324,6 +324,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     if not params[:che_ling].blank?
       car_user_info.che_ling = params[:che_ling]
     end
+
+    if  params[:is_cheshang]=="1"
+      car_user_info.is_cheshang = 1
+      car_user_info.is_real_cheshang = true
+    end
     car_user_info.need_update = false
     car_user_info.save!
 
