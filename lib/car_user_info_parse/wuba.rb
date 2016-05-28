@@ -162,6 +162,8 @@ module Wuba
       note.gsub!('联系我时，请说是在58同城上看到的，谢谢！','')
 
 
+      phone_is_shangjia = true if name.match /瓜子/
+
       # time = detail_content.css('.mtit_con_left .time').text
       # name = detail_content.css('.lineheight_2').children[3].text
       # note = begin
