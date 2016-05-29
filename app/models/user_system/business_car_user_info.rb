@@ -12,17 +12,14 @@ class UserSystem::BusinessCarUserInfo < ActiveRecord::Base
     car_user_info.id
   end
 
-  # UserSystem::BusinessCarUserInfo.pc_ganji
+  # UserSystem::BusinessCarUserInfo.pc_ganji and UserSystem::BusinessCarUserInfo.pc_wuba
   def self.pc_ganji
     city_hash = ::UserSystem::CarUserInfo::GANJI_CITY
-    threads = []
+
     city_hash.each_pair do |areaid, areaname|
-      threads.delete_if { |thread| thread.status == false }
-      if threads.length > 8
-        pp "现在共有#{threads.length}个线程正在运行"
-        sleep 2
-      end
-      t = Thread.new do
+
+
+
         begin
           pp "现在跑赶集.. #{areaname}"
           1.upto 5 do |i|
@@ -92,24 +89,17 @@ class UserSystem::BusinessCarUserInfo < ActiveRecord::Base
               break
             end
           end
-          ActiveRecord::Base.connection.close
+
         rescue Exception => e
           pp e
-          ActiveRecord::Base.connection.close
         end
-      end
-      threads << t
+
     end
 
-    1.upto(2000) do
-      sleep(1)
-      # pp '休息.......'
-      threads.delete_if { |thread| thread.status == false }
-      break if threads.blank?
-    end
+
   end
 
-  #UserSystem::BusinessCarUserInfo.pc
+  #UserSystem::BusinessCarUserInfo.pc_wuba
   def self.pc_wuba lest_number = 3
     city_hash = ::UserSystem::CarUserInfo::WUBA_CITY.merge('wz' => '温州')
     # city_hash = {'wz' => '温州'}
