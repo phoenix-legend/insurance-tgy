@@ -939,6 +939,23 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         next
       end
 
+      # 车型中有[]的一律认为是车商
+      if not car_user_info.che_xing.blank?
+        next if car_user_info.che_xing.match /QQ|电话|不准|低价|私家车|外观|咨询|一手车|精品|业务|打折/
+      end
+
+      if not car_user_info.che_xing.blank?
+        next if car_user_info.che_xing.match /\[/ and car_user_info.che_xing.match /\]/
+      end
+
+      if /^[a-z|A-Z|0-9|-|_]+$/.match car_user_info.name
+        next
+      end
+
+      if /[0-9]+/.match car_user_info.name
+        next
+      end
+
       if car_user_info.note.match /^出售/
         next
       end

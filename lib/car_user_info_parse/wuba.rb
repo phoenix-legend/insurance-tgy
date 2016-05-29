@@ -165,6 +165,12 @@ module Wuba
 
       phone_is_shangjia = true if name.match /瓜子/
 
+
+
+
+
+
+
       # time = detail_content.css('.mtit_con_left .time').text
       # name = detail_content.css('.lineheight_2').children[3].text
       # note = begin
