@@ -124,7 +124,7 @@ class UserSystem::CarBusinessUserInfo < ActiveRecord::Base
       #   return true
       # end
 
-      ['商家', '赶集', '瓜子', '销售', '百姓','车行','名车', '顾问', '阳光车网', 'QQ','qq','微信','Qq','图片','客服', '管家', '车王', '看图', '58', '五八', '之家', '内容', '最多填写6字', '优车', '车置宝', '天天', '标题', '大爷'].each do |name_key|
+      ['商家', '赶集', '瓜子', '销售', '套牌车','百姓','车行','名车', '顾问', '阳光车网', 'QQ','qq','微信','Qq','图片','客服', '管家', '车王', '看图', '58', '五八', '之家', '内容', '最多填写6字', '优车', '车置宝', '天天', '标题', '大爷'].each do |name_key|
         if car_user_info.name.include? name_key
           return true
         end
