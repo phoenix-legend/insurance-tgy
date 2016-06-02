@@ -53,18 +53,18 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       else
         {
-            # "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆", "320200" => "无锡"
+            "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆", "320200" => "无锡"
 
             # 人人车把以下打开
-            "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛", "371000" => '威海', "370600" => '烟台', "370700" => '潍坊',
-            "320400" => '常州', "320300" => '徐州', "320600" => '南通', "321000" => '扬州', "370100" => "济南",
-            "130100" => "石家庄", "130200" => "唐山", "140100" => "太原", "610400" => "咸阳", "610300" => "宝鸡", "410300" => "洛阳", "411300" => "南阳", "410700" => "新乡",
-            "430300" => "湘潭", "430200" => "株洲", "430700" => "常德", "430600" => "岳阳",
-            "210100" => "沈阳", "210200" => "大连", "210800" => "营口",
-            "350100" => "福州", "350200" => "厦门", "350500" => "泉州",
-            "220100" => "长春", "230100" => "哈尔滨", "230600" => "大庆", "340100" => "合肥", "340200" => "芜湖", "450100" => "南宁", "360100" => "南昌",
-            "441300" => "惠州", "441200" => "肇庆", "442000" => "中山", "330400" => "嘉兴", "520100" => "贵阳", "520300" => "遵义", "150100" => "呼和浩特", "650100" => "乌鲁木齐",
-            "510600" => "德阳", "510700" => "绵阳", "420600" => "襄阳", "420500" => "宜昌"
+            # "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛", "371000" => '威海', "370600" => '烟台', "370700" => '潍坊',
+            # "320400" => '常州', "320300" => '徐州', "320600" => '南通', "321000" => '扬州', "370100" => "济南",
+            # "130100" => "石家庄", "130200" => "唐山", "140100" => "太原", "610400" => "咸阳", "610300" => "宝鸡", "410300" => "洛阳", "411300" => "南阳", "410700" => "新乡",
+            # "430300" => "湘潭", "430200" => "株洲", "430700" => "常德", "430600" => "岳阳",
+            # "210100" => "沈阳", "210200" => "大连", "210800" => "营口",
+            # "350100" => "福州", "350200" => "厦门", "350500" => "泉州",
+            # "220100" => "长春", "230100" => "哈尔滨", "230600" => "大庆", "340100" => "合肥", "340200" => "芜湖", "450100" => "南宁", "360100" => "南昌",
+            # "441300" => "惠州", "441200" => "肇庆", "442000" => "中山", "330400" => "嘉兴", "520100" => "贵阳", "520300" => "遵义", "150100" => "呼和浩特", "650100" => "乌鲁木齐",
+            # "510600" => "德阳", "510700" => "绵阳", "420600" => "襄阳", "420500" => "宜昌"
         }
     end
   end
@@ -76,17 +76,18 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   PINYIN_CITY = {
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
-      "dongguan" => "东莞", "chongqing" => "重庆", "beijing" => "北京", "zhengzhou" => '郑州', 'changsha' => '长沙',
-      'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "foshan" => '佛山', "weihai" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
-      "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jinan" => "济南", "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
-      "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
-      "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
-      "shenyang" => "沈阳", "dalian" => "大连", "yingkou" => "营口",
-      "fuzhou" => "福州", "xiamen" => "厦门", "quanzhou" => "泉州",
-      "changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥", "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
-      "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
-      "guiyang" => "贵阳", "zunyi" => "遵义", "huhehaote" => "呼和浩特", "wulumuqi" => "乌鲁木齐", "deyang" => "德阳",
-      "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌"
+      "dongguan" => "东莞", "chongqing" => "重庆"#, "beijing" => "北京"#,
+      # "zhengzhou" => '郑州', 'changsha' => '长沙',
+      # 'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "foshan" => '佛山', "weihai" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
+      # "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jinan" => "济南", "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
+      # "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
+      # "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
+      # "shenyang" => "沈阳", "dalian" => "大连", "yingkou" => "营口",
+      # "fuzhou" => "福州", "xiamen" => "厦门", "quanzhou" => "泉州",
+      # "changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥", "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
+      # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
+      # "guiyang" => "贵阳", "zunyi" => "遵义", "huhehaote" => "呼和浩特", "wulumuqi" => "乌鲁木齐", "deyang" => "德阳",
+      # "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌"
   }
 
   IMPRTANT_CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "佛山", "东莞", "重庆", "无锡"]
@@ -136,16 +137,18 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       else
         {
-            "zhengzhou" => '郑州', 'changsha' => '长沙', 'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "weihai" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
-            "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jinan" => "济南", "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
-            "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
-            "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
-            "shenyang" => "沈阳", "dalian" => "大连", "yingkou" => "营口",
-            "fuzhou" => "福州", "xiamen" => "厦门", "quanzhou" => "泉州",
-            "changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥", "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
-            "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
-            "guiyang" => "贵阳", "zunyi" => "遵义", "huhehaote" => "呼和浩特", "wulumuqi" => "乌鲁木齐", "deyang" => "德阳",
-            "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌"
+            "guangzhou" => "广州", "hangzhou" => "杭州", "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡", "foshan" => '佛山'
+
+            # "zhengzhou" => '郑州', 'changsha' => '长沙', 'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "weihai" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
+            # "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jinan" => "济南", "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
+            # "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
+            # "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
+            # "shenyang" => "沈阳", "dalian" => "大连", "yingkou" => "营口",
+            # "fuzhou" => "福州", "xiamen" => "厦门", "quanzhou" => "泉州",
+            # "changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥", "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
+            # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
+            # "guiyang" => "贵阳", "zunyi" => "遵义", "huhehaote" => "呼和浩特", "wulumuqi" => "乌鲁木齐", "deyang" => "德阳",
+            # "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌"
 
         }
     end
@@ -189,20 +192,20 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       else
         {
 
-            # "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "wx" => "无锡", 'foshan' => '佛山'
+            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "wx" => "无锡", 'foshan' => '佛山'
 
 
             # 人人车把以下放开
-            'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', "wei" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
-            "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jn" => "济南", "sjz" => "石家庄", "tangshan" => "唐山",
-            "ty" => "太原", "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
-            "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
-            "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口",
-            "fz" => "福州", "xm" => "厦门", "quanzhou" => "泉州",
-            "cc" => "长春", "hrb" => "哈尔滨", "daqing" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
-            "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
-            "gy" => "贵阳", "zunyi" => "遵义", "nmg" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
-            "mianyang" => "绵阳", "xiangyang" => "襄阳", "yichang" => "宜昌"
+            # 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', "wei" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
+            # "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jn" => "济南", "sjz" => "石家庄", "tangshan" => "唐山",
+            # "ty" => "太原", "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
+            # "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
+            # "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口",
+            # "fz" => "福州", "xm" => "厦门", "quanzhou" => "泉州",
+            # "cc" => "长春", "hrb" => "哈尔滨", "daqing" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
+            # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
+            # "gy" => "贵阳", "zunyi" => "遵义", "nmg" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
+            # "mianyang" => "绵阳", "xiangyang" => "襄阳", "yichang" => "宜昌"
         }
     end
   end
@@ -244,7 +247,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       else
         {
-            # "cq" => "重庆"
+            "cq" => "重庆"
             # 需要人人车的时候，把重庆注释掉，把以下放开就好了，
             # 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "weihai" => '威海', "yt" => '烟台', "wf" => '潍坊',
             # "cz" => "常州", 'xz' => '徐州', "nt" => '南通', "yz" => '扬州', "jn" => "济南", "sjz" => "石家庄", "ts" => "唐山", "ty" => "太原",
@@ -252,11 +255,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             # "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yy" => "岳阳",
             # "sy" => "沈阳", "dl" => "大连", "yk" => "营口",
             #   "qz" => "泉州",
-            "cc" => "长春", "hrb" => "哈尔滨", "dq" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
-            "huizhou" => "惠州", "zq" => "肇庆", "zs" => "中山", "jx" => "嘉兴",
-            "gy" => "贵阳", "zunyi" => "遵义", "hu" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
-            "mianyang" => "绵阳", "xf" => "襄阳", "yc" => "宜昌",
-            "fz" => "福州","xm" => "厦门"
+            # "cc" => "长春", "hrb" => "哈尔滨", "dq" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
+            # "huizhou" => "惠州", "zq" => "肇庆", "zs" => "中山", "jx" => "嘉兴",
+            # "gy" => "贵阳", "zunyi" => "遵义", "hu" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
+            # "mianyang" => "绵阳", "xf" => "襄阳", "yc" => "宜昌",
+            # "fz" => "福州","xm" => "厦门"
         }
     end
   end
@@ -846,11 +849,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # 4. 对于赶集， 小城市群分成四个组，再开1台服务器，用于快速抓取数据。  对于赶集
     # 5. 对于百姓， 现在4台机器在跑， 把数据分成6个小组， 每台机器跑一组。 对于百姓    Done， 分成三组
     # 6. 对于百姓， 严格获取车龄和里程    Done
-    # 7. 对于整体， 所有手机号过滤一遍，手机号重复率> 10 的， 全部进入车商库。
-    # 8. 对于整体， 只要在车商库中存在的，一律不提交
-    # 9. 对于没有车龄，里程数据的，一律不提交
-    # 10. 手机号异地，一律不提交
-    # 11. 出现在车商信息中的，一律不提交
+    # 7. 对于整体， 所有手机号过滤一遍，手机号重复率> 10 的， 全部进入车商库。  Done
+    # 8. 对于整体， 只要在车商库中存在的，一律不提交  Done
+    # 9. 对于没有车龄，里程数据的，一律不提交  Done
+    # 10. 手机号异地，一律不提交   Done
+    # 11. 出现在车商信息中的，一律不提交    Done
     # #
 
     phones = []
@@ -860,14 +863,22 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     phones = []
     record_number = 0
     a, b, c, d, e, f, g, h, ii, jj = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    bcui_number = 0
     sheet1 = book.create_worksheet name: "人人车测试数据"
     ['姓名', '电话', '品牌', '车系', '城市', "里程", "车龄"].each_with_index do |content, i|
       sheet1.row(0)[i] = content
     end
     row = 0
-    cuis = UserSystem::CarUserInfo.where("id > 1003334 and phone is not null")
+    # cuis = UserSystem::CarUserInfo.where("id > 1003334 and phone is not null")
+    cuis = UserSystem::CarUserInfo.where("created_at > ? and created_at < ? and phone is not null", "#{(Time.now-1.days).chinese_format_day} 10:00:00", "#{(Time.now).chinese_format} 10:00:00")
+
+
 
     cuis.each_with_index do |car_user_info, current_row|
+      car_user_info.note.gsub!('联系我时，请说是在易车二手车上看到的，谢谢！','')
+      car_user_info.note.gsub!('打电话给我时，请一定说明在手机百姓网看到的，谢谢！','')
+      car_user_info.save!
+
       UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
       car_user_info = car_user_info.reload
       if car_user_info.phone.blank?
@@ -897,18 +908,18 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
 
 
-      if ['金杯', '五菱汽车', '江淮','东风小康','依维柯','长安商用','福田','东风风神','东风','一汽'].include? car_user_info.brand
+      if ['金杯', '五菱汽车',"五菱",'五十铃','昌河','奥迪','宝马','宾利','奔驰','路虎','保时捷', '江淮','东风小康','依维柯','长安商用','福田','东风风神','东风','一汽'].include? car_user_info.brand
         next
       end
 
 
       # 本车   私家车  手机号  心动  包你满意    一个螺丝
       aaa = false
-      ['求购', '牌照', '批发', '私家一手车', '个体经商', '过不了户', '帮朋友', '外地',
-       '贷款', '女士一手车', '原漆', '原版漆', '当天开走', '美女', '车辆说明', '车辆概述', '选购', '一个螺丝',
-       '精品', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
+      ['QQ','求购', '牌照', '批发', '私家一手车','一手私家车','身份','身 份','身~份', '个体经商', '过不了户', '帮朋友', '外地',
+       '贷款', '女士一手','包过户', '原漆', '原版漆', '当天开走', '美女', '车辆说明', '车辆概述', '选购', '一个螺丝',
+       '精品','驾驶证', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
        '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信','wx', '微 信',
-       '威信', '加微', '评估师点评', '车主自述', '电话量大', '包你满意', '刷卡', '纯正', '抢购', '心动', '本车', '送豪礼'].each do |kw|
+       '威信', '加微', '评估师点评', '车主自述', "溦 信",'电话量大', '包你满意', '刷卡','办理', '纯正', '抢购', '心动', '本车', '送豪礼'].each do |kw|
         if car_user_info.note.include? kw
           aaa = true
           break
@@ -916,9 +927,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
       next if aaa
 
+      # 描述中不需要电话号码
+      next if car_user_info.note.match /\d{11}/
+
+
       aaa = false
-      # 名字是小字开头的，都是车商
-      ['图', '哥', '旗舰', '汽车', '威信', '微信'].each do |kw|
+      #名字有特殊意思的
+      ['图','照片' ,'哥', '旗舰', '汽车', '短信','威信', '微信','店','薇'].each do |kw|
         if car_user_info.name.include? kw
           aaa = true
           break
@@ -926,83 +941,107 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
       next if aaa
 
+
       config_key_words = 0
       ["天窗", "导航", "倒车雷达", "电动调节座椅", "后视镜加热", "后视镜电动调节", "多功能方向盘", "轮毂", "dvd",
        "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜",
        "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "空调",
-       "倒镜","后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速"].each do |kw|
+       "倒镜","后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速","一分钱"].each do |kw|
         config_key_words+=1 if car_user_info.note.include? kw
       end
+      # 过多配置描述，一般车商
       next if config_key_words > 6
 
+      # 名字是小字开头的，都是车商
       if car_user_info.name.match /^小/ and car_user_info.name.length == 2
         next
       end
 
-      # 车型中有[]的一律认为是车商
-      if not car_user_info.che_xing.blank?
-        next if car_user_info.che_xing.match /QQ|电话|不准|低价|私家车|外观|咨询|一手车|精品|业务|打折/
-      end
 
-      if not car_user_info.che_xing.blank?
-        next if car_user_info.che_xing.match /\[/ and car_user_info.che_xing.match /\]/
-      end
-
+      #特殊名字一般是做走私车，不能使用。
       if /^[a-z|A-Z|0-9|-|_]+$/.match car_user_info.name
         next
       end
 
+      #还有用手机号，QQ号做名字的。
       if /[0-9]+/.match car_user_info.name
         next
       end
 
-      if car_user_info.note.match /^出售/
-        next
-      end
+      #车型是数字+点的，一律不要
 
 
-      if car_user_info.che_ling.to_i < 2008
-        next
+      # 车商口气
+      next if car_user_info.note.match /^出售/
+
+      # 08年之前的车不要
+      next if car_user_info.che_ling.to_i < 2008
+
+      #没有品牌数据的不要
+      next if car_user_info.brand.blank?
+
+      # 车型中有[]的一律认为是车商
+      if not car_user_info.che_xing.blank?
+        next if car_user_info.che_xing.match /QQ|电话|不准|低价|私家车|外观|咨询|一手车|精品|业务|打折|货车/
+        next if car_user_info.note.match /\d{11}/  # 车型中不能出现电话
+        # 车型中以数字标号开头的，一律不要  这是赶集数据
+        # next if car_user_info.che_xing.match /^\d{1,2}\./
       end
 
-      if car_user_info.brand.blank?
-        c+=1
-        next
+      if not car_user_info.che_xing.blank?
+        next if car_user_info.che_xing.match /\[/ and car_user_info.che_xing.match /\]/
+        next if car_user_info.che_xing.match /【/ and car_user_info.che_xing.match /】/
       end
 
-      if phones.include? car_user_info.phone
-        next
-      end
+      #去重复
+      next if phones.include? car_user_info.phone
 
-      if car_user_info.is_cheshang == 1
-        d+=1
-        next
-      end
-      if car_user_info.is_real_cheshang
-        e+=1
-        next
-      end
-      if car_user_info.is_pachong
-        f += 1
-        next
-      end
-      unless car_user_info.is_city_match
-        g +=1
-        next
-      end
-      unless cities_all.include? car_user_info.city_chinese # 判断城市是否包含
-        h += 1
-        next
-      end
+      # 初步判断去车商
+      next if car_user_info.is_cheshang == 1
 
+      # 初步判断去车商
+      next if car_user_info.is_real_cheshang
+
+      # 去爬虫
+      next if car_user_info.is_pachong
+
+      # 城市需要匹配
+      next unless car_user_info.is_city_match
+
+      #只要业务范围内城市
+      next unless cities_all.include? car_user_info.city_chinese # 判断城市是否包含
 
       #最要这个手机号出现过一次，就不导入
       cuis = UserSystem::CarUserInfo.where("id < ? and phone = ?", car_user_info.id, car_user_info.phone)
-      if cuis.length > 0
-        next
-      end
+      next if cuis.length > 0
+
+      # 车商库中再查询一遍
       cbuis = UserSystem::CarBusinessUserInfo.find_by_phone car_user_info.phone
       next unless cbuis.blank?
+
+      bcui_number = 0
+      bcui = UserSystem::BusinessCarUserInfo.find_by_phone car_user_info.phone
+      unless bcui.blank?
+        bcui_number += 1
+        next
+      end
+
+
+
+      #不要外地手机号
+      car_user_info.phone_city = UserSystem::YoucheCarUserInfo.get_city_name(car_user_info.phone)
+      car_user_info.save!
+      next unless car_user_info.phone_city == car_user_info.phone_city
+
+      #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
+      tmp_chexing = car_user_info.che_xing.gsub(/\s|\.|~|-|_/,'')
+      tmp_note = car_user_info.note.gsub(/\s|\.|~|-|_/,'')
+      next if tmp_chexing.match /\d{11}|身份证|驾驶证/
+      next if tmp_note.match /\d{11}|身份证|驾驶证/
+
+
+
+
 
       jj+=1
       record_number = record_number+1
@@ -1020,6 +1059,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     book.write file_path
     file_path
     pp a, b, c, d, e, f, g, h, ii, jj
+    pp "商车库中重复数为： #{bcui_number}"
 
     # MailSend.send_car_user_infos('13472446647@163.com',
     #                              '',
