@@ -32,6 +32,8 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
       cui.wuba_kouling_deviceid = deviceid
       cui.email_status += 1
       cui.save!
+
+      UserSystem::DeviceAccessLog.update_device_access deviceid
       return cui
     end
 
