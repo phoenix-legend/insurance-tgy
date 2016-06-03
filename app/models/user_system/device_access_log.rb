@@ -24,7 +24,7 @@ class UserSystem::DeviceAccessLog < ActiveRecord::Base
   def self.need_restart machine_name
     device_access_count = UserSystem::DeviceAccessLog.where(machine_name: machine_name).
         where("last_access_time  > ?", (Time.now-3.minutes).chinese_format).count
-    return true if device_access_count < 2
+    return true if device_access_count < 1
   end
 
 end
