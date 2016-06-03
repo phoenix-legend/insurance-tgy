@@ -15,6 +15,7 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
   def self.get_wei_tijiao_kouling deviceid = 'unknow'
     UserSystem::KouLingCarUserInfo.transaction do
       # return nil
+      UserSystem::DeviceAccessLog.update_device_access deviceid
       kouling_car_infos = UserSystem::KouLingCarUserInfo.where("vip_flg = ?", 'vip').order(id: :desc).limit(10)
       kouling_car_infos = UserSystem::KouLingCarUserInfo.order(id: :desc).limit(10)  if kouling_car_infos.blank?
       return nil if kouling_car_infos.blank?
@@ -33,7 +34,7 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
       cui.email_status += 1
       cui.save!
 
-      UserSystem::DeviceAccessLog.update_device_access deviceid
+
       return cui
     end
 
