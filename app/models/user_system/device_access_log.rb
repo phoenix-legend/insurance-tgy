@@ -7,7 +7,7 @@ class UserSystem::DeviceAccessLog < ActiveRecord::Base
     machine_name = 'unknow' if machine_name.blank?
     log = UserSystem::DeviceAccessLog.where(device_id: devce_id, machine_name: machine_name).first
     if log.blank?
-      log = UserSystem::DeviceAccessLog.new devce_id: devce_id,
+      log = UserSystem::DeviceAccessLog.new device_id: devce_id,
                                             machine_name: machine_name,
                                             last_access_time: Time.now.chinese_format
       log.save!
