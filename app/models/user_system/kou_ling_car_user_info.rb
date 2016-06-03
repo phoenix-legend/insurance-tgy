@@ -1,3 +1,4 @@
+# 主要记录临时的，需要从APP获取的口令
 class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info
 

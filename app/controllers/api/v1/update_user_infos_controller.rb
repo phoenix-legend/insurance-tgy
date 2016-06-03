@@ -47,4 +47,8 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
     UserSystem::CarUserInfo.update_58_phone_detail params
   end
 
+  def need_chongqi
+    @is_need = UserSystem::DeviceAccessLog.need_restart params[:machine_name]
+  end
+
 end

@@ -128,6 +128,7 @@ Rails.application.routes.draw do
           get :get_cui_kouling
           get :update_kouling_phone
           post :update_kouling_phone
+          get :need_chongqi
         end
       end
     end
