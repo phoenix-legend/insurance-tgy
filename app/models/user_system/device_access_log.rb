@@ -23,7 +23,7 @@ class UserSystem::DeviceAccessLog < ActiveRecord::Base
   # 目前有2台，分别是077， 094
   def self.need_restart machine_name
     device_access_count = UserSystem::DeviceAccessLog.where(machine_name: machine_name).
-        where("last_access_time  > ?", (Time.now-2.minutes).chinese_format).count
+        where("last_access_time  > ?", (Time.now-3.minutes).chinese_format).count
     return true if device_access_count < 2
   end
 
