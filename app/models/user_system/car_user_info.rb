@@ -264,6 +264,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
   end
 
+
+  # 人人车支持的全部城市
   def tmp_renrenche
     # cities_all = ["深圳","广州","南京","成都","东莞","重庆","苏州","郑州","上海","威海","石家庄","武汉","沈阳","西安青岛","长沙","哈尔滨","长春","杭州","潍坊","厦门","佛山","大连","合肥","天津","绵阳","徐州","无锡","湘潭","株洲","宜昌","肇庆","洛阳 ","济南 ","贵阳 ","南宁 ","福州","咸阳","南阳","惠州","太原","常德","泉州","襄阳","宝鸡","中山","德阳","常州","南通扬州","新乡","烟台 ","嘉兴","大庆","营口呼和浩特","芜湖","唐山","遵义","乌鲁木齐","南昌","岳阳"]
     # 以下是测试数据
@@ -375,6 +377,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
     #同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # 同步至4A
+    UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
   end
 
   def self.update_58_phone_detail params
@@ -391,7 +395,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       car_user_info = car_user_info.reload
       pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
       UploadTianTian.upload_one_tt car_user_info
+      # 同步至优车
       UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+      # 同步至a s
+      UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
     end
 
   end
