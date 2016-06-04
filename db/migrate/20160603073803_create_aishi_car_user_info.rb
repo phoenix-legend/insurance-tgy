@@ -1,6 +1,6 @@
-class CreateAiShiCarUserInfo < ActiveRecord::Migration
+class CreateAishiCarUserInfo < ActiveRecord::Migration
   def change
-    create_table :ai_shi_car_user_infos do |t|
+    create_table :aishi_car_user_infos do |t|
       t.string :name
       t.string :phone
       t.string :brand

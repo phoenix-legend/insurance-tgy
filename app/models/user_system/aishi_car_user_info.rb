@@ -1,71 +1,81 @@
 class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
 
-  # CITY = ['天津', '苏州']
-  CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆"]
+
+  CITY = ['天津', '苏州']
+  # CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆"]
 
   # 上传到埃侍
-  def self.upload_to_aishi
-    ycuis = UserSystem::AishiCarUserInfo.where("aishi_upload_status = ? ", '未上传')
-    ycuis.each do |ycui|
-      is_select = true
-      if not ycui.aishi_id.blank?
-        return # 如果已经提交，就不再提交
-      end
-
-      if ycui.phone.blank?
-        ycui.aishi_upload_status = '手机号不存在'
-        is_select = false
-      end
-
-      if ycui.aishi_upload_status != '未上传'
-        is_select = false
-      end
-
-      if ycui.is_real_cheshang
-        ycui.aishi_upload_status = '疑似车商'
-        is_select = false
-      end
-
-      if ycui.is_pachong
-        ycui.aishi_upload_status = '疑似爬虫'
-        is_select = false
-      end
-
-      unless ycui.is_city_match
-        ycui.aishi_upload_status = '城市不匹配'
-        is_select = false
-      end
-
-      if ycui.name.blank?
-        ycui.aishi_upload_status = '没姓名'
-        is_select = false
-      end
+  def self.upload_to_aishi ycui
+    return unless ycui.site == 'ganji'
+    ycui.name = ycui.name.gsub('(个人)', '')
+    ycui.name = ycui.name.gsub('个人', '')
+    ycui.name = ycui.name.gsub('(', '')
+    ycui.name = ycui.name.gsub(')', '')
+    ycui.save!
 
 
-      unless UserSystem::AishiCarUserInfo::CITY.include? ycui.city_chinese
-        ycui.aishi_upload_status = '城市不对'
-        is_select = false
-      end
-      ycui.save!
-
-      if is_select
-        response = RestClient.post "http://api.test.4scenter.com/index.php?r=apicar/signup", {owner_phone: ycui.phone,
-                                                                                              owner_name: ycui.name.gsub('(个人)', ''),
-                                                                                              addr: ycui.city_chinese,
-                                                                                              brand: ycui.brand,
-                                                                                              token: 'Ap4q0s31p'
-                                                                                           }
-        response = JSON.parse response.body
-        pp response
-        ycui.youche_id = response["data"]["id"]
-        ycui.youche_upload_status = '已上传'
-
-        ycui.yc_status = response["status_msg"]
-        ycui.yc_status_message = response["status_msg"]
-        ycui.save!
-      end
+    if sa_car_user_info.phone.blank? or sa_car_user_info.brand.blank?
+      sa_car_user_info.aishi_upload_status = '信息不完整'
+      sa_car_user_info.save!
+      return
     end
+
+    if not CITY.include? sa_car_user_info.city_chinese
+      pp '城市不对'
+      sa_car_user_info.aishi_upload_status = '城市不对'
+      sa_car_user_info.save!
+      return
+    end
+
+    if sa_car_user_info.is_real_cheshang
+      pp '车商'
+      sa_car_user_info.aishi_upload_status = '车商'
+      sa_car_user_info.save!
+      return
+    end
+
+    if sa_car_user_info.is_pachong
+      pp '爬虫'
+      sa_car_user_info.aishi_upload_status = '爬虫'
+      sa_car_user_info.save!
+      return
+    end
+
+    if not sa_car_user_info.is_city_match
+      pp '城市不匹配'
+      sa_car_user_info.aishi_upload_status = '城市不匹配'
+      sa_car_user_info.save!
+      return
+    end
+
+    return if ycui.phone.blank?
+    return if ycui.aishi_upload_status != '未上传'
+    return if ycui.name.blank?
+
+
+     key = "033bd94b1168d7e4f0d644c3c95e35bf" #测试
+    number = "4S-10009" #测试
+
+    # key = "5c7a8fe495a35f24f6674ac80c9843d8" #正式
+    # number = "4SA-1001" #正式
+    require 'digest/md5'
+
+    response = RestClient.post "http://api.test.4scenter.com/index.php?r=apicar/signup", {mobile: ycui.phone,
+                                                                                          name: ycui.name.gsub('(个人)', ''),
+                                                                                          city: "#{ycui.city_chinese}市",
+                                                                                          brand: ycui.brand,
+                                                                                          number: number,
+                                                                                          sign: Digest::MD5.hexdigest("#{number}#{key}")
+                                                                                       }
+    response = JSON.parse response.body
+    pp response
+    ycui.aishi_upload_status = '已上传'
+    ycui.aishi_upload_message = response["message"]
+    if response["error"] == false
+      ycui.aishi_id = response["result"]["id"]
+    end
+    ycui.save!
   end
 
 
@@ -123,7 +133,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     end
   end
 
-  # 创建优车车主信息
+  # 创建车主信息
   def self.create_car_info options
     cui = UserSystem::AishiCarUserInfo.find_by_car_user_info_id options[:car_user_info_id]
     return unless cui.blank?
@@ -136,64 +146,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
     cui.created_day = cui.created_at.chinese_format_day
     cui.save!
-    # UserSystem::AishiCarUserInfo.upload_youche cui
-  end
-
-
-  def self.upload_youche sa_car_user_info
-
-    sa_car_user_info.name = sa_car_user_info.name.gsub('(个人)', '')
-    sa_car_user_info.save!
-
-    if sa_car_user_info.phone_city.blank?
-      phone_city_name = get_city_name sa_car_user_info.phone
-      sa_car_user_info.phone_city = phone_city_name
-      sa_car_user_info.save!
-    end
-
-
-    if sa_car_user_info.phone.blank? or sa_car_user_info.brand.blank?
-      sa_car_user_info.aishi_upload_status = '信息不完整'
-      sa_car_user_info.save!
-      return
-    end
-
-    if not CITY.include? sa_car_user_info.city_chinese
-      pp '城市不对'
-      sa_car_user_info.aishi_upload_status = '城市不对'
-      sa_car_user_info.save!
-      return
-    end
-
-    if sa_car_user_info.is_real_cheshang
-      pp '车商'
-      sa_car_user_info.aishi_upload_status = '车商'
-      sa_car_user_info.save!
-      return
-    end
-
-    if sa_car_user_info.is_pachong
-      pp '爬虫'
-      sa_car_user_info.aishi_upload_status = '爬虫'
-      sa_car_user_info.save!
-      return
-    end
-
-    if not sa_car_user_info.is_city_match
-      pp '城市不匹配'
-      sa_car_user_info.aishi_upload_status = '城市不匹配'
-      sa_car_user_info.save!
-      return
-    end
-
-
-    if sa_car_user_info.city_chinese == '北京'
-      unless sa_car_user_info.phone_city == '北京'
-        sa_car_user_info.aishi_upload_status = '北京的外地电话'
-        sa_car_user_info.save!
-        return
-      end
-    end
+    # UserSystem::AishiCarUserInfo.upload_aishi cui
   end
 
 
