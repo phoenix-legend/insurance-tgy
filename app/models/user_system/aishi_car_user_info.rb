@@ -1,7 +1,8 @@
 class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
 
-  CITY = ['天津', '苏州']
+  # CITY = ['天津', '苏州']
+  CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆"]
 
   # 上传到埃侍
   def self.upload_to_aishi
