@@ -1,5 +1,5 @@
 if @is_need
-  json.chongqi "yes"
+  json.chongqi "no"
 else
   json.chongqi "no"
 end
