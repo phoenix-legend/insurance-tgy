@@ -16,37 +16,37 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     ycui.save!
 
 
-    if sa_car_user_info.phone.blank? or sa_car_user_info.brand.blank?
-      sa_car_user_info.aishi_upload_status = '信息不完整'
-      sa_car_user_info.save!
+    if ycui.phone.blank? or ycui.brand.blank?
+      ycui.aishi_upload_status = '信息不完整'
+      ycui.save!
       return
     end
 
-    if not CITY.include? sa_car_user_info.city_chinese
+    if not CITY.include? ycui.city_chinese
       pp '城市不对'
-      sa_car_user_info.aishi_upload_status = '城市不对'
-      sa_car_user_info.save!
+      ycui.aishi_upload_status = '城市不对'
+      ycui.save!
       return
     end
 
-    if sa_car_user_info.is_real_cheshang
+    if ycui.is_real_cheshang
       pp '车商'
-      sa_car_user_info.aishi_upload_status = '车商'
-      sa_car_user_info.save!
+      ycui.aishi_upload_status = '车商'
+      ycui.save!
       return
     end
 
-    if sa_car_user_info.is_pachong
+    if ycui.is_pachong
       pp '爬虫'
-      sa_car_user_info.aishi_upload_status = '爬虫'
-      sa_car_user_info.save!
+      ycui.aishi_upload_status = '爬虫'
+      ycui.save!
       return
     end
 
-    if not sa_car_user_info.is_city_match
+    if not ycui.is_city_match
       pp '城市不匹配'
-      sa_car_user_info.aishi_upload_status = '城市不匹配'
-      sa_car_user_info.save!
+      ycui.aishi_upload_status = '城市不匹配'
+      ycui.save!
       return
     end
 
@@ -55,11 +55,11 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     return if ycui.name.blank?
 
 
-     key = "033bd94b1168d7e4f0d644c3c95e35bf" #测试
-    number = "4S-10009" #测试
+     # key = "033bd94b1168d7e4f0d644c3c95e35bf" #测试
+    # number = "4S-10009" #测试
 
-    # key = "5c7a8fe495a35f24f6674ac80c9843d8" #正式
-    # number = "4SA-1001" #正式
+    key = "5c7a8fe495a35f24f6674ac80c9843d8" #正式
+    number = "4SA-1001" #正式
     require 'digest/md5'
 
     response = RestClient.post "http://api.test.4scenter.com/index.php?r=apicar/signup", {mobile: ycui.phone,
@@ -73,7 +73,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     pp response
     ycui.aishi_upload_status = '已上传'
     ycui.aishi_upload_message = response["message"]
-    if response["error"] == false
+    if response["error"] == "false"
       ycui.aishi_id = response["result"]["id"]
     end
     ycui.save!
