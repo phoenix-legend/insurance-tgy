@@ -6,8 +6,9 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   # CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆"]
 
   # 上传到埃侍
+  # UserSystem::AishiCarUserInfo.upload_to_aishi ycui
   def self.upload_to_aishi ycui
-    return unless ycui.site == 'ganji'
+    return unless ycui.site_name == 'ganji'
     ycui.name = ycui.name.gsub('(个人)', '')
     ycui.name = ycui.name.gsub('个人', '')
     ycui.name = ycui.name.gsub('(', '')
