@@ -147,7 +147,9 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
     cui.created_day = cui.created_at.chinese_format_day
     cui.save!
-    # UserSystem::AishiCarUserInfo.upload_aishi cui
+
+    UserSystem::AishiCarUserInfo.upload_to_aishi cui
+
   end
 
 
