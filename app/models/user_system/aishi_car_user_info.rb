@@ -55,7 +55,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     return if ycui.name.blank?
 
 
-     # key = "033bd94b1168d7e4f0d644c3c95e35bf" #测试
+    # key = "033bd94b1168d7e4f0d644c3c95e35bf" #测试
     # number = "4S-10009" #测试
 
     # key = "5c7a8fe495a35f24f6674ac80c9843d8" #正式
@@ -66,13 +66,13 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
     require 'digest/md5'
 
-    response = RestClient.post "http://api.test.4scenter.com/index.php?r=apicar/signup", {mobile: ycui.phone,
-                                                                                          name: ycui.name.gsub('(个人)', ''),
-                                                                                          city: "#{ycui.city_chinese}市",
-                                                                                          brand: ycui.brand,
-                                                                                          number: number,
-                                                                                          sign: Digest::MD5.hexdigest("#{number}#{key}")
-                                                                                       }
+    response = RestClient.post "http://api.formal.4scenter.com/index.php?r=apicar/signup", {mobile: ycui.phone,
+                                                                                            name: ycui.name.gsub('(个人)', ''),
+                                                                                            city: "#{ycui.city_chinese}市",
+                                                                                            brand: ycui.brand,
+                                                                                            number: number,
+                                                                                            sign: Digest::MD5.hexdigest("#{number}#{key}")
+                                                                                         }
     response = JSON.parse response.body
     pp response
     ycui.aishi_upload_status = '已上传'
