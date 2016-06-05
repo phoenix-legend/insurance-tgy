@@ -58,8 +58,12 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
      # key = "033bd94b1168d7e4f0d644c3c95e35bf" #测试
     # number = "4S-10009" #测试
 
-    key = "5c7a8fe495a35f24f6674ac80c9843d8" #正式
-    number = "4SA-1001" #正式
+    # key = "5c7a8fe495a35f24f6674ac80c9843d8" #正式
+    # number = "4SA-1001" #正式
+
+    key = "098f6bcd4621d373cade4e832627b4f6" #正式
+    number = "4SA-1011" #正式
+
     require 'digest/md5'
 
     response = RestClient.post "http://api.test.4scenter.com/index.php?r=apicar/signup", {mobile: ycui.phone,
