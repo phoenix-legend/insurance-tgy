@@ -489,7 +489,12 @@ module UploadTianTian
       end
     end
 
+
+    UserSystem::CarUserInfo.where(city_chinese: '上海').where("id > 1148459 and tt_yaoyue = '成功'")
+
   end
+
+
 end
 
 __END__

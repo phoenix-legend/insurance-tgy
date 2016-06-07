@@ -8,21 +8,21 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     if car_user_info.is_pachong == false and UserSystem::YouyicheCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
         #数据回传到优车
-        UserSystem::YouyicheCarUserInfo.create_car_info name: car_user_info.name,
-                                                      phone: car_user_info.phone,
-                                                      brand: car_user_info.brand,
-                                                      city_chinese: car_user_info.city_chinese,
-                                                      che_ling: car_user_info.che_ling,
-                                                      car_user_info_id: car_user_info.id,
-                                                      milage: car_user_info.milage,
-                                                      price: car_user_info.price,
-                                                      is_real_cheshang: car_user_info.is_real_cheshang,
-                                                      is_city_match: car_user_info.is_city_match,
-                                                      is_pachong: car_user_info.is_pachong,
-                                                      is_repeat_one_month: car_user_info.is_repeat_one_month,
-                                                      youyiche_upload_status: '未上传',
-                                                      site_name: car_user_info.site_name,
-                                                      created_day: car_user_info.tt_created_day
+        UserSystem::YouyicheCarUserInfo.create_car_info name: car_user_info.name.gsub('(个人)', ''),
+                                                        phone: car_user_info.phone,
+                                                        brand: car_user_info.brand,
+                                                        city_chinese: car_user_info.city_chinese,
+                                                        che_ling: car_user_info.che_ling,
+                                                        car_user_info_id: car_user_info.id,
+                                                        milage: car_user_info.milage,
+                                                        price: car_user_info.price,
+                                                        is_real_cheshang: car_user_info.is_real_cheshang,
+                                                        is_city_match: car_user_info.is_city_match,
+                                                        is_pachong: car_user_info.is_pachong,
+                                                        is_repeat_one_month: car_user_info.is_repeat_one_month,
+                                                        youyiche_upload_status: '未上传',
+                                                        site_name: car_user_info.site_name,
+                                                        created_day: car_user_info.tt_created_day
       rescue Exception => e
         pp '更新又一车异常'
         pp e
@@ -108,7 +108,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       return
     end
 
-    ['图','照片' , '旗舰', '汽车', '短信','威信', '微信','店','薇', 'QQ'].each do |kw|
+    ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ'].each do |kw|
       if yc_car_user_info.name.include? kw or yc_car_user_info.car_user_info.che_xing.include? kw
         yc_car_user_info.youyiche_upload_status = '疑似走私车或车商'
         yc_car_user_info.save!
@@ -130,8 +130,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     end
 
     #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
-    tmp_chexing = yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/,'')
-    tmp_note = yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/,'')
+    tmp_chexing = yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
+    tmp_note = yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '')
     if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
       yc_car_user_info.youyiche_upload_status = '疑似走私车'
       yc_car_user_info.save!
@@ -149,7 +149,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     }
 
     # host_name = 'uat.youyiche.com' #测试环境
-    host_name = "b.youyiche.com"  #正式环境
+    host_name = "b.youyiche.com" #正式环境
 
     response = RestClient.post "http://#{host_name}/webapi/public/register_carneed", params.to_json, :content_type => 'application/json'
 
@@ -177,12 +177,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     # {"success"=>true, "id"=>116586}
 
 
-
   end
-
-
-
-
 
 
 end
