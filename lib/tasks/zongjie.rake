@@ -23,6 +23,9 @@ namespace :zongjie do
 	end
 
 
+	# 把数据传到优车
+	# 查询优车数据状态
+	# 查询又一车数据状态
 	desc "把数据上传到优车，目前频率10分钟/次  rake zongjie:uploadyouche RAILS_ENV=production"
 	task :uploadyouche => :environment do
 		jincheng = `ps -ef | grep zongjie:uploadyouche`
@@ -32,6 +35,7 @@ namespace :zongjie do
 		else
 			UserSystem::YoucheCarUserInfo.upload_to_youche
 			UserSystem::YoucheCarUserInfo.query_youche_status
+			UserSystem::YouyicheCarUserInfo.query_youyiche
 		end
 	end
 

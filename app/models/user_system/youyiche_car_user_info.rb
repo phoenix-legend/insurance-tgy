@@ -56,13 +56,6 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     yc_car_user_info.name = yc_car_user_info.name.gsub('(个人)', '')
     yc_car_user_info.save!
 
-    # if yc_car_user_info.phone_city.blank?
-    #   phone_city_name = get_city_name yc_car_user_info.phone
-    #   yc_car_user_info.phone_city = phone_city_name
-    #   yc_car_user_info.save!
-    # end
-
-
     if yc_car_user_info.phone.blank? or yc_car_user_info.brand.blank?
       yc_car_user_info.youyiche_upload_status = '信息不完整'
       yc_car_user_info.save!
@@ -163,22 +156,27 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     end
     yc_car_user_info.save!
 
-
-    #
-    #
-    # ycui.youche_id = response["data"]["id"]
-    # ycui.youche_upload_status = '已上传'
-    #
-    # ycui.youyiche_status = response["status_msg"]
-    # ycui.yc_status_message = response["status_msg"]
-
-
-    # {"success"=>false, "message"=>"isSell不能为空"}
-    # {"success"=>true, "id"=>116586}
-
-
   end
 
 
+
+  # UserSystem::YouyicheCarUserInfo.query_youyiche
+  def self.query_youyiche
+    # host_name = 'uat.youyiche.com' #测试环境
+    host_name = "b.youyiche.com" #正式环境
+    UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_yaoyue is null").each do |cui|
+      response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
+      response = JSON.parse response.body
+      status = response[0]["status"].strip
+      next if ['待预约','待跟进'].include? status
+      cui.youyiche_yaoyue = status
+      cui.yaoyue_time = Time.now.chinese_format
+      cui.yaoyue_day = Time.now.chinese_format_day
+      cui.save!
+    end
+
+
+
+  end
 end
 __END__
