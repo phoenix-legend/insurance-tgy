@@ -1,107 +1,14 @@
-class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
+class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
 
-  CITY = ['天津']
+  CITY = ['上海']
 
-  def self.upload_to_youche
-    ycuis = UserSystem::YoucheCarUserInfo.where("youche_upload_status = ? ", '未上传')
-    ycuis.each do |ycui|
-      is_select = true
-      if not ycui.youche_id.blank?
-        return # 如果已经提交，就不再提交
-      end
-
-      if ycui.phone.blank?
-        ycui.youche_upload_status = '手机号不存在'
-        is_select = false
-      end
-
-      if ycui.youche_upload_status != '未上传'
-        is_select = false
-      end
-
-      if ycui.is_real_cheshang
-        ycui.youche_upload_status = '疑似车商'
-        is_select = false
-      end
-
-      if ycui.is_pachong
-        ycui.youche_upload_status = '疑似爬虫'
-        is_select = false
-      end
-
-      unless ycui.is_city_match
-        ycui.youche_upload_status = '城市不匹配'
-        is_select = false
-      end
-
-      if ycui.name.blank?
-        ycui.youche_upload_status = '没姓名'
-        is_select = false
-      end
-
-
-      unless UserSystem::YoucheCarUserInfo::CITY.include? ycui.city_chinese
-        ycui.youche_upload_status = '城市不对'
-        is_select = false
-      end
-      ycui.save!
-
-      if is_select
-        response = RestClient.post "http://http.api.youche.com/xuzuo/push_user", {owner_phone: ycui.phone,
-                                                                                  owner_name: ycui.name.gsub('(个人)', ''),
-                                                                                  addr: ycui.city_chinese,
-                                                                                  brand: ycui.brand,
-                                                                                  token: 'Ap4q0s31p'
-                                                                               }
-        response = JSON.parse response.body
-        pp response
-        ycui.youche_id = response["data"]["id"]
-        ycui.youche_upload_status = '已上传'
-
-        ycui.yc_status = response["status_msg"]
-        ycui.yc_status_message = response["status_msg"]
-        ycui.save!
-      end
-
-
-    end
-  end
-
-
-  # UserSystem::YoucheCarUserInfo.query_youche_status
-  def self.query_youche_status
-    return if Time.now.min > 10
-    i = 0
-    j = 0
-    ycuis = UserSystem::YoucheCarUserInfo.where("youche_id is not null and youche_yaoyue is null ")
-    ycuis.each do |ycui|
-      response = RestClient.get "http://http.api.youche.com/xuzuo/query_user?id=#{ycui.youche_id}&token=Ap4q0s31p"
-      response = JSON.parse response.body
-      pp response
-      if response["data"]["user_status_msg"] == '有效'
-        i += 1
-        ycui.youche_yaoyue = '有效'
-        ycui.yaoyue_time = Time.now.chinese_format
-        ycui.yaoyue_day = Time.now.chinese_format_day
-        ycui.save!
-      end
-
-      if response["data"]["user_status_msg"] == '无效'
-        j += 1
-        ycui.youche_yaoyue = '无效'
-        ycui.yaoyue_time = Time.now.chinese_format
-        ycui.yaoyue_day = Time.now.chinese_format_day
-        ycui.save!
-      end
-    end
-  end
-
+  # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
-    if car_user_info.is_pachong == false and UserSystem::YoucheCarUserInfo::CITY.include?(car_user_info.city_chinese)
+    if car_user_info.is_pachong == false and UserSystem::YouyicheCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
         #数据回传到优车
-        UserSystem::YoucheCarUserInfo.create_car_info name: car_user_info.name,
+        UserSystem::YouyicheCarUserInfo.create_car_info name: car_user_info.name,
                                                       phone: car_user_info.phone,
                                                       brand: car_user_info.brand,
                                                       city_chinese: car_user_info.city_chinese,
@@ -113,11 +20,11 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
                                                       is_city_match: car_user_info.is_city_match,
                                                       is_pachong: car_user_info.is_pachong,
                                                       is_repeat_one_month: car_user_info.is_repeat_one_month,
-                                                      youche_upload_status: '未上传',
+                                                      youyiche_upload_status: '未上传',
                                                       site_name: car_user_info.site_name,
                                                       created_day: car_user_info.tt_created_day
       rescue Exception => e
-        pp '更新优车异常'
+        pp '更新又一车异常'
         pp e
       end
     end
@@ -126,100 +33,157 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
   # 创建优车车主信息
   def self.create_car_info options
 
-    cui = UserSystem::YoucheCarUserInfo.find_by_car_user_info_id options[:car_user_info_id]
+    sleep_time = rand(3)
+    sleep sleep_time
+
+    cui = UserSystem::YouyicheCarUserInfo.find_by_car_user_info_id options[:car_user_info_id]
     return unless cui.blank?
 
-    cui = UserSystem::YoucheCarUserInfo.find_by_phone options[:phone]
+    cui = UserSystem::YouyicheCarUserInfo.find_by_phone options[:phone]
     return unless cui.blank?
 
-    cui = UserSystem::YoucheCarUserInfo.new options
+    cui = UserSystem::YouyicheCarUserInfo.new options
     cui.save!
 
     cui.created_day = cui.created_at.chinese_format_day
     cui.save!
 
-    # UserSystem::YoucheCarUserInfo.upload_youche cui
+    UserSystem::YouyicheCarUserInfo.upload_youyiche cui
   end
 
-
-  def self.batch_upload_youche
-    UserSystem::YoucheCarUserInfo.where("youche_upload_status = '未上传' ").each do |yc_car_user_info|
-      upload_youche yc_car_user_info
-    end
-  end
-
-
-  def self.upload_youche yc_car_user_info
+  def self.upload_youyiche yc_car_user_info
 
     yc_car_user_info.name = yc_car_user_info.name.gsub('(个人)', '')
     yc_car_user_info.save!
 
-    if yc_car_user_info.phone_city.blank?
-      phone_city_name = get_city_name yc_car_user_info.phone
-      yc_car_user_info.phone_city = phone_city_name
-      yc_car_user_info.save!
-    end
+    # if yc_car_user_info.phone_city.blank?
+    #   phone_city_name = get_city_name yc_car_user_info.phone
+    #   yc_car_user_info.phone_city = phone_city_name
+    #   yc_car_user_info.save!
+    # end
 
 
     if yc_car_user_info.phone.blank? or yc_car_user_info.brand.blank?
-      yc_car_user_info.youche_upload_status = '信息不完整'
+      yc_car_user_info.youyiche_upload_status = '信息不完整'
       yc_car_user_info.save!
       return
     end
 
     if not CITY.include? yc_car_user_info.city_chinese
       pp '城市不对'
-      yc_car_user_info.youche_upload_status = '城市不对'
+      yc_car_user_info.youyiche_upload_status = '城市不对'
       yc_car_user_info.save!
       return
     end
 
     if yc_car_user_info.is_real_cheshang
       pp '车商'
-      yc_car_user_info.youche_upload_status = '车商'
+      yc_car_user_info.youyiche_upload_status = '车商'
       yc_car_user_info.save!
       return
     end
 
     if yc_car_user_info.is_pachong
       pp '爬虫'
-      yc_car_user_info.youche_upload_status = '爬虫'
+      yc_car_user_info.youyiche_upload_status = '爬虫'
       yc_car_user_info.save!
       return
     end
 
     if not yc_car_user_info.is_city_match
       pp '城市不匹配'
-      yc_car_user_info.youche_upload_status = '城市不匹配'
+      yc_car_user_info.youyiche_upload_status = '城市不匹配'
       yc_car_user_info.save!
       return
     end
 
+    if yc_car_user_info.car_user_info.note.match /\d{11}/
+      yc_car_user_info.youyiche_upload_status = '疑似走私车'
+      yc_car_user_info.save!
+      return
+    end
+    if yc_car_user_info.car_user_info.che_xing.match /\d{11}/
+      yc_car_user_info.youyiche_upload_status = '疑似走私车'
+      yc_car_user_info.save!
+      return
+    end
 
-    if yc_car_user_info.city_chinese == '北京'
-      unless yc_car_user_info.phone_city == '北京'
-        yc_car_user_info.youche_upload_status = '北京的外地电话'
+    ['图','照片' , '旗舰', '汽车', '短信','威信', '微信','店','薇', 'QQ'].each do |kw|
+      if yc_car_user_info.name.include? kw or yc_car_user_info.car_user_info.che_xing.include? kw
+        yc_car_user_info.youyiche_upload_status = '疑似走私车或车商'
         yc_car_user_info.save!
         return
       end
     end
-  end
 
-  # UserSystem::YoucheCarUserInfo.get_city_name ''
-  def self.get_city_name phone
-    begin
-      response = RestClient.get "http://life.tenpay.com/cgi-bin/mobile/MobileQueryAttribution.cgi?chgmobile=#{phone}"
-      ec = Encoding::Converter.new("gb18030", "UTF-8")
-      response = ec.convert response
-      matchs = response.match /<city>(.*)<\/city>/
-      return matchs[1].to_s.strip
-    rescue Exception => e
-      pp '获取城市出错'
-      return ''
+    if /^[a-z|A-Z|0-9|-|_]+$/.match yc_car_user_info.name
+      yc_car_user_info.youyiche_upload_status = '疑似走私车'
+      yc_car_user_info.save!
+      return
     end
 
+    #还有用手机号，QQ号做名字的。
+    if /[0-9]+/.match yc_car_user_info.name
+      yc_car_user_info.youyiche_upload_status = '疑似走私车'
+      yc_car_user_info.save!
+      return
+    end
+
+    #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
+    tmp_chexing = yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/,'')
+    tmp_note = yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/,'')
+    if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
+      yc_car_user_info.youyiche_upload_status = '疑似走私车'
+      yc_car_user_info.save!
+      return
+    end
+
+    params = {
+        "name" => yc_car_user_info.name,
+        "phone" => yc_car_user_info.phone,
+        "isSell" => 1,
+        "city" => yc_car_user_info.city_chinese,
+        "type" => "线上合作-数据合作",
+        "origin" => "xuzuo",
+        "brand" => yc_car_user_info.brand
+    }
+
+    # host_name = 'uat.youyiche.com' #测试环境
+    host_name = "b.youyiche.com"  #正式环境
+
+    response = RestClient.post "http://#{host_name}/webapi/public/register_carneed", params.to_json, :content_type => 'application/json'
+
+    response = JSON.parse response.body
+
+    yc_car_user_info.youyiche_upload_status = '已上传'
+    if response["success"]
+      yc_car_user_info.youyiche_id = response["id"]
+    else
+      yc_car_user_info.youyiche_status_message = response["message"]
+    end
+    yc_car_user_info.save!
+
+
+    #
+    #
+    # ycui.youche_id = response["data"]["id"]
+    # ycui.youche_upload_status = '已上传'
+    #
+    # ycui.youyiche_status = response["status_msg"]
+    # ycui.yc_status_message = response["status_msg"]
+
+
+    # {"success"=>false, "message"=>"isSell不能为空"}
+    # {"success"=>true, "id"=>116586}
+
+
 
   end
+
+
+
+
+
 
 end
 __END__

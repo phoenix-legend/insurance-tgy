@@ -1,26 +1,31 @@
 module UploadTianTian
-  # CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆"]
-  # CITY = ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "重庆", "佛山", "武汉"]
-  CITY = ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "佛山"]
+
+  CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆", "佛山"]
+
+  CITY1 = ["上海", "成都", "深圳", "南京", "广州" , "杭州", "东莞", "佛山"]
+  # CITY2 = ["武汉", "天津", "重庆","苏州"]
+  CITY2= []
+
+
+
 
   # CITY = ["上海"]
 
   # 需要上传的数据。
-  def self.need_upload
-    pp '开始批量上传'
-    car_user_infos = ::UserSystem::CarUserInfo.where "tt_upload_status = 'weishangchuan' and id > #{::UserSystem::CarUserInfo::CURRENT_ID} and phone is not null and brand is not null and is_cheshang = 0"
-    pp "本次批量上传#{car_user_infos.length}个"
-    pp "*************************************"
-    car_user_infos
-  end
+  # def self.need_upload
+  #   pp '开始批量上传'
+  #   car_user_infos = ::UserSystem::CarUserInfo.where "tt_upload_status = 'weishangchuan' and id > #{::UserSystem::CarUserInfo::CURRENT_ID} and phone is not null and brand is not null and is_cheshang = 0"
+  #   pp "本次批量上传#{car_user_infos.length}个"
+  #   pp "*************************************"
+  #   car_user_infos
+  # end
 
-  def self.upload_tt
-
-    user_infos = UploadTianTian.need_upload
-    user_infos.each do |user_info|
-      UploadTianTian.upload_one_tt user_info
-    end
-  end
+  # def self.upload_tt
+  #   user_infos = UploadTianTian.need_upload
+  #   user_infos.each do |user_info|
+  #     UploadTianTian.upload_one_tt user_info
+  #   end
+  # end
 
   def self.upload_one_tt car_user_info
 
@@ -82,6 +87,14 @@ module UploadTianTian
     # end
     car_user_info.save!
 
+    #如果符合郭正的城市条件，优先给郭正渠道
+    if UploadTianTian::CITY2.include? car_user_info.city_chinese
+      UploadTianTian.tt_pai_v2_0_guozheng car_user_info
+      return
+    end
+
+
+    #其它渠道再往胡磊那里传
     qudao = "23-23-1"
     if car_user_info.site_name == 'baixing' or car_user_info.site_name == 'zuoxi'
       qudao = "23-23-4"
@@ -124,7 +137,47 @@ module UploadTianTian
       user_info.tt_upload_status = '已上传'
       user_info.save!
     end
+  end
 
+
+  #郭正的天天拍2.0接口，新合同
+  #UploadTianTian.tt_pai_v2_0_guozheng
+  def self.tt_pai_v2_0_guozheng user_info
+
+    #测试环境
+    domain = "sandbox.openapi.ttpai.cn"
+    s = "3ee710fd91922986627461fccf8f7886"
+    appkey = 'flower'
+    qudao = '2-307'
+
+    # domain = "openapi.ttpai.cn"
+    # s = "3ee710fd91922986627461fccf8f7886"
+
+    params = []
+    user_info = user_info.reload
+    return if user_info.tt_upload_status != 'weishangchuan'
+    params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
+    params << [:mobile, UploadTianTian.escape2(user_info.phone)]
+    params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
+    params << [:brand, UploadTianTian.escape2(user_info.brand)]
+    params << [:source, UploadTianTian.escape2(qudao)]
+    params << [:appkey, UploadTianTian.escape2(appkey)]
+    params << [:sign, UploadTianTian.escape2(Digest::MD5.hexdigest("#{user_info.phone}#{s}"))]
+    response = RestClient.get "#{domain}/api/v2.0/ttp_sign_up?#{URI.encode_www_form params}"
+    pp response
+    response = JSON.parse response.body
+    error = response["error"]
+    message = response["message"]
+    id = begin
+      response["result"]["id"] rescue -1
+    end
+    user_info.tt_source = qudao
+    user_info.tt_created_day = user_info.created_at.chinese_format_day
+    user_info.tt_id = id if not id.blank?
+    user_info.tt_code = error
+    user_info.tt_message = message
+    user_info.tt_upload_status = '已上传'
+    user_info.save!
   end
 
 
