@@ -94,6 +94,10 @@ module UploadTianTian
     end
 
 
+    if not UploadTianTian::CITY1.include? car_user_info.city_chinese
+      return
+    end
+
     #其它渠道再往胡磊那里传
     qudao = "23-23-1"
     if car_user_info.site_name == 'baixing' or car_user_info.site_name == 'zuoxi'
