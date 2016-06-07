@@ -168,12 +168,18 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
       response = JSON.parse response.body
       status = response[0]["status"].strip
-      next if ['待预约','待跟进','跟进中'].include? status
+      next if ['待预约','待跟进','跟进中','未拨通'].include? status
       cui.youyiche_yaoyue = status
       cui.yaoyue_time = Time.now.chinese_format
       cui.yaoyue_day = Time.now.chinese_format_day
       cui.save!
     end
+
+
+    # UserSystem::YouyicheCarUserInfo.all.each do |i|
+    #   i.youyiche_yaoyue = status
+    #   i.save!
+    # end
 
 
 
