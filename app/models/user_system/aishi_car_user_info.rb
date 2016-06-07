@@ -84,34 +84,6 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   end
 
 
-  # UserSystem::AishiCarUserInfo.query_youche_status
-  def self.query_youche_status
-    return if Time.now.min > 10
-    i = 0
-    j = 0
-    ycuis = UserSystem::AishiCarUserInfo.where("aishi_id is not null and youche_yaoyue is null ")
-    ycuis.each do |ycui|
-      response = RestClient.get "http://http.api.youche.com/xuzuo/query_user?id=#{ycui.youche_id}&token=Ap4q0s31p"
-      response = JSON.parse response.body
-      pp response
-      if response["data"]["user_status_msg"] == '有效'
-        i += 1
-        ycui.youche_yaoyue = '有效'
-        ycui.yaoyue_time = Time.now.chinese_format
-        ycui.yaoyue_day = Time.now.chinese_format_day
-        ycui.save!
-      end
-
-      if response["data"]["user_status_msg"] == '无效'
-        j += 1
-        ycui.youche_yaoyue = '无效'
-        ycui.yaoyue_time = Time.now.chinese_format
-        ycui.yaoyue_day = Time.now.chinese_format_day
-        ycui.save!
-      end
-    end
-  end
-
   def self.create_user_info_from_car_user_info car_user_info
     if car_user_info.is_pachong == false and UserSystem::AishiCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
