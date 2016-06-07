@@ -375,6 +375,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UploadTianTian.upload_one_tt car_user_info
     # 同步至车置宝  车置宝作废
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
+    #同步至又一车
+    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
     #同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
     # 同步至4A
@@ -395,6 +397,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       car_user_info = car_user_info.reload
       pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
       UploadTianTian.upload_one_tt car_user_info
+      # 同步至又一车
+      UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
       # 同步至优车
       UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
       # 同步至a s
