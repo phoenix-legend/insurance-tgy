@@ -93,6 +93,12 @@ module UploadTianTian
       return
     end
 
+    #如果符合郭正的城市条件，优先给郭正渠道
+    if UploadTianTian::CITY.include? car_user_info.city_chinese and car_user_info.site_name == '58'
+      UploadTianTian.tt_pai_v2_0_guozheng car_user_info
+      return
+    end
+
 
     if not UploadTianTian::CITY1.include? car_user_info.city_chinese
       return
