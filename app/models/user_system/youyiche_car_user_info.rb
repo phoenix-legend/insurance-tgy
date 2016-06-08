@@ -56,7 +56,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     yc_car_user_info.name = yc_car_user_info.name.gsub('(个人)', '')
     yc_car_user_info.save!
 
-    if yc_car_user_info.phone.blank? or yc_car_user_info.brand.blank?
+    if yc_car_user_info.phone.blank? #or yc_car_user_info.brand.blank?
       yc_car_user_info.youyiche_upload_status = '信息不完整'
       yc_car_user_info.save!
       return
