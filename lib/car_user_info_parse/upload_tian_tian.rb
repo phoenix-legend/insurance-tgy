@@ -3,8 +3,8 @@ module UploadTianTian
   CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆", "佛山"]
 
   CITY1 = ["上海", "成都", "深圳", "南京", "广州" , "杭州", "东莞", "佛山"]
-  # CITY2 = ["武汉", "天津", "重庆","苏州"]
-  CITY2= []
+  CITY2 = ["武汉", "天津", "重庆","苏州"]
+  # CITY2= []
 
 
 
@@ -150,9 +150,13 @@ module UploadTianTian
 
     #测试环境
     domain = "sandbox.openapi.ttpai.cn"
-    s = "3ee710fd91922986627461fccf8f7886"
+    # s = "3ee710fd91922986627461fccf8f7886"
+    # appkey = 'flower'
+    # qudao = '2-307'
+
+    s = "83c78d166b59e953032eef673296faef"
     appkey = 'flower'
-    qudao = '2-307'
+    qudao = '2-307-317'
 
     # domain = "openapi.ttpai.cn"
     # s = "3ee710fd91922986627461fccf8f7886"
