@@ -36,8 +36,7 @@
        ['58', 'ganji', 'baixing', 'che168', 'taoche','zuoxi'].each do |source|
 
          tijiaoshu = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and created_at > ? and created_at < ?", source,"#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
-         tijiaoshu1 = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and created_at > ? and created_at < ?", source,"#{d.chinese_format_day} 00:00:00 and tt_source in ('23-23-4','23-23-5','23-23-1')", "#{d.chinese_format_day} 23:59:59").count
-         tijiaoshu2 = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and created_at > ? and created_at < ?", source,"#{d.chinese_format_day} 00:00:00 and tt_source in ('2-307-317')", "#{d.chinese_format_day} 23:59:59").count
+
          chenggongshu = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ?",source, "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
          source_name = case source
                          when 'taoche'
@@ -59,7 +58,7 @@
           <tr class=<%= if i%2 == 0 then '"yinying"' else 'noyinying' end%>>
             <td><%= d.chinese_format_day %></td>
             <td><%= source_name %></td>
-            <td><%= tijiaoshu %>=<%= tijiaoshu1 %>+<%= tijiaoshu2 %></td>
+            <td><%= tijiaoshu %></td>
             <td><%= chenggongshu %></td>
             <td><%= if tijiaoshu == 0 then 'NaN' else (((chenggongshu.to_f/tijiaoshu)*10000).to_i).to_f/100 end %>%</td>
           </tr>
@@ -70,13 +69,18 @@
 
       <%
          all_tijiaoshu = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ?", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         all_tijiaoshu1 = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ? and tt_source in ('23-23-4','23-23-5','23-23-1')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         all_tijiaoshu2 = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ? and tt_source in ('2-307-317')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+
          all_chenggongshu = UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ?", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         all_chenggongshu1 = UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ? and tt_source in ('23-23-4','23-23-5','23-23-1')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         all_chenggongshu2 = UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ? and tt_source in ('2-307-317')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
       %>
       <tr class=<%= if i%2 == 0 then '"yinying"' else 'noyinying' end%>>
         <td><%= d.chinese_format_day %></td>
         <td>---</td>
-        <td><%= all_tijiaoshu %></td>
-        <td><%= all_chenggongshu %></td>
+        <td><%= all_tijiaoshu %>=<%= all_tijiaoshu1 %>+<%= all_tijiaoshu2 %></td>
+        <td><%= all_chenggongshu %>=<%= all_chenggongshu1 %>+<%= all_chenggongshu2 %></td>
         <td><%= if all_tijiaoshu == 0 then 'NaN' else (((all_chenggongshu.to_f/all_tijiaoshu)*10000).to_i).to_f/100 end%>% </td>
       </tr>
 
