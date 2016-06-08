@@ -149,7 +149,7 @@ module UploadTianTian
   def self.tt_pai_v2_0_guozheng user_info
 
     #测试环境
-    domain = "sandbox.openapi.ttpai.cn"
+    # domain = "sandbox.openapi.ttpai.cn"
     # s = "3ee710fd91922986627461fccf8f7886"
     # appkey = 'flower'
     # qudao = '2-307'
@@ -158,7 +158,7 @@ module UploadTianTian
     appkey = 'flower'
     qudao = '2-307-317'
 
-    # domain = "openapi.ttpai.cn"
+    domain = "openapi.ttpai.cn"
     # s = "3ee710fd91922986627461fccf8f7886"
 
     params = []
