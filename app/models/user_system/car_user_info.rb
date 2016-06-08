@@ -76,7 +76,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   PINYIN_CITY = {
       "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
-      "dongguan" => "东莞", "chongqing" => "重庆"#, "beijing" => "北京"#,
+      "dongguan" => "东莞", "chongqing" => "重庆" #, "beijing" => "北京"#,
       # "zhengzhou" => '郑州', 'changsha' => '长沙',
       # 'xian' => '西安', "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "foshan" => '佛山', "weihai" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
       # "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jinan" => "济南", "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
@@ -330,7 +330,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       car_user_info.che_ling = params[:che_ling]
     end
 
-    if  params[:is_cheshang]=="1"
+    if params[:is_cheshang]=="1"
       car_user_info.is_cheshang = 1
       car_user_info.is_real_cheshang = true
     end
@@ -740,7 +740,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   # 现在只要天津和上海数据。每天下午3点定时导出前一天下午3点到今天下午3点的数据。
   # UserSystem::CarUserInfo.get_info_to_chewang
   def self.get_info_to_chewang
-
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
     record_number = 0
@@ -753,21 +752,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       cuis = UserSystem::CarUserInfo.where("id > 172006 and city_chinese = ? and milage < 9 and  tt_upload_status = '已上传' and tt_code in (0,1) and created_at > ? and created_at < ?", city, "#{Date.yesterday.chinese_format_day} 15:00:00", "#{Date.today.chinese_format_day} 15:00:00")
       cuis.each_with_index do |car_user_info, current_row|
         next if car_user_info.is_repeat_one_month
-
         if car_user_info.city_chinese == '上海'
           unless ['别克', '福特', 'MG', '荣威', '雪佛兰'].include? car_user_info.brand
             next
           end
         end
-
         record_number = record_number+1
         row = row+1
         [car_user_info.name.gsub('(个人)', ''), car_user_info.phone, car_user_info.brand, car_user_info.city_chinese].each_with_index do |content, i|
-
           sheet1.row(row)[i] = content
-
         end
-
       end
     end
 
@@ -784,6 +778,57 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                  "车王最新数据-#{Time.now.chinese_format}",
                                  [file_path]
     ).deliver
+
+  end
+
+
+  # 导出数据给晓玥。
+  # 一次一个城市
+  # UserSystem::CarUserInfo.get_info_to_xiaoyue
+  def self.get_info_to_xiaoyue
+    id_hash = {
+        "上海" => 1161102
+    }
+    Spreadsheet.client_encoding = 'UTF-8'
+    book = Spreadsheet::Workbook.new
+
+    city = '上海'
+    phones = []
+    sheet1 = book.create_worksheet name: "#{city}数据"
+    ['姓名', '电话'].each_with_index do |content, i|
+      sheet1.row(0)[i] = content
+    end
+    row = 0
+    cuis = UserSystem::CarUserInfo.where("id > #{id_hash[city]} and city_chinese = ?", city ).select("id","name", "phone")
+    cuis.find_each do |car_user_info|
+      next if phones.include? car_user_info.phone
+      next if car_user_info.phone.blank?
+      next unless car_user_info.phone.match /\d{11}/
+      phones << car_user_info.phone
+
+      row = row+1
+      [car_user_info.name, car_user_info.phone].each_with_index do |content, i|
+        sheet1.row(row)[i] = content
+      end
+      if row == 50000
+        pp car_user_info.id
+        break
+      end
+    end
+
+
+    dir = Rails.root.join('public', 'downloads')
+    Dir.mkdir dir unless Dir.exist? dir
+    file_path = File.join(dir, "#{Time.now.strftime("%Y%m%dT%H%M%S")}导出#{city}数据.xls")
+    book.write file_path
+    file_path
+    #
+    # MailSend.send_car_user_infos('',
+    #                              '13472446647@163.com',
+    #                              record_number,
+    #                              "车王最新数据-#{Time.now.chinese_format}",
+    #                              [file_path]
+    # ).deliver
 
   end
 
@@ -884,10 +929,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     cuis = UserSystem::CarUserInfo.where("created_at > ? and created_at < ? and phone is not null", "#{(Time.now-1.days).chinese_format_day} 10:00:00", "#{(Time.now).chinese_format} 10:00:00")
 
 
-
     cuis.each_with_index do |car_user_info, current_row|
-      car_user_info.note.gsub!('联系我时，请说是在易车二手车上看到的，谢谢！','')
-      car_user_info.note.gsub!('打电话给我时，请一定说明在手机百姓网看到的，谢谢！','')
+      car_user_info.note.gsub!('联系我时，请说是在易车二手车上看到的，谢谢！', '')
+      car_user_info.note.gsub!('打电话给我时，请一定说明在手机百姓网看到的，谢谢！', '')
       car_user_info.save!
 
       UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
@@ -902,7 +946,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
 
       chexing_guolv = false
-      ['电话','联系','精品','处理','过户','包你'].each do |kw|
+      ['电话', '联系', '精品', '处理', '过户', '包你'].each do |kw|
         if car_user_info.che_xing.include? kw
           chexing_guolv = true
           break
@@ -919,18 +963,18 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
 
 
-      if ['金杯', '五菱汽车',"五菱",'五十铃','昌河','奥迪','宝马','宾利','奔驰','路虎','保时捷', '江淮','东风小康','依维柯','长安商用','福田','东风风神','东风','一汽'].include? car_user_info.brand
+      if ['金杯', '五菱汽车', "五菱", '五十铃', '昌河', '奥迪', '宝马', '宾利', '奔驰', '路虎', '保时捷', '江淮', '东风小康', '依维柯', '长安商用', '福田', '东风风神', '东风', '一汽'].include? car_user_info.brand
         next
       end
 
 
       # 本车   私家车  手机号  心动  包你满意    一个螺丝
       aaa = false
-      ['QQ','求购', '牌照', '批发', '私家一手车','一手私家车','身份','身 份','身~份', '个体经商', '过不了户', '帮朋友', '外地',
-       '贷款', '女士一手','包过户', '原漆', '原版漆', '当天开走', '美女', '车辆说明', '车辆概述', '选购', '一个螺丝',
-       '精品','驾驶证', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
-       '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信','wx', '微 信',
-       '威信', '加微', '评估师点评', '车主自述', "溦 信",'电话量大', '包你满意', '刷卡','办理', '纯正', '抢购', '心动', '本车', '送豪礼'].each do |kw|
+      ['QQ', '求购', '牌照', '批发', '私家一手车', '一手私家车', '身份', '身 份', '身~份', '个体经商', '过不了户', '帮朋友', '外地',
+       '贷款', '女士一手', '包过户', '原漆', '原版漆', '当天开走', '美女', '车辆说明', '车辆概述', '选购', '一个螺丝',
+       '精品', '驾驶证', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
+       '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信', 'wx', '微 信',
+       '威信', '加微', '评估师点评', '车主自述', "溦 信", '电话量大', '包你满意', '刷卡', '办理', '纯正', '抢购', '心动', '本车', '送豪礼'].each do |kw|
         if car_user_info.note.include? kw
           aaa = true
           break
@@ -944,7 +988,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
       aaa = false
       #名字有特殊意思的
-      ['图','照片' ,'哥', '旗舰', '汽车', '短信','威信', '微信','店','薇'].each do |kw|
+      ['图', '照片', '哥', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇'].each do |kw|
         if car_user_info.name.include? kw
           aaa = true
           break
@@ -957,7 +1001,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       ["天窗", "导航", "倒车雷达", "电动调节座椅", "后视镜加热", "后视镜电动调节", "多功能方向盘", "轮毂", "dvd",
        "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜",
        "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "空调",
-       "倒镜","后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速","一分钱"].each do |kw|
+       "倒镜", "后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速", "一分钱"].each do |kw|
         config_key_words+=1 if car_user_info.note.include? kw
       end
       # 过多配置描述，一般车商
@@ -994,7 +1038,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       # 车型中有[]的一律认为是车商
       if not car_user_info.che_xing.blank?
         next if car_user_info.che_xing.match /QQ|电话|不准|低价|私家车|外观|咨询|一手车|精品|业务|打折|货车/
-        next if car_user_info.note.match /\d{11}/  # 车型中不能出现电话
+        next if car_user_info.note.match /\d{11}/ # 车型中不能出现电话
         # 车型中以数字标号开头的，一律不要  这是赶集数据
         # next if car_user_info.che_xing.match /^\d{1,2}\./
       end
@@ -1038,27 +1082,23 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
 
 
-
       #不要外地手机号
       car_user_info.phone_city = UserSystem::YoucheCarUserInfo.get_city_name(car_user_info.phone)
       car_user_info.save!
       next unless car_user_info.phone_city == car_user_info.phone_city
 
       #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
-      tmp_chexing = car_user_info.che_xing.gsub(/\s|\.|~|-|_/,'')
-      tmp_note = car_user_info.note.gsub(/\s|\.|~|-|_/,'')
+      tmp_chexing = car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
+      tmp_note = car_user_info.note.gsub(/\s|\.|~|-|_/, '')
       next if tmp_chexing.match /\d{11}|身份证|驾驶证/
       next if tmp_note.match /\d{11}|身份证|驾驶证/
-
-
-
 
 
       jj+=1
       record_number = record_number+1
       row = row+1
       phones << car_user_info.phone
-      [car_user_info.name.gsub('(个人)', '').gsub('联系TA', '先生女士'), car_user_info.phone, car_user_info.brand, car_user_info.cx, car_user_info.city_chinese, car_user_info.milage, car_user_info.che_ling, car_user_info.note,car_user_info.che_xing, car_user_info.detail_url].each_with_index do |content, i|
+      [car_user_info.name.gsub('(个人)', '').gsub('联系TA', '先生女士'), car_user_info.phone, car_user_info.brand, car_user_info.cx, car_user_info.city_chinese, car_user_info.milage, car_user_info.che_ling, car_user_info.note, car_user_info.che_xing, car_user_info.detail_url].each_with_index do |content, i|
         sheet1.row(row)[i] = content
       end
     end

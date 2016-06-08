@@ -62,6 +62,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       return
     end
 
+    return unless yc_car_user_info.phone.match /\d{11}/
+
     if not CITY.include? yc_car_user_info.city_chinese
       pp '城市不对'
       yc_car_user_info.youyiche_upload_status = '城市不对'
