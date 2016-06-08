@@ -3,7 +3,7 @@
    last_day = 30
    yx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day >= ? and tt_yaoyue_day <= ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
    yx_hulei_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day >= ? and tt_yaoyue_day <= ? and tt_source in ('23-23-4','23-23-5','23-23-1')", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
-   yx_guongzheng_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day >= ? and tt_yaoyue_day <= ? and tt_source in ('2-307')", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
+   yx_guongzheng_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day >= ? and tt_yaoyue_day <= ? and tt_source in ('2-307-317')", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
   tj_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day >= ? and tt_created_day <= ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
 %>
 本月意向数：<%=yx_month_counts%> = <%=yx_hulei_month_counts%> + <%= yx_guongzheng_month_counts %>

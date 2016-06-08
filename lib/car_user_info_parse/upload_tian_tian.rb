@@ -157,9 +157,8 @@ module UploadTianTian
     s = "83c78d166b59e953032eef673296faef"
     appkey = 'flower'
     qudao = '2-307-317'
-
     domain = "openapi.ttpai.cn"
-    # s = "3ee710fd91922986627461fccf8f7886"
+
 
     params = []
     user_info = user_info.reload
