@@ -87,22 +87,7 @@ module UploadTianTian
     # end
     car_user_info.save!
 
-    #如果符合郭正的城市条件，优先给郭正渠道
-    if UploadTianTian::CITY2.include? car_user_info.city_chinese
-      UploadTianTian.tt_pai_v2_0_guozheng car_user_info
-      return
-    end
 
-    #如果符合郭正的城市条件，优先给郭正渠道
-    if UploadTianTian::CITY.include? car_user_info.city_chinese and car_user_info.site_name == '58'
-      UploadTianTian.tt_pai_v2_0_guozheng car_user_info
-      return
-    end
-
-
-    if not UploadTianTian::CITY1.include? car_user_info.city_chinese
-      return
-    end
 
     #其它渠道再往胡磊那里传
     qudao = "23-23-1"
@@ -113,6 +98,24 @@ module UploadTianTian
     end
 
     if is_select
+
+      #如果符合郭正的城市条件，优先给郭正渠道
+      if UploadTianTian::CITY2.include? car_user_info.city_chinese
+        UploadTianTian.tt_pai_v2_0_guozheng car_user_info
+        return
+      end
+
+      #如果符合郭正的城市条件，优先给郭正渠道
+      if UploadTianTian::CITY.include? car_user_info.city_chinese and car_user_info.site_name == '58'
+        UploadTianTian.tt_pai_v2_0_guozheng car_user_info
+        return
+      end
+
+
+      if not UploadTianTian::CITY1.include? car_user_info.city_chinese
+        return
+      end
+
       # domain = "sandbox.openapi.ttpai.cn"
       # s = "256a18c39baf24f120a191c9454e4f03"
       domain = "openapi.ttpai.cn"
