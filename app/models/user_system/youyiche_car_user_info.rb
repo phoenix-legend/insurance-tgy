@@ -168,7 +168,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
       response = JSON.parse response.body
       status = response[0]["status"].strip
-      next if ['待跟进','跟进中','未拨通'].include? status
+      next if ['待跟进','跟进中'].include? status
       if status == '竞拍中'
         cui.youyiche_jiance = status
       end
@@ -188,6 +188,17 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
         cui.save!
       end
     end
+    #
+    # host_name = "b.youyiche.com" #正式环境
+    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null").each do |cui|
+    #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
+    #   response = JSON.parse response.body
+    #   status = response[0]["status"].strip
+    #
+    #     cui.youyiche_chengjiao = status
+    #     cui.save!
+    #
+    # end
 
 
     # UserSystem::YouyicheCarUserInfo.all.each do |i|
