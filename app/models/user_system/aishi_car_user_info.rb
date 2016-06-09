@@ -2,7 +2,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
 
 
-  CITY = ['天津', '苏州']
+  CITY = ['天津', '苏州', "上海", "成都", "深圳", "南京", "广州" , "杭州", "东莞", "佛山"]
   # CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆"]
 
   # 上传到埃侍
@@ -115,8 +115,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     cui = UserSystem::AishiCarUserInfo.find_by_car_user_info_id options[:car_user_info_id]
     return unless cui.blank?
 
-    cui = UserSystem::AishiCarUserInfo.find_by_phone options[:phone]
-    return unless cui.blank?
+    # cui = UserSystem::AishiCarUserInfo.find_by_phone options[:phone]
+    # return unless cui.blank?
 
     cui = UserSystem::AishiCarUserInfo.new options
     cui.save!
