@@ -230,25 +230,11 @@ module UploadTianTian
   def self.query_order
     car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null").order(id: :desc)
     i = 0
-    # threads = []
     car_user_infos.find_each do |car_user_info|
-      # threads.delete_if { |thread| thread.status == false }
-      # if threads.length > 30
-      #   sleep 2
-      # end
-      # pp "现在有#{threads.length}个线程"
-      # t = Thread.new do
-      #   source = "23-23-1"
-      #   if car_user_info.site_name == 'baixing' or
-      #     source = "23-23-4"
-      #   elsif car_user_info.site_name == '58'
-      #     source = "23-23-5"
-      #   end
       url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
       response = RestClient.get url
       response = JSON.parse response
       pp "#{response["result"]["invite"]} ~~  #{car_user_info.tt_id}"
-
       if not response["result"]["invite"].blank? and car_user_info.tt_yaoyue.blank?
         car_user_info.tt_yaoyue = response["result"]["invite"]
         car_user_info.tt_yaoyue_time = DateTime.now.chinese_format
@@ -256,22 +242,29 @@ module UploadTianTian
         car_user_info.save!
         i = i+1
       end
-      # end
-      # threads << t
-
     end
-    # 1.upto(2000) do
-    #   sleep(1)
-    #   # pp '休息.......'
-    #   threads.delete_if { |thread| thread.status == false }
-    #   break if threads.blank?
-    # end
-
-
-    # j = UploadTianTian.query_order_baixing
-    # pp "百姓网#{j}个"
     pp "本次新增#{i}个。 "
-    # pp "总共#{i+j}个"
+  end
+
+  # UploadTianTian.query_order2
+  def self.query_order2
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and tt_source = '2-307-317'")
+    i = 0
+    car_user_infos.find_each do |car_user_info|
+      # car_user_info = ::UserSystem::CarUserInfo.where("tt_id  = 21924728").first
+      url = "http://openapi.ttpai.cn/api/v2.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
+      response = RestClient.get url
+      response = JSON.parse response
+      pp "#{response["result"]["invite"]} ~~  #{car_user_info.tt_id}"
+      if not response["result"]["invite"].blank? and car_user_info.tt_yaoyue.blank?
+        car_user_info.tt_yaoyue = response["result"]["invite"]
+        car_user_info.tt_yaoyue_time = DateTime.now.chinese_format
+        car_user_info.tt_yaoyue_day = car_user_info.tt_yaoyue_time.chinese_format_day
+        car_user_info.save!
+        i = i+1
+      end
+    end
+    pp "本次新增#{i}个。 "
   end
 
 
