@@ -120,6 +120,35 @@ module Wuba
   end
 
 
+
+  def self.tttt car_user_info_id
+    car_user_info = UserSystem::CarUserInfo.find car_user_info_id
+    response = RestClient.get car_user_info.detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+    detail_content = response.body
+    detail_content.gsub!('person-name','personname')
+    detail_content.gsub!('abstract-info-txt clear','fbsj')
+    detail_content.gsub!('detailinfo-box desClose','notenote')
+    detail_content.gsub!('person-phoneNumber','persophone')
+    detail_content = Nokogiri::HTML(detail_content)
+    name = detail_content.css('.personname').text
+    name.gsub!(/\(|\)|个人/,'')
+
+    phone = detail_content.css('persophone').text
+    phone_is_shangjia = if (phone.match /\*/).nil? then  false else true end
+
+    time = detail_content.css('.fbsj').text
+    time.gsub!('发布：','')
+    time.gsub!('放心租车牌','')
+    time.strip!
+
+
+    note = begin detail_content.css('.notenote').text rescue '' end
+    note.gsub!('联系我时，请说是在58同城上看到的，谢谢！','')
+
+    pp "姓名是：#{name}"
+    pp "备注是：#{note}"
+  end
+
   # Wuba.update_detail
   def self.update_one_detail car_user_info_id
     # car_user_info_id = 1055829
