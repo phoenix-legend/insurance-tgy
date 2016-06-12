@@ -7,6 +7,7 @@ namespace :zongjie do
 			pp '前一次未执行完毕，退出任务'
 		else
 			UploadTianTian.get_now_status true
+			UploadTianTian.query_order2
 		end
 	end
 
@@ -47,7 +48,7 @@ namespace :zongjie do
 	desc "每天晚新天天数据状态  rake zongjie:all1 RAILS_ENV=production"
 	task :all1 => :environment do
 		UploadTianTian.get_now_status
-		UploadTianTian.query_order2
+		# UploadTianTian.query_order2
 	end
 
 	desc "每天下午3点跑车王的数据  rake zongjie:chewang RAILS_ENV=production"
