@@ -121,6 +121,7 @@ module Wuba
 
 
 
+  # Wuba.tttt 1175137
   def self.tttt car_user_info_id
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
     response = RestClient.get car_user_info.detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
@@ -149,7 +150,7 @@ module Wuba
     pp "备注是：#{note}"
   end
 
-  # Wuba.update_detail
+  # Wuba.update_one_detail 1175137
   def self.update_one_detail car_user_info_id
     # car_user_info_id = 1055829
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
@@ -185,6 +186,10 @@ module Wuba
       time = detail_content.css('.fbsj').text
       time.gsub!('发布：','')
       time.gsub!('放心租车牌','')
+      time.gsub!(/\s/,'')
+      time.gsub!('车牌保障服务','')
+      time.gsub!("\\r",'')
+      time.gsub!("\\n",'')
       time.strip!
 
 

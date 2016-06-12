@@ -128,6 +128,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
   end
 
+
+  # UserSystem::AishiCarUserInfo.query_aishi
   def self.query_aishi
     key = "098f6bcd4621d373cade4e832627b4f6" #正式
     number = "4SA-1011" #正式
@@ -139,8 +141,9 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
      response = JSON.parse response.body
      # cui.aishi_yaoyue = response
      # cui.save!
+     pp "4A ID 为：#{cui.aishi_id}"
       pp response
-      pp ''
+
     end
   end
 
