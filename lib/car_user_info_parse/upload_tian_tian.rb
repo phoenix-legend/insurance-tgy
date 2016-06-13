@@ -99,7 +99,7 @@ module UploadTianTian
 
     if is_select
 
-      #赶集8城市不往郭正那里进入,会进入到埃侍一体化平台
+      #赶集8城市不往郭正那里进入,给埃侍一体化平台留点机会
       return if car_user_info.site_name == 'ganji' and CITY1.include?(car_user_info.city_chinese)
 
       # 所有的全部导入到郭正的渠道
@@ -227,6 +227,7 @@ module UploadTianTian
   end
 
   # UploadTianTian.query_order
+  # 天天数据查询接口1.0版本，主要用于胡磊三个渠道数据更新
   def self.query_order
     car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null").order(id: :desc)
     i = 0
@@ -247,6 +248,7 @@ module UploadTianTian
   end
 
   # UploadTianTian.query_order2
+  # 天天接口查询2.0版本，目前用于郭正一个渠道更新数据
   def self.query_order2
     car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and tt_source = '2-307-317'")
     i = 0

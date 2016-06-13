@@ -10,6 +10,9 @@ class CreateAishiCarUserInfo < ActiveRecord::Migration
       t.integer :milage
       t.string  :price
       t.string :site_name
+      t.string :business_name
+      t.datetime :aishi_yaoyue_time
+      t.date :aishi_yaoyue_day
       t.boolean :is_real_cheshang
       t.boolean :is_city_match
       t.boolean :is_pachong
@@ -30,6 +33,7 @@ class CreateAishiCarUserInfo < ActiveRecord::Migration
       t.index :aishi_id
       t.index :aishi_upload_status
       t.index :created_day
+
     end
   end
 end

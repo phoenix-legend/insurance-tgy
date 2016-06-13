@@ -204,49 +204,55 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     # end
     #
     #
-    #一次更新所有数据   最终结果
-    # host_name = "b.youyiche.com" #正式环境
-    # p = {}
-    # cuis = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null").each_with_index do |cui, i|
-    #   p["#{i}"] = cui.youyiche_id
-    # end
-    # response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", p.to_json, :content_type => 'application/json'
-    # response = JSON.parse response.body
-    # response.each do |xx|
-    #   cui = cuis.select { |cui| cui.youyiche_id == "#{xx["need_id"]}" }
-    #   cui = cui[0]
-    #   cui.youyiche_chengjiao = xx["status"]
-    #   cui.save!
-    # end
     #
-    #
-    # #
-    # # 查看报价
+    # 查看报价
     # host_name = "b.youyiche.com" #正式环境
     # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and id in (84,589,472,486)").each do |cui|
     #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
     #   response = JSON.parse response.body
     #   pp response
     # end
-    #
-    # youxiao = 0
-    # wuxiao = 0
-    # weizhi = 0
-    # jingpai = 0
-    # chengjiao = 0
-    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and id > 0 and id < 741").each do |cui|
-    #   jingpai += 1 if cui.youyiche_jiance == '竞拍中'
-    #   chengjiao += 1 if cui.youyiche_chengjiao == '成交'
-    #   next wuxiao += 1 if ["失败", '未拨通'].include? cui.youyiche_yaoyue
-    #   next youxiao += 1 if ["已预约检测", "待预约"].include? cui.youyiche_yaoyue
-    #   next if cui.youyiche_yaoyue == '重复'
-    #   weizhi += 1
-    # end
-    # pp "有效率为：#{youxiao.to_f/(youxiao+wuxiao)}"
-    # pp "竞拍率为：#{jingpai.to_f/(youxiao)}"
-    # pp "竞拍成交率为：#{chengjiao.to_f/(jingpai)}"
 
   end
+
+
+  def self.yxl
+    #一次更新所有数据   最终结果
+    host_name = "b.youyiche.com" #正式环境
+    p = {}
+    cuis = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null").each_with_index do |cui, i|
+      p["#{i}"] = cui.youyiche_id
+    end
+    response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", p.to_json, :content_type => 'application/json'
+    response = JSON.parse response.body
+    response.each do |xx|
+      cui = cuis.select { |cui| cui.youyiche_id == "#{xx["need_id"]}" }
+      cui = cui[0]
+      cui.youyiche_chengjiao = xx["status"]
+      cui.save!
+    end
+
+
+
+    youxiao = 0
+    wuxiao = 0
+    weizhi = 0
+    jingpai = 0
+    chengjiao = 0
+    UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and id > 0 and id < 741").each do |cui|
+      jingpai += 1 if cui.youyiche_jiance == '竞拍中'
+      chengjiao += 1 if cui.youyiche_chengjiao == '成交'
+      next wuxiao += 1 if ["失败", '未拨通'].include? cui.youyiche_yaoyue
+      next youxiao += 1 if ["已预约检测", "待预约"].include? cui.youyiche_yaoyue
+      next if cui.youyiche_yaoyue == '重复'
+      weizhi += 1
+    end
+    pp "有效率为：#{youxiao.to_f/(youxiao+wuxiao)}"
+    pp "竞拍率为：#{jingpai.to_f/(youxiao)}"
+    pp "竞拍成交率为：#{chengjiao.to_f/(jingpai)}"
+
+  end
+
 
 
 end
