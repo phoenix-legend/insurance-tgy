@@ -376,7 +376,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # 同步至车置宝  车置宝作废
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
     #同步至又一车
-    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    #UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
     #同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
     # 同步至4A
@@ -398,7 +398,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
       UploadTianTian.upload_one_tt car_user_info
       # 同步至又一车
-      UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
+      #UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
       # 同步至优车
       UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
       # 同步至a s
@@ -799,7 +799,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       sheet1.row(0)[i] = content
     end
     row = 0
-    cuis = UserSystem::CarUserInfo.where("id > #{id_hash[city]} and city_chinese = ?", city ).select("id","name", "phone")
+    cuis = UserSystem::CarUserInfo.where("id > #{id_hash[city]} and city_chinese = ?", city).select("id", "name", "phone")
     cuis.find_each do |car_user_info|
       next if phones.include? car_user_info.phone
       next if car_user_info.phone.blank?
@@ -1159,6 +1159,30 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       next unless p.blank?
       kk = UserSystem::CarBusinessUserInfo.new :phone => phone
       kk.save
+    end
+  end
+
+  def self.upload_guozheng
+    s = '261d684f6b7d9af996a5691e7106075e'
+    cuis = UserSystem::CarUserInfo.where("tt_source = '2-307-317' and tt_id is not null")
+    cuis.find_each do |cui|
+      # cui = UserSystem::CarUserInfo.find 1181521
+      next if cui.tt_chengjiao == '已提交GZ'
+      name = cui.name.gsub('(个人)', '')
+      response = RestClient.post 'http://api.wejing365.com/index.php?r=apisa/save_car', {name: name,
+                                                                                         mobile: cui.phone,
+                                                                                         city: cui.city_chinese,
+                                                                                         brand: cui.brand,
+                                                                                         source: '2-307-317',
+                                                                                         response_id: cui.tt_id,
+                                                                                         number: 'PRO103',
+                                                                                         sign: Digest::MD5.hexdigest("#{cui.phone}#{s}")
+                                                                                      }
+      response = JSON.parse response.body
+      if response["error"] == false
+        cui.tt_chengjiao = '已提交GZ'
+        cui.save!
+      end
     end
   end
 
