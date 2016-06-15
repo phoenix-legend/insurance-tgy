@@ -445,6 +445,31 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
     end
 
+    #避免在车型中添加手机号，微信号
+    unless car_user_info.che_xing.blank?
+      tmp_chexing = car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
+      if tmp_chexing.match /\d{11}|身份证|驾驶证/
+        car_user_info.is_cheshang = 1
+        car_user_info.is_real_cheshang = true
+        car_user_info.is_pachong = true
+        car_user_info.save!
+      end
+    end
+
+    unless car_user_info.note.blank?
+      tmp_note = car_user_info.note.gsub(/\s|\.|~|-|_/, '')
+      if tmp_note.match /\d{11}|身份证|驾驶证/
+        car_user_info.is_cheshang = 1
+        car_user_info.is_real_cheshang = true
+        car_user_info.is_pachong = true
+        car_user_info.save!
+      end
+    end
+
+
+
+
+
     is_pachong = UserSystem::CarBusinessUserInfo.is_pachong car_user_info
     if is_pachong
       car_user_info.is_pachong = true
@@ -1197,8 +1222,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                                                                          sign: Digest::MD5.hexdigest("#{cui.phone}#{s}")
                                                                                       }
       response = JSON.parse response.body
-      # pp response
+      pp response
       if response["error"] == "false"
+        cui.tt_chengjiao = '已提交GZ'
+        cui.save!
+      end
+
+      if response["error"] == "true" and response["message"] = '该手机号已经报名'
         cui.tt_chengjiao = '已提交GZ'
         cui.save!
       end
