@@ -383,8 +383,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
   end
 
+  #用于网站调用
   def self.update_58_phone_detail params
-    UserSystem::CarUserInfo.transaction do
+
       car_user_info = UserSystem::CarUserInfo.find params[:id]
       phone = params[:phone]
       phone.gsub!('-', '')
@@ -403,7 +404,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
       # 同步至a s
       UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
-    end
+
 
   end
 
@@ -427,6 +428,22 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
     end
 
+    # 凌晨带有[]上传的，就认为是车商
+    if car_user_info.created_at.hour >0 and car_user_info.created_at.hour < 6
+      if not car_user_info.che_xing.blank?
+        if car_user_info.che_xing.match /\[/ and car_user_info.che_xing.match /\]/
+          car_user_info.is_cheshang = 1
+          car_user_info.is_real_cheshang = true
+          car_user_info.is_pachong = true
+        end
+        if car_user_info.che_xing.match /【/ and car_user_info.che_xing.match /】/
+          car_user_info.is_cheshang = 1
+          car_user_info.is_real_cheshang = true
+          car_user_info.is_pachong = true
+        end
+        car_user_info.save!
+      end
+    end
 
     is_pachong = UserSystem::CarBusinessUserInfo.is_pachong car_user_info
     if is_pachong
@@ -1162,6 +1179,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
   end
 
+  #UserSystem::CarUserInfo.upload_guozheng
   def self.upload_guozheng
     s = '261d684f6b7d9af996a5691e7106075e'
     cuis = UserSystem::CarUserInfo.where("tt_source = '2-307-317' and tt_id is not null")
@@ -1179,7 +1197,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                                                                          sign: Digest::MD5.hexdigest("#{cui.phone}#{s}")
                                                                                       }
       response = JSON.parse response.body
-      if response["error"] == false
+      # pp response
+      if response["error"] == "false"
         cui.tt_chengjiao = '已提交GZ'
         cui.save!
       end

@@ -138,7 +138,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     key = "098f6bcd4621d373cade4e832627b4f6" #正式
     number = "4SA-1011" #正式
     UserSystem::AishiCarUserInfo.where("aishi_id is not null and aishi_yaoyue is null").find_each do |cui|
-      # pp cui
+
       response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/querysignupone', {number: number,
                                                                                                       sign: Digest::MD5.hexdigest("#{number}#{key}"),
                                                                                                       id: cui.aishi_id
@@ -168,8 +168,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       cui.aishi_yaoyue_time = Time.now.chinese_format
       cui.aishi_yaoyue_day = Time.now.chinese_format_day
       cui.save!
-      pp "4A ID 为：#{cui.aishi_id}"
-      pp response
+
     end
 
   end

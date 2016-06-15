@@ -215,7 +215,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   end
 
-
+  # UserSystem::YouyicheCarUserInfo.yxl
   def self.yxl
     #一次更新所有数据   最终结果
     host_name = "b.youyiche.com" #正式环境

@@ -2,11 +2,9 @@ module UploadTianTian
 
   CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆", "佛山"]
 
-  CITY1 = ["上海", "成都", "深圳", "南京", "广州" , "杭州", "东莞", "佛山"]
-  CITY2 = ["武汉", "天津", "重庆","苏州"]
+  CITY1 = ["上海", "成都", "深圳", "南京", "广州", "杭州", "东莞", "佛山"]
+  CITY2 = ["武汉", "天津", "重庆", "苏州"]
   # CITY2= []
-
-
 
 
   # CITY = ["上海"]
@@ -50,6 +48,19 @@ module UploadTianTian
       is_select = false
     end
 
+    #晚上带[]的，全部认为是车商
+    # 白天带[]的，留给4A
+    if not car_user_info.che_xing.blank?
+      if car_user_info.che_xing.match /\[/ and car_user_info.che_xing.match /\]/
+        is_select = false
+      end
+      if car_user_info.che_xing.match /【/ and car_user_info.che_xing.match /】/
+        is_select = false
+      end
+    end
+
+
+
     # if car_user_info.is_repeat_one_month
     #   car_user_info.tt_upload_status = '自判重复'
     #   is_select = false
@@ -86,7 +97,6 @@ module UploadTianTian
     #   end
     # end
     car_user_info.save!
-
 
 
     #其它渠道再往胡磊那里传
@@ -452,7 +462,7 @@ module UploadTianTian
   # UploadTianTian.really_jiao_bijiao
   def self.really_jiao_bijiao is_detail = false
     ['58', 'ganji', 'baixing', 'che168', 'taoche'].each do |site_name|
-    # ['58'].each do |site_name|
+      # ['58'].each do |site_name|
       all_number = 0
       our_number = 0
       pp '---------'*7
@@ -490,7 +500,7 @@ module UploadTianTian
       begin
         cui = kl.car_user_info
         if ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "重庆", "佛山"].include? cui.city_chinese
-            kl.vip_flg = 'vip'
+          kl.vip_flg = 'vip'
           kl.save!
         else
           kl.vip_flg = 'normal'
