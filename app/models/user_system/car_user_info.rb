@@ -411,7 +411,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   # 车商检验流程
   def self.che_shang_jiao_yan car_user_info
     begin
-      UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
+      #UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
     rescue Exception => e
       pp '更新商家电话号码出错'
       pp e
@@ -425,6 +425,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         car_user_info.is_real_cheshang = true
         car_user_info.need_update = false
         car_user_info.save!
+        return
       end
     end
 
@@ -442,6 +443,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
           car_user_info.is_pachong = true
         end
         car_user_info.save!
+        return
       end
     end
 
@@ -453,6 +455,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         car_user_info.is_real_cheshang = true
         car_user_info.is_pachong = true
         car_user_info.save!
+        return
       end
     end
 
@@ -463,6 +466,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         car_user_info.is_real_cheshang = true
         car_user_info.is_pachong = true
         car_user_info.save!
+        return
       end
     end
 
@@ -474,6 +478,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     if is_pachong
       car_user_info.is_pachong = true
       car_user_info.save!
+      return
     end
 
     unless car_user_info.phone.blank?
