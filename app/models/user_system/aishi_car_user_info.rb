@@ -8,7 +8,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   # 上传到埃侍
   # UserSystem::AishiCarUserInfo.upload_to_aishi ycui
   def self.upload_to_aishi ycui
-    sleep 2
+    sleep 1
     # return unless ycui.site_name == 'ganji'
     ycui.name = ycui.name.gsub('(个人)', '')
     ycui.name = ycui.name.gsub('个人', '')

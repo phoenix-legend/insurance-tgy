@@ -50,14 +50,14 @@ module UploadTianTian
 
     #晚上带[]的，全部认为是车商
     # 白天带[]的，留给4A
-    if not car_user_info.che_xing.blank?
-      if car_user_info.che_xing.match /\[/ and car_user_info.che_xing.match /\]/
-        is_select = false
-      end
-      if car_user_info.che_xing.match /【/ and car_user_info.che_xing.match /】/
-        is_select = false
-      end
-    end
+    # if not car_user_info.che_xing.blank?
+    #   if car_user_info.che_xing.match /\[/ and car_user_info.che_xing.match /\]/
+    #     is_select = false
+    #   end
+    #   if car_user_info.che_xing.match /【/ and car_user_info.che_xing.match /】/
+    #     is_select = false
+    #   end
+    # end
 
 
 
