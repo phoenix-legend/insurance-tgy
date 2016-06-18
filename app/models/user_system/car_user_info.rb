@@ -1211,6 +1211,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   #UserSystem::CarUserInfo.upload_guozheng
   def self.upload_guozheng
+    return unless (Time.now.hour > 9 and Time.now.hour < 22)
+    return unless Time.now.min > 40
     s = '261d684f6b7d9af996a5691e7106075e'
     cuis = UserSystem::CarUserInfo.where("tt_source = '2-307-317' and tt_id is not null")
     cuis.find_each do |cui|

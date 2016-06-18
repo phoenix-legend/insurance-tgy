@@ -42,6 +42,8 @@ namespace :zongjie do
 			UserSystem::YouyicheCarUserInfo.query_youyiche
 			# 去侍埃更新数据， 程序内控制18点40分,20点40分再更新一次
 			UserSystem::AishiCarUserInfo.query_aishi
+			# 上传数据给郭正
+			UserSystem::CarUserInfo.upload_guozheng
 		end
 	end
 
