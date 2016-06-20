@@ -115,6 +115,12 @@ module UploadTianTian
         return
       end
 
+      #赶集8城市给胡磊
+      if car_user_info.site_name == '58' and ['成都','南京'].include?(car_user_info.city_chinese)
+        UploadTianTian.tt_pai_v1_0_hulei car_user_info
+        return
+      end
+
       # 剩余所有的全部导入到郭正的渠道
       if UploadTianTian::CITY.include? car_user_info.city_chinese
         UploadTianTian.tt_pai_v2_0_guozheng car_user_info
