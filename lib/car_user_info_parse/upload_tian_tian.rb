@@ -109,10 +109,13 @@ module UploadTianTian
 
     if is_select
 
-      #赶集8城市不往郭正那里进入,给埃侍一体化平台留点机会
-      return if car_user_info.site_name == 'ganji' and CITY1.include?(car_user_info.city_chinese)
+      #赶集8城市给胡磊
+      if car_user_info.site_name == 'ganji' and CITY1.include?(car_user_info.city_chinese)
+        UploadTianTian.tt_pai_v1_0_hulei car_user_info
+        return
+      end
 
-      # 所有的全部导入到郭正的渠道
+      # 剩余所有的全部导入到郭正的渠道
       if UploadTianTian::CITY.include? car_user_info.city_chinese
         UploadTianTian.tt_pai_v2_0_guozheng car_user_info
         return
@@ -169,6 +172,49 @@ module UploadTianTian
       # user_info.tt_upload_status = '已上传'
       # user_info.save!
     end
+  end
+
+
+  # UploadTianTian.tt_pai_v1_0_hulei
+  def self.tt_pai_v1_0_hulei car_user_info
+    qudao = "23-23-1"
+    if car_user_info.site_name == 'baixing' or car_user_info.site_name == 'zuoxi'
+      qudao = "23-23-4"
+    elsif car_user_info.site_name == '58'
+      qudao = "23-23-5"
+    end
+
+    domain = "openapi.ttpai.cn"
+    s = "1579089ae5ae1d9b559f3082c4e44148"
+    user_info = car_user_info
+    params = []
+    user_info = user_info.reload
+    return if car_user_info.tt_upload_status != 'weishangchuan'
+    params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
+    params << [:mobile, UploadTianTian.escape2(user_info.phone)]
+    params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
+    params << [:brand, UploadTianTian.escape2(user_info.brand)]
+    pp "渠道为#{qudao}"
+    params << [:source, UploadTianTian.escape2(qudao)]
+    params << [:appkey, UploadTianTian.escape2('shiaicaigou')]
+
+    params << [:sign, UploadTianTian.escape2(Digest::MD5.hexdigest("#{user_info.phone}#{s}"))]
+
+    response = RestClient.get "#{domain}/api/v1.1/ttp_sign_up?#{URI.encode_www_form params}"
+    pp response
+    response = JSON.parse response.body
+    error = response["error"]
+    message = response["message"]
+    id = begin
+      response["result"]["id"] rescue -1
+    end
+    user_info.tt_source = qudao
+    user_info.tt_created_day = user_info.created_at.chinese_format_day
+    user_info.tt_id = id if not id.blank?
+    user_info.tt_code = error
+    user_info.tt_message = message
+    user_info.tt_upload_status = '已上传'
+    user_info.save!
   end
 
 

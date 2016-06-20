@@ -239,7 +239,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     weizhi = 0
     jingpai = 0
     chengjiao = 0
-    UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and id > 0 and id < 741").each do |cui|
+    UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and id > 0 and id < 1402").each do |cui|
       jingpai += 1 if cui.youyiche_jiance == '竞拍中'
       chengjiao += 1 if cui.youyiche_chengjiao == '成交'
       next wuxiao += 1 if ["失败", '未拨通'].include? cui.youyiche_yaoyue
