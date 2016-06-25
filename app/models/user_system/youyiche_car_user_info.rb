@@ -1,11 +1,12 @@
 class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
 
-  CITY = ['上海','杭州','苏州','成都']
+  # CITY = ['上海', '杭州', '苏州', '成都']
+  CITY = ['上海']
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
-    if car_user_info.is_pachong == false and UserSystem::YouyicheCarUserInfo::CITY.include?(car_user_info.city_chinese)
+    if car_user_info.is_pachong == false and car_user_info.is_real_cheshang == false and UserSystem::YouyicheCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
         #数据回传到优车
         UserSystem::YouyicheCarUserInfo.create_car_info name: car_user_info.name.gsub('(个人)', ''),
@@ -207,7 +208,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     #
     # 查看报价
     # host_name = "b.youyiche.com" #正式环境
-    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and id in (84,589,472,486,1186,866)").each do |cui|
+    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and id in (84,486,857,1186,866)").each do |cui|
     #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
     #   response = JSON.parse response.body
     #   pp response
@@ -233,7 +234,6 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     end
 
 
-
     youxiao = 0
     wuxiao = 0
     weizhi = 0
@@ -253,6 +253,13 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   end
 
+  def self.yiqiandeshuju
+    cuis = UserSystem::CarUserInfo.where("id > 1220000 and id < 1235282")
+    cuis.each_with_index do |cui, i|
+      pp cui.id
+      UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
+    end
+  end
 
 
 end
