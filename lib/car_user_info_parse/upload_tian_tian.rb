@@ -457,11 +457,11 @@ module UploadTianTian
   end
 
   # 指定日期区间的意向数据。
-  # UploadTianTian.xiazai_tt_detail_by_day '2016-03-01', '2016-03-31'
+  # UploadTianTian.xiazai_tt_detail_by_day '2016-06-21', '2016-03-27'
   def self.xiazai_tt_detail_by_day start_day = '2016-04-01', end_day = '2016-04-30'
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
-    ['23-23-1', '23-23-4', '23-23-5'].each_with_index do |qudao, i|
+    ['23-23-1', '23-23-4', '23-23-5','2-307-317'].each_with_index do |qudao, i|
       cuis = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_source = '#{qudao}' and tt_yaoyue_day >= '#{start_day}' and  tt_yaoyue_day <= '#{end_day}' and tt_yaoyue = '成功' and tt_yaoyue_day is not null")
       cuis.order(tt_yaoyue_day: :asc, tt_source: :asc)
       sheet1 = book.create_worksheet name: "#{qudao}意向列表"
@@ -487,7 +487,7 @@ module UploadTianTian
   # UploadTianTian.query_order_shibai
   #  把失败的数据，再更新一遍，以便从失败中捡漏
   def self.query_order_shibai
-    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '失败'").order(id: :desc)
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '失败' and tt_source in ('23-23-1','23-23-4','23-23-5')").order(id: :desc)
     i = 0
     car_user_infos.find_each do |car_user_info|
       url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
@@ -499,6 +499,26 @@ module UploadTianTian
       pp '..........................'
       next if response["result"]["invite"] == '失败'
       if !response["result"]["invite"].blank? and car_user_info.tt_yaoyue == '失败'
+        car_user_info.tt_yaoyue = response["result"]["invite"]
+        car_user_info.tt_yaoyue_time = DateTime.now.chinese_format
+        car_user_info.tt_yaoyue_day = car_user_info.tt_yaoyue_time.chinese_format_day
+        car_user_info.save!
+        i = i+1
+      end
+    end
+    pp "本次新增#{i}个。 "
+
+
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '失败' and tt_source = '2-307-317'")
+    i = 0
+    car_user_infos.find_each do |car_user_info|
+      # car_user_info = ::UserSystem::CarUserInfo.where("tt_id  = 21924728").first
+      url = "http://openapi.ttpai.cn/api/v2.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
+      response = RestClient.get url
+      response = JSON.parse response
+      pp "#{response["result"]["invite"]} ~~  #{car_user_info.tt_id}"
+      next if response["result"]["invite"] == '失败'
+      if not response["result"]["invite"].blank? and car_user_info.tt_yaoyue == '失败'
         car_user_info.tt_yaoyue = response["result"]["invite"]
         car_user_info.tt_yaoyue_time = DateTime.now.chinese_format
         car_user_info.tt_yaoyue_day = car_user_info.tt_yaoyue_time.chinese_format_day

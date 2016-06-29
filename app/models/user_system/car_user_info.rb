@@ -411,7 +411,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   # 车商检验流程
   def self.che_shang_jiao_yan car_user_info
     begin
-      #UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
+      UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
     rescue Exception => e
       pp '更新商家电话号码出错'
       pp e
