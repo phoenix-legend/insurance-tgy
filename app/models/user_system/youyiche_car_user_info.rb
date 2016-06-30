@@ -34,8 +34,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   # 创建优车车主信息
   def self.create_car_info options
 
-    sleep_time = rand(3)
-    sleep sleep_time
+    # sleep_time = rand(3)
+    # sleep sleep_time
 
     cui = UserSystem::YouyicheCarUserInfo.find_by_car_user_info_id options[:car_user_info_id]
     return unless cui.blank?
@@ -175,10 +175,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       if status == '竞拍中'
         cui.youyiche_jiance = status
       end
-
       cui.youyiche_yaoyue = status
-      cui.yaoyue_time = Time.now.chinese_format
-      cui.yaoyue_day = Time.now.chinese_format_day
       cui.save!
     end
 
@@ -189,6 +186,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       status = response[0]["status"].strip
       if status == '竞拍中'
         cui.youyiche_jiance = status
+        cui.yaoyue_time = Time.now.chinese_format
+        cui.yaoyue_day = Time.now.chinese_format_day
         cui.save!
       end
     end

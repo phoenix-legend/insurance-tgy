@@ -353,7 +353,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     # 针对非58 更新车商库
     if car_user_info.site_name != '58'
-      UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info
+      UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, false
     end
 
 
@@ -376,6 +376,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # 同步至车置宝  车置宝作废
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
     #同步至又一车
+    UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
     #同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -394,11 +395,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       car_user_info.wuba_kouling_shouji_huilai_time = Time.now.chinese_format
       car_user_info.save!
 
-      UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info
+      UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, false
       car_user_info = car_user_info.reload
       pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
       UploadTianTian.upload_one_tt car_user_info
       # 同步至又一车
+      UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
       UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
       # 同步至优车
       UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -409,9 +411,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
   # 车商检验流程
-  def self.che_shang_jiao_yan car_user_info
+  def self.che_shang_jiao_yan car_user_info, is_fenxi = false
     begin
-      UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info
+      UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info if is_fenxi
     rescue Exception => e
       pp '更新商家电话号码出错'
       pp e
