@@ -85,6 +85,9 @@ module Ganji
 
   #  Ganji.get_car_user_list  单线程sleep 版
   def self.get_car_user_list party = 0
+
+    return if Time.now.hour > 2 and Time.now.hour < 4
+
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
 
     city_hash.each_pair do |areaid, areaname|
@@ -125,7 +128,7 @@ module Ganji
               cheling_licheng.split('年')[0] rescue 2012
             end
             cheling.gsub!('  ', '')
-            cheling.gsub!('\n|\s', '')
+            cheling.gsub!('\n|\s|\r', '')
             licheng = begin
               cheling_licheng.split(/上牌|万公里/)[1] rescue 2012
             end
