@@ -387,25 +387,25 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   #用于网站调用
   def self.update_58_phone_detail params
 
-      car_user_info = UserSystem::CarUserInfo.find params[:id]
-      phone = params[:phone]
-      phone.gsub!('-', '')
-      phone = phone.match(/\d{11}$/).to_s
-      car_user_info.phone = phone
-      car_user_info.wuba_kouling_shouji_huilai_time = Time.now.chinese_format
-      car_user_info.save!
+    car_user_info = UserSystem::CarUserInfo.find params[:id]
+    phone = params[:phone]
+    phone.gsub!('-', '')
+    phone = phone.match(/\d{11}$/).to_s
+    car_user_info.phone = phone
+    car_user_info.wuba_kouling_shouji_huilai_time = Time.now.chinese_format
+    car_user_info.save!
 
-      UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, false
-      car_user_info = car_user_info.reload
-      pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
-      UploadTianTian.upload_one_tt car_user_info
-      # 同步至又一车
-      UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
-      UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
-      # 同步至优车
-      UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
-      # 同步至a s
-      UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
+    UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, false
+    car_user_info = car_user_info.reload
+    pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
+    UploadTianTian.upload_one_tt car_user_info
+    # 同步至又一车
+    UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
+    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # 同步至优车
+    UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # 同步至a s
+    UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
   end
@@ -471,9 +471,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         return
       end
     end
-
-
-
 
 
     is_pachong = UserSystem::CarBusinessUserInfo.is_pachong car_user_info
@@ -1242,6 +1239,54 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         cui.save!
       end
     end
+  end
+
+  # UserSystem::CarUserInfo.upload_to_hulei
+  def self.upload_to_hulei
+    # return unless (Time.now.hour > 9 and Time.now.hour < 22)
+    # return unless Time.now.min > 40
+
+    # key = "033bd94b1168d7e4f0d644c3c95e35bf" #测试
+    # number = "4S-10009" #测试
+    # url = 'http://api.test.4scenter.com/index.php?r=apicar/save_car'
+
+    key = "098f6bcd4621d373cade4e832627b4f6" #正式
+    number = "4SA-1011" #正式
+    url = 'http://api.formal.4scenter.com/index.php?r=apicar/save_car'
+
+    cuis = UserSystem::CarUserInfo.where("tt_source in ('23-23-5','23-23-4','23-23-1') and tt_id is not null and created_at > '2016-06-01'")
+    cuis.find_each do |cui|
+
+      next if cui.tt_chengjiao == '已提交GZ'
+      next if cui.tt_chengjiao == '已提交HL'
+      pp cui.id
+      name = cui.name.gsub('(个人)', '')
+      response = RestClient.post url, {mobile: cui.phone,
+                                       name: name,
+                                       city: "#{cui.city_chinese}市",
+                                       brand: cui.brand,
+                                       number: number,
+                                       source: cui.tt_source,
+                                       sign: Digest::MD5.hexdigest("#{cui.phone}#{key}"),
+                                       response_id: cui.tt_id,
+                                    }
+      response = JSON.parse response.body
+
+      pp response
+      if response["error"] == "false"
+        cui.tt_chengjiao = '已提交HL'
+        cui.save!
+      end
+
+      if response["error"] == "true" and response["message"] = '该手机号已经报名'
+        cui.tt_chengjiao = '已提交HL'
+        cui.save!
+      end
+    end
+
+
+
+
   end
 
 

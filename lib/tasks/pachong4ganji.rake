@@ -9,6 +9,7 @@ namespace :pachong4chongganji do
 		else
 			pp '前一次已完成， GO RUN'
 			UserSystem::CarUserInfo.run_ganji 1
+			sleep 20
 		end
 	end
 

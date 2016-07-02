@@ -457,7 +457,7 @@ module UploadTianTian
   end
 
   # 指定日期区间的意向数据。
-  # UploadTianTian.xiazai_tt_detail_by_day '2016-06-21', '2016-03-27'
+  # UploadTianTian.xiazai_tt_detail_by_day '2016-06-01', '2016-06-30'
   def self.xiazai_tt_detail_by_day start_day = '2016-04-01', end_day = '2016-04-30'
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
@@ -591,10 +591,10 @@ module UploadTianTian
       end
     end
 
-
     UserSystem::CarUserInfo.where(city_chinese: '上海').where("id > 1148459 and tt_yaoyue = '成功'")
-
   end
+
+
 
 
 end

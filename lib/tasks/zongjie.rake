@@ -44,6 +44,8 @@ namespace :zongjie do
 			UserSystem::AishiCarUserInfo.query_aishi
 			# 上传数据给郭正
 			UserSystem::CarUserInfo.upload_guozheng
+			# 上传数据给胡磊
+			UserSystem::CarUserInfo.upload_to_hulei
 		end
 	end
 
