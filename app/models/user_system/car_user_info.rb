@@ -187,12 +187,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       when 1
         {
-            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "wx" => "无锡", 'foshan' => '佛山'
+            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆",  'foshan' => '佛山'
         }
       else
         {
 
-            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "wx" => "无锡", 'foshan' => '佛山'
+            "tj" => "天津"
 
 
             # 人人车把以下放开
@@ -204,7 +204,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             # "fz" => "福州", "xm" => "厦门", "quanzhou" => "泉州",
             # "cc" => "长春", "hrb" => "哈尔滨", "daqing" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
             # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
-            # "gy" => "贵阳", "zunyi" => "遵义", "nmg" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
+            # "gy" => "贵阳", "zunyi" => "遵义", "nmg" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳","wx" => "无锡",
             # "mianyang" => "绵阳", "xiangyang" => "襄阳", "yichang" => "宜昌"
         }
     end
