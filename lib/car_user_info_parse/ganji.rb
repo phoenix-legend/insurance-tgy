@@ -94,7 +94,7 @@ module Ganji
       begin
         pp "现在跑赶集.. #{areaname}"
         1.upto 3 do |i|
-          sleep 10+rand(10)
+          sleep 7+rand(10)
           url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=1&deal_type=1&page=#{i}"
           # url = "http://wap.ganji.com/sh/ershouche/?back=search&agent=1&deal_type=1&page=1"
           # url = "http://wap.ganji.com/su/ershouche/?back=search&agent=1&deal_type=1&page=1"
@@ -170,85 +170,85 @@ module Ganji
   end
 
   # Ganji.update_detail
-  def self.update_detail
-    threads = []
-    # car_user_infos = UserSystem::CarUserInfo.where need_update: true, site_name: 'ganji'
-    car_user_infos = UserSystem::CarUserInfo.where ["need_update = ? and site_name = ? and id > ?", true, 'ganji', UserSystem::CarUserInfo::CURRENT_ID]
-    car_user_infos.each do |car_user_info|
-      next unless car_user_info.name.blank?
-      next unless car_user_info.phone.blank?
-
-
-      if threads.length > 30
-        sleep 1
-      end
-      threads.delete_if { |thread| thread.status == false }
-      t = Thread.new do
-        begin
-          puts '开始跑明细'
-
-          # detail_content = `curl '#{car_user_info.detail_url}'`
-          pp car_user_info.detail_url
-          response = RestClient.get(car_user_info.detail_url)
-          pp
-          detail_content = response.body
-          detail_content = Nokogiri::HTML(detail_content)
-          note, phone, name = '', '', ''
-          ps = detail_content.css('.detail-describe p')
-          next if ps.blank?
-          ps.each do |p|
-            text = begin
-              p.text rescue ''
-            end
-            case text
-              when /联系人：/
-                name = text
-              when /电话：/
-                phone = text
-              when /详细信息：/
-                note = text
-            end
-          end
-          brand = ps[1].css('a').text
-
-          note = note.gsub('详细信息：', '')
-          name = name.gsub('联系人：', '')
-          phone = phone.gsub('电话：', '')
-          fabushijian = detail_content.css('.mod-detail .detail-meta span')[0].text
-          fabushijian = fabushijian.gsub("发布:", '')
-          fabushijian = fabushijian.gsub("\n", '')
-          fabushijian = fabushijian.gsub("\r", '')
-          fabushijian = fabushijian.gsub("  ", '')
-          fabushijian = "2016-#{fabushijian}"
-
-
-          UserSystem::CarUserInfo.update_detail id: car_user_info.id,
-                                                name: name,
-                                                phone: phone,
-                                                note: note,
-                                                fabushijian: fabushijian,
-                                                brand: brand
-
-        rescue Exception => e
-          pp e
-          pp $@
-          car_user_info.need_update = false
-          car_user_info.save
-        end
-        ActiveRecord::Base.connection.close
-      end
-      threads << t
-      # pp "现在线程池中有#{threads.length}个。"
-    end
-
-    1.upto(2000) do
-      sleep(1)
-      # pp '休息.......'
-      threads.delete_if { |thread| thread.status == false }
-      break if threads.blank?
-    end
-
-  end
+  # def self.update_detail
+  #   threads = []
+  #   # car_user_infos = UserSystem::CarUserInfo.where need_update: true, site_name: 'ganji'
+  #   car_user_infos = UserSystem::CarUserInfo.where ["need_update = ? and site_name = ? and id > ?", true, 'ganji', UserSystem::CarUserInfo::CURRENT_ID]
+  #   car_user_infos.each do |car_user_info|
+  #     next unless car_user_info.name.blank?
+  #     next unless car_user_info.phone.blank?
+  #
+  #
+  #     if threads.length > 30
+  #       sleep 1
+  #     end
+  #     threads.delete_if { |thread| thread.status == false }
+  #     t = Thread.new do
+  #       begin
+  #         puts '开始跑明细'
+  #
+  #         # detail_content = `curl '#{car_user_info.detail_url}'`
+  #         pp car_user_info.detail_url
+  #         response = RestClient.get(car_user_info.detail_url)
+  #         pp
+  #         detail_content = response.body
+  #         detail_content = Nokogiri::HTML(detail_content)
+  #         note, phone, name = '', '', ''
+  #         ps = detail_content.css('.detail-describe p')
+  #         next if ps.blank?
+  #         ps.each do |p|
+  #           text = begin
+  #             p.text rescue ''
+  #           end
+  #           case text
+  #             when /联系人：/
+  #               name = text
+  #             when /电话：/
+  #               phone = text
+  #             when /详细信息：/
+  #               note = text
+  #           end
+  #         end
+  #         brand = ps[1].css('a').text
+  #
+  #         note = note.gsub('详细信息：', '')
+  #         name = name.gsub('联系人：', '')
+  #         phone = phone.gsub('电话：', '')
+  #         fabushijian = detail_content.css('.mod-detail .detail-meta span')[0].text
+  #         fabushijian = fabushijian.gsub("发布:", '')
+  #         fabushijian = fabushijian.gsub("\n", '')
+  #         fabushijian = fabushijian.gsub("\r", '')
+  #         fabushijian = fabushijian.gsub("  ", '')
+  #         fabushijian = "2016-#{fabushijian}"
+  #
+  #
+  #         UserSystem::CarUserInfo.update_detail id: car_user_info.id,
+  #                                               name: name,
+  #                                               phone: phone,
+  #                                               note: note,
+  #                                               fabushijian: fabushijian,
+  #                                               brand: brand
+  #
+  #       rescue Exception => e
+  #         pp e
+  #         pp $@
+  #         car_user_info.need_update = false
+  #         car_user_info.save
+  #       end
+  #       ActiveRecord::Base.connection.close
+  #     end
+  #     threads << t
+  #     # pp "现在线程池中有#{threads.length}个。"
+  #   end
+  #
+  #   1.upto(2000) do
+  #     sleep(1)
+  #     # pp '休息.......'
+  #     threads.delete_if { |thread| thread.status == false }
+  #     break if threads.blank?
+  #   end
+  #
+  # end
 
 
   def self.update_one_detail car_user_info_id
@@ -266,7 +266,7 @@ module Ganji
       response = RestClient.get(car_user_info.detail_url)
       detail_content = response.body
       if detail_content.match /您访问的速度太快/
-        sleep 6
+        sleep 30
         car_user_info.destroy
       end
       # pp '-----'
