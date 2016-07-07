@@ -60,7 +60,6 @@ module UploadTianTian
     # end
 
 
-
     # if car_user_info.is_repeat_one_month
     #   car_user_info.tt_upload_status = '自判重复'
     #   is_select = false
@@ -116,7 +115,7 @@ module UploadTianTian
       end
 
 
-      if car_user_info.site_name == '58' and ['成都','杭州'].include?(car_user_info.city_chinese)
+      if car_user_info.site_name == '58' and ['成都', '杭州'].include?(car_user_info.city_chinese)
         UploadTianTian.tt_pai_v1_0_hulei car_user_info
         return
       end
@@ -234,9 +233,15 @@ module UploadTianTian
     # appkey = 'flower'
     # qudao = '2-307'
 
-    s = "83c78d166b59e953032eef673296faef"
-    appkey = 'flower'
-    qudao = '2-307-317'
+    #正式环境，已废弃
+    # s = "83c78d166b59e953032eef673296faef"
+    # appkey = 'flower'
+    # qudao = '2-307-317'
+    # domain = "openapi.ttpai.cn"
+
+    s = 'ce7807d55f0a40fbbd5ddb0f1c92756c'
+    appkey = 'tree'
+    qudao = '2-306-314'
     domain = "openapi.ttpai.cn"
 
 
@@ -457,11 +462,12 @@ module UploadTianTian
   end
 
   # 指定日期区间的意向数据。
-  # UploadTianTian.xiazai_tt_detail_by_day '2016-06-01', '2016-06-30'
-  def self.xiazai_tt_detail_by_day start_day = '2016-04-01', end_day = '2016-04-30'
+  # UploadTianTian.xiazai_tt_yaoyue_detail_by_day '2016-07-01', '2016-07-30'
+  def self.xiazai_tt_yaoyue_detail_by_day start_day = '2016-04-01', end_day = '2016-04-30'
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
-    ['23-23-1', '23-23-4', '23-23-5','2-307-317'].each_with_index do |qudao, i|
+    # ['23-23-1', '23-23-4', '23-23-5','2-307-317'].each_with_index do |qudao, i|
+    ['23-23-1', '23-23-4', '23-23-5'].each_with_index do |qudao, i|
       cuis = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_source = '#{qudao}' and tt_yaoyue_day >= '#{start_day}' and  tt_yaoyue_day <= '#{end_day}' and tt_yaoyue = '成功' and tt_yaoyue_day is not null")
       cuis.order(tt_yaoyue_day: :asc, tt_source: :asc)
       sheet1 = book.create_worksheet name: "#{qudao}意向列表"
@@ -479,6 +485,34 @@ module UploadTianTian
     dir = Rails.root.join('public', 'downloads')
     Dir.mkdir dir unless Dir.exist? dir
     file_path = File.join(dir, "#{Time.now.strftime("%Y%m%dT%H%M%S")}导出的成功邀约数据#{start_day}~#{end_day}.xls")
+    book.write file_path
+    file_path
+  end
+
+
+  # UploadTianTian.xiazai_tt_create_detail_by_day '2016-07-01', '2016-07-31'
+  def self.xiazai_tt_create_detail_by_day start_day = '2016-04-01', end_day = '2016-04-30'
+    Spreadsheet.client_encoding = 'UTF-8'
+    book = Spreadsheet::Workbook.new
+    # ['23-23-1', '23-23-4', '23-23-5','2-307-317'].each_with_index do |qudao, i|
+    ['23-23-1', '23-23-4', '23-23-5'].each_with_index do |qudao, i|
+      cuis = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_source = '#{qudao}' and tt_created_day >= '#{start_day}' and  tt_created_day <= '#{end_day}'")
+      cuis.order(tt_yaoyue_day: :asc, tt_source: :asc)
+      sheet1 = book.create_worksheet name: "#{qudao}意向列表"
+      ['ID', '渠道', '创建日期'].each_with_index do |content, i|
+        sheet1.row(0)[i] = content
+      end
+      current_row = 1
+      cuis.each do |car_user_info|
+        [car_user_info.tt_id, car_user_info.tt_source, car_user_info.tt_created_day].each_with_index do |content, i|
+          sheet1.row(current_row)[i] = content
+        end
+        current_row += 1
+      end
+    end
+    dir = Rails.root.join('public', 'downloads')
+    Dir.mkdir dir unless Dir.exist? dir
+    file_path = File.join(dir, "#{Time.now.strftime("%Y%m%dT%H%M%S")}导出的成功创建数据#{start_day}~#{end_day}.xls")
     book.write file_path
     file_path
   end
@@ -593,8 +627,6 @@ module UploadTianTian
 
     UserSystem::CarUserInfo.where(city_chinese: '上海').where("id > 1148459 and tt_yaoyue = '成功'")
   end
-
-
 
 
 end
