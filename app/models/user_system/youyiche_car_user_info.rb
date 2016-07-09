@@ -252,6 +252,17 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   end
 
+  def self.jiancelu
+    0.upto 10 do |i|
+      date = Date.today - i
+      yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? and youyiche_yaoyue not in ('重复') AND  youyiche_yaoyue IS NOT NULL", date.chinese_format_day)
+
+      yiccuis_yaoyue = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and yaoyue_day  = ? and youyiche_jiance = '竞拍中'", date.chinese_format_day)
+      pp "#{date.chinese_format_day}成功率：#{yiccuis_yaoyue.count.to_f/yiccuis_create.count.to_f}"
+    end
+
+  end
+
   def self.yiqiandeshuju
     cuis = UserSystem::CarUserInfo.where("id > 1220000 and id < 1235282")
     cuis.each_with_index do |cui, i|
