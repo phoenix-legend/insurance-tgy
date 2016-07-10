@@ -381,7 +381,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     #同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
     # 同步至4A
-    UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
   end
 
   #用于网站调用
@@ -405,7 +405,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # 同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
     # 同步至a s
-    UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
   end
@@ -1212,8 +1212,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   def self.upload_guozheng
     return unless (Time.now.hour > 9 and Time.now.hour < 22)
     return unless Time.now.min > 40
+    qudao = '2-306-314'
     s = '261d684f6b7d9af996a5691e7106075e'
-    cuis = UserSystem::CarUserInfo.where("tt_source = '2-307-317' and tt_id is not null")
+    cuis = UserSystem::CarUserInfo.where("tt_source = '#{qudao}' and tt_id is not null")
     cuis.find_each do |cui|
       # cui = UserSystem::CarUserInfo.find 1181521
       next if cui.tt_chengjiao == '已提交GZ'
@@ -1222,7 +1223,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                                                                          mobile: cui.phone,
                                                                                          city: cui.city_chinese,
                                                                                          brand: cui.brand,
-                                                                                         source: '2-307-317',
+                                                                                         source: qudao,
                                                                                          response_id: cui.tt_id,
                                                                                          number: 'PRO103',
                                                                                          sign: Digest::MD5.hexdigest("#{cui.phone}#{s}")

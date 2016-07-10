@@ -317,7 +317,7 @@ module UploadTianTian
   # UploadTianTian.query_order2
   # 天天接口查询2.0版本，目前用于郭正一个渠道更新数据
   def self.query_order2
-    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and tt_source = '2-307-317'")
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and tt_source in ('2-307-317', '2-306-314')")
     i = 0
     car_user_infos.find_each do |car_user_info|
       # car_user_info = ::UserSystem::CarUserInfo.where("tt_id  = 21924728").first
@@ -466,7 +466,7 @@ module UploadTianTian
   def self.xiazai_tt_yaoyue_detail_by_day start_day = '2016-04-01', end_day = '2016-04-30'
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
-    # ['23-23-1', '23-23-4', '23-23-5','2-307-317'].each_with_index do |qudao, i|
+    # ['23-23-1', '23-23-4', '23-23-5','2-307-317','2-306-314'].each_with_index do |qudao, i|
     ['23-23-1', '23-23-4', '23-23-5'].each_with_index do |qudao, i|
       cuis = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_source = '#{qudao}' and tt_yaoyue_day >= '#{start_day}' and  tt_yaoyue_day <= '#{end_day}' and tt_yaoyue = '成功' and tt_yaoyue_day is not null")
       cuis.order(tt_yaoyue_day: :asc, tt_source: :asc)
@@ -543,7 +543,7 @@ module UploadTianTian
     pp "本次新增#{i}个。 "
 
 
-    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '失败' and tt_source = '2-307-317'")
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '失败' and tt_source in ('2-307-317', '2-306-314')")
     i = 0
     car_user_infos.find_each do |car_user_info|
       # car_user_info = ::UserSystem::CarUserInfo.where("tt_id  = 21924728").first
