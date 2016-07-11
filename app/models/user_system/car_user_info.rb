@@ -1219,7 +1219,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       # cui = UserSystem::CarUserInfo.find 1181521
       next if cui.tt_chengjiao == '已提交GZ'
       name = cui.name.gsub('(个人)', '')
-      response = RestClient.post 'http://api.wejing365.com/index.php?r=apisa/save_car', {name: name,
+      response = RestClient.post 'http://api3.wejing365.cn/index.php?r=apisa/save_car', {name: name,
                                                                                          mobile: cui.phone,
                                                                                          city: cui.city_chinese,
                                                                                          brand: cui.brand,
