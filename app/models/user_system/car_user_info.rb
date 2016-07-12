@@ -381,7 +381,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     #同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
     # 同步至4A
-    # UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
+    UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
   end
 
   #用于网站调用
@@ -405,7 +405,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # 同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
     # 同步至a s
-    # UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
+    UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
   end
