@@ -53,11 +53,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       else
         {
-            "410100" => "郑州","430100" => "长沙", "610100" => "西安"
-            # "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆", "320200" => "无锡"
+            "410100" => "郑州","430100" => "长沙", "610100" => "西安",
+            "370200" => "青岛", "371000" => '威海', "370600" => '烟台', "370700" => '潍坊',
+
 
             # 人人车把以下打开
-            # "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛", "371000" => '威海', "370600" => '烟台', "370700" => '潍坊',
+            # "410100" => "郑州", "430100" => "长沙", "610100" => "西安",
+            # "370200" => "青岛", "371000" => '威海', "370600" => '烟台', "370700" => '潍坊',
             # "320400" => '常州', "320300" => '徐州', "320600" => '南通', "321000" => '扬州', "370100" => "济南",
             # "130100" => "石家庄", "130200" => "唐山", "140100" => "太原", "610400" => "咸阳", "610300" => "宝鸡", "410300" => "洛阳", "411300" => "南阳", "410700" => "新乡",
             # "430300" => "湘潭", "430200" => "株洲", "430700" => "常德", "430600" => "岳阳",
@@ -79,8 +81,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
       "dongguan" => "东莞", "chongqing" => "重庆" ,
       "zhengzhou" => '郑州', 'changsha' => '长沙', 'xian' => '西安',
+      "qingdao" => "青岛","weihai" => '威海',"yantai" => '烟台', "weifang" => '潍坊'
+
       # "beijing" => "北京"#,
-      # "qingdao" => "青岛", 'zhenjiang' => '镇江', "wuxi" => "无锡", "foshan" => '佛山', "weihai" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
+      #'zhenjiang' => '镇江', "wuxi" => "无锡", "foshan" => '佛山',
       # "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jinan" => "济南", "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
       # "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
       # "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
@@ -140,7 +144,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       else
         {
             "zhengzhou" => '郑州', 'changsha' => '长沙', 'xian' => '西安',
-            # "qingdao" => "青岛", 'zhenjiang' => '镇江', "weihai" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
+            "qingdao" => "青岛","weihai" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
+
+            #  'zhenjiang' => '镇江',
             # "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jinan" => "济南", "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
             # "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
             # "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
@@ -194,10 +200,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         {
 
             'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安',
+            'qd' => '青岛', "wei" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
 
 
             # 人人车把以下放开
-            # 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zhenjiang' => '镇江', "wei" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
+            # 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', , 'zhenjiang' => '镇江'
             # "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jn" => "济南", "sjz" => "石家庄", "tangshan" => "唐山",
             # "ty" => "太原", "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
             # "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
@@ -249,8 +256,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       else
         {
             'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安',
+            'qd' => '青岛',"weihai" => '威海', "yt" => '烟台', "wf" => '潍坊',
             # 需要人人车的时候，把重庆注释掉，把以下放开就好了，
-            # 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'qd' => '青岛', 'zj' => '镇江', "weihai" => '威海', "yt" => '烟台', "wf" => '潍坊',
+            # 'zz' => '郑州', 'cs' => '长沙', 'xa' => '西安', 'zj' => '镇江'
             # "cz" => "常州", 'xz' => '徐州', "nt" => '南通', "yz" => '扬州', "jn" => "济南", "sjz" => "石家庄", "ts" => "唐山", "ty" => "太原",
             # "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "ny" => "南阳", "xx" => "新乡",
             # "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yy" => "岳阳",
