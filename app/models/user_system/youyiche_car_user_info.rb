@@ -52,6 +52,9 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     UserSystem::YouyicheCarUserInfo.upload_youyiche cui
   end
 
+
+  # yc_car_user_info = UserSystem::YouyicheCarUserInfo.find id
+  # UserSystem::YouyicheCarUserInfo.upload_youyiche yc_car_user_info
   def self.upload_youyiche yc_car_user_info
 
     yc_car_user_info.name = yc_car_user_info.name.gsub('(个人)', '')
@@ -139,7 +142,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       cui = yc_car_user_info.car_user_info
       cui.phone_city = UserSystem::YoucheCarUserInfo.get_city_name(yc_car_user_info.phone)
       cui.save!
-      unless car_user_info.phone_city == car_user_info.phone_city
+      unless cui.phone_city == cui.phone_city
         yc_car_user_info.youyiche_upload_status = '非本地车'
         yc_car_user_info.save!
         return
@@ -163,13 +166,13 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
        "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜",
        "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "空调",
        "倒镜", "后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速", "一分钱"].each do |kw|
-        config_key_words+=1 if car_user_info.note.include? kw
+        config_key_words+=1 if cui.note.include? kw
       end
 
 
       # 过多配置描述，一般车商
       if config_key_words > 6
-        yc_car_user_info.youyiche_upload_status = '疑似车商'
+        yc_car_user_info.youyiche_upload_status = '疑似车商，'
         yc_car_user_info.save!
         return
       end
