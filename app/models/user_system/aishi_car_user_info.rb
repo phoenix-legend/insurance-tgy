@@ -163,7 +163,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       response = JSON.parse response.body
       result = if ['创建失败', '邀约失败'].include? response["result"]["status"]
                  '失败'
-               elsif ['检测成功', '检测失败', '竞拍成功', '竞拍失败', '成交成功', '成交失败', '邀约成功'].include? response["result"]["status"]
+               elsif ['检测成功', '检测失败', '竞拍成功', '竞拍失败', '成交成功', '成交失败'].include? response["result"]["status"]
                  '成功'
                else
                  nil
