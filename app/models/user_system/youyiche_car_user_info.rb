@@ -142,7 +142,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       cui = yc_car_user_info.car_user_info
       cui.phone_city = UserSystem::YoucheCarUserInfo.get_city_name(yc_car_user_info.phone)
       cui.save!
-      unless cui.phone_city == cui.phone_city
+      unless cui.city_chinese == cui.phone_city
         yc_car_user_info.youyiche_upload_status = '非本地车'
         yc_car_user_info.save!
         return
