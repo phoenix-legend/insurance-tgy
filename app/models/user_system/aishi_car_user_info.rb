@@ -4,6 +4,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
   # CITY = ['天津', '苏州', "上海", "成都", "深圳", "南京", "广州", "杭州", "东莞", "佛山", '武汉', '重庆']
   CITY = ['天津', '苏州', '武汉', '重庆']
+  # CITY = ['天津', '苏州', '武汉', '重庆', "郑州", "长沙", "西安"]
+
 
 
   # 上传到埃侍
@@ -55,6 +57,20 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     return if ycui.phone.blank?
     return if ycui.aishi_upload_status != '未上传'
     return if ycui.name.blank?
+
+    if ycui.che_ling.to_i < 2008
+      ycui.aishi_upload_status = '车龄过老'
+      ycui.save!
+      return
+    end
+
+    if ycui.milage.to_f > 15
+      ycui.aishi_upload_status = '里程太多'
+      ycui.save!
+      return
+    end
+
+
 
 
     # key = "033bd94b1168d7e4f0d644c3c95e35bf" #测试
