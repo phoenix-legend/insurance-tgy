@@ -1212,7 +1212,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   #UserSystem::CarUserInfo.upload_guozheng
   def self.upload_guozheng
     return unless (Time.now.hour > 9 and Time.now.hour < 22)
-    return unless Time.now.min > 40
+    return unless Time.now.min > 30
     qudao = '2-306-314'
     s = '261d684f6b7d9af996a5691e7106075e'
     cuis = UserSystem::CarUserInfo.where("tt_source = '#{qudao}' and tt_id is not null")
@@ -1245,8 +1245,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # UserSystem::CarUserInfo.upload_to_hulei
   def self.upload_to_hulei
-    # return unless (Time.now.hour > 9 and Time.now.hour < 22)
-    # return unless Time.now.min > 40
+    return unless (Time.now.hour > 9 and Time.now.hour < 22)
+    return unless Time.now.min > 30
 
     # key = "033bd94b1168d7e4f0d644c3c95e35bf" #测试
     # number = "4S-10009" #测试
