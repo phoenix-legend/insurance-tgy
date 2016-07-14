@@ -61,8 +61,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "410300" => "洛阳", "411300" => "南阳", "410700" => "新乡",
 
             #  "610400" => "咸阳",,
-            # "430300" => "湘潭", "430200" => "株洲", "430700" => "常德", "430600" => "岳阳",
-            # "210100" => "沈阳", "210200" => "大连", "210800" => "营口",
+            "430300" => "湘潭", "430200" => "株洲", "430700" => "常德", "430600" => "岳阳",
+            "210100" => "沈阳", "210200" => "大连", "210800" => "营口",
             # "350100" => "福州", "350200" => "厦门", "350500" => "泉州",
             # "220100" => "长春", "230100" => "哈尔滨", "230600" => "大庆", "340100" => "合肥", "340200" => "芜湖", "450100" => "南宁", "360100" => "南昌",
             # "441300" => "惠州", "441200" => "肇庆", "442000" => "中山", "330400" => "嘉兴", "520100" => "贵阳", "520300" => "遵义", "150100" => "呼和浩特", "650100" => "乌鲁木齐",
@@ -86,12 +86,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原", "baoji" => "宝鸡","foshan" => '佛山',
       "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
 
-      # "beijing" => "北京"#,
-      #'zhenjiang' => '镇江', ,
-      #
-      # "xianyang" => "咸阳",,
-      # "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
-      # "shenyang" => "沈阳", "dalian" => "大连", "yingkou" => "营口",
+      # "beijing" => "北京", 'zhenjiang' => '镇江',# "xianyang" => "咸阳",,
+
+      "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
+      "shenyang" => "沈阳", "dalian" => "大连", "yingkou" => "营口",
+
       # "fuzhou" => "福州", "xiamen" => "厦门", "quanzhou" => "泉州",
       # "changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥", "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
       # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
@@ -153,14 +152,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原","baoji" => "宝鸡",
             "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
 
-
-
-
             #  'zhenjiang' => '镇江',
             #  "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原",
             # "xianyang" => "咸阳", ,
-            # "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
-            # "shenyang" => "沈阳", "dalian" => "大连", "yingkou" => "营口",
+
+            "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
+            "shenyang" => "沈阳", "dalian" => "大连", "yingkou" => "营口",
+
             # "fuzhou" => "福州", "xiamen" => "厦门", "quanzhou" => "泉州",
             # "changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥", "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
             # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
@@ -220,11 +218,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
             # 人人车把以下放开
-            #  'zhenjiang' => '镇江'
-            #
-            # , "xianyang" => "咸阳",
-            # "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
-            # "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口",
+            #  'zhenjiang' => '镇江'  , "xianyang" => "咸阳",
+
+            "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
+            "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口",
+
             # "fz" => "福州", "xm" => "厦门", "quanzhou" => "泉州",
             # "cc" => "长春", "hrb" => "哈尔滨", "daqing" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
             # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
@@ -278,13 +276,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "sjz" => "石家庄", "ts" => "唐山", "ty" => "太原", "baoji" => "宝鸡",
             "luoyang" => "洛阳", "ny" => "南阳", "xx" => "新乡",
 
-            
+
             # 需要人人车的时候，把重庆注释掉，把以下放开就好了，
             # 'zj' => '镇江',"xianyang" => "咸阳",
-            #
-            #
-            # "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yy" => "岳阳",
-            # "sy" => "沈阳", "dl" => "大连", "yk" => "营口",
+            
+            "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yy" => "岳阳",
+            "sy" => "沈阳", "dl" => "大连", "yk" => "营口",
             #   "qz" => "泉州",
             # "cc" => "长春", "hrb" => "哈尔滨", "dq" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
             # "huizhou" => "惠州", "zq" => "肇庆", "zs" => "中山", "jx" => "嘉兴",
