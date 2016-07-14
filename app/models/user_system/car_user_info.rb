@@ -279,9 +279,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
             # 需要人人车的时候，把重庆注释掉，把以下放开就好了，
             # 'zj' => '镇江',"xianyang" => "咸阳",
-            
-            "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yy" => "岳阳",
-            "sy" => "沈阳", "dl" => "大连", "yk" => "营口",
+
+            "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yy" => "岳阳", "sy" => "沈阳", "dl" => "大连", "yk" => "营口",
             #   "qz" => "泉州",
             # "cc" => "长春", "hrb" => "哈尔滨", "dq" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
             # "huizhou" => "惠州", "zq" => "肇庆", "zs" => "中山", "jx" => "嘉兴",
