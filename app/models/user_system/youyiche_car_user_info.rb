@@ -96,12 +96,12 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       return
     end
 
-    if !yc_car_user_info.car_user_info.note.blank?  and yc_car_user_info.car_user_info.note.match /\d{11}/
+    if !yc_car_user_info.car_user_info.note.blank? and yc_car_user_info.car_user_info.note.match /\d{11}/
       yc_car_user_info.youyiche_upload_status = '疑似走私车'
       yc_car_user_info.save!
       return
     end
-    if !yc_car_user_info.car_user_info.che_xing.blank?  and yc_car_user_info.car_user_info.che_xing.match /\d{11}/
+    if !yc_car_user_info.car_user_info.che_xing.blank? and yc_car_user_info.car_user_info.che_xing.match /\d{11}/
       yc_car_user_info.youyiche_upload_status = '疑似走私车'
       yc_car_user_info.save!
       return
@@ -138,7 +138,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     end
 
     # 针对苏，杭，成都 进行严格限制量。
-    if ['苏州','杭州','成都'].include? yc_car_user_info.city_chinese
+    if ['苏州', '杭州', '成都'].include? yc_car_user_info.city_chinese
       cui = yc_car_user_info.car_user_info
       cui.phone_city = UserSystem::YoucheCarUserInfo.get_city_name(yc_car_user_info.phone)
       cui.save!
@@ -178,7 +178,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       end
 
       #对量进行严格控制
-      peiliang = {"苏州" => 40,"杭州" => 30,"成都" => 50}
+      # peiliang = {"苏州" => 40, "杭州" => 30, "成都" => 50}
+      peiliang = {"苏州" => 60, "杭州" => 50, "成都" => 70}
       liang = peiliang[yc_car_user_info.city_chinese]
       yijingyoudeliang = UserSystem::YouyicheCarUserInfo.where("city_chinese = ? and created_day = ? and youyiche_id is not null", yc_car_user_info.city_chinese, Time.now.chinese_format_day).count
       if yijingyoudeliang > liang
@@ -310,21 +311,74 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     response.each do |xx|
       cui = cuis.select { |cui| cui.youyiche_id == "#{xx["need_id"]}" }
       cui = cui[0]
-      next if cui.youyiche_chengjiao ==  xx["status"]
+      next if cui.youyiche_chengjiao == xx["status"]
       cui.youyiche_chengjiao = xx["status"]
       cui.save!
     end
 
   end
+
   # UserSystem::YouyicheCarUserInfo.jiancelu
   def self.jiancelu
-    0.upto 10 do |i|
+    Spreadsheet.client_encoding = 'UTF-8'
+    book = Spreadsheet::Workbook.new
+
+    sheet1 = book.create_worksheet name: "总体转化率"
+    ['日期', '创建数', '竞拍数', '竞拍率'].each_with_index do |content, i|
+      sheet1.row(0)[i] = content
+    end
+    0.upto 20 do |i|
       date = Date.today - i
       # yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? and youyiche_yaoyue not in ('重复') AND  youyiche_yaoyue IS NOT NULL", date.chinese_format_day)
-      yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? ", date.chinese_format_day)
-      yiccuis_yaoyue = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and yaoyue_day  = ? and youyiche_jiance = '竞拍中'", date.chinese_format_day)
-      pp "#{date.chinese_format_day}到检率：#{yiccuis_yaoyue.count.to_f/yiccuis_create.count.to_f}"
+      yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? and youyiche_yaoyue <> '重复' ", date)
+      # yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? ", date.chinese_format_day)
+      yiccuis_yaoyue = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and yaoyue_day  = ? and youyiche_jiance = '竞拍中'", date)
+
+      yaoyuelv = if yiccuis_create.count == 0 then
+                   '无'
+                 else
+                   "#{((yiccuis_yaoyue.count.to_f/yiccuis_create.count.to_f)*100).to_i}%"
+                 end
+      [date.chinese_format_day, yiccuis_create.count, yiccuis_yaoyue.count, yaoyuelv].each_with_index do |content, j|
+        sheet1.row(i+1)[j] = content
+      end
+
     end
+
+    CITY.each do |city|
+      sheet1 = book.create_worksheet name: "#{city}转化率"
+      ['日期', '创建数', '竞拍数', '竞拍率'].each_with_index do |content, i|
+        sheet1.row(0)[i] = content
+      end
+      0.upto 20 do |i|
+        date = Date.today - i
+
+        # yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? and youyiche_yaoyue not in ('重复') AND  youyiche_yaoyue IS NOT NULL and city_chinese = ?", date.chinese_format_day, city)
+        yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? and youyiche_yaoyue  <> '重复'  and city_chinese = ?", date, city)
+        # yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? ", date.chinese_format_day)
+        yiccuis_yaoyue = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and yaoyue_day  = ? and youyiche_jiance = '竞拍中' and city_chinese = ?", date, city)
+        # next if yiccuis_create.count == 0
+        # pp "#{city} #{date.chinese_format_day}上架率：#{}%"
+
+        yaoyuelv = if yiccuis_create.count == 0 then
+                     '无'
+                   else
+                     "#{((yiccuis_yaoyue.count.to_f/yiccuis_create.count.to_f)*100).to_i}%"
+                   end
+
+        [date.chinese_format_day, yiccuis_create.count, yiccuis_yaoyue.count, yaoyuelv].each_with_index do |content, j|
+          sheet1.row(i+1)[j] = content
+        end
+
+      end
+    end
+
+    dir = Rails.root.join('public', 'downloads')
+    Dir.mkdir dir unless Dir.exist? dir
+    file_path = File.join(dir, "又一车转化率 #{Time.now.strftime("%Y%m%dT%H%M%S")}导出.xls")
+    book.write file_path
+    file_path
+
 
   end
 
