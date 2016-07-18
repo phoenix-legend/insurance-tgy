@@ -10,15 +10,13 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   #         "石家庄", "唐山", "太原", "宝鸡", "洛阳", "南阳", "新乡","湘潭", "株洲", "常德", "岳阳", "沈阳", "大连", "营口",
   #         "泉州", "长春", "哈尔滨", "大庆", "合肥", "芜湖", "南宁", "南昌"]
 
-  CITY = ['天津', '苏州', '武汉', '重庆', "郑州", "长沙", "西安","青岛","威海","烟台","潍坊","无锡","常州","徐州","南通","扬州","济南",
+  CITY = ['天津', '苏州', '武汉', '重庆', "郑州", "长沙", "西安", "青岛", "威海", "烟台", "潍坊", "无锡", "常州", "徐州", "南通", "扬州", "济南",
           # "石家庄", "唐山", "太原", "宝鸡", "洛阳", "南阳", "新乡","湘潭", "株洲", "常德", "岳阳", "沈阳", "大连", "营口",
           "泉州",
           # "长春", "哈尔滨",
           # "大庆", "合肥", "芜湖",
           "南宁", "南昌"
   ]
-
-
 
 
   # 上传到埃侍
@@ -82,8 +80,6 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       ycui.save!
       return
     end
-
-
 
 
     # key = "033bd94b1168d7e4f0d644c3c95e35bf" #测试
@@ -164,43 +160,102 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   def self.query_aishi
     return unless (Time.now.hour == 18 or Time.now.hour == 20)
     return unless Time.now.min > 40
+    #
+    # key = "098f6bcd4621d373cade4e832627b4f6" #正式
+    # number = "4SA-1011" #正式
+    # UserSystem::AishiCarUserInfo.where("aishi_id is not null and aishi_yaoyue is null").find_each do |cui|
+    #
+    #   response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/querysignupone', {number: number,
+    #                                                                                                   sign: Digest::MD5.hexdigest("#{number}#{key}"),
+    #                                                                                                   id: cui.aishi_id
+    #                                                                                                }
+    #   response = JSON.parse response.body
+    #   result = if ['创建失败', '邀约失败'].include? response["result"]["status"]
+    #              '失败'
+    #            elsif ['检测成功', '检测失败', '竞拍成功', '竞拍失败', '成交成功', '成交失败'].include? response["result"]["status"]
+    #              '成功'
+    #            else
+    #              nil
+    #            end
+    #   next if result.blank?
+    #
+    #   business_name = begin
+    #     response["result"]["log"][0]["name"] rescue ''
+    #   end
+    #   upload_message = begin
+    #     response["result"]["log"][0]["msg"] rescue ''
+    #   end
+    #
+    #
+    #   cui.aishi_yaoyue = result
+    #   cui.aishi_upload_message = upload_message
+    #   cui.business_name = business_name
+    #
+    #   cui.aishi_yaoyue_time = Time.now.chinese_format
+    #   cui.aishi_yaoyue_day = Time.now.chinese_format_day
+    #   cui.save!
+    #
+    # end
 
+  end
+
+
+  # UserSystem::AishiCarUserInfo.batch_query_aishi
+  def self.batch_query_aishi
     key = "098f6bcd4621d373cade4e832627b4f6" #正式
     number = "4SA-1011" #正式
-    UserSystem::AishiCarUserInfo.where("aishi_id is not null and aishi_yaoyue is null").find_each do |cui|
+    UserSystem::AishiCarUserInfo.where("aishi_id is not null and business1_name = '瓜子'").find_each do |cui|
 
       response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/querysignupone', {number: number,
                                                                                                       sign: Digest::MD5.hexdigest("#{number}#{key}"),
                                                                                                       id: cui.aishi_id
                                                                                                    }
+      pp cui.id
       response = JSON.parse response.body
-      result = if ['创建失败', '邀约失败'].include? response["result"]["status"]
-                 '失败'
-               elsif ['检测成功', '检测失败', '竞拍成功', '竞拍失败', '成交成功', '成交失败'].include? response["result"]["status"]
-                 '成功'
-               else
-                 nil
-               end
-      next if result.blank?
+      next if cui.shiai_message == response
+      cui.shiai_message = response.to_hash.to_s
+      next if response["result"]["status"].blank?
 
-      business_name = begin
-        response["result"]["log"][0]["name"] rescue ''
-      end
-      upload_message = begin
+      cui.business_last_status = response["result"]["status"]
+
+      business1_status = begin
         response["result"]["log"][0]["msg"] rescue ''
       end
+      business1_name = begin
+        response["result"]["log"][0]["name"] rescue ''
+      end
 
+      cui.business1_status = business1_status
 
-      cui.aishi_yaoyue = result
-      cui.aishi_upload_message = upload_message
-      cui.business_name = business_name
+      cui.business1_name = business1_name
 
-      cui.aishi_yaoyue_time = Time.now.chinese_format
-      cui.aishi_yaoyue_day = Time.now.chinese_format_day
       cui.save!
 
+      cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败'].include? cui.business1_status
+                           '成功'
+                         elsif ['创建失败', '检测失败', '邀约失败'].include? cui.business1_status
+                           '失败'
+                         else
+                           '未知'
+                         end
+      cui.save!
     end
+  end
 
+  def self.xxx
+    UserSystem::AishiCarUserInfo.where("aishi_id is not null").find_each do |cui|
+      pp cui.id
+      next if cui.business1_status.blank?
+      next if cui.business1_name == '瓜子'
+      cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败'].include? cui.business1_status
+                           '成功'
+                         elsif ['创建失败', '检测失败', '邀约失败'].include? cui.business1_status
+                           '失败'
+                         else
+                           '未知'
+                         end
+      cui.save!
+    end
   end
 
 
