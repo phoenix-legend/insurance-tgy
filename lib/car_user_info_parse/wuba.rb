@@ -151,7 +151,69 @@ module Wuba
   end
 
   # Wuba.update_one_detail 1175137
+  # 使用接口的方式抓数据
   def self.update_one_detail car_user_info_id
+    # car_user_info_id = 1443622
+    car_user_info = UserSystem::CarUserInfo.find car_user_info_id
+
+    return unless car_user_info.name.blank?
+    return unless car_user_info.phone.blank?
+    return if car_user_info.detail_url.match /zhineng/
+
+
+    begin
+      puts '更新明细'
+      pp car_user_info.detail_url
+
+      info = car_user_info.detail_url.match /http:\/\/([a-zA-Z]+)\.58.com\/ershouche\/(\d+)x\.shtml/
+      city_name = info[1].to_s
+      id_name = info[2].to_s
+      api_url = "http://app.58.com/api/detail/ershouche/#{id_name}?appId=3&format=json&localname=#{city_name}&platform=ios&sidDict=%7B%22PGTID%22%3A%22%22%2C%22GTID%22%3A%22130722508192553938177207060%22%7D&version=7.1.1"
+      pp api_url
+      # api_url = 'http://app.58.com/api/detail/ershouche/25901110150859?appId=3&format=json&localname=sy&platform=ios&sidDict=%7B%22PGTID%22%3A%22%22%2C%22GTID%22%3A%22130722508192553938177207060%22%7D&version=7.1.1'
+      response = RestClient.get api_url
+      response = response.body
+      response = JSON.parse response
+
+      return if response['status'] != 0
+
+      infos = response["result"]["info"]
+      note = infos.select{|info| info.keys[0] == 'desc_area' }[0]["desc_area"]["text"]
+      name = infos.select{|info| info.keys[0] == 'linkman_area' }[0]["linkman_area"]["base_info"]["title"]
+      name.gsub!('(个人)','')
+      time = infos.select{|info| info.keys[0] == 'title_area' }[0]["title_area"]["ext"][0]
+
+      phone = infos.select{|info| info.keys[0] == 'fenqigou_area' }[0]
+      if phone.blank?
+        Wuba.update_one_detail_kouling car_user_info_id
+        return
+      end
+
+      phone = infos.select{|info| info.keys[0] == 'fenqigou_area' }[0]["fenqigou_area"]["detail_link"]["action"]["content"]["url"].match /phone=(\d{11})/
+      phone = phone[1].to_s
+
+
+      #姓名，手机号，备注，发布时间
+
+
+      UserSystem::CarUserInfo.update_detail id: car_user_info.id,
+                                            name: name,
+                                            phone: phone,
+                                            note: "__#{note}",
+                                            fabushijian: time
+
+
+    rescue Exception => e
+      pp e
+      pp $@
+      car_user_info.need_update = false
+      car_user_info.save
+    end
+  end
+
+  # Wuba.update_one_detail 1175137
+  # 使用口令的方式抓数据
+  def self.update_one_detail_kouling car_user_info_id
     # car_user_info_id = 1055829
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
 

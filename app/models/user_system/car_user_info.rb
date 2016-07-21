@@ -277,7 +277,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
             # 需要人人车的时候，把重庆注释掉，把以下放开就好了，
-            # 'zj' => '镇江',"xianyang" => "咸阳",
+            # 'zj' => '镇江', "xianyang" => "咸阳",
 
             "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yy" => "岳阳", "sy" => "沈阳", "dl" => "大连", "yk" => "营口",
             "qz" => "泉州","cc" => "长春", "hrb" => "哈尔滨", "dq" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
@@ -363,6 +363,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info.save!
 
 
+    # 针对58做城市匹配性校验
     if car_user_info.site_name == '58'
       # 针对58， 做城市校验，因为此时还没有电话号码，所以不用校验重复等。
       invert_wuba_city = UserSystem::CarUserInfo::WUBA_CITY.invert
@@ -377,9 +378,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
     # 针对非58 更新车商库
-    if car_user_info.site_name != '58'
+    # 2016-07-21 现在采用接口方式，58数据过来一并提交，此时58有电话号码，所以可以统一校验车商
+    unless (car_user_info.site_name == '58' and car_user_info.phone.blank?)
       UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, false
     end
+
+
 
 
     car_user_info = car_user_info.reload
@@ -394,14 +398,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
 
-    return if car_user_info.site_name == '58' # 58数据先不上传，等待手机端提交过来
+    # 58数据先不上传，等待手机端提交过来
+    # 2016-07-21 现在采用接口和口令两种并存
+    return if car_user_info.site_name == '58' and car_user_info.phone.blank?
     car_user_info = car_user_info.reload
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
     UploadTianTian.upload_one_tt car_user_info
     # 同步至车置宝  车置宝作废
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
-    #同步至又一车
     UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
+    #同步至又一车
     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
     #同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
