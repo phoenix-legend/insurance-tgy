@@ -11,10 +11,14 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   #         "泉州", "长春", "哈尔滨", "大庆", "合肥", "芜湖", "南宁", "南昌"]
 
   CITY = ['天津', '苏州', '武汉', '重庆', "郑州", "长沙", "西安", "青岛", "威海", "烟台", "潍坊", "无锡", "常州", "徐州", "南通", "扬州", "济南",
-          # "石家庄", "唐山", "太原", "宝鸡", "洛阳", "南阳", "新乡","湘潭", "株洲", "常德", "岳阳", "沈阳", "大连", "营口",
+          # "石家庄", "唐山",
+          "太原",
+          # "宝鸡", "洛阳", "南阳", "新乡","湘潭", "株洲", "常德", "岳阳", "沈阳", "大连", "营口",
           "泉州",
           "长春", "哈尔滨",
-          # "大庆", "合肥", "芜湖",
+          # "大庆",
+          "合肥",
+          # "芜湖",
           "南宁", "南昌"
   ]
 
@@ -207,9 +211,10 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   def self.batch_query_aishi
     key = "098f6bcd4621d373cade4e832627b4f6" #正式
     number = "4SA-1011" #正式
-    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 52000 and (aishi_yaoyue is null or aishi_yaoyue = '未知')").find_each do |cui|
+    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 100000 and (aishi_yaoyue is null or aishi_yaoyue = '未知')").find_each do |cui|
     # UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 100000 and (aishi_yaoyue is null or aishi_yaoyue = '未知')").order(id: :desc).each do |cui|
       # pp cui.id
+      # cui = UserSystem::AishiCarUserInfo.where("aishi_id is not null").order(id: :desc).first
       next if cui.aishi_yaoyue == '成功'
       next if cui.aishi_yaoyue == '失败'
     response = nil
