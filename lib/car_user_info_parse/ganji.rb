@@ -94,7 +94,7 @@ module Ganji
       begin
         pp "现在跑赶集.. #{areaname}"
         1.upto 3 do |i|
-          sleep 6+rand(10)
+          sleep 4+rand(5)
           url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=1&deal_type=1&page=#{i}"
           # url = "http://wap.ganji.com/sh/ershouche/?back=search&agent=1&deal_type=1&page=1"
           # url = "http://wap.ganji.com/su/ershouche/?back=search&agent=1&deal_type=1&page=1"
