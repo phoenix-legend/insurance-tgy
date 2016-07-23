@@ -11,7 +11,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   #         "泉州", "长春", "哈尔滨", "大庆", "合肥", "芜湖", "南宁", "南昌"]
 
   CITY = ['天津', '苏州', '武汉', '重庆', "郑州", "长沙", "西安", "青岛", "威海", "烟台", "潍坊", "无锡", "常州", "徐州", "南通", "扬州", "济南",
-          # "石家庄", "唐山",
+          "石家庄",
+          # , "唐山",
           "太原",
           # "宝鸡", "洛阳", "南阳", "新乡","湘潭", "株洲", "常德", "岳阳", "沈阳", "大连", "营口",
           "泉州",
@@ -162,7 +163,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
   # UserSystem::AishiCarUserInfo.query_aishi
   def self.query_aishi
-    return unless (Time.now.hour == 13 or Time.now.hour == 20)
+    return unless (Time.now.hour == 13 or Time.now.hour == 17)
     return unless Time.now.min > 40
 
     UserSystem::AishiCarUserInfo.batch_query_aishi

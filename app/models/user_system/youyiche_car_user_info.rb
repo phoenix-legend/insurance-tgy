@@ -279,6 +279,23 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       end
     end
 
+
+    #
+    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null").find_each do |cui|
+    #   next if cui.youyiche_jiance == '竞拍中'
+    #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
+    #   response = JSON.parse response.body
+    #   pp response
+    #   status = response[0]["status"].strip
+    #   if status == '竞拍中'
+    #     cui.youyiche_jiance = status
+    #     cui.yaoyue_time = Time.now.chinese_format
+    #     cui.yaoyue_day = Time.now.chinese_format_day
+    #     cui.save!
+    #   end
+    # end
+
+
     # 更新成交的数据
     UserSystem::YouyicheCarUserInfo.chengjiaogengxin
     #
