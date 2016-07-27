@@ -190,6 +190,10 @@ module Wuba
       end
 
       phone = infos.select{|info| info.keys[0] == 'fenqigou_area' }[0]["fenqigou_area"]["detail_link"]["action"]["content"]["url"].match /phone=(\d{11})/
+      if phone.blank?
+        Wuba.update_one_detail_kouling car_user_info_id
+        return
+      end
       phone = phone[1].to_s
 
 
