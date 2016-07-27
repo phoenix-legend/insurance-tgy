@@ -314,12 +314,20 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     #
     #
     # 查看报价
+    # i = []
     # host_name = "b.youyiche.com" #正式环境
-    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and id in (84,486,857,1186,866,1101,2545,2824,3039,3085)").each do |cui|
+    # UserSystem::YouyicheCarUserInfo.where("youyiche_chengjiao = '成交'").each do |cui|
     #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
     #   response = JSON.parse response.body
     #   pp response
+    #   i << response[0]["trade_price"]
     # end
+    #
+    # k = 0
+    # i.each do |ii|
+    #   k += ii.to_f
+    # end
+
 
   end
 
