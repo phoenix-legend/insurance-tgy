@@ -149,14 +149,21 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
     # 针对苏，杭，成都 进行严格限制量。
     if ['苏州', '杭州', '成都'].include? yc_car_user_info.city_chinese
-      cui = yc_car_user_info.car_user_info
-      cui.phone_city = UserSystem::YoucheCarUserInfo.get_city_name(yc_car_user_info.phone)
-      cui.save!
-      unless cui.city_chinese == cui.phone_city
-        yc_car_user_info.youyiche_upload_status = '非本地车'
+
+      if Time.now.hour < 6 and yc_car_user_info.city_chinese == '苏州'
+        yc_car_user_info.youyiche_upload_status = '时间太早'
         yc_car_user_info.save!
         return
       end
+
+      # cui = yc_car_user_info.car_user_info
+      # cui.phone_city = UserSystem::YoucheCarUserInfo.get_city_name(yc_car_user_info.phone)
+      # cui.save!
+      # unless cui.city_chinese == cui.phone_city
+      #   yc_car_user_info.youyiche_upload_status = '非本地车'
+      #   yc_car_user_info.save!
+      #   return
+      # end
 
       if cui.note.match /^出售/
         yc_car_user_info.youyiche_upload_status = '疑似车商'
