@@ -10,20 +10,10 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   #         "石家庄", "唐山", "太原", "宝鸡", "洛阳", "南阳", "新乡","湘潭", "株洲", "常德", "岳阳", "沈阳", "大连", "营口",
   #         "泉州", "长春", "哈尔滨", "大庆", "合肥", "芜湖", "南宁", "南昌"]
 
-  CITY = ['天津', '苏州', '武汉', '重庆', "郑州", "长沙", "西安", "青岛", "威海", "烟台", "潍坊", "无锡", "常州", "徐州", "南通", "扬州", "济南",
-          "石家庄",
-          "唐山",
-          "太原",
-          "宝鸡", "洛阳", "南阳", "新乡","湘潭", "株洲",
-          "常德", "岳阳",
-          "沈阳", "大连",
-          "营口",
-          "泉州",
-          "长春", "哈尔滨",
-          "大庆",
-          "合肥",
-          "芜湖",
-          "南宁", "南昌"
+  CITY = ['天津', '苏州', '武汉', '重庆', "郑州", "长沙", "西安", "青岛", "威海", "烟台",
+          "潍坊", "无锡", "常州", "徐州", "南通", "扬州", "济南","上海","杭州","成都",
+          "石家庄", "唐山", "太原", "宝鸡", "洛阳", "南阳", "新乡","湘潭", "株洲", "常德",
+          "岳阳", "沈阳", "大连", "营口", "泉州", "长春", "哈尔滨", "大庆", "合肥", "芜湖", "南宁", "南昌"
   ]
 
 
@@ -122,6 +112,10 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   def self.create_user_info_from_car_user_info car_user_info
     if car_user_info.is_pachong == false and UserSystem::AishiCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
+        if UserSystem::YouyicheCarUserInfo::CITY.include? car_user_info.city_chinese
+          youyiche_number = UserSystem::YouyicheCarUserInfo.where("phone = ? and youyiche_id is not null", car_user_info.phone).count
+          return if youyiche_number > 0
+        end
         #数据回传到优车
         UserSystem::AishiCarUserInfo.create_car_info name: car_user_info.name,
                                                      phone: car_user_info.phone,
