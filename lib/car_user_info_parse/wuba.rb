@@ -182,6 +182,12 @@ module Wuba
   # Wuba.update_one_detail 1175137
   # 使用接口的方式抓数据
   def self.update_one_detail car_user_info_id
+
+    if true
+      Wuba.update_one_detail_kouling car_user_info_id
+      return
+    end
+
     # car_user_info_id = 1526796
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
 
