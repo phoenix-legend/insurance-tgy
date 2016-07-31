@@ -204,6 +204,23 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
   end
 
+  def self.query_chengjiao
+    key = "098f6bcd4621d373cade4e832627b4f6" #正式
+    number = "4SA-1011" #正式
+    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 10000").find_each do |cui|
+      next if cui.aishi_yaoyue == '失败'
+      response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/querysignupone', {number: number,
+                                                                                                      sign: Digest::MD5.hexdigest("#{number}#{key}"),
+                                                                                                      id: cui.aishi_id
+                                                                                                   }
+      response = JSON.parse response.body
+      if response["result"]["status"] == '交易成功'
+        cui.aishi_upload_message = "#{Date.today.chinese_format_day} 交易成功"
+        cui.save!
+      end
+    end
+  end
+
 
   # UserSystem::AishiCarUserInfo.batch_query_aishi
   def self.batch_query_aishi

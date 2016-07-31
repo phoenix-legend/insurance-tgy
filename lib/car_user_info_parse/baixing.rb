@@ -29,6 +29,7 @@ module Baixing
             # price = car_info.css('.price').text
             # chexing = car_info.css('a').children[0].text
             is_cheshang = 0
+            next if detail_url.match /redirect/
             result = UserSystem::CarUserInfo.create_car_user_info che_ling: "3010",
                                                                   milage: 8.8,
                                                                   detail_url: detail_url,
@@ -58,6 +59,7 @@ module Baixing
     end
   end
 
+  # Baixing.
   def self.update_one_detail car_user_info_id
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
     return unless car_user_info.name.blank?
