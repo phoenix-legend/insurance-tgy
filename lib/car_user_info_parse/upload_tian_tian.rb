@@ -1,13 +1,13 @@
 module UploadTianTian
 
-  CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆", "佛山"]
+  CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆", "佛山","北京"]
 
   CITY1 = ["上海", "成都", "杭州", "佛山"]
-  CITY2 = ["武汉", "天津", "重庆", "苏州", "广州", "深圳", "东莞", "南京"]
-  # CITY2= []
 
 
-  # CITY = ["上海"]
+
+
+
 
   # 需要上传的数据。
   # def self.need_upload
@@ -115,7 +115,7 @@ module UploadTianTian
       end
 
 
-      if car_user_info.site_name == '58' and ['成都', '杭州'].include?(car_user_info.city_chinese)
+      if car_user_info.site_name == '58' and ['成都', '杭州','南京'].include?(car_user_info.city_chinese)
         UploadTianTian.tt_pai_v1_0_hulei car_user_info
         return
       end
