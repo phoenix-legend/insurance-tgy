@@ -245,18 +245,48 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   def self.query_youyiche
     # host_name = 'uat.youyiche.com' #测试环境
     host_name = "b.youyiche.com" #正式环境
+    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and (youyiche_yaoyue is null or youyiche_yaoyue in ('未拨通','失败','重复'))").find_each do |cui|
+    #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
+    #   response = JSON.parse response.body
+    #   status = response[0]["status"].strip
+    #   next if ['待跟进', '跟进中'].include? status
+    #   next if status.blank?
+    #   next if status == cui.youyiche_yaoyue
+    #   if status == '竞拍中'
+    #     cui.youyiche_jiance = status
+    #   end
+    #   cui.youyiche_yaoyue = status
+    #   cui.save!
+    # end
+
+    query_q_ids = {}
+    kk = 0
+    sanbaideliang = 0
     UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and (youyiche_yaoyue is null or youyiche_yaoyue in ('未拨通','失败','重复'))").find_each do |cui|
-      response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
-      response = JSON.parse response.body
-      status = response[0]["status"].strip
-      next if ['待跟进', '跟进中'].include? status
-      next if status.blank?
-      next if status == cui.youyiche_yaoyue
-      if status == '竞拍中'
-        cui.youyiche_jiance = status
+      kk += 1
+      query_q_ids["#{kk}"] = cui.youyiche_id
+      # 想加速查询，把10改为更大的数字
+      if kk == (if sanbaideliang < 10 then 300 else 10 end)
+        pp 'XXX'
+        kk = 0
+        sanbaideliang += 1
+        response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", query_q_ids.to_json, :content_type => 'application/json'
+        pp response.body
+        response = JSON.parse response.body
+        response.each do |xx|
+          status = xx["status"].strip
+          next if ['待跟进', '跟进中'].include? status
+          next if status.blank?
+          cuii = (UserSystem::YouyicheCarUserInfo.find_by_youyiche_id xx["need_id"])
+          next if status == cuii.youyiche_yaoyue
+          if status == '竞拍中'
+            cuii.youyiche_jiance = status
+          end
+          cuii.youyiche_yaoyue = status
+          cuii.save!
+        end
+        query_q_ids = {}
       end
-      cui.youyiche_yaoyue = status
-      cui.save!
     end
 
 
@@ -274,32 +304,62 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     # end
 
 
+    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_jiance is null").find_each do |cui|
+    #   next if cui.youyiche_yaoyue == '失败'
+    #   next if cui.youyiche_jiance == '竞拍中'
+    #   next if cui.youyiche_chengjiao == '失败'
+    #
+    #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
+    #   response = JSON.parse response.body
+    #   # pp response
+    #   status = response[0]["status"].strip
+    #   if status == '竞拍中'
+    #     cui.youyiche_jiance = status
+    #     cui.yaoyue_time = Time.now.chinese_format
+    #     cui.yaoyue_day = Time.now.chinese_format_day
+    #     cui.save!
+    #   end
+    # end
+
+    query_q_ids = {}
+    kk = 0
+    sanbaideliang = 0
     UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_jiance is null").find_each do |cui|
       next if cui.youyiche_yaoyue == '失败'
-
       next if cui.youyiche_jiance == '竞拍中'
-
       next if cui.youyiche_chengjiao == '失败'
+      kk += 1
 
-      response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
-      response = JSON.parse response.body
-      # pp response
-      status = response[0]["status"].strip
-      if status == '竞拍中'
-        cui.youyiche_jiance = status
-        cui.yaoyue_time = Time.now.chinese_format
-        cui.yaoyue_day = Time.now.chinese_format_day
-        cui.save!
+      query_q_ids["#{kk}"] = cui.youyiche_id
+
+      # 想加速查询，把5改为更大的数字
+      if kk == (if sanbaideliang < 6 then 300 else 10 end)
+        kk = 0
+        sanbaideliang += 1
+        response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", query_q_ids.to_json, :content_type => 'application/json'
+        response = JSON.parse response.body
+        response.each do |xx|
+          status = xx["status"].strip
+          if status == '竞拍中'
+            cuii = (UserSystem::YouyicheCarUserInfo.find_by_youyiche_id xx["need_id"])
+            cuii.youyiche_jiance = status
+            cuii.yaoyue_time = Time.now.chinese_format
+            cuii.yaoyue_day = Time.now.chinese_format_day
+            cuii.save!
+          end
+        end
+
+
+
+          query_q_ids = {}
+        end
       end
-    end
 
 
     #
-    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null").find_each do |cui|
-    #   next if cui.youyiche_jiance == '竞拍中'
     #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
     #   response = JSON.parse response.body
-    #   pp response
+    #   # pp response
     #   status = response[0]["status"].strip
     #   if status == '竞拍中'
     #     cui.youyiche_jiance = status
@@ -312,34 +372,24 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
     # 更新成交的数据
     UserSystem::YouyicheCarUserInfo.chengjiaogengxin
-    #
-    #
-    # #多次更新所有数据   最终结果
-    # host_name = "b.youyiche.com" #正式环境
-    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null").each do |cui|
-    #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
-    #   response = JSON.parse response.body
-    #   status = response[0]["status"].strip
-    #   cui.youyiche_chengjiao = status
-    #   cui.save!
-    # end
-    #
-    #
-    #
-    # 查看报价
-    # i = []
-    # host_name = "b.youyiche.com" #正式环境
-    # UserSystem::YouyicheCarUserInfo.where("youyiche_chengjiao = '成交'").each do |cui|
-    #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
-    #   response = JSON.parse response.body
-    #   pp response
-    #   i << response[0]["trade_price"]
-    # end
-    #
-    # k = 0
-    # i.each do |ii|
-    #   k += ii.to_f
-    # end
+
+
+    if false
+      # 查看报价
+      i = []
+      host_name = "b.youyiche.com" #正式环境
+      UserSystem::YouyicheCarUserInfo.where("youyiche_chengjiao = '成交'").each do |cui|
+        response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
+        response = JSON.parse response.body
+        pp response
+        i << response[0]["trade_price"]
+      end
+
+      k = 0
+      i.each do |ii|
+        k += ii.to_f
+      end
+    end
 
 
   end
@@ -426,18 +476,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     file_path = File.join(dir, "又一车转化率 #{Time.now.strftime("%Y%m%dT%H%M%S")}导出.xls")
     book.write file_path
     file_path
-
-
   end
-
-  def self.yiqiandeshuju
-    cuis = UserSystem::CarUserInfo.where("id > 1220000 and id < 1235282")
-    cuis.each_with_index do |cui, i|
-      pp cui.id
-      UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
-    end
-  end
-
 
 end
 __END__

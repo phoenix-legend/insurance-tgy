@@ -36,8 +36,6 @@ namespace :zongjie do
 		else
 			# 上传数据到U车
 			UserSystem::YoucheCarUserInfo.upload_to_youche
-			# 更新U车数据
-			UserSystem::YoucheCarUserInfo.query_youche_status
 			#更新又一车的数据
 			UserSystem::YouyicheCarUserInfo.query_youyiche
 			# 去侍埃更新数据， 程序内控制18点40分,20点40分再更新一次
@@ -46,6 +44,8 @@ namespace :zongjie do
 			UserSystem::CarUserInfo.upload_guozheng
 			# 上传数据给胡磊
 			UserSystem::CarUserInfo.upload_to_hulei
+			# 更新U车数据
+			UserSystem::YoucheCarUserInfo.query_youche_status
 		end
 	end
 
