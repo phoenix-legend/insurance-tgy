@@ -29,7 +29,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
               "410100" => "郑州", "430100" => "长沙", "610100" => "西安", "370200" => "青岛", "440600" => "佛山", "371000" => '威海',
               "370600" => '烟台', "370700" => '潍坊', "320400" => '常州', "320300" => '徐州', "320600" => '南通', "321000" => '扬州', "370100" => "济南",
               "130100" => "石家庄", "130200" => "唐山", "140100" => "太原", "610400" => "咸阳", "610300" => "宝鸡",
-              "410300" => "洛阳", "411300" => "南阳", "410700" => "新乡",
+              "410300" => "洛阳", "411300" => "南阳", "410700" => "新乡","110100" => "北京",
               "430300" => "湘潭", "430200" => "株洲", "430700" => "常德", "430600" => "岳阳",
               "210100" => "沈阳", "210200" => "大连", "210800" => "营口",
               "350100" => "福州", "350200" => "厦门", "350500" => "泉州",
@@ -49,7 +49,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       when 1
         {
-            "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆", "320200" => "无锡"
+            "120100" => "天津", "320500" => "苏州", "330100" => "杭州", "441900" => "东莞", "500100" => "重庆", "320200" => "无锡","110100" => "北京",
         }
       else
         {
@@ -83,16 +83,18 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "qingdao" => "青岛", "weihai" => '威海', "yantai" => '烟台', "weifang" => '潍坊', "wuxi" => "无锡",
       "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jinan" => "济南",
 
-      "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原", "baoji" => "宝鸡","foshan" => '佛山',
+      "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原", "baoji" => "宝鸡","foshan" => '佛山',"beijing" => "北京",
       "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
 
-      # "beijing" => "北京", 'zhenjiang' => '镇江',# "xianyang" => "咸阳",,
+
 
       "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
       "shenyang" => "沈阳", "dalian" => "大连", "yingkou" => "营口",
 
-      # "fuzhou" => "福州", "xiamen" => "厦门",
+
       "quanzhou" => "泉州","changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥", "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
+      #  'zhenjiang' => '镇江',# "xianyang" => "咸阳",,
+      # "fuzhou" => "福州", "xiamen" => "厦门",
 
 
       # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
@@ -100,14 +102,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       # "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌"
   }
 
-  IMPRTANT_CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "佛山", "东莞", "重庆", "无锡"]
+  IMPRTANT_CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "佛山", "东莞", "重庆", "无锡","北京"]
 
-  # 淘车
-  # PINYIN_CITY = {
-  #     "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
-  #     "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州", "foshan" => '佛山',
-  #     "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡"
-  # }
+
 
 
   #百姓人人车+天天拍
@@ -125,15 +122,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥", "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
       "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
       "guiyang" => "贵阳", "zunyi" => "遵义", "huhehaote" => "呼和浩特", "wulumuqi" => "乌鲁木齐", "deyang" => "德阳",
-      "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌"
+      "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌", "beijing"=>"北京"
   }
 
-  # 百姓天天拍
-  # BAIXING_PINYIN_CITY = {
-  #     "shanghai" => "上海", "chengdu" => "成都", "shenzhen" => "深圳", "nanjing" => "南京",
-  #     "guangzhou" => "广州", "wuhan" => "武汉", "tianjin" => "天津", "suzhou" => "苏州", "hangzhou" => "杭州",
-  #     "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡", "foshan" => '佛山'
-  # }
+
 
   def self.get_baixing_sub_cities sub_party = 0
     case sub_party
@@ -143,7 +135,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       when 1
         {
-            "guangzhou" => "广州", "hangzhou" => "杭州", "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡", "foshan" => '佛山'
+            "guangzhou" => "广州", "hangzhou" => "杭州", "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡", "foshan" => '佛山', "beijing"=>"北京"
         }
       else
         {
@@ -187,7 +179,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "cc" => "长春", "hrb" => "哈尔滨", "daqing" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
       "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
       "gy" => "贵阳", "zunyi" => "遵义", "nmg" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
-      "mianyang" => "绵阳", "xiangyang" => "襄阳", "yichang" => "宜昌"
+      "mianyang" => "绵阳", "xiangyang" => "襄阳", "yichang" => "宜昌","bj" => "北京"
   }
   #赶集天天拍
   # GANJI_CITY = {
@@ -205,7 +197,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       when 1
         {
-            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", 'foshan' => '佛山'
+            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", 'foshan' => '佛山',"bj" => "北京"
         }
       else
         {
@@ -241,7 +233,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "cz" => "常州", 'xz' => '徐州', "nt" => '南通', "yz" => '扬州', "jn" => "济南", "sjz" => "石家庄", "ts" => "唐山", "ty" => "太原",
       "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "ny" => "南阳", "xx" => "新乡",
       "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yy" => "岳阳",
-      "sy" => "沈阳", "dl" => "大连", "yk" => "营口",
+      "sy" => "沈阳", "dl" => "大连", "yk" => "营口","bj" => "北京",
       "fz" => "福州", "xm" => "厦门", "qz" => "泉州",
       "cc" => "长春", "hrb" => "哈尔滨", "dq" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
 
@@ -264,7 +256,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       when 1
         {
-            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆"
+            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆","bj" => "北京"
         }
       else
         {
