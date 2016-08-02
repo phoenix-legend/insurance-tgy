@@ -243,6 +243,9 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   # UserSystem::YouyicheCarUserInfo.query_youyiche
   def self.query_youyiche
+    return if Time.now.hour < 9
+    return if Time.now.hour > 21
+    return unless Time.now.min < 10
     # host_name = 'uat.youyiche.com' #测试环境
     host_name = "b.youyiche.com" #正式环境
     # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and (youyiche_yaoyue is null or youyiche_yaoyue in ('未拨通','失败','重复'))").find_each do |cui|
