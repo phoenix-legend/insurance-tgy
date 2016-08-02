@@ -83,7 +83,13 @@ module Baixing
 
       detail_content = Nokogiri::HTML(detail_content1)
 
-      phone = detail_content.css(".num")[0].text
+      phone =  nil
+      begin
+        phone = detail_content.css(".num")[0].text
+      rescue Exception => e
+        phone = detail_content.css(".contact-main-txt")[0].text
+      end
+
       che_xing = detail_content.css(".title h1").text
       fabushijian = begin detail_content.css(".fabushijian").text rescue '2010-01-01' end
 
