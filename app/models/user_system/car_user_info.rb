@@ -63,7 +63,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             #  "610400" => "咸阳",,
             "430300" => "湘潭", "430200" => "株洲", "430700" => "常德", "430600" => "岳阳",
             "210100" => "沈阳", "210200" => "大连", "210800" => "营口",
-            # "350100" => "福州", "350200" => "厦门",
+            "350100" => "福州", "350200" => "厦门",
             "350500" => "泉州","220100" => "长春", "230100" => "哈尔滨", "230600" => "大庆", "340100" => "合肥", "340200" => "芜湖", "450100" => "南宁", "360100" => "南昌",
             # "441300" => "惠州", "441200" => "肇庆", "442000" => "中山", "330400" => "嘉兴", "520100" => "贵阳", "520300" => "遵义", "150100" => "呼和浩特", "650100" => "乌鲁木齐",
             # "510600" => "德阳", "510700" => "绵阳", "420600" => "襄阳", "420500" => "宜昌"
@@ -94,7 +94,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
       "quanzhou" => "泉州","changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥", "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
       #  'zhenjiang' => '镇江',# "xianyang" => "咸阳",,
-      # "fuzhou" => "福州", "xiamen" => "厦门",
+      "fuzhou" => "福州", "xiamen" => "厦门",
 
 
       # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
@@ -135,7 +135,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       when 1
         {
-            "guangzhou" => "广州", "hangzhou" => "杭州", "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡", "foshan" => '佛山', "beijing"=>"北京"
+            "guangzhou" => "广州", "hangzhou" => "杭州", "dongguan" => "东莞", "chongqing" => "重庆", "wuxi" => "无锡", "foshan" => '佛山', "beijing"=>"北京","fuzhou" => "福州", "xiamen" => "厦门",
         }
       else
         {
@@ -153,7 +153,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
             "shenyang" => "沈阳", "dalian" => "大连", "yingkou" => "营口",
 
-            # "fuzhou" => "福州", "xiamen" => "厦门",
+
             "quanzhou" => "泉州","changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥", "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
 
             # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
@@ -193,11 +193,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     case sub_party
       when 0
         {
-            "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉"
+            "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉","fz" => "福州"
         }
       when 1
         {
-            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", 'foshan' => '佛山',"bj" => "北京"
+            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", 'foshan' => '佛山',"bj" => "北京", "xm" => "厦门"
         }
       else
         {
@@ -214,7 +214,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
             "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
             "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口",
-            # "fz" => "福州", "xm" => "厦门",
+
             "quanzhou" => "泉州","cc" => "长春", "hrb" => "哈尔滨", "daqing" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
             # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
             # "gy" => "贵阳", "zunyi" => "遵义", "nmg" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳","wx" => "无锡",
@@ -276,7 +276,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             # "huizhou" => "惠州", "zq" => "肇庆", "zs" => "中山", "jx" => "嘉兴",
             # "gy" => "贵阳", "zunyi" => "遵义", "hu" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
             # "mianyang" => "绵阳", "xf" => "襄阳", "yc" => "宜昌",
-            # "fz" => "福州","xm" => "厦门"
+            "fz" => "福州","xm" => "厦门"
         }
     end
   end
