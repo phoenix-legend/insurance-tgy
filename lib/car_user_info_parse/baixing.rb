@@ -67,7 +67,7 @@ module Baixing
 
     begin
       puts '更新明细'
-      detail_url = "http://yantai.baixing.com/m/ershouqiche/a1028355953.html"
+      # detail_url = "http://guangzhou.baixing.com/m/ershouqiche/a1028370758.html"
       detail_url = car_user_info.detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
       sleep 3+rand(5)
       response = RestClient.get(detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
@@ -98,7 +98,6 @@ module Baixing
       che_ling = che_ling.split('-')[0]
       licheng = begin detail_content.css(".detail .content .info").children[1].children[0].content rescue '80000' end
 
-
       metas = detail_content.css(".top-meta li")
       metas.each do |meta|
         if meta.children[0].text.match /上牌/
@@ -109,6 +108,11 @@ module Baixing
         end
       end
       licheng = licheng.gsub(/万|公里/, '')
+
+      if che_ling == '暂无'
+        che_ling = '2013'
+        licheng = '4'
+      end
 
 
       name = '先生女士'
