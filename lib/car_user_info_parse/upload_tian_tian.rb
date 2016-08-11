@@ -49,6 +49,63 @@ module UploadTianTian
       is_select = false
     end
 
+    if car_user_info.city_chinese == '北京'
+      ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ'].each do |kw|
+        if car_user_info.name.include? kw or car_user_info.che_xing.include? kw
+          car_user_info.tt_upload_status = '疑似走私车或车商'
+          car_user_info.save!
+          return
+        end
+      end
+
+      if car_user_info.name.match /^小/ and car_user_info.name.length == 2
+        car_user_info.tt_upload_status = '疑似走私车或车商'
+        car_user_info.save!
+        return
+      end
+
+
+      if /^[a-z|A-Z|0-9|-|_]+$/.match car_user_info.name
+        car_user_info.tt_upload_status = '疑似走私车'
+        car_user_info.save!
+        return
+      end
+
+      #还有用手机号，QQ号做名字的。
+      if /[0-9]+/.match car_user_info.name
+        car_user_info.tt_upload_status = '疑似走私车'
+        car_user_info.save!
+        return
+      end
+
+      #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
+      tmp_chexing = car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
+      tmp_note = car_user_info.note.gsub(/\s|\.|~|-|_/, '')
+      if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
+        car_user_info.tt_upload_status = '疑似走私车'
+        car_user_info.save!
+        return
+      end
+
+      if ['金杯', '五菱汽车', "五菱", '五十铃', '昌河', '奥迪', '宝马', '宾利', '奔驰', '路虎', '保时捷', '江淮', '东风小康', '依维柯', '长安商用', '福田', '东风风神', '东风', '一汽'].include? yc_car_user_info.brand
+        car_user_info.tt_upload_status = '品牌外车，暂排除'
+        car_user_info.save!
+        return
+      end
+
+      ['QQ', '求购', '牌照', '批发', '私家一手车', '一手私家车', '身份', '身 份', '身~份', '个体经商', '过不了户', '帮朋友', '外地',
+       '贷款', '女士一手', '包过户', '原漆', '原版漆', '当天开走', '美女', '车辆说明', '车辆概述', '选购', '一个螺丝',
+       '精品', '驾驶证', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
+       '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信', 'wx', '微 信',
+       '威信', '加微', '评估师点评', '车主自述', "溦 信", '电话量大', '包你满意', '刷卡', '办理', '纯正', '抢购', '心动', '本车', '送豪礼'].each do |kw|
+        if car_user_info.note.include? kw
+          car_user_info.tt_upload_status = '疑似车商'
+          car_user_info.save!
+          return
+        end
+      end
+    end
+
     #晚上带[]的，全部认为是车商
     # 白天带[]的，留给4A
     # if not car_user_info.che_xing.blank?
@@ -99,13 +156,6 @@ module UploadTianTian
     car_user_info.save!
 
 
-    #其它渠道再往胡磊那里传
-    # qudao = "23-23-1"
-    # if car_user_info.site_name == 'baixing' or car_user_info.site_name == 'zuoxi'
-    #   qudao = "23-23-4"
-    # elsif car_user_info.site_name == '58'
-    #   qudao = "23-23-5"
-    # end
 
     if is_select
 
@@ -127,56 +177,6 @@ module UploadTianTian
         return
       end
 
-      #如果符合郭正的城市条件，优先给郭正渠道
-      # if UploadTianTian::CITY2.include? car_user_info.city_chinese
-      #   UploadTianTian.tt_pai_v2_0_guozheng car_user_info
-      #   return
-      # end
-
-      #如果符合郭正的城市条件，优先给郭正渠道
-      # if UploadTianTian::CITY.include? car_user_info.city_chinese and car_user_info.site_name == '58'
-      #   UploadTianTian.tt_pai_v2_0_guozheng car_user_info
-      #   return
-      # end
-
-
-      # if not UploadTianTian::CITY1.include? car_user_info.city_chinese
-      #   return
-      # end
-
-      # domain = "sandbox.openapi.ttpai.cn"
-      # s = "256a18c39baf24f120a191c9454e4f03"
-      # domain = "openapi.ttpai.cn"
-      # s = "1579089ae5ae1d9b559f3082c4e44148"
-      # user_info = car_user_info
-      # params = []
-      # user_info = user_info.reload
-      # return if car_user_info.tt_upload_status != 'weishangchuan'
-      # params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
-      # params << [:mobile, UploadTianTian.escape2(user_info.phone)]
-      # params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
-      # params << [:brand, UploadTianTian.escape2(user_info.brand)]
-      # pp "渠道为#{qudao}"
-      # params << [:source, UploadTianTian.escape2(qudao)]
-      # params << [:appkey, UploadTianTian.escape2('shiaicaigou')]
-      #
-      # params << [:sign, UploadTianTian.escape2(Digest::MD5.hexdigest("#{user_info.phone}#{s}"))]
-      #
-      # response = RestClient.get "#{domain}/api/v1.1/ttp_sign_up?#{URI.encode_www_form params}"
-      # pp response
-      # response = JSON.parse response.body
-      # error = response["error"]
-      # message = response["message"]
-      # id = begin
-      #   response["result"]["id"] rescue -1
-      # end
-      # user_info.tt_source = qudao
-      # user_info.tt_created_day = user_info.created_at.chinese_format_day
-      # user_info.tt_id = id if not id.blank?
-      # user_info.tt_code = error
-      # user_info.tt_message = message
-      # user_info.tt_upload_status = '已上传'
-      # user_info.save!
     end
   end
 

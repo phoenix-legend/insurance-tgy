@@ -200,6 +200,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       end
     end
 
+    # 用手机号归属地的时候，最好先去表中查询一下，看看有没有外地号
     # yc_car_user_info = yc_car_user_info.car_user_info
     # yc_car_user_info.phone_city = UserSystem::YoucheCarUserInfo.get_city_name(yc_car_user_info.phone)
     # yc_car_user_info.save!
