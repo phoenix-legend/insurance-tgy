@@ -50,6 +50,7 @@ module UploadTianTian
     end
 
     if car_user_info.city_chinese == '北京'
+      return if car_user_info.name.blank?
       ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ'].each do |kw|
         if car_user_info.name.include? kw or car_user_info.che_xing.include? kw
           car_user_info.tt_upload_status = '疑似走私车或车商'
@@ -93,17 +94,20 @@ module UploadTianTian
         return
       end
 
-      ['QQ', '求购', '牌照', '批发', '私家一手车', '一手私家车', '身份', '身 份', '身~份', '个体经商', '过不了户', '帮朋友', '外地',
-       '贷款', '女士一手', '包过户', '原漆', '原版漆', '当天开走', '美女', '车辆说明', '车辆概述', '选购', '一个螺丝',
-       '精品', '驾驶证', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
-       '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信', 'wx', '微 信',
-       '威信', '加微', '评估师点评', '车主自述', "溦 信", '电话量大', '包你满意', '刷卡', '办理', '纯正', '抢购', '心动', '本车', '送豪礼'].each do |kw|
-        if car_user_info.note.include? kw
-          car_user_info.tt_upload_status = '疑似车商'
-          car_user_info.save!
-          return
+      unless car_user_info.note.blank?
+        ['QQ', '求购', '牌照', '批发', '私家一手车', '一手私家车', '身份', '身 份', '身~份', '个体经商', '过不了户', '帮朋友', '外地',
+         '贷款', '女士一手', '包过户', '原漆', '原版漆', '当天开走', '美女', '车辆说明', '车辆概述', '选购', '一个螺丝',
+         '精品', '驾驶证', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
+         '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信', 'wx', '微 信',
+         '威信', '加微', '评估师点评', '车主自述', "溦 信", '电话量大', '包你满意', '刷卡', '办理', '纯正', '抢购', '心动', '本车', '送豪礼'].each do |kw|
+          if car_user_info.note.include? kw
+            car_user_info.tt_upload_status = '疑似车商'
+            car_user_info.save!
+            return
+          end
         end
       end
+
     end
 
     #晚上带[]的，全部认为是车商
@@ -628,6 +632,12 @@ module UploadTianTian
     end
 
     UserSystem::CarUserInfo.where(city_chinese: '上海').where("id > 1148459 and tt_yaoyue = '成功'")
+  end
+
+  def XX
+    UserSystem::CarUserInfo.where("city_chinese = '北京' and id > 1925462").each do |car_user_info|
+      UploadTianTian.upload_one_tt car_user_info
+    end
   end
 
 
