@@ -17,6 +17,17 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   ]
 
 
+  def self.get_key_numbers city_name
+    if ['太原','郑州','长沙','运城','晋中','临汾','大同'].include? city_name
+      return '13cfe7dfa0dd2fe5e2a7d5fb467099a6','4SA-1012'   # Eric 秘钥
+    elsif [].include? city_name
+      return '79ac5efb00e55d1025a1850ac6cf653a','4SA-1013'   # Eric 秘钥二
+    else
+      return "098f6bcd4621d373cade4e832627b4f6", "4SA-1011"  # 第一次KK的密钥
+    end
+  end
+
+
   # 上传到埃侍
   # UserSystem::AishiCarUserInfo.upload_to_aishi ycui
   def self.upload_to_aishi ycui
@@ -86,8 +97,10 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     # key = "5c7a8fe495a35f24f6674ac80c9843d8" #正式
     # number = "4SA-1001" #正式
 
-    key = "098f6bcd4621d373cade4e832627b4f6" #正式
-    number = "4SA-1011" #正式
+    # key = "098f6bcd4621d373cade4e832627b4f6" #正式
+    # number = "4SA-1011" #正式
+
+    key, number = UserSystem::AishiCarUserInfo.get_key_numbers ycui.city_chinese
 
     require 'digest/md5'
 
@@ -165,12 +178,12 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   end
 
   def self.query_chengjiao
-    key = "098f6bcd4621d373cade4e832627b4f6" #正式
-    number = "4SA-1011" #正式
+    # key = "098f6bcd4621d373cade4e832627b4f6" #正式
+    # number = "4SA-1011" #正式
     UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 10000").find_each do |cui|
       next if cui.aishi_yaoyue == '失败'
-      response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/querysignupone', {number: number,
-                                                                                                      sign: Digest::MD5.hexdigest("#{number}#{key}"),
+      response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/querysignupone', {number: cui.numbers,
+                                                                                                      sign: Digest::MD5.hexdigest("#{cui.numbers}#{cui.k}"),
                                                                                                       id: cui.aishi_id
                                                                                                    }
       response = JSON.parse response.body
@@ -191,8 +204,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       next if cui.aishi_yaoyue == '失败'
       response = nil
       begin
-        response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/querysignupone', {number: number,
-                                                                                                        sign: Digest::MD5.hexdigest("#{number}#{key}"),
+        response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/querysignupone', {number: cui.numbers,
+                                                                                                        sign: Digest::MD5.hexdigest("#{cui.numbers}#{cui.k}"),
                                                                                                         id: cui.aishi_id
                                                                                                      }
       rescue
