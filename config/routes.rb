@@ -100,6 +100,7 @@ Rails.application.routes.draw do
       resources :chaxun do
         collection do
           get :car_user_info
+          get :test_car_user_info
           get :no_weizhang
           post :result
 

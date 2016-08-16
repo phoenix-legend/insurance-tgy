@@ -4,6 +4,10 @@ class Wz::Weizhang::ChaxunController < Wz::WangzhanController
 
   end
 
+  def test_car_user_info
+
+  end
+
   def citycar_user_info
 
   end

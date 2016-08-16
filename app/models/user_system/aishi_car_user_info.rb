@@ -14,12 +14,12 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
           "潍坊", "无锡", "常州", "徐州", "南通", "扬州", "济南", "上海", "杭州", "成都",
           "石家庄", "唐山", "太原", "宝鸡", "洛阳", "南阳", "新乡", "湘潭", "株洲", "常德",
           "岳阳", "沈阳", "大连", "营口", "泉州", "长春", "哈尔滨", "大庆", "合肥", "芜湖", "南宁", "南昌",
-          "运城","晋中","临汾","大同","遵义"
+          "运城","晋中","临汾","大同","遵义","兰州","呼和浩特"
   ]
 
 
   def self.get_key_numbers city_name
-    if ['太原','郑州','长沙','运城','晋中','临汾','大同'].include? city_name
+    if ['太原','郑州','长沙','运城','晋中','临汾','大同',"兰州","呼和浩特"].include? city_name
       return '13cfe7dfa0dd2fe5e2a7d5fb467099a6','4SA-1012'   # Eric 秘钥
     elsif [].include? city_name
       return '79ac5efb00e55d1025a1850ac6cf653a','4SA-1013'   # Eric 秘钥二
