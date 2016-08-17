@@ -211,7 +211,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
         yc_car_user_info.save!
 
         #超出配额给兰昱。
-        (MailSend.send_content 'lanyufan629@163.com', '379576382@qq.com', "#{yc_car_user_info.name} 有车要卖",
+        xemail  = if rand(10)<6 then 'lanyufan629@163.com' else '315840799@qq.com' end
+        (MailSend.send_content xemail, '379576382@qq.com', "#{yc_car_user_info.name} 有车要卖",
                                "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.car_user_info.che_xing}").deliver
         return
       end
@@ -222,7 +223,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       #成都暂时给兰昱。
       yc_car_user_info.youyiche_upload_status = '成都车-给兰昱'
       yc_car_user_info.save!
-      (MailSend.send_content 'lanyufan629@163.com', '379576382@qq.com', "#{yc_car_user_info.name} 有车要卖",
+      xemail  = if rand(10)<6 then 'lanyufan629@163.com' else '315840799@qq.com' end
+      (MailSend.send_content xemail, '379576382@qq.com', "#{yc_car_user_info.name} 有车要卖",
                              "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.car_user_info.che_xing}").deliver
       return
     end
