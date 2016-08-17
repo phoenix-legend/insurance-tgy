@@ -58,10 +58,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "350100" => "福州", "350200" => "厦门",
             "350500" => "泉州","220100" => "长春", "230100" => "哈尔滨", "230600" => "大庆", "340100" => "合肥", "340200" => "芜湖", "450100" => "南宁", "360100" => "南昌",
             "140200"=>"大同", "140700"=>"晋中", "141000"=>"临汾", "140800"=>"运城",
-            # "441300" => "惠州", "441200" => "肇庆", "442000" => "中山", "330400" => "嘉兴", "520100" => "贵阳",
+            "441300" => "惠州", "441200" => "肇庆", "442000" => "中山", "330400" => "嘉兴", "520100" => "贵阳",
             "520300" => "遵义",
         #, "650100" => "乌鲁木齐",
-            # "510600" => "德阳", "510700" => "绵阳", "420600" => "襄阳", "420500" => "宜昌"
+            # "510600" => "德阳",
+            "510700" => "绵阳", "420600" => "襄阳", "420500" => "宜昌"
         }
     end
   end
@@ -94,11 +95,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
 
-      # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
-      # "guiyang" => "贵阳",
+      "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴", "guiyang" => "贵阳",
       "zunyi" => "遵义", #
-      "huhehaote" => "呼和浩特"#, "wulumuqi" => "乌鲁木齐", "deyang" => "德阳",
-      # "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌"
+      "huhehaote" => "呼和浩特",# "wulumuqi" => "乌鲁木齐", "deyang" => "德阳",
+      "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌"
   }
 
   IMPRTANT_CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "佛山", "东莞", "重庆", "无锡","北京","太原","郑州"]
@@ -161,10 +161,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
             "datong"=>"大同", "jinzhong"=>"晋中", "linfen"=>"临汾", "yuncheng"=>"运城",
 
-            # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
-            # "guiyang" => "贵阳",
+            "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴", "guiyang" => "贵阳",
             "zunyi" => "遵义", #"huhehaote" => "呼和浩特", "wulumuqi" => "乌鲁木齐", "deyang" => "德阳",
-            # "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌"
+            "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌"
 
         }
     end
@@ -188,12 +187,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "mianyang" => "绵阳", "xiangyang" => "襄阳", "yichang" => "宜昌","bj" => "北京",
       "datong"=>"大同", "jinzhong"=>"晋中", "linfen"=>"临汾", "yuncheng"=>"运城","lz"=>"兰州",
   }
-  #赶集天天拍
-  # GANJI_CITY = {
-  #     "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉",
-  #     "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", ,
-  #     'foshan' => '佛山'
-  # }
+
 
 
   def self.get_ganji_sub_cities sub_party = 0
@@ -223,11 +217,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口",
 
             "quanzhou" => "泉州","cc" => "长春", "hrb" => "哈尔滨", "daqing" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
-            # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
-            # "gy" => "贵阳",
+            "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴", "gy" => "贵阳",
             "zunyi" => "遵义",
             "nmg" => "呼和浩特",#, "xj" => "乌鲁木齐", "deyang" => "德阳","wx" => "无锡",
-            # "mianyang" => "绵阳", "xiangyang" => "襄阳", "yichang" => "宜昌",
+            "mianyang" => "绵阳", "xiangyang" => "襄阳", "yichang" => "宜昌",
             "datong"=>"大同", "jinzhong"=>"晋中", "linfen"=>"临汾", "yuncheng"=>"运城",
         }
     end
@@ -284,11 +277,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
             "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yy" => "岳阳", "sy" => "沈阳", "dl" => "大连", "yk" => "营口",
             "qz" => "泉州","cc" => "长春", "hrb" => "哈尔滨", "dq" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
-            # "huizhou" => "惠州", "zq" => "肇庆", "zs" => "中山", "jx" => "嘉兴",
-            # "gy" => "贵阳",
+            "huizhou" => "惠州", "zq" => "肇庆", "zs" => "中山", "jx" => "嘉兴", "gy" => "贵阳",
             "zunyi" => "遵义",
             "hu" => "呼和浩特", #"xj" => "乌鲁木齐", "deyang" => "德阳",
-            # "mianyang" => "绵阳", "xf" => "襄阳", "yc" => "宜昌",
+            "mianyang" => "绵阳", "xf" => "襄阳", "yc" => "宜昌",
             "fz" => "福州","xm" => "厦门",
             "dt"=>"大同", "jz"=>"晋中", "linfen"=>"临汾", "yuncheng"=>"运城",
         }
