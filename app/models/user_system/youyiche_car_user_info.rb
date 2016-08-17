@@ -213,8 +213,9 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
         #超出配额给兰昱。
 
+
         (MailSend.send_content xemail, '379576382@qq.com', "#{yc_car_user_info.name} 有车要卖",
-                               "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.car_user_info.che_xing}").deliver
+                               "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.brand}").deliver
         return
       end
 
@@ -227,7 +228,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       yc_car_user_info.save!
 
       (MailSend.send_content xemail, '379576382@qq.com', "#{yc_car_user_info.name} 有车要卖",
-                             "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.car_user_info.che_xing}").deliver
+                             "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.brand}").deliver
       return
     end
 
