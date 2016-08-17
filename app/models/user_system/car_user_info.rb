@@ -1238,7 +1238,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     return unless Time.now.min > 30
     qudao = '2-306-314'
     s = '261d684f6b7d9af996a5691e7106075e'
-    cuis = UserSystem::CarUserInfo.where("tt_source = '#{qudao}' and tt_id is not null")
+    cuis = UserSystem::CarUserInfo.where("tt_source = '#{qudao}' and tt_id is not null and id > 2001992")
     cuis.find_each do |cui|
       # cui = UserSystem::CarUserInfo.find 1181521
       next if cui.tt_chengjiao == '已提交GZ'
@@ -1279,7 +1279,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     number = "4SA-1011" #正式
     url = 'http://api.formal.4scenter.com/index.php?r=apicar/save_car'
 
-    cuis = UserSystem::CarUserInfo.where("tt_source in ('23-23-5','23-23-4','23-23-1') and tt_id is not null and created_at > '2016-06-01'")
+    cuis = UserSystem::CarUserInfo.where("tt_source in ('23-23-5','23-23-4','23-23-1') and tt_id is not null and created_at > '2016-08-10'")
     cuis.find_each do |cui|
 
       next if cui.tt_chengjiao == '已提交GZ'

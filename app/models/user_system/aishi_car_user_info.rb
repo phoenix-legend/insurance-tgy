@@ -15,12 +15,12 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
           "石家庄", "唐山", "太原", "宝鸡", "洛阳", "南阳", "新乡", "湘潭", "株洲", "常德",
           "岳阳", "沈阳", "大连", "营口", "泉州", "长春", "哈尔滨", "大庆", "合肥", "芜湖", "南宁", "南昌",
           "运城","晋中","临汾","大同","遵义","兰州","呼和浩特",
-          # "贵阳","惠州","嘉兴","中山","肇庆","绵阳","襄阳","宜昌"
+          "贵阳","惠州","嘉兴","中山","肇庆","绵阳","襄阳","宜昌"
   ]
 
 
   def self.get_key_numbers city_name
-    if ['太原','郑州','长沙','运城','晋中','临汾','大同',"兰州","呼和浩特","大连"].include? city_name
+    if ['太原','郑州','长沙','运城','晋中','临汾','大同',"兰州","呼和浩特","大连","贵阳","惠州","嘉兴","中山","肇庆","绵阳","襄阳","宜昌"].include? city_name
       return '13cfe7dfa0dd2fe5e2a7d5fb467099a6','4SA-1012'   # Eric 秘钥
     elsif [].include? city_name
       return '79ac5efb00e55d1025a1850ac6cf653a','4SA-1013'   # Eric 秘钥二
@@ -182,7 +182,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   def self.query_chengjiao
     # key = "098f6bcd4621d373cade4e832627b4f6" #正式
     # number = "4SA-1011" #正式
-    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 10000").find_each do |cui|
+    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 100000").find_each do |cui|
       next if cui.aishi_yaoyue == '失败'
       response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/querysignupone', {number: cui.numbers,
                                                                                                       sign: Digest::MD5.hexdigest("#{cui.numbers}#{cui.k}"),

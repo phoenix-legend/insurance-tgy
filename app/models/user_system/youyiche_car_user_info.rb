@@ -3,7 +3,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   # CITY = ['上海', '杭州', '苏州', '成都']
   # CITY = ['上海', '杭州', '苏州']
-  CITY = ['上海',  '苏州']
+  CITY = ['上海', '苏州', '成都']
   # CITY = ['上海']
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -209,9 +209,20 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       if yijingyoudeliang > liang
         yc_car_user_info.youyiche_upload_status = '超出配额'
         yc_car_user_info.save!
+
+        #超出配额给兰昱。
+        (MailSend.send_content 'lanyufan629@163.com', '379576382@qq.com', "#{yc_car_user_info.name} 有车要卖",
+                               "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.car_user_info.che_xing}").deliver
         return
       end
 
+    end
+
+    if city_chinese == '成都'
+      #成都暂时给兰昱。
+      (MailSend.send_content 'lanyufan629@163.com', '379576382@qq.com', "#{yc_car_user_info.name} 有车要卖",
+                             "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.car_user_info.che_xing}").deliver
+      return
     end
 
     params = {
@@ -270,7 +281,12 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       kk += 1
       query_q_ids["#{kk}"] = cui.youyiche_id
       # 想加速查询，把10改为更大的数字
-      if kk == (if sanbaideliang < 10 then 300 else 10 end)
+      if kk == (
+      if sanbaideliang < 10 then
+        300
+      else
+        10
+      end)
         pp 'XXX'
         kk = 0
         sanbaideliang += 1
@@ -337,7 +353,12 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       query_q_ids["#{kk}"] = cui.youyiche_id
 
       # 想加速查询，把5改为更大的数字
-      if kk == (if sanbaideliang < 6 then 300 else 10 end)
+      if kk == (
+      if sanbaideliang < 6 then
+        300
+      else
+        10
+      end)
         kk = 0
         sanbaideliang += 1
         response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", query_q_ids.to_json, :content_type => 'application/json'
@@ -354,10 +375,9 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
         end
 
 
-
-          query_q_ids = {}
-        end
+        query_q_ids = {}
       end
+    end
 
 
     #
