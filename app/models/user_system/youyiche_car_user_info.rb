@@ -207,7 +207,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       liang = peiliang[yc_car_user_info.city_chinese]
       yijingyoudeliang = UserSystem::YouyicheCarUserInfo.where("city_chinese = ? and created_day = ? and youyiche_id is not null", yc_car_user_info.city_chinese, Time.now.chinese_format_day).count
       if yijingyoudeliang > liang
-        yc_car_user_info.youyiche_upload_status = '超出配额'
+        yc_car_user_info.youyiche_upload_status = '超出配额-给兰昱'
         yc_car_user_info.save!
 
         #超出配额给兰昱。
@@ -218,7 +218,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
     end
 
-    if city_chinese == '成都'
+    if yc_car_user_info.city_chinese == '成都'
       #成都暂时给兰昱。
       (MailSend.send_content 'lanyufan629@163.com', '379576382@qq.com', "#{yc_car_user_info.name} 有车要卖",
                              "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.car_user_info.che_xing}").deliver
