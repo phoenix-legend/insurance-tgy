@@ -1,10 +1,10 @@
 class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
 
-  # CITY = ["深圳", "广州", "南京", "成都", "东莞", "重庆", "苏州", "上海", "郑州", "威海", "石家庄", "武汉", "沈阳", "西安", "青岛", "长沙", "哈尔滨", "长春", "杭州", "潍坊", "厦门", "佛山", "大连", "合肥", "天津", "绵阳", "徐州", "无锡", "湘潭", "株洲", "宜昌", "肇庆", "洛阳 ", "济南 ", "贵阳 ", "南宁 ", "福州", "咸阳", "南阳", "惠州", "太原", "常德", "泉州", "襄阳", "宝鸡", "中山", "德阳", "常州", "南通", "扬州", "新乡", "烟台", "嘉兴", "大庆", "营口", "呼和浩特", "芜湖", "唐山", "遵义", "乌鲁木齐", "南昌", "岳阳"]
+  CITY = ["深圳", "广州", "南京", "成都", "东莞", "重庆", "苏州", "上海", "郑州", "威海", "石家庄", "武汉", "沈阳", "西安", "青岛", "长沙", "哈尔滨", "长春", "杭州", "潍坊", "厦门", "佛山", "大连", "合肥", "天津", "绵阳", "徐州", "无锡", "湘潭", "株洲", "宜昌", "肇庆", "洛阳 ", "济南 ", "贵阳 ", "南宁 ", "福州", "咸阳", "南阳", "惠州", "太原", "常德", "泉州", "襄阳", "宝鸡", "中山", "德阳", "常州", "南通", "扬州", "新乡", "烟台", "嘉兴", "大庆", "营口", "呼和浩特", "芜湖", "唐山", "遵义", "乌鲁木齐", "南昌", "岳阳"]
 
   # 先放两个城市试试
-  CITY = ["深圳", "广州"]
+  # CITY = ["深圳", "广州"]
 
 
   # car_user_info = UserSystem::CarUserInfo.find 1823159
@@ -30,7 +30,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
                                                       site_name: car_user_info.site_name,
                                                       created_day: car_user_info.tt_created_day
       rescue Exception => e
-        pp '更新又一车异常'
+        pp '更新 人人车异常'
         pp e
         pp $@
       end
@@ -245,8 +245,8 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
 
 
     token = 'J8UkigIBffy0xZen'
-    domain = '123.56.187.192:2872'
-    # domain = '60.205.108.209'
+    # domain = '123.56.187.192:2872'
+    domain = '60.205.108.209'
     require 'digest/md5'
     time = Time.now.to_i
     pp time

@@ -220,6 +220,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
     if yc_car_user_info.city_chinese == '成都'
       #成都暂时给兰昱。
+      yc_car_user_info.youyiche_upload_status = '超出配额-给兰昱'
+      yc_car_user_info.save!
       (MailSend.send_content 'lanyufan629@163.com', '379576382@qq.com', "#{yc_car_user_info.name} 有车要卖",
                              "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.car_user_info.che_xing}").deliver
       return
