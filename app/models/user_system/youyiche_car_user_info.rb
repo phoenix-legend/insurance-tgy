@@ -208,7 +208,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       yijingyoudeliang = UserSystem::YouyicheCarUserInfo.where("city_chinese = ? and created_day = ? and youyiche_id is not null", yc_car_user_info.city_chinese, Time.now.chinese_format_day).count
       if yijingyoudeliang > liang
         xemail  = if rand(10)<5 then 'lanyufan629@163.com' else '315840799@qq.com' end
-        yc_car_user_info.youyiche_upload_status = "超出配额-给兰-#{xemail}"
+        yc_car_user_info.youyiche_upload_status = "。超出配额-给兰-#{xemail}"
         yc_car_user_info.save!
 
         #超出配额给兰昱。
@@ -224,7 +224,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     if yc_car_user_info.city_chinese == '成都'
       #成都暂时给兰昱。
       xemail  = if rand(10)<6 then 'lanyufan629@163.com' else '315840799@qq.com' end
-      yc_car_user_info.youyiche_upload_status = "超出配额-给兰-#{xemail}"
+      yc_car_user_info.youyiche_upload_status = "成都车-给兰-#{xemail}"
       yc_car_user_info.save!
 
       (MailSend.send_content xemail, '379576382@qq.com', "#{yc_car_user_info.name} 有车要卖",

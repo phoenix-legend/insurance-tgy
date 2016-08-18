@@ -26,6 +26,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
               "650100" => "乌鲁木齐", "510600" => "德阳", "510700" => "绵阳", "420600" => "襄阳", "420500" => "宜昌",
               "140200"=>"大同", "140700"=>"晋中", "141000"=>"临汾", "140800"=>"运城",
               "620100"=>"兰州",
+              "371600"=>"滨州", "371400"=>"德州", "370500"=>"东营", "370800"=>"济宁", "371300"=>"临沂", "371100"=>"日照", "370900"=>"泰安", "370400"=>"枣庄", "330200"=>"宁波", "321300"=>"宿迁", "321200"=>"泰州", "320900"=>"盐城", "321100"=>"镇江"
 
 
   }
@@ -665,7 +666,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # provinces = { "320000" => "江苏"}
     # provinces = {"130000" => "河北"}
     # provinces = {"440000" => "广东", "330000" => "浙江", "520000" => "贵州", "150000" => "内蒙古", "650000" => "新疆", "510000" => "四川", "420000" => "湖北"}
-    provinces = {"620000" => "甘肃","150000" => "内蒙古"}
+    provinces = {"370000" => "山东", "330000" => "浙江", "320000" => "江苏"}
     city_hash = {}
     provinces.each_pair do |key, v|
       city_content = RestClient.get("http://m.che168.com/Handler/GetArea.ashx?pid=#{key}")
@@ -676,11 +677,18 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       city_content["item"].each do |city|
         areaid, areaname = city["id"], city["value"]
 
-        if ['兰州', '呼和浩特'].include? areaname
+        if ["XX"].include? areaname
           city_hash[areaid] = areaname
         end
       end
     end
+
+    pp city_hash
+    #获取淘车网的城市简称
+    response = RestClient.get 'http://huhehaote.taoche.com/'
+    response = response.body
+    response.gsub!('ritcit_tit clearfix','shengfenxxxxx')
+    content = Nokogiri::HTML(response)
   end
 
 
