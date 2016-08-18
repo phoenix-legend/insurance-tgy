@@ -39,23 +39,23 @@ module Insurance
 
 
     config.action_mailer.delivery_method = :smtp
-    config.action_mailer.smtp_settings = {
-        :address              => "smtp.qq.com",
-        :port                 => 587,
-        :user_name            => '379576382@qq.com',
-        :password             => 'lydbbnrplcknbhjd',
-        :authentication       => 'plain',
-        :enable_starttls_auto => true
-    }
-
-    # config.action_mailer.delivery_method = :smtp
     # config.action_mailer.smtp_settings = {
-    #     :address              => "smtp.exmail.qq.com",
+    #     :address              => "smtp.qq.com",
     #     :port                 => 587,
-    #     :user_name            => 'noreply@ikidstv.com',
-    #     :password             => 'ikidstv2014',
+    #     :user_name            => '379576382@qq.com',
+    #     :password             => 'lydbbnrplcknbhjd',
     #     :authentication       => 'plain',
     #     :enable_starttls_auto => true
     # }
+
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+        :address              => "smtp.exmail.qq.com",
+        :port                 => 587,
+        :user_name            => 'xiaoqi.liu@uguoyuan.cn',
+        :password             => 'xomRFnXN8vJwkVDkm7',
+        :authentication       => 'plain',
+        :enable_starttls_auto => true
+    }
   end
 end
