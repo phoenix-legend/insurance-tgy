@@ -210,7 +210,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   def self.batch_query_aishi
     key = "098f6bcd4621d373cade4e832627b4f6" #正式
     number = "4SA-1011" #正式
-    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 50000 and (aishi_yaoyue is null or aishi_yaoyue = '未知')").find_each do |cui|
+    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 300000 and (aishi_yaoyue is null or aishi_yaoyue = '未知')").find_each do |cui|
       next if cui.aishi_yaoyue == '成功'
       next if cui.aishi_yaoyue == '失败'
       response = nil
