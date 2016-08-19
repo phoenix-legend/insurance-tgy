@@ -27,8 +27,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
               "140200"=>"大同", "140700"=>"晋中", "141000"=>"临汾", "140800"=>"运城",
               "620100"=>"兰州",
               "371600"=>"滨州", "371400"=>"德州", "370500"=>"东营", "370800"=>"济宁", "371300"=>"临沂", "371100"=>"日照", "370900"=>"泰安", "370400"=>"枣庄", "330200"=>"宁波", "321300"=>"宿迁", "321200"=>"泰州", "320900"=>"盐城", "321100"=>"镇江"
-
-
   }
 
 
@@ -46,14 +44,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       else
         {
-              "610100" => "西安",
+            "610100" => "西安",
             "370200" => "青岛", "371000" => '威海', "370600" => '烟台', "370700" => '潍坊',
             "320400" => '常州', "320300" => '徐州', "320600" => '南通', "321000" => '扬州', "370100" => "济南",
-
             "130100" => "石家庄", "130200" => "唐山", "610300" => "宝鸡",
             "410300" => "洛阳", "411300" => "南阳", "410700" => "新乡",
-
-            #  "610400" => "咸阳",,
             "430300" => "湘潭", "430200" => "株洲", "430700" => "常德", "430600" => "岳阳",
             "210100" => "沈阳", "210200" => "大连", "210800" => "营口",
             "350100" => "福州", "350200" => "厦门",
@@ -61,8 +56,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "140200"=>"大同", "140700"=>"晋中", "141000"=>"临汾", "140800"=>"运城",
             "441300" => "惠州", "441200" => "肇庆", "442000" => "中山", "330400" => "嘉兴", "520100" => "贵阳",
             "520300" => "遵义",
-        #, "650100" => "乌鲁木齐",
-            # "510600" => "德阳",
             "510700" => "绵阳", "420600" => "襄阳", "420500" => "宜昌"
         }
     end
@@ -79,23 +72,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "zhengzhou" => '郑州', 'changsha' => '长沙', 'xian' => '西安',
       "qingdao" => "青岛", "weihai" => '威海', "yantai" => '烟台', "weifang" => '潍坊', "wuxi" => "无锡",
       "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jinan" => "济南",
-
       "shijiazhuang" => "石家庄", "tangshan" => "唐山", "taiyuan" => "太原", "baoji" => "宝鸡","foshan" => '佛山',"beijing" => "北京",
       "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
-
-
-
       "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
       "shenyang" => "沈阳", "dalian" => "大连", "yingkou" => "营口",
-
-
       "quanzhou" => "泉州","changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥", "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
-      #  'zhenjiang' => '镇江',# "xianyang" => "咸阳",,
       "fuzhou" => "福州", "xiamen" => "厦门",
       "datong"=>"大同", "jinzhong"=>"晋中", "linfen"=>"临汾", "yuncheng"=>"运城",
-
-
-
       "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴", "guiyang" => "贵阳",
       "zunyi" => "遵义", #
       "huhehaote" => "呼和浩特",# "wulumuqi" => "乌鲁木齐", "deyang" => "德阳",
@@ -146,25 +129,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             'xian' => '西安',
             "qingdao" => "青岛", "weihai" => '威海', "yantai" => '烟台', "weifang" => '潍坊',
             "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jinan" => "济南",
-
             "shijiazhuang" => "石家庄", "tangshan" => "唐山", "baoji" => "宝鸡",
             "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
-
-            #  'zhenjiang' => '镇江',
-            #  "shijiazhuang" => "石家庄", "tangshan" => "唐山",
-            # "xianyang" => "咸阳", ,
-
             "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
             "shenyang" => "沈阳", "dalian" => "大连", "yingkou" => "营口",
-
-
             "quanzhou" => "泉州","changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥",
             "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
             "datong"=>"大同", "jinzhong"=>"晋中", "linfen"=>"临汾", "yuncheng"=>"运城",
-
             "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴", "guiyang" => "贵阳",
-            "zunyi" => "遵义", #"huhehaote" => "呼和浩特", "wulumuqi" => "乌鲁木齐", "deyang" => "德阳",
-            "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌"
+            "zunyi" => "遵义", "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌"
 
         }
     end
@@ -203,24 +176,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       else
         {
-
             'xa' => '西安',
             'qd' => '青岛', "wei" => '威海', "yantai" => '烟台', "weifang" => '潍坊', "wx" => "无锡",
             "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jn" => "济南",
-
             "sjz" => "石家庄", "tangshan" => "唐山","baoji" => "宝鸡",
             "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
-
-            # 人人车把以下放开
-            #  'zhenjiang' => '镇江'  , "xianyang" => "咸阳",
-
             "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
             "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口",
-
             "quanzhou" => "泉州","cc" => "长春", "hrb" => "哈尔滨", "daqing" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
             "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴", "gy" => "贵阳",
-            "zunyi" => "遵义",
-            "nmg" => "呼和浩特",#, "xj" => "乌鲁木齐", "deyang" => "德阳","wx" => "无锡",
+            "zunyi" => "遵义", "nmg" => "呼和浩特",
             "mianyang" => "绵阳", "xiangyang" => "襄阳", "yichang" => "宜昌",
             "datong"=>"大同", "jinzhong"=>"晋中", "linfen"=>"临汾", "yuncheng"=>"运城",
         }
@@ -228,8 +193,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-  #需要人人车的时候，用这个
-  # WUBA_CITY_RENREN_ALL = {
+
   WUBA_CITY = {
       "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉", "fs" => '佛山',
       "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆",
@@ -240,18 +204,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "sy" => "沈阳", "dl" => "大连", "yk" => "营口","bj" => "北京",
       "fz" => "福州", "xm" => "厦门", "qz" => "泉州",
       "cc" => "长春", "hrb" => "哈尔滨", "dq" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
-
       "huizhou" => "惠州", "zq" => "肇庆", "zs" => "中山", "jx" => "嘉兴",
       "gy" => "贵阳", "zunyi" => "遵义", "hu" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
       "mianyang" => "绵阳", "xf" => "襄阳", "yc" => "宜昌",
       "dt"=>"大同", "jz"=>"晋中", "linfen"=>"临汾", "yuncheng"=>"运城","lz"=>"兰州",
   }
 
-  #不需要人人车的时候，用这个
-  # WUBA_CITY = {
-  #     "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉", "fs" => '佛山',
-  #     "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "wx" => "无锡", "cq" => "重庆"
-  # }
 
   def self.get_58_sub_cities sub_party = 0
     case sub_party
@@ -265,22 +223,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       else
         {
-              'xa' => '西安',
+            'xa' => '西安',
             'qd' => '青岛', "weihai" => '威海', "yt" => '烟台', "wf" => '潍坊',"wx" => "无锡",
             "cz" => "常州", 'xz' => '徐州', "nt" => '南通', "yz" => '扬州', "jn" => "济南",
-
             "sjz" => "石家庄", "ts" => "唐山",  "baoji" => "宝鸡",
             "luoyang" => "洛阳", "ny" => "南阳", "xx" => "新乡",
-
-
-            # 需要人人车的时候，把重庆注释掉，把以下放开就好了，
-            # 'zj' => '镇江', "xianyang" => "咸阳",
-
             "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yy" => "岳阳", "sy" => "沈阳", "dl" => "大连", "yk" => "营口",
             "qz" => "泉州","cc" => "长春", "hrb" => "哈尔滨", "dq" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
             "huizhou" => "惠州", "zq" => "肇庆", "zs" => "中山", "jx" => "嘉兴", "gy" => "贵阳",
-            "zunyi" => "遵义",
-            "hu" => "呼和浩特", #"xj" => "乌鲁木齐", "deyang" => "德阳",
+            "zunyi" => "遵义", "hu" => "呼和浩特",
             "mianyang" => "绵阳", "xf" => "襄阳", "yc" => "宜昌",
             "fz" => "福州","xm" => "厦门",
             "dt"=>"大同", "jz"=>"晋中", "linfen"=>"临汾", "yuncheng"=>"运城",
@@ -657,12 +608,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   #获取20个城市的代码及名称, 针对che168网站
   # UserSystem::CarUserInfo.get_city_code_name
   def self.get_city_code_name
-    provinces = {"440000" => "广东", "370000" => "山东", "330000" => "浙江", "320000" => "江苏", "130000" => "河北",
-                 "410000" => "河南", "110000" => "北京", "210000" => "辽宁", "310000" => "上海", "500000" => "重庆",
-                 "350000" => "福建", "450000" => "广西", "520000" => "贵州",  "460000" => "海南","620000" => "甘肃",
-                 "420000" => "湖北", "430000" => "湖南", "230000" => "黑龙江", "360000" => "江西", "220000" => "吉林",
-                 "150000" => "内蒙古", "640000" => "宁夏", "630000" => "青海", "610000" => "陕西", "510000" => "四川",
-                 "140000" => "山西", "120000" => "天津", "650000" => "新疆", "540000" => "西藏", "530000" => "云南", "34000" => "安徽"}
+    need_cities = ["滨州", "德州", "东营", "济宁", "临沂", "日照", "泰安", "枣庄", "宁波", "宿迁", "泰州", "盐城", "镇江"]
+    # provinces = {"440000" => "广东", "370000" => "山东", "330000" => "浙江", "320000" => "江苏", "130000" => "河北",
+    #              "410000" => "河南", "110000" => "北京", "210000" => "辽宁", "310000" => "上海", "500000" => "重庆",
+    #              "350000" => "福建", "450000" => "广西", "520000" => "贵州",  "460000" => "海南","620000" => "甘肃",
+    #              "420000" => "湖北", "430000" => "湖南", "230000" => "黑龙江", "360000" => "江西", "220000" => "吉林",
+    #              "150000" => "内蒙古", "640000" => "宁夏", "630000" => "青海", "610000" => "陕西", "510000" => "四川",
+    #              "140000" => "山西", "120000" => "天津", "650000" => "新疆", "540000" => "西藏", "530000" => "云南", "34000" => "安徽"}
     # provinces = { "320000" => "江苏"}
     # provinces = {"130000" => "河北"}
     # provinces = {"440000" => "广东", "330000" => "浙江", "520000" => "贵州", "150000" => "内蒙古", "650000" => "新疆", "510000" => "四川", "420000" => "湖北"}
@@ -670,25 +622,121 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     city_hash = {}
     provinces.each_pair do |key, v|
       city_content = RestClient.get("http://m.che168.com/Handler/GetArea.ashx?pid=#{key}")
-      pp 'xxx'
+      # pp 'xxx'
       city_content = JSON.parse city_content.body
-      pp city_content
+      # pp city_content
       #
       city_content["item"].each do |city|
         areaid, areaname = city["id"], city["value"]
 
-        if ["XX"].include? areaname
+        if need_cities.include? areaname
           city_hash[areaid] = areaname
         end
       end
     end
 
+    pp "che168获取城市列表为："
     pp city_hash
-    #获取淘车网的城市简称
-    response = RestClient.get 'http://huhehaote.taoche.com/'
-    response = response.body
-    response.gsub!('ritcit_tit clearfix','shengfenxxxxx')
-    content = Nokogiri::HTML(response)
+
+    #淘车网的城市简称
+    taoche_cities = {"北京"=>"beijing", "上海"=>"shanghai", "广州"=>"guangzhou", "深圳"=>"shenzhen", "成都"=>"chengdu", "沈阳"=>"shenyang", "宁波"=>"ningbo", "天津"=>"tianjin", "唐山"=>"tangshan", "济南"=>"jinan", "青岛"=>"qingdao", "西安"=>"xian", "临沂"=>"linyi", "太原"=>"taiyuan", "大连"=>"dalian", "杭州"=>"hangzhou", "苏州"=>"suzhou", "南京"=>"nanjing", "无锡"=>"wuxi", "合肥"=>"hefei", "东莞"=>"dongguan", "佛山"=>"foshan", "武汉"=>"wuhan", "昆明"=>"kunming", "长沙"=>"changsha", "郑州"=>"zhengzhou", "福州"=>"fuzhou", "重庆"=>"chongqing", "石家庄"=>"shijiazhuang", "邢台"=>"xingtai", "秦皇岛"=>"qinhuangdao", "廊坊"=>"langfang", "邯郸"=>"handan", "衡水"=>"hengshui", "沧州"=>"cangzhou", "保定"=>"baoding", "张家口"=>"zhangjiakou", "承德"=>"chengde", "呼和浩特"=>"huhehaote", "包头"=>"baotou", "赤峰"=>"chifeng", "通辽"=>"tongliao", "乌海"=>"wuhai", "鄂尔多斯"=>"eerduosi", "巴彦淖尔"=>"bayannaoer", "乌兰察布"=>"wulanchabu", "锡林郭勒"=>"xilinguolemeng", "呼伦贝尔"=>"hulunbeier", "兴安盟"=>"xinganmeng", "阿拉善盟"=>"alashanmeng", "大同"=>"datong", "晋城"=>"jincheng", "临汾"=>"linfen", "长治"=>"changzhi", "运城"=>"yuncheng", "忻州"=>"xinzhou", "朔州"=>"shuozhou", "吕梁"=>"lvliang", "晋中"=>"jinzhong", "阳泉"=>"yangquan", "安庆"=>"anqing", "蚌埠"=>"bengbu", "巢湖"=>"chaohu", "池州"=>"chizhou", "阜阳"=>"fuyang", "淮南"=>"huainan", "六安"=>"luan", "马鞍山"=>"maanshan", "铜陵"=>"tongling", "芜湖"=>"wuhu", "宣城"=>"xuancheng", "滁州"=>"chuzhou", "宿州"=>"sz", "亳州"=>"bozhou", "淮北"=>"huaibei", "黄山"=>"huangshan", "厦门"=>"xiamen", "龙岩"=>"longyan", "漳州"=>"zhangzhou", "莆田"=>"putian", "泉州"=>"quanzhou", "南平"=>"nanping", "宁德"=>"ningde", "三明"=>"sanming", "常州"=>"changzhou", "淮安"=>"huaian", "连云港"=>"lianyungang", "南通"=>"nantong", "盐城"=>"yancheng", "扬州"=>"yangzhou", "镇江"=>"zhenjiang", "泰州"=>"taizhou", "徐州"=>"xuzhou", "宿迁"=>"suqian", "德州"=>"dezhou", "烟台"=>"yantai", "威海"=>"weihai", "潍坊"=>"weifang", "泰安"=>"taian", "枣庄"=>"zaozhuang", "淄博"=>"zibo", "东营"=>"dongying", "菏泽"=>"heze", "滨州"=>"binzhou", "聊城"=>"liaocheng", "济宁"=>"jining", "日照"=>"rizhao", "莱芜"=>"laiwu", "温州"=>"wenzhou", "嘉兴"=>"jiaxing", "金华"=>"jinhua", "丽水"=>"lishui", "湖州"=>"huzhou", "衢州"=>"quzhou", "台州"=>"tz", "绍兴"=>"shaoxing", "舟山"=>"zhoushan", "洛阳"=>"luoyang", "周口"=>"zhoukou", "信阳"=>"xinyang", "新乡"=>"xinxiang", "商丘"=>"shangqiu", "三门峡"=>"sanmenxia", "濮阳"=>"puyang", "南阳"=>"nanyang", "漯河"=>"luohe", "焦作"=>"jiaozuo", "开封"=>"kaifeng", "安阳"=>"anyang", "鹤壁"=>"hebi", "平顶山"=>"pingdingshan", "驻马店"=>"zhumadian", "许昌"=>"xuchang", "河南直辖"=>"henanzhixiaxian", "十堰"=>"shiyan", "襄阳"=>"xiangfan", "随州"=>"suizhou", "宜昌"=>"yichang", "黄石"=>"huangshi", "荆门"=>"jingmen", "荆州"=>"jingzhou", "鄂州"=>"ezhou", "咸宁"=>"xianning", "孝感"=>"xiaogan", "黄冈"=>"huanggang", "恩施"=>"enshi", "湖北直辖"=>"hubeizhixiaxian", "郴州"=>"chenzhou", "常德"=>"changde", "衡阳"=>"hengyang", "怀化"=>"huaihua", "娄底"=>"loudi", "株洲"=>"zhuzhou", "岳阳"=>"yueyang", "湘潭"=>"xiangtan", "邵阳"=>"shaoyang", "永州"=>"yongzhou", "益阳"=>"yiyang", "张家界"=>"zhangjiajie", "湘西"=>"xiangxi", "珠海"=>"zhuhai", "中山"=>"zhongshan", "汕头"=>"shantou", "韶关"=>"shaoguan", "肇庆"=>"zhaoqing", "茂名"=>"maoming", "惠州"=>"huizhou", "江门"=>"jiangmen", "清远"=>"qingyuan", "潮州"=>"chaozhou", "湛江"=>"zhanjiang", "梅州"=>"meizhou", "揭阳"=>"jieyang", "云浮"=>"yunfu", "阳江"=>"yangjiang", "河源"=>"heyuan", "汕尾"=>"shanwei", "南宁"=>"nanning", "柳州"=>"liuzhou", "桂林"=>"guilin", "北海"=>"beihai", "百色"=>"baise", "贺州"=>"hezhou", "河池"=>"hechi", "贵港"=>"guigang", "玉林"=>"yulin", "钦州"=>"qinzhou", "梧州"=>"wuzhou", "防城港"=>"fangchenggang", "来宾"=>"laibin", "崇左"=>"chongzuo", "海口"=>"haikou", "三亚"=>"sanya", "琼北"=>"qiongbeidiqu", "琼南"=>"qiongnandiqu", "南昌"=>"nanchang", "上饶"=>"shangrao", "萍乡"=>"pingxiang", "新余"=>"xinyu", "宜春"=>"yichun", "九江"=>"jiujiang", "赣州"=>"ganzhou", "吉安"=>"jian", "景德镇"=>"jingdezhen", "抚州"=>"jxfz", "鹰潭"=>"yingtan", "咸阳"=>"xianyang", "渭南"=>"weinan", "榆林"=>"yl", "宝鸡"=>"baoji", "汉中"=>"hanzhong", "延安"=>"yanan", "铜川"=>"tongchuan", "商洛"=>"shangluo", "安康"=>"ankang", "兰州"=>"lanzhou", "定西"=>"dingxi", "平凉"=>"pingliang", " 酒泉"=>"jiuquan", "庆阳"=>"qingyang", "白银"=>"baiyin", "张掖"=>"zhangye", "武威"=>"wuwei", "天水"=>"tianshui", "嘉峪关"=>"jiayuguan", "金昌"=>"jinchang", "临夏"=>"linxia", "陇南"=>"longnan", "甘南"=>"gannan", "银川"=>"yinchuan", "中卫"=>"zhongwei", "吴忠"=>"wuzhong", "固原"=>"guyuan", "石嘴山"=>"shizuishan", "西宁"=>"xining", "海北"=>"haibei", "黄南"=>"huangnan", "果洛"=>"guoluo", "玉树"=>"yushu", "海西"=>"haixi", "海东"=>"haidongdiqu", "海南"=>"hainanzangzuzizhizho", "乌鲁木齐"=>"wulumuqi", "克拉玛依"=>"kelamayi", "巴音郭楞"=>"bazhou", "伊犁"=>"yili", "喀什"=>"kashidiqu", "阿克苏"=>"akesudiqu", "和田"=>"hetiandiqu", "塔城"=>"tachengdiqu", "吐鲁番"=>"tulufandiqu", "哈密"=>"hamidiqu", "阿勒泰"=>"aletaidiqu", "新疆克州"=>"xinjiangkezhou", "昌吉"=>"changji", "新疆直辖"=>"xinjiangzhixiaxian", "贵阳"=>"guiyang", "遵义"=>"zunyi", "安顺"=>"anshun", "六盘水"=>"liupanshui", "铜仁"=>"tongrendiqu", "黔东南"=>"qiandongnan", "黔南"=>"qiannan", "毕节"=>"bijiediqu", "黔西南"=>"qianxinan", "绵阳"=>"mianyang", "遂宁"=>"suining", "攀枝花"=>"panzhihua", "宜宾"=>"yibin", "自贡"=>"zigong", "资阳"=>"ziyang", "德阳"=>"deyang", "乐山"=>"leshan", "南充"=>"nanchong", "眉山"=>"meishan", "巴中"=>"bazhong", "泸州"=>"luzhou", "内江"=>"neijiang", "达州"=>"dazhou", "雅安"=>"yaan", "广元"=>"guangyuan", "广安"=>"guangan", "阿坝"=>"aba", "甘孜"=>"ganzi", "凉山"=>"liangshan", "曲靖"=>"qujing", "保山"=>"baoshan", "西双版纳"=>"xishuangbanna", "红河"=>"honghe", "大理"=>"dali", "玉溪"=>"yuxi", "临沧"=>"lincang", "文山"=>"wenshan", "昭通"=>"zhaotong", "丽江"=>"lijiang", "德宏"=>"dehong", "怒江"=>"nujiang", "迪庆"=>"diqing", "普洱"=>"puer", "楚雄"=>"chuxiong", "拉萨"=>"lasa", "日喀则"=>"rikazediqu", "山南"=>"shannan", "哈尔滨"=>"haerbin", "大庆"=>"daqing", "齐齐哈尔"=>"qiqihaer", "佳木斯"=>"jiamusi", "牡丹江"=>"mudanjiang", "鸡西"=>"jixi", "七台河"=>"qitaihe", "伊春"=>"yc", "黑河"=>"heihe", "双鸭山"=>"shuangyashan", "绥化"=>"suihua", "大兴安岭"=>"daxinganlingdiqu", "长春"=>"changchun", "吉林"=>"jilin", "通化"=>"tonghua", "辽源"=>"liaoyuan", "松原"=>"songyuan", "延边"=>"yanbian", "四平"=>"siping", "白山"=>"baishan", "白城"=>"baicheng", "丹东"=>"dandong", "抚顺"=>"fushun", "阜新"=>"fuxin", "葫芦岛"=>"huludao", "朝阳"=>"chaoyang", "本溪"=>"benxi", "鞍山"=>"anshan", "锦州"=>"jinzhou", "辽阳"=>"liaoyang", "营口"=>"yingkou", "盘锦"=>"panjin", "铁岭"=>"tieling"}
+    need_taoche_cities = {}
+    need_cities.each do |cityname|
+      need_taoche_cities[taoche_cities[cityname]] = cityname
+    end
+    pp "淘车获取城市列表为："
+    pp need_taoche_cities
+
+
+    #百姓网的城市简称
+    baixing_cities = {"上海"=>"shanghai", "北京"=>"beijing", "广州"=>"guangzhou", "深圳"=>"shenzhen", "成都"=>"chengdu", "杭州"=>"hangzhou", "南京"=>"nanjing", "天津"=>"tianjin", "武汉"=>"wuhan", "重庆"=>"chongqing", "邯郸"=>"handan", "石家庄"=>"shijiazhuang", "保定"=>"baoding", "张家口"=>"zhangjiakou", "承德"=>"chengde", "唐山"=>"tangshan", "廊坊"=>"langfang", "沧州"=>"cangzhou", "衡水"=>"hengshui", "邢台"=>"xingtai", "秦皇岛"=>"qinhuangdao", "朔州"=>"shuozhou", "忻州"=>"xinzhou", "太原"=>"taiyuan", "大同"=>"datong", "阳泉"=>"yangquan", "晋中"=>"jinzhong", "长治"=>"changzhi", "晋城"=>"jincheng", "临汾"=>"linfen", "吕梁"=>"lvliang", "运城"=>"yuncheng", "呼伦贝尔"=>"hulunbeier", "呼和浩特"=>"huhehaote", "包头"=>"baotou", "乌海"=>"wuhai", "乌兰察布"=>"wulanchabu", "通辽"=>"tongliao", "赤峰"=>"chifeng", "鄂尔多斯"=>"eerduosi", "巴彦淖尔"=>"bayannaoer", "锡林郭勒"=>"xilinguole", "兴安"=>"xingan", "阿拉善"=>"alashan", "沈阳"=>"shenyang", "铁岭"=>"tieling", "大连"=>"dalian", "鞍山"=>"anshan", "抚顺"=>"fushun", "本溪"=>"benxi", "丹东"=>"dandong", "锦州"=>"jinzhou", "营口"=>"yingkou", "阜新"=>"fuxin", "辽阳"=>"liaoyang", "朝阳"=>"chaoyang", "盘锦"=>"panjin", "葫芦岛"=>"huludao", "长春"=>"changchun", "吉林"=>"jilin", "延边"=>"yanbian", "四平"=>"siping", "通化"=>"tonghua", "白城"=>"baicheng", "辽源"=>"liaoyuan", "松原"=>"songyuan", "白山"=>"baishan", "鸡西"=>"jixi", "七台河"=>"qitaihe", "鹤岗"=>"hegang", "双鸭山"=>"shuangyashan", "伊春"=>"yichun", "哈尔滨"=>"haerbin", "齐齐哈尔"=>"qiqihaer", "牡丹江"=>"mudanjiang", "佳木斯"=>"jiamusi", "黑河"=>"heihe", "绥化"=>"suihua", "大庆"=>"daqing", "大兴安岭"=>"daxinganling", "无锡"=>"wuxi", "镇江"=>"zhenjiang", "苏州"=>"suzhou", "南通"=>"nantong", "扬州"=>"yangzhou", "盐城"=>"yancheng", "徐州"=>"xuzhou", "淮安"=>"huaian", "连云港"=>"lianyungang", "常州"=>"changzhou", "泰州"=>"tz", "宿迁"=>"suqian", "昆山"=>"kunshan", "常熟"=>"changshu", "张家港"=>"zhangjiagang", "太仓"=>"taicang", "衢州"=>"quzhou", "湖州"=>"huzhou", "嘉兴"=>"jiaxing", "宁波"=>"ningbo", "绍兴"=>"shaoxing", "台州"=>"taizhou", "温州"=>"wenzhou", "丽水"=>"lishui", "金华"=>"jinhua", "舟山"=>"zhoushan", "滁州"=>"chuzhou", "阜阳"=>"fuyang", "合肥"=>"hefei", "蚌埠"=>"bengbu", "芜湖"=>"wuhu", "淮南"=>"huainan", "马鞍山"=>"maanshan", "安庆"=>"anqing", "宿州"=>"sz", "亳州"=>"bozhou", "黄山"=>"huangshan", "淮北"=>"huaibei", "铜陵"=>"tongling", "宣城"=>"xuancheng", "六安"=>"luan", "巢湖"=>"chaohu", "池州"=>"chizhou", "泰安"=>"taian", "菏泽"=>"heze", "济南"=>"jinan", "青岛"=>"qingdao", "淄博"=>"zibo", "德州"=>"dezhou", "烟台"=>"yantai", "潍坊"=>"weifang", "济宁"=>"jining", "威海"=>"weihai", "临沂"=>"linyi", "滨州"=>"binzhou", "东营"=>"dongying", "枣庄"=>"zaozhuang", "日照"=>"rizhao", "莱芜"=>"laiwu", "聊城"=>"liaocheng", "商丘"=>"shangqiu", "郑州"=>"zhengzhou", "安阳"=>"anyang", "新乡"=>"xinxiang", "许昌"=>"xuchang", "平顶山"=>"pingdingshan", "信阳"=>"xinyang", "南阳"=>"nanyang", "开封"=>"kaifeng", "洛阳"=>"luoyang", "焦作"=>"jiaozuo", "鹤壁"=>"hebi", "濮阳"=>"puyang", "周口"=>"zhoukou", "漯河"=>"luohe", "驻马店"=>"zhumadian", "三门峡"=>"sanmenxia", "济源"=>"jiyuan", "岳阳"=>"yueyang", "长沙"=>"changsha", "湘潭"=>"xiangtan", "株洲"=>"zhuzhou", "衡阳"=>"hengyang", "郴州"=>"chenzhou", "常德"=>"changde", "益阳"=>"yiyang", "娄底"=>"loudi", "邵阳"=>"shaoyang", "湘西"=>"xiangxi", "张家界"=>"zhangjiajie", "怀化"=>"huaihua", "永州"=>"yongzhou", "仙桃"=>"xiantao", "天门"=>"tianmen", "潜江"=>"qianjiang", "襄阳"=>"xiangfan", "鄂州"=>"ezhou", "孝感"=>"xiaogan", "黄冈"=>"huanggang", "黄石"=>"huangshi", "咸宁"=>"xianning", "荆州"=>"jingzhou", "宜昌"=>"yichang", "十堰"=>"shiyan", "随州"=>"suizhou", "荆门"=>"jingmen", "恩施"=>"enshi", "神农架"=>"shennongjia", "鹰潭"=>"yingtan", "新余"=>"xinyu", "南昌"=>"nanchang", "九江"=>"jiujiang", "上饶"=>"shangrao", "抚州"=>"fz", "宜春"=>"yc", "吉安"=>"jian", "赣州"=>"ganzhou", "景德镇"=>"jingdezhen", "萍乡"=>"pingxiang", "福州"=>"fuzhou", "厦门"=>"xiamen", "宁德"=>"ningde", "莆田"=>"putian", "泉州"=>"quanzhou", "漳州"=>"zhangzhou", "龙岩"=>"longyan", "三明"=>"sanming", "南平"=>"nanping", "汕尾"=>"shanwei", "阳江"=>"yangjiang", "揭阳"=>"jieyang", "茂名"=>"maoming", "江门"=>"jiangmen", "韶关"=>"shaoguan", "惠州"=>"huizhou", "梅州"=>"meizhou", "汕头"=>"shantou", "珠海"=>"zhuhai", "佛山"=>"foshan", "肇庆"=>"zhaoqing", "湛江"=>"zhanjiang", "中山"=>"zhongshan", "河源"=>"heyuan", "清远"=>"qingyuan", "云浮"=>"yunfu", "潮州"=>"chaozhou", "东莞"=>"dongguan", "来宾"=>"laibin", "贺州"=>"hezhou", "崇左"=>"chongzuo", "玉林"=>"yl", "防城港"=>"fangchenggang", "南宁"=>"nanning", "柳州"=>"liuzhou", "桂林"=>"guilin", "梧州"=>"wuzhou", "贵港"=>"guigang", "百色"=>"bose", "钦州"=>"qinzhou", "河池"=>"hechi", "北海"=>"beihai", "三亚"=>"sanya", "儋州"=>"danzhou", "东方"=>"dongfang", "文昌"=>"wenchang", "琼海"=>"qionghai", "五指山"=>"wuzhishan", "万宁"=>"wanning", "海口"=>"haikou", "白沙"=>"baisha", "三沙"=>"sansha", "保亭"=>"baoting", "昌江"=>"changjiang", "澄迈"=>"chengmai", "定安"=>"dingan", "乐东"=>"ledong", "临高"=>"lingao", "陵水"=>"lingshui", "琼中"=>"qiongzhong", "屯昌"=>"tunchang", "眉山"=>"meishan", "资阳"=>"ziyang", "攀枝花"=>"panzhihua", "自贡"=>"zigong", "绵阳"=>"mianyang", "南充"=>"nanchong", "达州"=>"dazhou", "遂宁"=>"suining", "广安"=>"guangan", "巴中"=>"bazhong", "泸州"=>"luzhou", "宜宾"=>"yibin", "内江"=>"neijiang", "乐山"=>"leshan", "凉山"=>"liangshan", "雅安"=>"yaan", "甘孜"=>"ganzi", "阿坝"=>"aba", "德阳"=>"deyang", "广元"=>"guangyuan", "贵阳"=>"guiyang", "遵义"=>"zunyi", "安顺"=>"anshun", "黔南"=>"qiannan", "黔东南"=>"qiandongnan", "铜仁"=>"tongren", "毕节"=>"bijie", "六盘水"=>"liupanshui", "黔西南"=>"qianxinan", "西双版纳"=>"xishuangbanna", "德宏"=>"dehong", "昭通"=>"zhaotong", "昆明"=>"kunming", "大理"=>"dali", "红河"=>"honghe", "曲靖"=>"qujing", "保山"=>"baoshan", "文山"=>"wenshan", "玉溪"=>"yuxi", "楚雄"=>"chuxiong", "普洱"=>"puer", "临沧"=>"lincang", "怒江"=>"nujiang", "迪庆"=>"diqing", "丽江"=>"lijiang", "拉萨"=>"lasa", "日喀则"=>"rikaze", "山南"=>"shannan", "林芝"=>"linzhi", "昌都"=>"changdu", "那曲"=>"naqu", "阿里"=>"ali", "西安"=>"xian", "咸阳"=>"xianyang", "延安"=>"yanan", "榆林"=>"yulin", "渭南"=>"weinan", "商洛"=>"shangluo", "安康"=>"ankang", "汉中"=>"hanzhong", "宝鸡"=>"baoji", "铜川"=>"tongchuan", "陇南"=>"longnan", "武威"=>"wuwei", "嘉峪关"=>"jiayuguan", "临夏"=>"linxia", "兰州"=>"lanzhou", "定西"=>"dingxi", "平凉"=>"pingliang", "庆阳"=>"qingyang", "金昌"=>"jinchang", "张掖"=>"zhangye", "酒泉"=>"jiuquan", "天水"=>"tianshui", "甘南"=>"gannan", "白银"=>"baiyin", "海北"=>"haibei", "西宁"=>"xining", "海东"=>"haidong", "黄南"=>"huangnan", "果洛"=>"guoluo", "玉树"=>"yushu", "海西"=>"haixi", "海南"=>"hainan", "中卫"=>"zhongwei", "银川"=>"yinchuan", "石嘴山"=>"shizuishan", "吴忠"=>"wuzhong", "固原"=>"guyuan", "伊犁"=>"yili", "塔城"=>"tacheng", "哈密"=>"hami", "和田"=>"hetian", "阿勒泰"=>"aletai", "博尔塔拉"=>"boertala", "克拉玛依"=>"kelamayi", "乌鲁木齐"=>"wulumuqi", "石河子"=>"shihezi", "昌吉"=>"changji", "吐鲁番"=>"tulufan", "巴音郭楞"=>"bayinguoleng", "阿克苏"=>"akesu", "喀什"=>"kashi", "克孜勒苏"=>"kezilesu", "阿拉尔"=>"alaer", "五家渠"=>"wujiaqu", "图木舒克"=>"tumushuke"}
+    need_baixing_cities = {}
+    need_cities.each do |cityname|
+      need_baixing_cities[baixing_cities[cityname]] = cityname
+    end
+    pp "百姓获取城市列表为："
+    pp need_baixing_cities
+
+
+    #赶集网的城市简称
+    ganji_cities = {"北京"=>"bj", "上海"=>"sh", "广州"=>"gz", "深圳"=>"sz", "武汉"=>"wh", "南京"=>"nj", "天津"=>"tj", "杭州"=>"hz", "鞍山"=>"anshan", "安阳"=>"anyang", "安庆"=>"anqing", "安康"=>"ankang", "阿克苏"=>"akesu", "安顺"=>"anshun", "阿勒泰"=>"aletai", "阿拉善"=>"alashan", "阿坝"=>"aba", "阿里"=>"ali", "阿拉尔"=>"alaer", "澳门"=>"aomen", "保定"=>"baoding", "滨州"=>"binzhou", "包头"=>"baotou", "宝鸡"=>"baoji", "本溪"=>"benxi", "蚌埠"=>"bengbu", "北海"=>"beihai", "巴彦淖尔"=>"bayannaoer", "白城"=>"baicheng", "白山"=>"baishan", "亳州"=>"bozhou", "巴中"=>"bazhong", "白银"=>"baiyin", "百色"=>"baise", "毕节"=>"bijie", "巴音郭楞"=>"bayinguoleng", "保山"=>"baoshan", "博尔塔拉"=>"boertala", "成都"=>"cd", "重庆"=>"cq", "长沙"=>"cs", "长春"=>"cc", "常州"=>"changzhou", "沧州"=>"cangzhou", "赤峰"=>"chifeng", "承德"=>"chengde", "常德"=>"changde", "长治"=>"changzhi", "郴州"=>"chenzhou", "滁州"=>"chuzhou", "巢湖"=>"chaohu", "潮州"=>"chaozhou", "昌吉"=>"changji", "池州"=>"chizhou", "楚雄"=>"chuxiong", "崇左"=>"chongzuo", "昌都"=>"changdu", "朝阳"=>"chaoyang", "常熟"=>"changshu", "慈溪"=>"cixi", "大连"=>"dl", "东莞"=>"dg", "德州"=>"dezhou", "东营"=>"dongying", "大庆"=>"daqing", "大同"=>"datong", "丹东"=>"dandong", "儋州"=>"danzhou", "德阳"=>"deyang", "达州"=>"dazhou", "大理"=>"dali", "大兴安岭"=>"daxinganling", "定西"=>"dingxi", "德宏"=>"dehong", "迪庆"=>"diqing", "钓鱼岛"=>"diaoyudao", "鄂尔多斯"=>"eerduosi", "恩施"=>"enshi", "鄂州"=>"ezhou", "福州"=>"fz", "佛山"=>"foshan", "抚顺"=>"fushun", "阜阳"=>"fuyang", "阜新"=>"fuxin", "抚州"=>"jxfuzhou", "防城港"=>"fangchenggang", "贵阳"=>"gy", "桂林"=>"gl", "赣州"=>"ganzhou", "广元"=>"guangyuan", "广安"=>"guangan", "贵港"=>"guigang", "固原"=>"guyuan", "甘南"=>"gannan", "甘孜"=>"ganzi", "果洛"=>"guoluo", "惠州"=>"huizhou", "哈尔滨"=>"hrb", "合肥"=>"hf", "呼和浩特"=>"nmg", "海口"=>"hn", "邯郸"=>"handan", "菏泽"=>"heze", "衡水"=>"hengshui", "淮安"=>"huaian", "衡阳"=>"hengyang", "葫芦岛"=>"huludao", "淮南"=>"huainan", "汉中"=>"hanzhong", "怀化"=>"huaihua", "淮北"=>"huaibei", "黄冈"=>"huanggang", "湖州"=>"huzhou", "黄石"=>"huangshi", "呼伦贝尔"=>"hulunbeier", "河源"=>"heyuan", "鹤壁"=>"hebi", "鹤岗"=>"hegang", "黄山"=>"huangshan", "红河"=>"honghe", "河池"=>"hechi", "哈密"=>"hami", "黑河"=>"heihe", "贺州"=>"hezhou", "海西"=>"haixi", "和田"=>"hetian", "海北"=>"haibei", "海东"=>"haidong", "黄南"=>"huangnan", "济南"=>"jn", "济宁"=>"jining", "吉林"=>"jilin", "锦州"=>"jinzhou", "金华"=>"jinhua", "嘉兴"=>"jiaxing", "江门"=>"jiangmen", "荆州"=>"jingzhou", "焦作"=>"jiaozuo", "晋中"=>"jinzhong", "佳木斯"=>"jiamusi", "九江"=>"jiujiang", "晋城"=>"jincheng", "荆门"=>"jingmen", "鸡西"=>"jixi", "吉安"=>"jian", "揭阳"=>"jieyang", "景德镇"=>"jingdezhen", "济源"=>"jiyuan", "酒泉"=>"jiuquan", "金昌"=>"jinchang", "嘉峪关"=>"jiayuguan", "胶州"=>"jiaozhou", "即墨"=>"jimo", "昆明"=>"km", "开封"=>"kaifeng", "喀什"=>"kashi", "克拉玛依"=>"kelamayi", "库尔勒"=>"kuerle", "克孜勒苏"=>"kezilesu", "昆山"=>"kunshan", "兰州"=>"lz", "拉萨"=>"xz", "廊坊"=>"langfang", "临沂"=>"linyi", "洛阳"=>"luoyang", "聊城"=>"liaocheng", "柳州"=>"liuzhou", "连云港"=>"lianyungang", "临汾"=>"linfen", "漯河"=>"luohe", "辽阳"=>"liaoyang", "乐山"=>"leshan", "泸州"=>"luzhou", "六安"=>"luan", "娄底"=>"loudi", "莱芜"=>"laiwu", "龙岩"=>"longyan", "吕梁"=>"lvliang", "丽水"=>"lishui", "凉山"=>"liangshan", "丽江"=>"lijiang", "六盘水"=>"liupanshui", "辽源"=>"liaoyuan", "来宾"=>"laibin", "临沧"=>"lincang", "陇南"=>"longnan", "临夏"=>"linxia", "林芝"=>"linzhi", "绵阳"=>"mianyang", "牡丹江"=>"mudanjiang", "茂名"=>"maoming", "梅州"=>"meizhou", "马鞍山"=>"maanshan", "眉山"=>"meishan", "宁波"=>"nb", "南宁"=>"nn", "南昌"=>"nc", "南通"=>"nantong", "南阳"=>"nanyang", "南充"=>"nanchong", "内江"=>"neijiang", "南平"=>"nanping", "宁德"=>"ningde", "怒江"=>"nujiang", "那曲"=>"naqu", "平顶山"=>"pingdingshan", "濮阳"=>"puyang", "盘锦"=>"panjin", "莆田"=>"putian", "攀枝花"=>"panzhihua", "萍乡"=>"pingxiang", "平凉"=>"pingliang", "普洱"=>"puer", "郫县"=>"pixian", "青岛"=>"qd", "琼海"=>"qh", "秦皇岛"=>"qinhuangdao", "泉州"=>"quanzhou", "齐齐哈尔"=>"qiqihaer", "清远"=>"qingyuan", "曲靖"=>"qujing", "衢州"=>"quzhou", "庆阳"=>"qingyang", "七台河"=>"qitaihe", "钦州"=>"qinzhou", "潜江"=>"qianjiang", "黔东南"=>"qiandongnan", "黔南"=>"qiannan", "黔西南"=>"qianxinan", "日照"=>"rizhao", "日喀则"=>"rikaze", "沈阳"=>"sy", "石家庄"=>"sjz", "苏州"=>"su", "汕头"=>"shantou", "商丘"=>"shangqiu", "三亚"=>"sanya", "宿迁"=>"suqian", "绍兴"=>"shaoxing", "十堰"=>"shiyan", "四平"=>"siping", "三门峡"=>"sanmenxia", "邵阳"=>"shaoyang", "上饶"=>"shangrao", "遂宁"=>"suining", "三明"=>"sanming", "绥化"=>"suihua", "石河子"=>"shihezi", "宿州"=>"ahsuzhou", "韶关"=>"shaoguan", "松原"=>"songyuan", "随州"=>"suizhou", "汕尾"=>"shanwei", "双鸭山"=>"shuangyashan", "朔州"=>"shuozhou", "石嘴山"=>"shizuishan", "商洛"=>"shangluo", "神农架"=>"shennongjia", "山南"=>"shannan", "双流"=>"shuangliu", "太原"=>"ty", "唐山"=>"tangshan", "泰安"=>"taian", "台州"=>"zjtaizhou", "泰州"=>"jstaizhou", "铁岭"=>"tieling", "通辽"=>"tongliao", "通化"=>"tonghua", "天水"=>"tianshui", "铜陵"=>"tongling", "铜川"=>"tongchuan", "铜仁"=>"tongren", "天门"=>"tianmen", "塔城"=>"tacheng", "吐鲁番"=>"tulufan", "图木舒克"=>"tumushuke", "无锡"=>"wx", "乌鲁木齐"=>"xj", "威海"=>"wei", "潍坊"=>"weifang", "温州"=>"wenzhou", "芜湖"=>"wuhu", "渭南"=>"weinan", "乌海"=>"wuhai", "梧州"=>"wuzhou", "乌兰察布"=>"wulanchabu", "武威"=>"wuwei", "文山"=>"wenshan", "吴忠"=>"wuzhong", "五家渠"=>"wujiaqu", "五指山"=>"wuzhishan", "西安"=>"xa", "厦门"=>"xm", "西宁"=>"xn", "徐州"=>"xuzhou", "咸阳"=>"xianyang", "邢台"=>"xingtai", "襄阳"=>"xiangyang", "新乡"=>"xinxiang", "湘潭"=>"xiangtan", "许昌"=>"xuchang", "信阳"=>"xinyang", "孝感"=>"xiaogan", "忻州"=>"xinzhou", "咸宁"=>"xianning", "新余"=>"xinyu", "宣城"=>"xuancheng", "仙桃"=>"xiantao", "锡林郭勒"=>"xilinguole", "湘西"=>"xiangxi", "兴安"=>"xingan", "西双版纳"=>"xishuangbanna", "香港"=>"xianggang", "银川"=>"yc", "宜昌"=>"yichang", "烟台"=>"yantai", "扬州"=>"yangzhou", "盐城"=>"yancheng", "营口"=>"yingkou", "岳阳"=>"yueyang", "运城"=>"yuncheng", "榆林"=>"sxyulin", "宜宾"=>"yibin", "阳泉"=>"yangquan", "延安"=>"yanan", "益阳"=>"yiyang", "永州"=>"yongzhou", "玉林"=>"gxyulin", "宜春"=>"jxyichun", "阳江"=>"yangjiang", "延边"=>"yanbian", "玉溪"=>"yuxi", "伊犁"=>"yili", "云浮"=>"yunfu", "伊春"=>"hljyichun", "雅安"=>"yaan", "鹰潭"=>"yingtan", "玉树"=>"yushu", "义乌"=>"yiwu", "郑州"=>"zz", "珠海"=>"zhuhai", "淄博"=>"zibo", "中山"=>"zhongshan", "枣庄"=>"zaozhuang", "张家口"=>"zhangjiakou", "株洲"=>"zhuzhou", "镇江"=>"zhenjiang", "周口"=>"zhoukou", "湛江"=>"zhanjiang", "驻马店"=>"zhumadian", "肇庆"=>"zhaoqing", "自贡"=>"zigong", "遵义"=>"zunyi", "漳州"=>"zhangzhou", "舟山"=>"zhoushan", "张掖"=>"zhangye", "资阳"=>"ziyang", "张家界"=>"zhangjiajie", "昭通"=>"zhaotong", "中卫"=>"zhongwei"}
+    need_ganji_cities = {}
+    need_cities.each do |cityname|
+      need_ganji_cities[ganji_cities[cityname]] = cityname
+    end
+    pp "赶集获取城市列表为："
+    pp need_ganji_cities
+
+    #58的城市简称
+    wuba_cities = {"北京"=>"bj", "上海"=>"sh", "广州"=>"gz", "深圳"=>"sz", "成都"=>"cd", "杭州"=>"hz", "南京"=>"nj", "天津"=>"tj", "武汉"=>"wh", "重庆"=>"cq", "青岛"=>"qd", "济南"=>"jn", "烟台"=>"yt", "潍坊"=>"wf", "临沂"=>"linyi", "淄博"=>"zb", "济宁"=>"jining", "泰安"=>"ta", "聊城"=>"lc", "威海"=>"weihai", "枣庄"=>"zaozhuang", "德州"=>"dz", "日照"=>"rizhao", "东营"=>"dy", "菏泽"=>"heze", "滨州"=>"bz", "莱芜"=>"lw", "章丘"=>"zhangqiu", "垦利"=>"kl", "诸城"=>"zc", "寿光"=>"shouguang", "苏州"=>"su", "无锡"=>"wx", "常州"=>"cz", "徐州"=>"xz", "南通"=>"nt", "扬州"=>"yz", "盐城"=>"yancheng", "淮安"=>"ha", "连云港"=>"lyg", "泰州"=>"taizhou", "宿迁"=>"suqian", "镇江"=>"zj", "沭阳"=>"shuyang", "大丰"=>"dafeng", "如皋"=>"rugao", "启东"=>"qidong", "溧阳"=>"liyang", "海门"=>"haimen", "东海"=>"donghai", "扬中"=>"yangzhong", "兴化"=>"xinghuashi", "新沂"=>"xinyishi", "泰兴"=>"taixing", "如东"=>"rudong", "邳州"=>"pizhou", "沛县"=>"xzpeixian", "靖江"=>"jingjiang", "建湖"=>"jianhu", "海安"=>"haian", "东台"=>"dongtai", "丹阳"=>"danyang", "宁波"=>"nb", "温州"=>"wz", "金华"=>"jh", "嘉兴"=>"jx", "台州"=>"tz", "绍兴"=>"sx", "湖州"=>"huzhou", "丽水"=>"lishui", "衢州"=>"quzhou", "舟山"=>"zhoushan", "乐清"=>"yueqingcity", "瑞安"=>"ruiancity", "义乌"=>"yiwu", "余姚"=>"yuyao", "诸暨"=>"zhuji", "象山"=>"xiangshanxian", "温岭"=>"wenling", "桐乡"=>"tongxiang", "慈溪"=>"cixi", "长兴"=>"changxing", "嘉善"=>"jiashanx", "海宁"=>"haining", "德清"=>"deqing", "合肥"=>"hf", "芜湖"=>"wuhu", "蚌埠"=>"bengbu", "阜阳"=>"fy", "淮南"=>"hn", "安庆"=>"anqing", "宿州"=>"suzhou", "六安"=>"la", "淮北"=>"huaibei", "滁州"=>"chuzhou", "马鞍山"=>"mas", "铜陵"=>"tongling", "宣城"=>"xuancheng", "亳州"=>"bozhou", "黄山"=>"huangshan", "池州"=>"chizhou", "巢湖"=>"ch", "和县"=>"hexian", "霍邱"=>"hq", "桐城"=>"tongcheng", "宁国"=>"ningguo", "天长"=>"tianchang", "东莞"=>"dg", "佛山"=>"fs", "中山"=>"zs", "珠海"=>"zh", "惠州"=>"huizhou", "江门"=>"jm", "汕头"=>"st", "湛江"=>"zhanjiang", "肇庆"=>"zq", "茂名"=>"mm", "揭阳"=>"jy", "梅州"=>"mz", "清远"=>"qingyuan", "阳江"=>"yj", "韶关"=>"sg", "河源"=>"heyuan", "云浮"=>"yf", "汕尾"=>"sw", "潮州"=>"chaozhou", "台山"=>"taishan", "阳春"=>"yangchun", "顺德"=>"sd", "惠东"=>"huidong", "博罗"=>"boluo", "福州"=>"fz", "厦门"=>"xm", "泉州"=>"qz", "莆田"=>"pt", "漳州"=>"zhangzhou", "宁德"=>"nd", "三明"=>"sm", "南平"=>"np", "龙岩"=>"ly", "武夷山"=>"wuyishan", "石狮"=>"shishi", "晋江"=>"jinjiangshi", "南安"=>"nananshi", "南宁"=>"nn", "柳州"=>"liuzhou", "桂林"=>"gl", "玉林"=>"yulin", "梧州"=>"wuzhou", "北海"=>"bh", "贵港"=>"gg", "钦州"=>"qinzhou", "百色"=>"baise", "河池"=>"hc", "来宾"=>"lb", "贺州"=>"hezhou", "防城港"=>"fcg", "崇左"=>"chongzuo", "海口"=>"haikou", "三亚"=>"sanya", "五指山"=>"wzs", "三沙"=>"sansha", "琼海"=>"qh", "文昌"=>"wenchang", "万宁"=>"wanning", "屯昌"=>"tunchang", "琼中"=>"qiongzhong", "陵水"=>"lingshui", "东方"=>"df", "定安"=>"da", "澄迈"=>"cm", "保亭"=>"baoting", "白沙"=>"baish", "儋州"=>"danzhou", "郑州"=>"zz", "洛阳"=>"luoyang", "新乡"=>"xx", "南阳"=>"ny", "许昌"=>"xc", "平顶山"=>"pds", "安阳"=>"ay", "焦作"=>"jiaozuo", "商丘"=>"sq", "开封"=>"kaifeng", "濮阳"=>"puyang", "周口"=>"zk", "信阳"=>"xy", "驻马店"=>"zmd", "漯河"=>"luohe", "三门峡"=>"smx", "鹤壁"=>"hb", "济源"=>"jiyuan", "明港"=>"mg", "鄢陵"=>"yanling", "禹州"=>"yuzhou", "长葛"=>"changge", "宜昌"=>"yc", "襄阳"=>"xf", "荆州"=>"jingzhou", "十堰"=>"shiyan", "黄石"=>"hshi", "孝感"=>"xiaogan", "黄冈"=>"hg", "恩施"=>"es", "荆门"=>"jingmen", "咸宁"=>"xianning", "鄂州"=>"ez", "随州"=>"suizhou", "潜江"=>"qianjiang", "天门"=>"tm", "仙桃"=>"xiantao", "神农架"=>"snj", "宜都"=>"yidou", "长沙"=>"cs", "株洲"=>"zhuzhou", "益阳"=>"yiyang", "常德"=>"changde", "衡阳"=>"hy", "湘潭"=>"xiangtan", "岳阳"=>"yy", "郴州"=>"chenzhou", "邵阳"=>"shaoyang", "怀化"=>"hh", "永州"=>"yongzhou", "娄底"=>"ld", "湘西"=>"xiangxi", "张家界"=>"zjj", "南昌"=>"nc", "赣州"=>"ganzhou", "九江"=>"jj", "宜春"=>"yichun", "吉安"=>"ja", "上饶"=>"sr", "萍乡"=>"px", "抚州"=>"fuzhou", "景德镇"=>"jdz", "新余"=>"xinyu", "鹰潭"=>"yingtan", "永新"=>"yxx", "沈阳"=>"sy", "大连"=>"dl", "鞍山"=>"as", "锦州"=>"jinzhou", "抚顺"=>"fushun", "营口"=>"yk", "盘锦"=>"pj", "朝阳"=>"cy", "丹东"=>"dandong", "辽阳"=>"liaoyang", "本溪"=>"benxi", "葫芦岛"=>"hld", "铁岭"=>"tl", "阜新"=>"fx", "庄河"=>"pld", "瓦房店"=>"wfd", "哈尔滨"=>"hrb", "大庆"=>"dq", "齐齐哈尔"=>"qqhr", "牡丹江"=>"mdj", "绥化"=>"suihua", "佳木斯"=>"jms", "鸡西"=>"jixi", "双鸭山"=>"sys", "鹤岗"=>"hegang", "黑河"=>"heihe", "伊春"=>"yich", "七台河"=>"qth", "大兴安岭"=>"dxal", "长春"=>"cc", "吉林"=>"jl", "四平"=>"sp", "延边"=>"yanbian", "松原"=>"songyuan", "白城"=>"bc", "通化"=>"th", "白山"=>"baishan", "辽源"=>"liaoyuan", "绵阳"=>"mianyang", "德阳"=>"deyang", "南充"=>"nanchong", "宜宾"=>"yb", "自贡"=>"zg", "乐山"=>"ls", "泸州"=>"luzhou", "达州"=>"dazhou", "内江"=>"scnj", "遂宁"=>"suining", "攀枝花"=>"panzhihua", "眉山"=>"ms", "广安"=>"ga", "资阳"=>"zy", "凉山"=>"liangshan", "广元"=>"guangyuan", "雅安"=>"ya", "巴中"=>"bazhong", "阿坝"=>"ab", "甘孜"=>"ganzi", "昆明"=>"km", "曲靖"=>"qj", "大理"=>"dali", "红河"=>"honghe", "玉溪"=>"yx", "丽江"=>"lj", "文山"=>"ws", "楚雄"=>"cx", "西双版纳"=>"bn", "昭通"=>"zt", "德宏"=>"dh", "普洱"=>"pe", "保山"=>"bs", "临沧"=>"lincang", "迪庆"=>"diqing", "怒江"=>"nujiang", "贵阳"=>"gy", "遵义"=>"zunyi", "黔东南"=>"qdn", "黔南"=>"qn", "六盘水"=>"lps", "毕节"=>"bijie", "铜仁"=>"tr", "安顺"=>"anshun", "黔西南"=>"qxn", "拉萨"=>"lasa", "日喀则"=>"rkz", "山南"=>"sn", "林芝"=>"linzhi", "昌都"=>"changdu", "那曲"=>"nq", "阿里"=>"al", "日土"=>"rituxian", "改则"=>"gaizexian", "石家庄"=>"sjz", "保定"=>"bd", "唐山"=>"ts", "廊坊"=>"lf", "邯郸"=>"hd", "秦皇岛"=>"qhd", "沧州"=>"cangzhou", "邢台"=>"xt", "衡水"=>"hs", "张家口"=>"zjk", "承德"=>"chengde", "定州"=>"dingzhou", "馆陶"=>"gt", "张北"=>"zhangbei", "赵县"=>"zx", "正定"=>"zd", "太原"=>"ty", "临汾"=>"linfen", "大同"=>"dt", "运城"=>"yuncheng", "晋中"=>"jz", "长治"=>"changzhi", "晋城"=>"jincheng", "阳泉"=>"yq", "吕梁"=>"lvliang", "忻州"=>"xinzhou", "朔州"=>"shuozhou", "临猗"=>"linyixian", "清徐"=>"qingxu", "呼和浩特"=>"hu", "包头"=>"bt", "赤峰"=>"chifeng", "鄂尔多斯"=>"erds", "通辽"=>"tongliao", "呼伦贝尔"=>"hlbe", "巴彦淖尔市"=>"bycem", "乌兰察布"=>"wlcb", "锡林郭勒"=>"xl", "兴安盟"=>"xam", "乌海"=>"wuhai", "阿拉善盟"=>"alsm", "海拉尔"=>"hlr", "西安"=>"xa", "咸阳"=>"xianyang", "宝鸡"=>"baoji", "渭南"=>"wn", "汉中"=>"hanzhong", "榆林"=>"yl", "延安"=>"yanan", "安康"=>"ankang", "商洛"=>"sl", "铜川"=>"tc", "乌鲁木齐"=>"xj", "昌吉"=>"changji", "巴音郭楞"=>"bygl", "伊犁"=>"yili", "阿克苏"=>"aks", "喀什"=>"ks", "哈密"=>"hami", "克拉玛依"=>"klmy", "博尔塔拉"=>"betl", "吐鲁番"=>"tlf", "和田"=>"ht", "石河子"=>"shz", "克孜勒苏"=>"kzls", "阿拉尔"=>"ale", "五家渠"=>"wjq", "图木舒克"=>"tmsk", "库尔勒"=>"kel", "阿勒泰"=>"alt", "塔城"=>"tac", "兰州"=>"lz", "天水"=>"tianshui", "白银"=>"by", "庆阳"=>"qingyang", "平凉"=>"pl", "酒泉"=>"jq", "张掖"=>"zhangye", "武威"=>"wuwei", "定西"=>"dx", "金昌"=>"jinchang", "陇南"=>"ln", "临夏"=>"linxia", "嘉峪关"=>"jyg", "甘南"=>"gn", "银川"=>"yinchuan", "吴忠"=>"wuzhong", "石嘴山"=>"szs", "中卫"=>"zw", "固原"=>"guyuan", "西宁"=>"xn", "海西"=>"hx", "海北"=>"haibei", "果洛"=>"guoluo", "海东"=>"haidong", "黄南"=>"huangnan", "玉树"=>"ys", "海南"=>"hainan", "香港"=>"hk", "澳门"=>"am", "台湾"=>"tw"}
+    need_wuba_cities = {}
+    need_cities.each do |cityname|
+      need_wuba_cities[wuba_cities[cityname]] = cityname
+    end
+    pp "五八获取城市列表为："
+    pp need_wuba_cities
+
+
+    #58网城市简称,下面抄的百姓的代码，变量也没换，不过这样就可以用。为啥要换呢
+    # baixing_cities = {}
+    # response = RestClient.get 'http://www.58.com/'
+    # response = response.body
+    # response = Nokogiri::HTML(response)
+    # response.css('#clist a').each do |x|
+    #   city_code = x.attributes["href"].value
+    #   city_code.gsub!('http://','')
+    #   city_code.gsub!('.58.com/','')
+    #   baixing_cities[x.text] = city_code
+    # end
+    # pp baixing_cities
+
+
+    #赶集网的城市简称,下面抄的百姓的代码，变量也没换，不过这样就可以用。为啥要换呢
+    # baixing_cities = {}
+    # response = RestClient.get 'http://www.ganji.com/index.htm'
+    # response = response.body
+    # response = Nokogiri::HTML(response)
+    # response.css('.all-city a').each do |x|
+    #   city_code = x.attributes["href"].value
+    #   city_code.gsub!('http://','')
+    #   city_code.gsub!('.ganji.com/','')
+    #   baixing_cities[x.text] = city_code
+    # end
+    # pp baixing_cities
+    #
+
+
+
+    #百姓网城市简称的获取方式
+    # baixing_cities = {}
+    # response = RestClient.get 'http://www.baixing.com/?changeLocation=yes&return=%2F'
+    # response = response.body
+    # response = Nokogiri::HTML(response)
+    # response.css('.wrapper a').each do |x|
+    #   city_code = x.attributes["href"].value
+    #   city_code.gsub!('http://','')
+    #   city_code.gsub!('.baixing.com/','')
+    #   baixing_cities[x.text] = city_code
+    # end
+    # pp baixing_cities
+
+
+    #以下是taoche_cities的获取方式
+    # taoche_cities = {}
+    # response = RestClient.get 'http://huhehaote.taoche.com/'
+    # response = response.body
+    # response.gsub!('ritcit_main clearfix','shengfenxxxxx')
+    # response.gsub!('ritcit_main','shengfenxxxxx')
+    # content = Nokogiri::HTML(response)
+    # content.css('.shengfenxxxxx a').each do |xx|
+    #   city_pinyin = xx.attributes["href"].value
+    #
+    #   city_pinyin.gsub!('http://','')
+    #   city_pinyin.gsub!('.taoche.com/','')
+    #
+    #   taoche_cities[xx.text] = city_pinyin
+    # end
+    # taoche_cities
   end
 
 
