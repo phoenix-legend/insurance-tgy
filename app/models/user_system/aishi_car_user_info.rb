@@ -188,8 +188,9 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   def self.query_chengjiao
     # key = "098f6bcd4621d373cade4e832627b4f6" #正式
     # number = "4SA-1011" #正式
-    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 100000").find_each do |cui|
+    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 1000000 and aishi_yaoyue <> '失败' and aishi_yaoyue <> '成功'").find_each do |cui|
       next if cui.aishi_yaoyue == '失败'
+      next if cui.aishi_yaoyue == '成功'
       response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/querysignupone', {number: cui.numbers,
                                                                                                       sign: Digest::MD5.hexdigest("#{cui.numbers}#{cui.k}"),
                                                                                                       id: cui.aishi_id
