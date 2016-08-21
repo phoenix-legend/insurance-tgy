@@ -289,7 +289,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       query_q_ids["#{kk}"] = cui.youyiche_id
       # 想加速查询，把10改为更大的数字
       if kk == (
-      if sanbaideliang < 10 then
+      if sanbaideliang < 30 then
         300
       else
         10
@@ -361,7 +361,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
       # 想加速查询，把5改为更大的数字
       if kk == (
-      if sanbaideliang < 6 then
+      if sanbaideliang < 60 then
         300
       else
         10
