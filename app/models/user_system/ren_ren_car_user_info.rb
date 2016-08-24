@@ -7,7 +7,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
   # CITY = ["深圳", "广州"]
 
 
-  # car_user_info = UserSystem::CarUserInfo.find 1823159
+  # car_user_info = UserSystem::CarUserInfo.find 2127639
   # UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
     return if car_user_info.name.blank?
