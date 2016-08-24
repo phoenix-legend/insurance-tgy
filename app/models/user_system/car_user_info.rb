@@ -429,6 +429,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     return if car_user_info.site_name == '58' and car_user_info.phone.blank?
     car_user_info = car_user_info.reload
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
+
+    # 同步给人人车
+    UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
+
     UploadTianTian.upload_one_tt car_user_info
     # 同步至车置宝  车置宝作废
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
@@ -437,8 +441,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
     #同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
-    # 同步给人人车
-    UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
+
     # 同步至4A
     UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
 
@@ -458,14 +461,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, false
     car_user_info = car_user_info.reload
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
+    # 同步给人人车
+    UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
+
     UploadTianTian.upload_one_tt car_user_info
     # 同步至又一车
     UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
     # 同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
-    # 同步给人人车
-    UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
+
     # 同步至a s
     UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
 
