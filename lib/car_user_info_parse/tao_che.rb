@@ -6,7 +6,7 @@ module TaoChe
       threads.delete_if { |thread| thread.status == false }
       if threads.length > 15
         pp "现在共有#{threads.length}个线程正在运行"
-        sleep 3
+        sleep 2
       end
       t = Thread.new do
         begin

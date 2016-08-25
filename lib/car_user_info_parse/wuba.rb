@@ -10,7 +10,7 @@ module Wuba
       threads.delete_if { |thread| thread.status == false }
       if threads.length > 30
         pp "现在共有#{threads.length}个线程正在运行"
-        sleep 1
+        sleep 2
       end
       t = Thread.new do
         begin
