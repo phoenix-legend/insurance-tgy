@@ -329,7 +329,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   def self.create_car_user_info options
 
-    redis = Redis.new(:host => 'www.pachong.com', :port => '7480')
+    redis = Redis.current
     begin
       if redis[options[:detail_url]] == 'y'
         return 1

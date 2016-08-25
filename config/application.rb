@@ -58,4 +58,7 @@ module Insurance
         :enable_starttls_auto => true
     }
   end
+
+  redis = Redis.new(host: "www.pachong.com", port: 7480)
+  Redis.current = redis
 end
