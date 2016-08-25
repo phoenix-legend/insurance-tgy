@@ -99,11 +99,11 @@ module Wuba
           end
 
 
-          # ActiveRecord::Base.connection.close
+          ActiveRecord::Base.connection.close
         rescue Exception => e
           pp e
           pp $@
-          # ActiveRecord::Base.connection.close
+          ActiveRecord::Base.connection.close
 
         end
       end
