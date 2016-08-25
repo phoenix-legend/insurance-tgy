@@ -161,10 +161,10 @@ module Ganji
             break
           end
         end
-        ActiveRecord::Base.connection.close
+        # ActiveRecord::Base.connection.close
       rescue Exception => e
         pp e
-        ActiveRecord::Base.connection.close
+        # ActiveRecord::Base.connection.close
       end
     end
   end
