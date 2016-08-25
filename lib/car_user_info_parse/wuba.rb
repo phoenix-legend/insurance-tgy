@@ -383,6 +383,7 @@ module Wuba
         params_hash[p[0]] = p[1]
       end
       entry_id = params_hash["entinfo"]
+      return nil if entry_id.blank?
       entry_id = entry_id.split('_')[0]
       url = "http://#{city_code}.58.com/ershouche/#{entry_id}x.shtml"
       return url
