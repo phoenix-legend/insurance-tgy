@@ -50,7 +50,7 @@ gem 'nokogiri'
 gem 'eric_tools', '~> 0.0.6'
 gem 'rest-client'
 gem "multi_xml"
-
+gem "redis"
 
 
 #异常通知邮件
