@@ -114,6 +114,12 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
         return
       end
 
+      if [ '众泰',"五菱",'长安商用','奇瑞','力帆','金杯','江淮','哈飞','哈弗', '东风小康','宝骏', '五菱汽车',  '五十铃', '昌河',  '依维柯',  '福田', '东风风神', '东风'].include? yc_car_user_info.brand
+        ycui.aishi_upload_status = '品牌外车，暂排除'
+        ycui.save!
+        return
+      end
+
       if ycui.milage.to_f > 15
         ycui.aishi_upload_status = '里程太多'
         ycui.save!
