@@ -4,11 +4,13 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
   CITY = [
       # "上海","福州", "厦门", '苏州', "杭州", "成都"
-      '天津', '苏州', '武汉', '重庆', "上海", "杭州", "成都", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山","北京",
+       "上海", "杭州",  "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山","北京",
+       '天津', '苏州', '武汉', '重庆',"成都",
       "郑州", "长沙", "西安", "青岛", "威海", "烟台",
       "潍坊", "无锡", "常州", "徐州", "南通", "扬州", "济南",
       "石家庄", "唐山", "太原", "宝鸡", "洛阳", "南阳", "新乡", "湘潭", "株洲", "常德",
       "岳阳", "沈阳", "大连", "营口", "泉州", "长春", "哈尔滨", "大庆", "合肥", "芜湖", "南宁", "南昌",
+
       "运城", "晋中", "临汾", "大同", "遵义", "兰州", "呼和浩特",
       "贵阳", "惠州", "嘉兴", "中山", "肇庆", "绵阳", "襄阳", "宜昌",
       "滨州", "德州", "东营", "济宁", "临沂", "日照", "泰安", "枣庄", "宁波", "宿迁", "泰州", "盐城", "镇江",
@@ -105,17 +107,20 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     return if ycui.aishi_upload_status != '未上传'
     return if ycui.name.blank?
 
-    if ycui.che_ling.to_i < 2008
-      ycui.aishi_upload_status = '车龄过老'
-      ycui.save!
-      return
+    unless ['上海','福州','厦门'].include? ycui.city_chinese
+      if ycui.che_ling.to_i < 2008
+        ycui.aishi_upload_status = '车龄过老'
+        ycui.save!
+        return
+      end
+
+      if ycui.milage.to_f > 15
+        ycui.aishi_upload_status = '里程太多'
+        ycui.save!
+        return
+      end
     end
 
-    if ycui.milage.to_f > 15
-      ycui.aishi_upload_status = '里程太多'
-      ycui.save!
-      return
-    end
 
 
     # key = "033bd94b1168d7e4f0d644c3c95e35bf" #测试
@@ -156,7 +161,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       begin
         if UserSystem::YouyicheCarUserInfo::CITY.include? car_user_info.city_chinese
           youyiche_number = UserSystem::YouyicheCarUserInfo.where("phone = ? and youyiche_id is not null", car_user_info.phone).count
-          return if youyiche_number > 0
+          return if youyiche_number > 0 and rand(10)>5
         end
         #数据回传到优车
         UserSystem::AishiCarUserInfo.create_car_info name: car_user_info.name,
@@ -204,12 +209,15 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     UserSystem::AishiCarUserInfo.batch_query_aishi
   end
 
+
+  #UserSystem::AishiCarUserInfo.query_chengjiao
   def self.query_chengjiao
     # key = "098f6bcd4621d373cade4e832627b4f6" #正式
     # number = "4SA-1011" #正式
-    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 100000 and aishi_yaoyue <> '失败' and aishi_yaoyue <> '成功'").find_each do |cui|
-      next if cui.aishi_yaoyue == '失败'
-      next if cui.aishi_yaoyue == '成功'
+    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 100000 and  aishi_yaoyue = '成功'").find_each do |cui|
+      # next if cui.aishi_yaoyue == '失败'
+      # next if cui.aishi_yaoyue == '成功'
+      next if cui.aishi_upload_message.match /交易成功/
       response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/querysignupone', {number: cui.numbers,
                                                                                                       sign: Digest::MD5.hexdigest("#{cui.numbers}#{cui.k}"),
                                                                                                       id: cui.aishi_id
