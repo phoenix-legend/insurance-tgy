@@ -9,7 +9,7 @@ module Baixing
       begin
         pp "现在跑..百姓 #{areaname}"
         1.upto 3 do |i|
-          sleep 2+rand(5)
+          sleep 2+rand(4)
           url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}"  # url = "http://haerbin.baixing.com/m/ershouqiche/?page=1"
           content = RestClient.get url,{'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
           content = content.body
