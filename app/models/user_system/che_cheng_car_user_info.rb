@@ -3,7 +3,7 @@ class UserSystem::CheChengCarUserInfo < ActiveRecord::Base
 
   CITY = ["上海"]
 
-  # car_user_info = UserSystem::CarUserInfo.find 2252196
+  # car_user_info = UserSystem::CarUserInfo.find 2260527
   # UserSystem::CheChengCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
     return if not UserSystem::CheChengCarUserInfo::CITY.include?(car_user_info.city_chinese)
@@ -257,7 +257,7 @@ class UserSystem::CheChengCarUserInfo < ActiveRecord::Base
     pp response
 
     yc_car_user_info.checheng_upload_status = '已上传'
-    if response["code"] == 2
+    if response["code"].to_i == 2
       yc_car_user_info.checheng_id = response["customerList"][0]["id"]
       yc_car_user_info.checheng_status_message = response["remark"]
       # yc_car_user_info.checheng_yaoyue = '重复' if response["data"]["is_repeat"]
