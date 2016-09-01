@@ -4,8 +4,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
   CITY = [
       # "上海","福州", "厦门", '苏州', "杭州", "成都"
-       "上海", "杭州",  "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山","北京",
-       '天津', '苏州', '武汉', '重庆',"成都",
+      "上海", "杭州", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京",
+      '天津', '苏州', '武汉', '重庆', "成都",
       "郑州", "长沙", "西安", "青岛", "威海", "烟台",
       "潍坊", "无锡", "常州", "徐州", "南通", "扬州", "济南",
       "石家庄", "唐山", "太原", "宝鸡", "洛阳", "南阳", "新乡", "湘潭", "株洲", "常德",
@@ -107,14 +107,14 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     return if ycui.aishi_upload_status != '未上传'
     return if ycui.name.blank?
 
-    unless ['上海','福州','厦门'].include? ycui.city_chinese
+    unless ['上海', '福州', '厦门'].include? ycui.city_chinese
       if ycui.che_ling.to_i < 2008
         ycui.aishi_upload_status = '车龄过老'
         ycui.save!
         return
       end
 
-      if [ '众泰',"五菱",'长安商用','奇瑞','力帆','金杯','江淮','哈飞','哈弗', '东风小康','宝骏', '五菱汽车',  '五十铃', '昌河',  '依维柯',  '福田', '东风风神', '东风'].include? ycui.brand
+      if ['众泰', "五菱", '长安商用', '奇瑞', '力帆', '金杯', '江淮', '哈飞', '哈弗', '东风小康', '宝骏', '五菱汽车', '五十铃', '昌河', '依维柯', '福田', '东风风神', '东风'].include? ycui.brand
         ycui.aishi_upload_status = '品牌外车，暂排除'
         ycui.save!
         return
@@ -126,7 +126,6 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
         return
       end
     end
-
 
 
     # key = "033bd94b1168d7e4f0d644c3c95e35bf" #测试
@@ -239,7 +238,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
   # UserSystem::AishiCarUserInfo.batch_query_aishi
   def self.batch_query_aishi
-    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 150000 and (aishi_yaoyue is null or aishi_yaoyue = '未知')").find_each do |cui|
+    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 300000 and (aishi_yaoyue is null or aishi_yaoyue = '未知')").find_each do |cui|
       next if cui.aishi_yaoyue == '成功'
       next if cui.aishi_yaoyue == '失败'
       response = nil
@@ -255,7 +254,17 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
         next
       end
       response = JSON.parse response.body
-      next if cui.shiai_message == response
+      pp response
+      if response["result"]["status"] == '未创建'
+        cui.business1_status = '失败'
+        cui.business1_name = '未创建'
+        cui.aishi_yaoyue = '失败'
+        cui.aishi_yaoyue_time = Time.now.chinese_format
+        cui.aishi_yaoyue_day = Time.now.chinese_format_day
+        cui.save!
+        next
+      end
+      # next if cui.shiai_message == response
       cui.shiai_message = response.to_hash.to_s
       next if response["result"]["status"].blank?
 
@@ -270,23 +279,67 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       cui.business1_status = business1_status
       cui.business1_name = business1_name
       cui.save!
-      next if cui.business1_name != '瓜子'
 
-      cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败'].include? cui.business_last_status
-                           '成功'
-                         elsif ['创建失败', '检测失败', '邀约失败'].include? cui.business_last_status
-                           '失败'
-                         else
-                           '未知'
-                         end
-
-      if cui.changed?
-        cui.aishi_yaoyue_time = Time.now.chinese_format
-        cui.aishi_yaoyue_day = Time.now.chinese_format_day
+      # 处理瓜子的情况
+      if cui.business1_name == '瓜子'
+        cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败'].include? cui.business_last_status
+                             '成功'
+                           elsif ['创建失败', '检测失败', '邀约失败'].include? cui.business_last_status
+                             '失败'
+                           else
+                             '未知'
+                           end
+        if cui.changed?
+          cui.aishi_yaoyue_time = Time.now.chinese_format
+          cui.aishi_yaoyue_day = Time.now.chinese_format_day
+        end
+        cui.save!
       end
 
+      if cui.business1_name == '又一车'
+        cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败'].include? cui.business_last_status
+                             '成功'
+                           elsif ['创建失败', '检测失败', '邀约失败'].include? cui.business_last_status
+                             '失败'
+                           else
+                             '未知'
+                           end
+        if cui.changed?
+          cui.aishi_yaoyue_time = Time.now.chinese_format
+          cui.aishi_yaoyue_day = Time.now.chinese_format_day
+        end
+        cui.save!
+      end
 
-      cui.save!
+      if cui.business1_name == '人人拍'
+        # cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败'].include? cui.business_last_status
+        #                      '成功'
+        #                    elsif ['创建失败', '检测失败', '邀约失败'].include? cui.business_last_status
+        #                      '失败'
+        #                    else
+        #                      '未知'
+        #                    end
+        # if cui.changed?
+        #   cui.aishi_yaoyue_time = Time.now.chinese_format
+        #   cui.aishi_yaoyue_day = Time.now.chinese_format_day
+        # end
+        # cui.save!
+      end
+
+      if cui.business1_name.match /朋/
+        # cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败'].include? cui.business_last_status
+        #                      '成功'
+        #                    elsif ['创建失败', '检测失败', '邀约失败'].include? cui.business_last_status
+        #                      '失败'
+        #                    else
+        #                      '未知'
+        #                    end
+        # if cui.changed?
+        #   cui.aishi_yaoyue_time = Time.now.chinese_format
+        #   cui.aishi_yaoyue_day = Time.now.chinese_format_day
+        # end
+        # cui.save!
+      end
     end
   end
 

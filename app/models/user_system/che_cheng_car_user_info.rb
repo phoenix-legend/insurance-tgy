@@ -269,5 +269,17 @@ class UserSystem::CheChengCarUserInfo < ActiveRecord::Base
   end
 
 
+  def self.query_checheng
+    UserSystem::CheChengCarUserInfo.where("checheng_id is not null").find_each do |cui|
+      response = RestClient.post 'https://api.che.com/che_service/che/queryCarStatus',
+                                 token: '049cfd502c74cafac9cde1a4161f5352',
+                                 customer_id: cui.checheng_id
+      response = JSON.parse response.body
+      pp response
+
+    end
+  end
+
+
 end
 __END__

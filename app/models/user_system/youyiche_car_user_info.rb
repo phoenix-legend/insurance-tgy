@@ -3,7 +3,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   # CITY = ['上海', '杭州', '苏州', '成都']
   # CITY = ['上海', '杭州', '苏州']
-  CITY = ['上海', '苏州', '成都']
+  CITY = ['上海', '苏州', '成都','杭州']
   # CITY = ['上海']
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -456,7 +456,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     ['日期', '创建数', '竞拍数', '竞拍率'].each_with_index do |content, i|
       sheet1.row(0)[i] = content
     end
-    0.upto 20 do |i|
+    0.upto 30 do |i|
       date = Date.today - i
       # yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? and youyiche_yaoyue not in ('重复') AND  youyiche_yaoyue IS NOT NULL", date.chinese_format_day)
       yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? and youyiche_yaoyue <> '重复' ", date)
