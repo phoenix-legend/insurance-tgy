@@ -1,6 +1,6 @@
 
 <%
-   last_day = 31
+   last_day = 30
    a4_month_counts = ::UserSystem::AishiCarUserInfo.where("aishi_yaoyue = '成功' and aishi_yaoyue_day >= ? and numbers = '4SA-1012' and aishi_yaoyue_day <= ?",Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
    a4_today_counts = ::UserSystem::AishiCarUserInfo.where("aishi_yaoyue = '成功' and aishi_yaoyue_day = ? and numbers = '4SA-1012'", Date.today).count
 
