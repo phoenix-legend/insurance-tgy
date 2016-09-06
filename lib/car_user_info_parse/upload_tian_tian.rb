@@ -232,6 +232,7 @@ module UploadTianTian
   #UploadTianTian.tt_pai_v2_0_guozheng
   def self.tt_pai_v2_0_guozheng user_info
     redis_key = "#{ Date.today.chinese_format_day}_tangjin_upload_number"
+    redis = Redis.current
     if redis[redis_key].to_i < 100
       UploadTianTian.tt_pai_v2_0_tangjin user_info
       return
