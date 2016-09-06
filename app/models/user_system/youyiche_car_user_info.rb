@@ -203,7 +203,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
       #对量进行严格控制
       # peiliang = {"苏州" => 40, "杭州" => 30, "成都" => 50}
-      peiliang = {"苏州" => 60, "杭州" => 50, "成都" => 80}
+      peiliang = {"苏州" => 65, "杭州" => 50, "成都" => 80}
       liang = peiliang[yc_car_user_info.city_chinese]
       yijingyoudeliang = UserSystem::YouyicheCarUserInfo.where("city_chinese = ? and created_day = ? and youyiche_id is not null", yc_car_user_info.city_chinese, Time.now.chinese_format_day).count
       if yijingyoudeliang > liang
@@ -214,7 +214,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
         #超出配额给兰昱。
 
 
-        (MailSend.send_content xemail, 'xiaoqi.liu@uguoyuan.cn', "#{yc_car_user_info.name} 有车要卖",
+        (MailSend.send_content xemail, '', "#{yc_car_user_info.name} 有车要卖",
                                "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.brand}").deliver
         return
       end
@@ -227,7 +227,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       yc_car_user_info.youyiche_upload_status = "成都车-给兰-#{xemail}"
       yc_car_user_info.save!
 
-      (MailSend.send_content xemail, 'xiaoqi.liu@uguoyuan.cn', "#{yc_car_user_info.name} 有车要卖",
+      (MailSend.send_content xemail, '', "#{yc_car_user_info.name} 有车要卖",
                              "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.brand}").deliver
       return
     end

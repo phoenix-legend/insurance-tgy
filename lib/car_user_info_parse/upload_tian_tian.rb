@@ -231,6 +231,11 @@ module UploadTianTian
   #郭正的天天拍2.0接口，新合同
   #UploadTianTian.tt_pai_v2_0_guozheng
   def self.tt_pai_v2_0_guozheng user_info
+    redis_key = "#{ Date.today.chinese_format_day}_tangjin_upload_number"
+    if redis[redis_key].to_i < 100
+      UploadTianTian.tt_pai_v2_0_tangjin user_info
+      return
+    end
 
     #测试环境
     # domain = "sandbox.openapi.ttpai.cn"
@@ -250,6 +255,50 @@ module UploadTianTian
     domain = "openapi.ttpai.cn"
 
 
+    params = []
+    user_info = user_info.reload
+    return if user_info.tt_upload_status != 'weishangchuan'
+    params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
+    params << [:mobile, UploadTianTian.escape2(user_info.phone)]
+    params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
+    params << [:brand, UploadTianTian.escape2(user_info.brand)]
+    params << [:source, UploadTianTian.escape2(qudao)]
+    params << [:appkey, UploadTianTian.escape2(appkey)]
+    params << [:sign, UploadTianTian.escape2(Digest::MD5.hexdigest("#{user_info.phone}#{s}"))]
+    response = RestClient.get "#{domain}/api/v2.0/ttp_sign_up?#{URI.encode_www_form params}"
+    pp response
+    response = JSON.parse response.body
+    error = response["error"]
+    message = response["message"]
+    id = begin
+      response["result"]["id"] rescue -1
+    end
+    user_info.tt_source = qudao
+    user_info.tt_created_day = user_info.created_at.chinese_format_day
+    user_info.tt_id = id if not id.blank?
+    user_info.tt_code = error
+    user_info.tt_message = message
+    user_info.tt_upload_status = '已上传'
+    user_info.save!
+  end
+
+
+  #天天这边给唐金搞的新接口
+  #UploadTianTian.tt_pai_v2_0_tangjin
+  def self.tt_pai_v2_0_tangjin user_info
+    s = 'ed0c79e867028c60ce4137407728538c'
+    appkey = 'xiaomeigui'
+    qudao = '2-474'
+    domain = "openapi.ttpai.cn"
+    #使用redis统计当天送上去的数据量
+    redis_key = "#{ Date.today.chinese_format_day}_tangjin_upload_number"
+    redis = Redis.current
+    if redis[redis_key].blank?
+      redis[redis_key] = 0
+      redis.expire redis_key, 2*24*60*60
+    else
+      redis[redis_key] = redis[redis_key].to_i + 1
+    end
     params = []
     user_info = user_info.reload
     return if user_info.tt_upload_status != 'weishangchuan'
@@ -467,7 +516,7 @@ module UploadTianTian
   end
 
   # 指定日期区间的意向数据。
-  # UploadTianTian.xiazai_tt_yaoyue_detail_by_day '2016-07-01', '2016-07-31'
+  # UploadTianTian.xiazai_tt_yaoyue_detail_by_day '2016-08-01', '2016-08-31'
   def self.xiazai_tt_yaoyue_detail_by_day start_day = '2016-04-01', end_day = '2016-04-30'
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
@@ -496,11 +545,11 @@ module UploadTianTian
   end
 
 
-  # UploadTianTian.xiazai_tt_create_detail_by_day '2016-06-01', '2016-06-30'
+  # UploadTianTian.xiazai_tt_create_detail_by_day '2016-08-01', '2016-08-31'
   def self.xiazai_tt_create_detail_by_day start_day = '2016-04-01', end_day = '2016-04-30'
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
-    # ['23-23-1', '23-23-4', '23-23-5','2-307-317'].each_with_index do |qudao, i|
+    # ['23-23-1', '23-23-4', '23-23-5'].each_with_index do |qudao, i|
     ['2-307-317', '2-306-314'].each_with_index do |qudao, i|
       cuis = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_source = '#{qudao}' and tt_created_day >= '#{start_day}' and  tt_created_day <= '#{end_day}'")
       cuis.order(tt_yaoyue_day: :asc, tt_source: :asc)

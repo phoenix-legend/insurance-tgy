@@ -347,6 +347,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     if user_infos.length > 0
       redis[options[:detail_url]] = 'y'
+      redis.expire options[:detail_url], 7*24*60*60
       return 1
     end
 
@@ -1037,7 +1038,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   # UserSystem::CarUserInfo.get_info_to_xiaoyue
   def self.get_info_to_xiaoyue
     id_hash = {
-        "上海" => 1161102
+        "上海" => 2388481
     }
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
