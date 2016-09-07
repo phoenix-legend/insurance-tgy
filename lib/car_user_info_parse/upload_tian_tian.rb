@@ -233,12 +233,12 @@ module UploadTianTian
   def self.tt_pai_v2_0_guozheng user_info
 
     #现在要全部给唐金
-    UploadTianTian.tt_pai_v2_0_tangjin user_info
-    return
+    # UploadTianTian.tt_pai_v2_0_tangjin user_info
+    # return
 
     redis_key = "#{ Date.today.chinese_format_day}_tangjin_upload_number"
     redis = Redis.current
-    if redis[redis_key].to_i < 100
+    if redis[redis_key].to_i < 130
       UploadTianTian.tt_pai_v2_0_tangjin user_info
       return
     end
@@ -298,14 +298,6 @@ module UploadTianTian
     domain = "openapi.ttpai.cn"
 
     #使用redis统计当天送上去的数据量
-    # redis_key = "#{ Date.today.chinese_format_day}_tangjin_upload_number"
-    # redis = Redis.current
-    # if redis[redis_key].blank?
-    #   redis[redis_key] = 0
-    #   redis.expire redis_key, 2*24*60*60
-    # else
-    #   redis[redis_key] = redis[redis_key].to_i + 1
-    # end
 
     params = []
     user_info = user_info.reload
@@ -332,6 +324,16 @@ module UploadTianTian
     user_info.tt_message = message
     user_info.tt_upload_status = '已上传'
     user_info.save!
+    if user_info.tt_id.to_i > 0
+      redis_key = "#{ Date.today.chinese_format_day}_tangjin_upload_number"
+      redis = Redis.current
+      if redis[redis_key].blank?
+        redis[redis_key] = 0
+        redis.expire redis_key, 2*24*60*60
+      else
+        redis[redis_key] = redis[redis_key].to_i + 1
+      end
+    end
   end
 
 
