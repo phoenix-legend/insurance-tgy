@@ -352,6 +352,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
     car_user_info = UserSystem::CarUserInfo.new options
+    car_user_info.name.gsub!(/\r|\n|\t/,'')
     car_user_info.save!
     return 0
   end
