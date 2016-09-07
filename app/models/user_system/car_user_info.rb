@@ -352,7 +352,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
     car_user_info = UserSystem::CarUserInfo.new options
-    car_user_info.name.gsub!(/\r|\n|\t/,'')
+    car_user_info.name.gsub!(/\r|\n|\t/,'') unless car_user_info.name.blank?
     car_user_info.save!
     return 0
   end
@@ -380,6 +380,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     #更新数据模块
     car_user_info.name = params[:name].gsub('联系TA', '先生女士') unless params[:name].blank?
+    car_user_info.name.gsub!(/\r|\n|\t/,'') unless car_user_info.name.blank?
     car_user_info.phone = params[:phone]
     car_user_info.note = params[:note]
     car_user_info.fabushijian = params[:fabushijian] unless params[:fabushijian].blank?
