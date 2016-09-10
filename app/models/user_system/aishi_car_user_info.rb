@@ -43,8 +43,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
         "保定", "包头", "百色", "巴中", "鞍山", "安阳", "安庆", "红河", "蚌埠", "丽水"
     ].include? city_name
       return '13cfe7dfa0dd2fe5e2a7d5fb467099a6', '4SA-1012' # Eric 秘钥
-    elsif ['福州', '厦门'].include? city_name
-      if rand(10)<5
+    elsif ['福州', '厦门', '上海'].include? city_name
+      if rand(10)<6
         return '13cfe7dfa0dd2fe5e2a7d5fb467099a6', '4SA-1012'
       else
         return "098f6bcd4621d373cade4e832627b4f6", "4SA-1011"
@@ -108,17 +108,17 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     return if ycui.name.blank?
 
     unless ['上海', '福州', '厦门'].include? ycui.city_chinese
-      if ycui.che_ling.to_i < 2008
+      if ycui.che_ling.to_i < 2006
         ycui.aishi_upload_status = '车龄过老'
         ycui.save!
         return
       end
 
-      if ['众泰', "五菱", '长安商用', '奇瑞', '力帆', '金杯', '江淮', '哈飞', '哈弗', '东风小康', '宝骏', '五菱汽车', '五十铃', '昌河', '依维柯', '福田', '东风风神', '东风'].include? ycui.brand
-        ycui.aishi_upload_status = '品牌外车，暂排除'
-        ycui.save!
-        return
-      end
+      # if ['众泰', "五菱", '长安商用', '奇瑞', '力帆', '金杯', '江淮', '哈飞', '哈弗', '东风小康', '宝骏', '五菱汽车', '五十铃', '昌河', '依维柯', '福田', '东风风神', '东风'].include? ycui.brand
+      #   ycui.aishi_upload_status = '品牌外车，暂排除'
+      #   ycui.save!
+      #   return
+      # end
 
       if ycui.milage.to_f > 15
         ycui.aishi_upload_status = '里程太多'
@@ -164,10 +164,16 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   def self.create_user_info_from_car_user_info car_user_info
     if car_user_info.is_pachong == false and UserSystem::AishiCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
-        if UserSystem::YouyicheCarUserInfo::CITY.include? car_user_info.city_chinese
+        if ["苏州"].include? car_user_info.city_chinese
+          youyiche_number = UserSystem::YouyicheCarUserInfo.where("phone = ? and youyiche_id is not null", car_user_info.phone).count
+          return if youyiche_number > 0
+        end
+
+        if ["杭州","上海"].include? car_user_info.city_chinese
           youyiche_number = UserSystem::YouyicheCarUserInfo.where("phone = ? and youyiche_id is not null", car_user_info.phone).count
           return if youyiche_number > 0 and rand(10)>5
         end
+
         #数据回传到优车
         UserSystem::AishiCarUserInfo.create_car_info name: car_user_info.name,
                                                      phone: car_user_info.phone,
