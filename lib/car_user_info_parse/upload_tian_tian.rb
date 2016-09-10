@@ -238,10 +238,14 @@ module UploadTianTian
 
     redis_key = "#{ Date.today.chinese_format_day}_tangjin_upload_number"
     redis = Redis.current
-    if redis[redis_key].to_i < 130
+    if redis['to_tangjin_qudao_number']
+      redis.expire 'to_tangjin_qudao_number', 7*24*60*60
+    end
+    if redis[redis_key].to_i < redis['to_tangjin_qudao_number']||260
       UploadTianTian.tt_pai_v2_0_tangjin user_info
       return
     end
+
 
     #测试环境
     # domain = "sandbox.openapi.ttpai.cn"
