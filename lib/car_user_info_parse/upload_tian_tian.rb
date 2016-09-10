@@ -241,7 +241,7 @@ module UploadTianTian
     if redis['to_tangjin_qudao_number']
       redis.expire 'to_tangjin_qudao_number', 7*24*60*60
     end
-    if redis[redis_key].to_i < redis['to_tangjin_qudao_number']||260
+    if redis[redis_key].to_i < redis['to_tangjin_qudao_number'].to_i
       UploadTianTian.tt_pai_v2_0_tangjin user_info
       return
     end
