@@ -100,7 +100,7 @@ module TaoChe
 
           unless u.blank?
             c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
-            Taoche.update_one_detail c.id if not c.blank?
+            TaoChe.update_one_detail c.id if not c.blank?
           end
         end
       end
