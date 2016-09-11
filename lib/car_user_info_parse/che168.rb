@@ -60,7 +60,7 @@ module Che168
               break
             end
           end
-          # ActiveRecord::Base.connection.close
+            # ActiveRecord::Base.connection.close
         rescue Exception => e
           pp e
           # ActiveRecord::Base.connection.close
@@ -73,6 +73,41 @@ module Che168
       # pp '休息.......'
       threads.delete_if { |thread| thread.status == false }
       break if threads.blank?
+    end
+  end
+
+  def self.get_car_user_list_v2 content, areaid
+    areaname = UserSystem::CarUserInfo::ALL_CITY[areaid]
+
+    begin
+      pp "现在跑168.. #{areaname}"
+      return if content.blank?
+      a = JSON.parse content
+      return if a.length == 0
+      a.each do |info|
+        url = "http://m.che168.com#{info["url"]}"
+        url = begin
+          url.split('#')[0] rescue ''
+        end
+        next if url.match /m\.hao\.autohome\.com\.cn/
+        result = UserSystem::CarUserInfo.create_car_user_info che_xing: "~#{info["carname"]}",
+                                                              che_ling: info["date"],
+                                                              milage: info['milage'],
+                                                              detail_url: url,
+                                                              city_chinese: areaname,
+                                                              site_name: 'che168'
+
+        if result == 0
+          u = url
+
+          unless u.blank?
+            c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
+            Che168.update_one_detail c.id if not c.blank?
+          end
+        end
+      end
+    rescue Exception => e
+      pp e
     end
   end
 

@@ -130,6 +130,8 @@ Rails.application.routes.draw do
           get :update_kouling_phone
           post :update_kouling_phone
           get :need_chongqi
+          get :get_all_city_codes
+          post :get_web_content
         end
       end
     end

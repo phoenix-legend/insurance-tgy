@@ -129,6 +129,90 @@ module Wuba
   end
 
 
+  #获取用户列表， 直接获取外部的链接
+  def self.get_car_user_list_v2 content, areaid
+    begin
+      areaname = UserSystem::CarUserInfo::WUBA_CITY[areaid]
+      return if content.blank?
+      content = Nokogiri::HTML(content)
+      trs = content.css('.tbimg tr')
+
+      trs.each do |tr|
+        chexing = ''
+        next if tr.to_s.match /google|7天可退/
+        begin
+          chexing = tr.css('td .t')[0].text
+        rescue
+          pp tr.to_s
+          pp 'Exception  车型获取失败'
+          next
+        end
+
+        price = 2
+        begin
+          price = tr.css('.tc .pri')[0].text
+        rescue
+          pp tr.to_s
+          pp 'Exception  价格获取失败'
+          next
+        end
+
+        cheling = tr.css('.t p')[0].children[0].text
+        cheling = cheling.gsub(/购于|年|\n|\r|\s/, '')
+        milage = begin
+          tr.css('.t p')[0].children[2].text rescue '8.0'
+        end
+        milage = milage.gsub(/万|公里/, '')
+        url = tr.css('td .t')[0].attributes["href"].value
+        begin
+          if url.match /http:\/\/short/
+            url = Wuba.get_normal_url_by_short_url_and_city url, areaid
+            next if url.blank?
+          end
+
+          # 如果58抓到的数据不是当前城市的，直接不进数据库
+          zhengze = "http://#{areaid}.58.com"
+          url_sx = url.match Regexp.new zhengze
+          if url_sx.blank?
+            next
+          end
+        rescue
+
+        end
+
+        result = UserSystem::CarUserInfo.create_car_user_info che_xing: "~#{chexing}",
+                                                              price: price,
+                                                              che_ling: cheling,
+                                                              milage: milage,
+                                                              detail_url: url.split('?')[0],
+                                                              city_chinese: areaname,
+                                                              site_name: '58'
+
+        if result == 0
+          u = url.split('?')[0]
+
+          unless u.blank?
+            c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
+            Wuba.update_one_detail c.id if not c.blank?
+          end
+        end
+
+      end
+
+
+
+        # ActiveRecord::Base.connection.close
+    rescue Exception => e
+      pp e
+      pp $@
+      # ActiveRecord::Base.connection.close
+
+    end
+
+
+  end
+
+
   # def chuli_list_page_content url, content, area_id
   #   begin
   #     return if content.blank?
@@ -209,7 +293,7 @@ module Wuba
   # end
 
 
-# Wuba.tttt 1175137
+  # Wuba.tttt 1175137
   def self.tttt car_user_info_id
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
     response = RestClient.get car_user_info.detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
@@ -245,7 +329,7 @@ module Wuba
   end
 
 
-# 没啥用， 主要是查看api内容
+  # 没啥用， 主要是查看api内容
   def xxxxxxx
     car_user_info_id = 1526796
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
@@ -272,8 +356,8 @@ module Wuba
 
   end
 
-# Wuba.update_one_detail 1175137
-# 使用接口的方式抓数据
+  # Wuba.update_one_detail 1175137
+  # 使用接口的方式抓数据
   def self.update_one_detail car_user_info_id
 
     if true
@@ -354,8 +438,8 @@ module Wuba
     end
   end
 
-# Wuba.update_one_detail 1175137
-# 使用口令的方式抓数据
+  # Wuba.update_one_detail 1175137
+  # 使用口令的方式抓数据
   def self.update_one_detail_kouling car_user_info_id
     # car_user_info_id = 1055829
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id

@@ -10,7 +10,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   # CURRENT_ID = 171550  第一次导入
-  CURRENT_ID = 539767
+  CURRENT_ID = 2400000
 
   EMAIL_STATUS = {0 => '待导', 1 => '已导', 2 => '不导入'}
   ALL_CITY = {"310100" => "上海", "510100" => "成都", "440300" => "深圳", "320100" => "南京", "440100" => "广州", "420100" => "武汉",
@@ -354,6 +354,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info = UserSystem::CarUserInfo.new options
     car_user_info.name.gsub!(/\r|\n|\t/,'') unless car_user_info.name.blank?
     car_user_info.save!
+    redis[options[:detail_url]] = 'y'
+    redis.expire options[:detail_url], 7*24*60*60
     return 0
   end
 
@@ -608,7 +610,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
     begin
-      TaoChe.update_detail
+      # TaoChe.update_detail
     rescue Exception => e
       pp e
     end
