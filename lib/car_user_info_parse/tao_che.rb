@@ -89,7 +89,7 @@ module TaoChe
         next if age_mil.blank?
         age_mil = age_mil.split('/')
         url = info.css('a').first['href']
-        result = UserSystem::CarUserInfo.create_car_user_info che_xing: info.css('h4').text.strip,
+        result = UserSystem::CarUserInfo.create_car_user_info che_xing: "~#{info.css('h4').text.strip}",
                                                               che_ling: age_mil.first.match(/\d{4}/).to_s,
                                                               milage: age_mil.last.match(/[\d.]{1,10}/).to_s,
                                                               detail_url: url,

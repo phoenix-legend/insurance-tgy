@@ -10,8 +10,8 @@ module Baixing
         pp "现在跑..百姓 #{areaname}"
         1.upto 3 do |i|
           sleep 2+rand(4)
-          url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}"  # url = "http://haerbin.baixing.com/m/ershouqiche/?page=1"
-          content = RestClient.get url,{'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+          url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}" # url = "http://haerbin.baixing.com/m/ershouqiche/?page=1&per_page=10"
+          content = RestClient.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
           content = content.body
           # pp content
           break if content.blank?
@@ -59,6 +59,43 @@ module Baixing
     end
   end
 
+
+  #Baixing.get_car_user_list_v2 content, areaid
+  def self.get_car_user_list_v2 content, areaid
+    areaname = UserSystem::CarUserInfo::BAIXING_PINYIN_CITY[areaid]
+    return if areaname.blank?
+    begin
+      return if content.blank?
+      content.gsub!('item special', 'eric')
+      content = Nokogiri::HTML(content)
+      car_infos = content.css('.eric')
+      car_infos = car_infos.select { |c| c.css('.jiaji').length==0 }
+      return if car_infos.blank?
+      car_infos.each do |car_info|
+        detail_url = car_info.css('a')[0].attributes['href'].value
+        is_cheshang = 0
+        next if detail_url.match /redirect/
+        result = UserSystem::CarUserInfo.create_car_user_info che_ling: "4010",
+                                                              milage: 8.8,
+                                                              detail_url: detail_url,
+                                                              city_chinese: areaname,
+                                                              # price: price,
+                                                              site_name: 'baixing',
+                                                              is_cheshang: is_cheshang
+        if result == 0
+          u = detail_url
+          unless u.blank?
+            c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
+            Baixing.update_one_detail c.id if not c.blank?
+          end
+        end
+      end
+    rescue Exception => e
+      pp e
+    end
+
+  end
+
   # Baixing.
   def self.update_one_detail car_user_info_id
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
@@ -84,7 +121,7 @@ module Baixing
 
       detail_content = Nokogiri::HTML(detail_content1)
 
-      phone =  nil
+      phone = nil
       begin
         phone = detail_content.css(".num")[0].text
       rescue Exception => e
@@ -92,11 +129,17 @@ module Baixing
       end
 
       che_xing = detail_content.css(".title h1").text
-      fabushijian = begin detail_content.css(".fabushijian").text rescue '2010-01-01' end
+      fabushijian = begin
+        detail_content.css(".fabushijian").text rescue '2010-01-01'
+      end
 
-      che_ling = begin detail_content.css(".detail .content .info").children[0].children[0].content rescue '3010-01' end
+      che_ling = begin
+        detail_content.css(".detail .content .info").children[0].children[0].content rescue '3010-01'
+      end
       che_ling = che_ling.split('-')[0]
-      licheng = begin detail_content.css(".detail .content .info").children[1].children[0].content rescue '80000' end
+      licheng = begin
+        detail_content.css(".detail .content .info").children[1].children[0].content rescue '80000'
+      end
 
       metas = detail_content.css(".top-meta li")
       metas.each do |meta|
@@ -116,7 +159,9 @@ module Baixing
 
 
       name = '先生女士'
-      note = begin detail_content.css(".eric_content")[0].text rescue '' end
+      note = begin
+        detail_content.css(".eric_content")[0].text rescue ''
+      end
 
       UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                             name: name,
@@ -170,7 +215,9 @@ module Baixing
         phone = detail_content.css(".num")[0].text
         che_xing = detail_content.css(".title h1").text
         name = '先生女士'
-        note = begin detail_content.css(".eric_content")[0].text rescue '' end
+        note = begin
+          detail_content.css(".eric_content")[0].text rescue ''
+        end
         fabushijian = '2010-01-01'
         UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                               name: name,

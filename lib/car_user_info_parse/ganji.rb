@@ -145,11 +145,11 @@ module Ganji
 
             unless cui_id.blank?
               begin
-              Ganji.update_one_detail cui_id
+                Ganji.update_one_detail cui_id
               rescue Exception => e
                 pp "赶集出错"
                 pp e
-                end
+              end
             end
 
 
@@ -161,12 +161,68 @@ module Ganji
             break
           end
         end
-        # ActiveRecord::Base.connection.close
+          # ActiveRecord::Base.connection.close
       rescue Exception => e
         pp e
         # ActiveRecord::Base.connection.close
       end
     end
+  end
+
+  #  Ganji.get_car_user_list  单线程sleep 版
+  def self.get_car_user_list_v2 content, areaid
+
+    begin
+      areaname = UserSystem::CarUserInfo::GANJI_CITY[areaid]
+      return if content.blank?
+      content = Nokogiri::HTML(content)
+      car_infos = content.css(".infor")
+      return if car_infos.blank?
+
+
+      car_infos.each do |car_info|
+        detail_url = car_info.attributes["href"].value
+        detail_url.gsub!('_', '/')
+        chexing = car_info.css('.iName').text
+        chexing.gsub!(/\n|\s/, '')
+
+        price = car_info.css('.price').text
+        price.gsub!('万元', '')
+
+        cheling_licheng = car_info.css('.iol').text
+        cheling = begin
+          cheling_licheng.split('年')[0] rescue 2012
+        end
+        cheling.gsub!('  ', '')
+        cheling.gsub!('\n|\s|\r', '')
+        licheng = begin
+          cheling_licheng.split(/上牌|万公里/)[1] rescue 2012
+        end
+        is_cheshang = (chexing.match /个人/).blank?
+        cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: "~#{chexing}",
+                                                               che_ling: cheling,
+                                                               milage: licheng,
+                                                               detail_url: "http://wap.ganji.com#{detail_url.split('?')[0]}",
+                                                               city_chinese: areaname,
+                                                               price: price,
+                                                               site_name: 'ganji',
+                                                               is_cheshang: is_cheshang
+
+
+        unless cui_id.blank?
+          begin
+            Ganji.update_one_detail cui_id
+          rescue Exception => e
+            pp "赶集出错"
+            pp e
+          end
+        end
+
+      end
+    rescue Exception => e
+      pp e
+    end
+
   end
 
   # Ganji.update_detail

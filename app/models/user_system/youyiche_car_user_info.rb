@@ -3,7 +3,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   # CITY = ['上海', '杭州', '苏州', '成都']
   # CITY = ['上海', '杭州', '苏州']
-  CITY = ['上海', '苏州', '成都','杭州']
+  CITY = ['上海', '苏州', '杭州']
   # CITY = ['上海']
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -203,34 +203,34 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
       #对量进行严格控制
       # peiliang = {"苏州" => 40, "杭州" => 30, "成都" => 50}
-      peiliang = {"苏州" => 65, "杭州" => 50, "成都" => 80}
+      peiliang = {"苏州" => 35, "杭州" => 50, "成都" => 80}
       liang = peiliang[yc_car_user_info.city_chinese]
       yijingyoudeliang = UserSystem::YouyicheCarUserInfo.where("city_chinese = ? and created_day = ? and youyiche_id is not null", yc_car_user_info.city_chinese, Time.now.chinese_format_day).count
       if yijingyoudeliang > liang
-        xemail  = if rand(10)<6 then 'lanyu@uguoyuan.cn' else 'lanjing@uguoyuan.cn' end
-        yc_car_user_info.youyiche_upload_status = "。超出配额-给兰-#{xemail}"
-        yc_car_user_info.save!
-
-        #超出配额给兰昱。
-
-
-        (MailSend.send_content xemail, '', "#{yc_car_user_info.name} 有车要卖",
-                               "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.brand}").deliver
-        return
+      # xemail  = if rand(10)<6 then 'lanyu@uguoyuan.cn' else 'lanjing@uguoyuan.cn' end
+      # yc_car_user_info.youyiche_upload_status = "。超出配额-给兰-#{xemail}"
+      # yc_car_user_info.save!
+      #
+      # #超出配额给兰昱。
+      #
+      #
+      # (MailSend.send_content xemail, '', "#{yc_car_user_info.name} 有车要卖",
+      #                        "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.brand}").deliver
+      return
       end
 
     end
 
-    if yc_car_user_info.city_chinese == '成都'
-      #成都暂时给兰昱。
-      xemail  = if rand(10)<6 then 'lanyu@uguoyuan.cn' else 'lanjing@uguoyuan.cn' end
-      yc_car_user_info.youyiche_upload_status = "成都车-给兰-#{xemail}"
-      yc_car_user_info.save!
-
-      (MailSend.send_content xemail, '', "#{yc_car_user_info.name} 有车要卖",
-                             "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.brand}").deliver
-      return
-    end
+    # if yc_car_user_info.city_chinese == '成都'
+    #   #成都暂时给兰昱。
+    #   xemail  = if rand(10)<6 then 'lanyu@uguoyuan.cn' else 'lanjing@uguoyuan.cn' end
+    #   yc_car_user_info.youyiche_upload_status = "成都车-给兰-#{xemail}"
+    #   yc_car_user_info.save!
+    #
+    #   (MailSend.send_content xemail, '', "#{yc_car_user_info.name} 有车要卖",
+    #                          "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.brand}").deliver
+    #   return
+    # end
 
     params = {
         "name" => yc_car_user_info.name,
