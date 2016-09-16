@@ -668,42 +668,6 @@ module UploadTianTian
     return ''
   end
 
-
-  # 忽略掉重点城市以外， 临时使用
-  def self.couge
-    UserSystem::KouLingCarUserInfo.all.find_each do |kl|
-      begin
-        cui = kl.car_user_info
-        if ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "重庆", "佛山"].include? cui.city_chinese
-          kl.vip_flg = 'vip'
-          kl.save!
-        else
-          kl.vip_flg = 'normal'
-          kl.save!
-        end
-      rescue Exception => e
-        next
-      end
-    end
-
-
-    UserSystem::CarUserInfo.where("site_name = 'baixing' and need_update = ?", true).find_each do |cui|
-      unless ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "重庆", "佛山"].include? cui.city_chinese
-        cui.need_update = false
-        cui.save!
-      end
-    end
-
-    UserSystem::CarUserInfo.where(city_chinese: '上海').where("id > 1148459 and tt_yaoyue = '成功'")
-  end
-
-  def XX
-    UserSystem::CarUserInfo.where("city_chinese = '北京' and id > 1925462").each do |car_user_info|
-      UploadTianTian.upload_one_tt car_user_info
-    end
-  end
-
-
 end
 
 __END__

@@ -1,27 +1,26 @@
-
 <%
    last_day = 30
    yx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day >= ? and tt_yaoyue_day <= ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
    yx_hulei_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day >= ? and tt_yaoyue_day <= ? and tt_source in ('23-23-4','23-23-5','23-23-1')", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
-   yx_guongzheng_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day >= ? and tt_yaoyue_day <= ? and tt_source in ('2-307-317','2-306-314')", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
-  tj_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day >= ? and tt_created_day <= ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
-   a4_month_counts = ::UserSystem::AishiCarUserInfo.where("aishi_yaoyue = '成功' and aishi_yaoyue_day >= ? and numbers = '4SA-1011' and aishi_yaoyue_day <= ?",Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
+   yx_guongzheng_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day >= ? and tt_yaoyue_day <= ? and tt_source in ('2-307-317','2-306-314','2-474')", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
+   tj_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day >= ? and tt_created_day <= ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
+   a4_month_counts = ::UserSystem::AishiCarUserInfo.where("aishi_yaoyue = '成功' and aishi_yaoyue_day >= ? and numbers = '4SA-1011' and aishi_yaoyue_day <= ?", Date.new(Date.today.year, Date.today.month, 1), Date.new(Date.today.year, Date.today.month, last_day)).count
    a4_today_counts = ::UserSystem::AishiCarUserInfo.where("aishi_yaoyue = '成功' and aishi_yaoyue_day = ? and numbers = '4SA-1011'", Time.now.chinese_format_day).count
 %>
-本月意向数：<%=yx_month_counts%> = <%=yx_hulei_month_counts%> + <%= yx_guongzheng_month_counts %>
+本月意向数：<%= yx_month_counts %> = <%= yx_hulei_month_counts %> + <%= yx_guongzheng_month_counts %>
 <br/>
-本月提交数：<%=tj_month_counts%>
+本月提交数：<%= tj_month_counts %>
 <br/>
 <%
 
    zyx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功'").count
    ztj_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null").count
 %>
-总意向数：<%=zyx_month_counts%>
+总意向数：<%= zyx_month_counts %>
 <br/>
-总提交数：<%=ztj_month_counts%>
+总提交数：<%= ztj_month_counts %>
 <br/>
-4A成功数 今天/本月：<%=a4_today_counts%> / <%=a4_month_counts%>
+4A成功数 今天/本月：<%= a4_today_counts %> / <%= a4_month_counts %>
 <br/>
 
 
@@ -39,11 +38,11 @@
      0.upto(day_number.to_i) do |i|
        d = Date.today - i
        next if d < Date.new(2016, 2, 15)
-       ['58', 'ganji', 'baixing', 'che168', 'taoche','zuoxi'].each do |source|
+       ['58', 'ganji', 'baixing', 'che168', 'taoche', 'zuoxi'].each do |source|
 
-         tijiaoshu = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and created_at > ? and created_at < ?", source,"#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         tijiaoshu = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and created_at > ? and created_at < ?", source, "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
 
-         chenggongshu = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ?",source, "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         chenggongshu = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ?", source, "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
          source_name = case source
                          when 'taoche'
                            '淘车'
@@ -56,42 +55,60 @@
                          when 'baixing'
                            '百姓'
                          when 'zuoxi'
-                            '座席'
+                           '座席'
                        end
   %>
 
 
-          <tr class=<%= if i%2 == 0 then '"yinying"' else 'noyinying' end%>>
+          <tr class=<%= if i%2 == 0 then
+                          '"yinying"'
+                        else
+                          'noyinying'
+                        end %>>
             <td><%= d.chinese_format_day %></td>
             <td><%= source_name %></td>
             <td><%= tijiaoshu %></td>
             <td><%= chenggongshu %></td>
-            <td><%= if tijiaoshu == 0 then 'NaN' else (((chenggongshu.to_f/tijiaoshu)*10000).to_i).to_f/100 end %>%</td>
+            <td><%= if tijiaoshu == 0 then
+                      'NaN'
+                    else
+                      (((chenggongshu.to_f/tijiaoshu)*10000).to_i).to_f/100
+                    end %>%
+            </td>
           </tr>
 
 
       <%
-         end%>
+         end %>
 
       <%
          all_tijiaoshu = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ?", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
          all_tijiaoshu1 = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ? and tt_source in ('23-23-4','23-23-5','23-23-1')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
-         all_tijiaoshu2 = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ? and tt_source in ('2-307-317','2-306-314')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         all_tijiaoshu2 = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ? and tt_source in ('2-307-317','2-306-314','2-474')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
 
          all_chenggongshu = UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ?", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
          all_chenggongshu1 = UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ? and tt_source in ('23-23-4','23-23-5','23-23-1')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
-         all_chenggongshu2 = UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ? and tt_source in ('2-307-317','2-306-314')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         all_chenggongshu2 = UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ? and tt_source in ('2-307-317','2-306-314','2-474')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
       %>
-      <tr class=<%= if i%2 == 0 then '"yinying"' else 'noyinying' end%>>
+      <tr class=<%= if i%2 == 0 then
+                      '"yinying"'
+                    else
+                      'noyinying'
+                    end %>>
         <td><%= d.chinese_format_day %></td>
         <td>---</td>
         <td><%= all_tijiaoshu %>=<%= all_tijiaoshu1 %>+<%= all_tijiaoshu2 %></td>
         <td><%= all_chenggongshu %>=<%= all_chenggongshu1 %>+<%= all_chenggongshu2 %></td>
-        <td><%= if all_tijiaoshu == 0 then 'NaN' else (((all_chenggongshu.to_f/all_tijiaoshu)*10000).to_i).to_f/100 end%>% </td>
+        <td><%= if all_tijiaoshu == 0 then
+                  'NaN'
+                else
+                  (((all_chenggongshu.to_f/all_tijiaoshu)*10000).to_i).to_f/100
+                end %>%
+        </td>
       </tr>
 
   <%
-     end%>
+     end %>
 
 </table>
 

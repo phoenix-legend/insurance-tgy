@@ -276,7 +276,13 @@ class UserSystem::CheChengCarUserInfo < ActiveRecord::Base
                                  token: '049cfd502c74cafac9cde1a4161f5352',
                                  customer_id: cui.checheng_id
       response = JSON.parse response.body
-      pp response
+      response["data"].each do |k|
+        pp "#{cui.id}...#{k["car_status_msg"]}"
+        if k["car_status_msg"] == '成交'
+          pp response
+          pp "###"*10
+        end
+      end
 
     end
   end
