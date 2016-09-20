@@ -4,7 +4,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
   CITY = [
       # "上海","福州", "厦门", '苏州', "杭州", "成都"
-      # '苏州',
+      '苏州',
       "杭州",
       "上海",  "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京",
       '天津',  '武汉', '重庆', "成都",
@@ -45,7 +45,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
         "保定", "包头", "百色", "巴中", "鞍山", "安阳", "安庆", "红河", "蚌埠", "丽水"
     ].include? city_name
       return '13cfe7dfa0dd2fe5e2a7d5fb467099a6', '4SA-1012' # Eric 秘钥
-    elsif ['福州', '厦门', '上海',"苏州"].include? city_name
+    elsif ['福州', '厦门', '上海',"苏州","合肥","成都"].include? city_name
       if rand(10)<6
         return '13cfe7dfa0dd2fe5e2a7d5fb467099a6', '4SA-1012'
       else
