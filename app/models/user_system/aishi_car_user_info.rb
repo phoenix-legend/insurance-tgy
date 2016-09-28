@@ -148,6 +148,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
                                                                                             city: "#{ycui.city_chinese}市",
                                                                                             brand: ycui.brand,
                                                                                             number: number,
+                                                                                            mileage: (ycui.milage).to_i*10000,
+                                                                                            car_age: (Date.today.year-ycui.che_ling)*12 ,
                                                                                             sign: Digest::MD5.hexdigest("#{number}#{key}")
                                                                                          }
     response = JSON.parse response.body
@@ -246,7 +248,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
   # UserSystem::AishiCarUserInfo.batch_query_aishi
   def self.batch_query_aishi
-    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 400000 and (aishi_yaoyue is null or aishi_yaoyue = '未知')").find_each do |cui|
+    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 600000 and (aishi_yaoyue is null or aishi_yaoyue = '未知')").find_each do |cui|
       next if cui.aishi_yaoyue == '成功'
       next if cui.aishi_yaoyue == '失败'
       response = nil
