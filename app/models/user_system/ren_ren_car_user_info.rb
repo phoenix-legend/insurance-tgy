@@ -247,7 +247,6 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     domain = '60.205.108.209'
     require 'digest/md5'
     time = Time.now.to_i
-    pp time
     data = {
         "name" => yc_car_user_info.name,
         "mobile" => yc_car_user_info.phone,
@@ -288,6 +287,25 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     end
     yc_car_user_info.save!
 
+  end
+
+  def self.tongji_renren_che
+    require 'digest/md5'
+    token = 'J8UkigIBffy0xZen'
+    domain = '60.205.108.209'
+    time = Time.now.chinese_format
+
+    data = {"day" => "2016-09-30"}
+    data_json = data.to_json
+    params = {
+        "token" => token,
+        "time" => time,
+        "sign" => Digest::MD5.hexdigest("#{token}#{time}"),
+        "data" => data_json
+    }
+
+    response = RestClient.post "#{domain}/v1/clue/saler", params
+    response = JSON.parse response.body
   end
 
 
