@@ -3,7 +3,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   # CITY = ['上海', '杭州', '苏州', '成都']
   # CITY = ['上海', '杭州', '苏州']
-  CITY = ['上海', '苏州', '杭州','合肥']
+  CITY = ['上海', '苏州', '杭州','合肥','宿州']
   # CITY = ['上海']
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -155,7 +155,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     # end
 
     # 针对苏，杭，成都 进行严格限制量。
-    if ['苏州', '杭州', '成都', '合肥'].include? yc_car_user_info.city_chinese
+    if ['苏州', '杭州', '成都', '合肥','宿州'].include? yc_car_user_info.city_chinese
 
       if Time.now.hour < 6 and ['苏州','合肥'].include? yc_car_user_info.city_chinese
         yc_car_user_info.youyiche_upload_status = '时间太早'
@@ -203,7 +203,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
       #对量进行严格控制
       # peiliang = {"苏州" => 40, "杭州" => 30, "成都" => 50}
-      peiliang = {"苏州" => 50, "杭州" => 50, "成都" => 80, "合肥" => 25}
+      peiliang = {"苏州" => 60, "杭州" => 50, "成都" => 80, "合肥" => 25, '宿州' => 25}
       liang = peiliang[yc_car_user_info.city_chinese]
       yijingyoudeliang = UserSystem::YouyicheCarUserInfo.where("city_chinese = ? and created_day = ? and youyiche_id is not null", yc_car_user_info.city_chinese, Time.now.chinese_format_day).count
       if yijingyoudeliang > liang
