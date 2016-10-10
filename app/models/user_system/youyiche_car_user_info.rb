@@ -239,7 +239,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
         "name" => yc_car_user_info.name,
         "phone" => yc_car_user_info.phone,
         "isSell" => 1,
-        "city" => yc_car_user_info.city_chinese,
+        "city" => if ['宿州'].include? yc_car_user_info.city_chinese then '合肥' else yc_car_user_info.city_chinese end,
         "type" => "线上合作-数据合作",
         "origin" => if ['宿州'].include? yc_car_user_info.city_chinese then 'xuzuo-ahsz' else "xuzuo" end,
         "brand" => yc_car_user_info.brand
