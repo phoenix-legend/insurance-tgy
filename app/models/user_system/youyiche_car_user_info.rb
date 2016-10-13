@@ -164,7 +164,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       end
 
       cui = yc_car_user_info.car_user_info
-      cui.phone_city = UserSystem::YoucheCarUserInfo.get_city_name(yc_car_user_info.phone)
+      cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
       cui.save!
       if not cui.phone_city.blank?
         unless cui.city_chinese == cui.phone_city

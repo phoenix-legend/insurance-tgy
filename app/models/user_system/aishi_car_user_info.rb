@@ -105,9 +105,23 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       return
     end
 
+
+
     return if ycui.phone.blank?
     return if ycui.aishi_upload_status != '未上传'
     return if ycui.name.blank?
+
+
+    cui = ycui.car_user_info
+    cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(ycui.phone)
+    cui.save!
+    if not cui.phone_city.blank?
+      unless cui.city_chinese == cui.phone_city
+        ycui.aishi_upload_status = '非本地车'
+        ycui.save!
+        return
+      end
+    end
 
     unless ['上海', '福州', '厦门'].include? ycui.city_chinese
       if ycui.che_ling.to_i < 2006

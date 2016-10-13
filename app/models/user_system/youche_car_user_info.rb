@@ -221,5 +221,18 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
 
   end
 
+  # UserSystem::YoucheCarUserInfo.get_city_name2 '13472446647'
+  def self.get_city_name2 phone
+    begin
+      key = "2e856e299e015bab441e492ea77f5375"
+      response = RestClient.get "http://apis.juhe.cn/mobile/get?phone=#{phone}&key=#{key}"
+      response = JSON.parse(response.body)
+      response["result"]["city"]
+    rescue Exception => e
+      ''
+    end
+
+  end
+
 end
 __END__
