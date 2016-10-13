@@ -1437,7 +1437,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                                                                          mobile: cui.phone,
                                                                                          city: cui.city_chinese,
                                                                                          brand: cui.brand,
-                                                                                         source: s,
+                                                                                         source: cui.tt_source,
                                                                                          response_id: cui.tt_id,
                                                                                          number: 'PRO103',
                                                                                          sign: Digest::MD5.hexdigest("#{cui.phone}#{s}")
