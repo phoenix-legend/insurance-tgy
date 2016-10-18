@@ -124,7 +124,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     end
 
     unless ['上海', '福州', '厦门'].include? ycui.city_chinese
-      if ycui.che_ling.to_i < 2006
+      if ycui.che_ling.to_i < 2009
         ycui.aishi_upload_status = '车龄过老'
         ycui.save!
         return
