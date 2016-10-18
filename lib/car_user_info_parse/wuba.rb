@@ -3,7 +3,7 @@ module Wuba
   # Wuba.get_car_user_list
   # 获取58部分城市的车辆列表
   def self.get_car_user_list lest_number = 20, sub_city_party = 0
-    
+    return true;
     # city_hash = ::UserSystem::CarUserInfo::WUBA_CITY
     city_hash = ::UserSystem::CarUserInfo.get_58_sub_cities sub_city_party
     threads = []
