@@ -312,7 +312,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       when 1
         {
-            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆", "bj" => "北京", "xm" => "厦门",
+            "tj" => "天津", "su" => "苏州", "hz" => "杭州", "dg" => "东莞", "cq" => "重庆",  "xm" => "厦门", #"bj" => "北京",
         }
       else
         {
