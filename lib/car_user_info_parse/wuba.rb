@@ -512,7 +512,7 @@ module Wuba
 
       id = car_user_info.detail_url.match /ershouche\/(\d{8,15})x\.shtml/
       id = id[1]
-      id_response = RestClient.get("http://app.58.com/api/windex/scandetail/car/#{id}/")
+      id_response = RestClient.get "http://app.58.com/api/windex/scandetail/car/#{id}/", {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
       id_response = id_response.body
       id_response = Nokogiri::HTML(id_response)
       # phone = id_response.css('.nums').text
@@ -520,7 +520,7 @@ module Wuba
 
 
       kouling = id_response.css('.info-short_url').text
-      kouling = kouling.match(/http(.)*$/)[0]
+      kouling = kouling.match(/https(.)*$/)[0]
       UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                             name: name,
                                             # phone: phone,
