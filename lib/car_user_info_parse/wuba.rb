@@ -3,7 +3,7 @@ module Wuba
   # Wuba.get_car_user_list
   # 获取58部分城市的车辆列表
   def self.get_car_user_list lest_number = 20, sub_city_party = 0
-    return true;
+    
     # city_hash = ::UserSystem::CarUserInfo::WUBA_CITY
     city_hash = ::UserSystem::CarUserInfo.get_58_sub_cities sub_city_party
     threads = []
@@ -398,6 +398,7 @@ module Wuba
       note = infos.select { |info| info.keys[0] == 'desc_area' }[0]["desc_area"]["text"]
       name = infos.select { |info| info.keys[0] == 'linkman_area' }[0]["linkman_area"]["base_info"]["title"]
       name.gsub!('(个人)', '')
+      name.gsub!('为保护用户隐私该电话3分钟后失效，请快速拨打哦~', '')
       time = infos.select { |info| info.keys[0] == 'title_area' }[0]["title_area"]["ext"][0]
 
       phone = infos.select { |info| info.keys[0] == 'fenqigou_area' }[0]
