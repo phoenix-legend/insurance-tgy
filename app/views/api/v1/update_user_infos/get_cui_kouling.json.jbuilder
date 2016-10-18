@@ -1,5 +1,5 @@
 if not @cui.blank?
-  json.kouling @cui.wuba_kouling
+  json.kouling begin (@cui.wuba_kouling).gsub('https','http') rescue '' end
   json.id @cui.id
 else
   json.kouling ''
