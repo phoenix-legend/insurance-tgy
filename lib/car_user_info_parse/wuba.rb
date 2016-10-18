@@ -37,7 +37,11 @@ module Wuba
             exists_car_number = 0
             trs.each do |tr|
               chexing = ''
-              next if tr.to_s.match /google|7天可退/
+              next if tr.to_s.match /google|7天可退|259项全车检测/
+              pp '.......'
+              next if (begin tr.attributes["style"] rescue '' end).to_s == 'display:none;'
+              pp '........'
+
               begin
                 chexing = tr.css('td .t')[0].text
               rescue
