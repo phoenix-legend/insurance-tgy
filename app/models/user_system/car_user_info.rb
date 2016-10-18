@@ -308,7 +308,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     case sub_party
       when 0
         {
-            "sh" => '上海', "cd" => '成都', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉", "fs" => '佛山',"fz" => "福州",
+            "sh" => '上海', "sz" => "深圳", 'nj' => '南京', "gz" => "广州", "wh" => "武汉", "fs" => '佛山',"fz" => "福州",#"cd" => '成都',
         }
       when 1
         {
