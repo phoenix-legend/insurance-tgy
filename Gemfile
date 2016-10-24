@@ -66,8 +66,6 @@ gem 'spreadsheet'
 gem "will_paginate-foundation"
 
 gem 'ruby-pinyin'
-gem 'barby'
-gem 'chunky_png'
-gem 'rqrcode'
+
 
 # gem 'therubyracer',  platforms: :ruby
