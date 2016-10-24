@@ -2,8 +2,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
 
   # CITY = ['上海', '苏州', '杭州','合肥','宿州']
-  CITY = ['上海', '苏州', '杭州','合肥']
-
+  # CITY = ['上海', '苏州', '杭州','合肥']
+  CITY = ['上海', '杭州','合肥']
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
     if car_user_info.is_pachong == false and car_user_info.is_real_cheshang == false and UserSystem::YouyicheCarUserInfo::CITY.include?(car_user_info.city_chinese)
