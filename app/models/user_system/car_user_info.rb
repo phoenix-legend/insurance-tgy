@@ -51,7 +51,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
               "511600" => "广安", "510800" => "广元", "510500" => "泸州", "511100" => "乐山", "511400" => "眉山", "511300" => "南充", "511000" => "内江", "510400" => "攀枝花", "510900" => "遂宁",
               "511800" => "雅安", "511500" => "宜宾", "512000" => "资阳", "510300" => "自贡", "140400" => "长治", "532300" => "楚雄",
               "532900" => "大理", "532500" => "红河", "530100" => "昆明", "530300" => "曲靖", "340800" => "安庆", "340300" => "蚌埠",
-              "341200" => "阜阳", "341500" => "六安", "340500" => "马鞍山"
+              "341200" => "阜阳", "341500" => "六安", "340500" => "马鞍山",
+              "371700"=>"菏泽",
+              "420700"=>"鄂州",
+              "421100"=>"黄冈",
+              "640100"=>"银川",
+              "630100"=>"西宁",
+
+              "140300"=>"阳泉",
+              "340700"=>"铜陵"
   }
 
 
@@ -69,12 +77,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       else
         {
             "610100" => "西安","410100" => "郑州", "430100" => "长沙", "150100" => "呼和浩特","140100" => "太原", "620100" => "兰州","320200" => "无锡",
-            "370200" => "青岛", "371000" => '威海', "370600" => '烟台', "370700" => '潍坊',
+            "370200" => "青岛", "371000" => '威海', "370600" => '烟台', "370700" => '潍坊',"650100" => "乌鲁木齐",
             "320400" => '常州', "320300" => '徐州', "320600" => '南通', "321000" => '扬州', "370100" => "济南",
             "130100" => "石家庄", "130200" => "唐山", "610300" => "宝鸡", "410300" => "洛阳", "411300" => "南阳", "410700" => "新乡",
             "430300" => "湘潭", "430200" => "株洲", "430700" => "常德", "430600" => "岳阳", "210100" => "沈阳", "210200" => "大连", "210800" => "营口",
             "350500" => "泉州", "220100" => "长春", "230100" => "哈尔滨", "230600" => "大庆", "340100" => "合肥", "340200" => "芜湖", "450100" => "南宁", "360100" => "南昌",
-            "140200" => "大同", "140700" => "晋中", "141000" => "临汾", "140800" => "运城",
+            "140200" => "大同", "140700" => "晋中", "141000" => "临汾", "140800" => "运城","610400" => "咸阳",
             "441300" => "惠州", "441200" => "肇庆", "442000" => "中山", "330400" => "嘉兴", "520100" => "贵阳",
             "520300" => "遵义", "510700" => "绵阳", "420600" => "襄阳", "420500" => "宜昌","341300"=>"宿州",
             "371600" => "滨州", "371400" => "德州", "370500" => "东营", "370800" => "济宁", "371300" => "临沂", "371100" => "日照", "370900" => "泰安", "370400" => "枣庄", "330200" => "宁波", "321300" => "宿迁", "321200" => "泰州", "320900" => "盐城", "321100" => "镇江",
@@ -86,7 +94,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "422800"=>"恩施", "420200"=>"黄石", "421000"=>"荆州", "420800"=>"荆门", "421300"=>"随州", "420300"=>"十堰", "421200"=>"咸宁", "420900"=>"孝感", "430900"=>"益阳", "230800"=>"佳木斯",
             "231000"=>"牡丹江", "230200"=>"齐齐哈尔", "361000"=>"抚州", "360700"=>"赣州", "360800"=>"吉安", "360400"=>"九江", "360200"=>"景德镇", "361100"=>"上饶", "360900"=>"宜春", "220200"=>"吉林", "220700"=>"松原", "220300"=>"四平", "222400"=>"延边", "150200"=>"包头", "150400"=>"赤峰",
             "150600"=>"鄂尔多斯", "150100"=>"呼和浩特", "150500"=>"通辽", "511900"=>"巴中", "510600"=>"德阳", "511700"=>"达州", "511600"=>"广安", "510800"=>"广元", "510500"=>"泸州", "511100"=>"乐山", "511400"=>"眉山", "511300"=>"南充", "511000"=>"内江", "510400"=>"攀枝花", "510900"=>"遂宁",
-            "511800"=>"雅安", "511500"=>"宜宾", "512000"=>"资阳", "510300"=>"自贡", "140400"=>"长治", "532300"=>"楚雄", "532900"=>"大理", "532500"=>"红河", "530100"=>"昆明", "530300"=>"曲靖", "340800"=>"安庆", "340300"=>"蚌埠", "341200"=>"阜阳", "341500"=>"六安", "340500"=>"马鞍山"
+            "511800"=>"雅安", "511500"=>"宜宾", "512000"=>"资阳", "510300"=>"自贡", "140400"=>"长治", "532300"=>"楚雄", "532900"=>"大理", "532500"=>"红河", "530100"=>"昆明", "530300"=>"曲靖", "340800"=>"安庆", "340300"=>"蚌埠", "341200"=>"阜阳", "341500"=>"六安", "340500"=>"马鞍山",
+            "371700"=>"菏泽",
+            "420700"=>"鄂州",
+            "421100"=>"黄冈",
+            "640100"=>"银川",
+            "630100"=>"西宁",
+
+            "140300"=>"阳泉",
+            "340700"=>"铜陵"
         }
     end
   end
@@ -124,7 +140,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "langfang"=>"廊坊", "kunming"=>"昆明", "kaifeng"=>"开封", "jiujiang"=>"九江", "jingdezhen"=>"景德镇", "jingzhou"=>"荆州", "jingmen"=>"荆门", "jinzhou"=>"锦州", "jinhua"=>"金华", "jiaozuo"=>"焦作", "jiangmen"=>"江门", "jiamusi"=>"佳木斯", "jilin"=>"吉林", "jian"=>"吉安", "huangshi"=>"黄石",
       "huaian"=>"淮安", "huzhou"=>"湖州", "huhehaote"=>"呼和浩特", "hengshui"=>"衡水", "handan"=>"邯郸", "guilin"=>"桂林", "guangyuan"=>"广元", "guangan"=>"广安", "ganzhou"=>"赣州", "fuyang"=>"阜阳", "jxfz"=>"抚州", "fushun"=>"抚顺", "fuzhou"=>"福州", "enshi"=>"恩施", "eerduosi"=>"鄂尔多斯",
       "deyang"=>"德阳", "dali"=>"大理", "dazhou"=>"达州", "chuxiong"=>"楚雄", "chifeng"=>"赤峰", "chengde"=>"承德", "cangzhou"=>"沧州", "beihai"=>"北海", "baoding"=>"保定", "baotou"=>"包头", "baise"=>"百色", "bazhong"=>"巴中", "anshan"=>"鞍山", "anyang"=>"安阳", "anqing"=>"安庆", "honghe"=>"红河",
-      "bengbu"=>"蚌埠", "lishui"=>"丽水"
+      "bengbu"=>"蚌埠", "lishui"=>"丽水",
+      "xianyang"=>"咸阳",
+      "yinchuan"=>"银川",
+      "xining"=>"西宁",
+      "heze"=>"菏泽",
+      "tongling"=>"铜陵",
+      "huanggang"=>"黄冈",
+      "ezhou"=>"鄂州",
+      "yangquan"=>"阳泉"
   }
 
   IMPRTANT_CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "佛山", "东莞", "重庆", "北京","福州","厦门"]
@@ -158,7 +182,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "leshan" => "乐山", "langfang" => "廊坊", "kunming" => "昆明", "kaifeng" => "开封", "jiujiang" => "九江", "jingdezhen" => "景德镇", "jingzhou" => "荆州", "jingmen" => "荆门", "jinzhou" => "锦州", "jinhua" => "金华", "jiaozuo" => "焦作", "jiangmen" => "江门", "jiamusi" => "佳木斯", "jilin" => "吉林",
       "jian" => "吉安", "huangshi" => "黄石", "huaian" => "淮安", "huzhou" => "湖州", "huhehaote" => "呼和浩特", "hengshui" => "衡水", "handan" => "邯郸", "guilin" => "桂林", "guangyuan" => "广元", "guangan" => "广安", "ganzhou" => "赣州", "fuyang" => "阜阳", "fz" => "抚州", "fushun" => "抚顺",
       "fuzhou" => "福州", "enshi" => "恩施", "eerduosi" => "鄂尔多斯", "deyang" => "德阳", "dali" => "大理", "dazhou" => "达州", "chuxiong" => "楚雄", "chifeng" => "赤峰", "chengde" => "承德", "cangzhou" => "沧州", "beihai" => "北海", "baoding" => "保定", "baotou" => "包头", "bose" => "百色", "bazhong" => "巴中",
-      "anshan" => "鞍山", "anyang" => "安阳", "anqing" => "安庆", "honghe" => "红河", "bengbu" => "蚌埠", "lishui" => "丽水"
+      "anshan" => "鞍山", "anyang" => "安阳", "anqing" => "安庆", "honghe" => "红河", "bengbu" => "蚌埠", "lishui" => "丽水",
+      "xianyang"=>"咸阳",
+      "yinchuan"=>"银川",
+      "xining"=>"西宁",
+      "heze"=>"菏泽",
+      "tongling"=>"铜陵",
+      "huanggang"=>"黄冈",
+      "ezhou"=>"鄂州",
+      "yangquan"=>"阳泉"
 
   }
 
@@ -187,7 +219,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "quanzhou" => "泉州", "changchun" => "长春", "haerbin" => "哈尔滨", "daqing" => "大庆", "hefei" => "合肥",
             "wuhu" => "芜湖", "nanning" => "南宁", "nanchang" => "南昌",
             "datong" => "大同", "jinzhong" => "晋中", "linfen" => "临汾", "yuncheng" => "运城",
-            "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴", "guiyang" => "贵阳",
+            "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴", "guiyang" => "贵阳","wulumuqi" => "乌鲁木齐",
             "zunyi" => "遵义", "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌",
             "binzhou" => "滨州", "dezhou" => "德州", "dongying" => "东营", "jining" => "济宁", "linyi" => "临沂", "rizhao" => "日照", "taian" => "泰安", "zaozhuang" => "枣庄", "ningbo" => "宁波", "suqian" => "宿迁", "tz" => "泰州", "yancheng" => "盐城", "zhenjiang" => "镇江",
 
@@ -200,7 +232,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "leshan"=>"乐山", "langfang"=>"廊坊", "kunming"=>"昆明", "kaifeng"=>"开封", "jiujiang"=>"九江", "jingdezhen"=>"景德镇", "jingzhou"=>"荆州", "jingmen"=>"荆门", "jinzhou"=>"锦州", "jinhua"=>"金华", "jiaozuo"=>"焦作", "jiangmen"=>"江门", "jiamusi"=>"佳木斯", "jilin"=>"吉林",
             "jian"=>"吉安", "huangshi"=>"黄石", "huaian"=>"淮安", "huzhou"=>"湖州", "huhehaote"=>"呼和浩特", "hengshui"=>"衡水", "handan"=>"邯郸", "guilin"=>"桂林", "guangyuan"=>"广元", "guangan"=>"广安", "ganzhou"=>"赣州", "fuyang"=>"阜阳", "fz"=>"抚州", "fushun"=>"抚顺",
             "fuzhou"=>"福州", "enshi"=>"恩施", "eerduosi"=>"鄂尔多斯", "deyang"=>"德阳", "dali"=>"大理", "dazhou"=>"达州", "chuxiong"=>"楚雄", "chifeng"=>"赤峰", "chengde"=>"承德", "cangzhou"=>"沧州", "beihai"=>"北海", "baoding"=>"保定", "baotou"=>"包头", "bose"=>"百色", "bazhong"=>"巴中",
-            "anshan"=>"鞍山", "anyang"=>"安阳", "anqing"=>"安庆", "honghe"=>"红河", "bengbu"=>"蚌埠", "lishui"=>"丽水"
+            "anshan"=>"鞍山", "anyang"=>"安阳", "anqing"=>"安庆", "honghe"=>"红河", "bengbu"=>"蚌埠", "lishui"=>"丽水",
+            "xianyang"=>"咸阳",
+            "yinchuan"=>"银川",
+            "xining"=>"西宁",
+            "heze"=>"菏泽",
+            "tongling"=>"铜陵",
+            "huanggang"=>"黄冈",
+            "ezhou"=>"鄂州",
+            "yangquan"=>"阳泉"
 
         }
     end
@@ -232,7 +272,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "lianyungang" => "连云港", "leshan" => "乐山", "langfang" => "廊坊", "km" => "昆明", "kaifeng" => "开封", "jiujiang" => "九江", "jingdezhen" => "景德镇", "jingzhou" => "荆州", "jingmen" => "荆门", "jinzhou" => "锦州", "jinhua" => "金华", "jiaozuo" => "焦作", "jiangmen" => "江门", "jiamusi" => "佳木斯",
       "jilin" => "吉林", "jian" => "吉安", "huangshi" => "黄石", "huaian" => "淮安", "huzhou" => "湖州", "nmg" => "呼和浩特", "hengshui" => "衡水", "handan" => "邯郸", "gl" => "桂林", "guangyuan" => "广元", "guangan" => "广安", "ganzhou" => "赣州", "fuyang" => "阜阳", "jxfuzhou" => "抚州", "fushun" => "抚顺",
       "fz" => "福州", "enshi" => "恩施", "eerduosi" => "鄂尔多斯", "deyang" => "德阳", "dali" => "大理", "dazhou" => "达州", "chuxiong" => "楚雄", "chifeng" => "赤峰", "chengde" => "承德", "cangzhou" => "沧州", "beihai" => "北海", "baoding" => "保定", "baotou" => "包头", "baise" => "百色", "bazhong" => "巴中",
-      "anshan" => "鞍山", "anyang" => "安阳", "anqing" => "安庆", "honghe" => "红河", "bengbu" => "蚌埠", "lishui" => "丽水"
+      "anshan" => "鞍山", "anyang" => "安阳", "anqing" => "安庆", "honghe" => "红河", "bengbu" => "蚌埠", "lishui" => "丽水",
+      "xianyang"=>"咸阳",
+      "yc"=>"银川",
+      "xn"=>"西宁",
+      "heze"=>"菏泽",
+      "tongling"=>"铜陵",
+      "huanggang"=>"黄冈",
+      "ezhou"=>"鄂州",
+      "yangquan"=>"阳泉"
   }
 
 
@@ -254,7 +302,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "sjz" => "石家庄", "tangshan" => "唐山", "baoji" => "宝鸡","ahsuzhou"=>"宿州",
             "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
             "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
-            "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口",
+            "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口","xj" => "乌鲁木齐",
             "quanzhou" => "泉州", "cc" => "长春", "hrb" => "哈尔滨", "daqing" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
             "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴", "gy" => "贵阳",
             "zunyi" => "遵义", "nmg" => "呼和浩特",
@@ -271,7 +319,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "lianyungang"=>"连云港", "leshan"=>"乐山", "langfang"=>"廊坊", "km"=>"昆明", "kaifeng"=>"开封", "jiujiang"=>"九江", "jingdezhen"=>"景德镇", "jingzhou"=>"荆州", "jingmen"=>"荆门", "jinzhou"=>"锦州", "jinhua"=>"金华", "jiaozuo"=>"焦作", "jiangmen"=>"江门", "jiamusi"=>"佳木斯",
             "jilin"=>"吉林", "jian"=>"吉安", "huangshi"=>"黄石", "huaian"=>"淮安", "huzhou"=>"湖州", "nmg"=>"呼和浩特", "hengshui"=>"衡水", "handan"=>"邯郸", "gl"=>"桂林", "guangyuan"=>"广元", "guangan"=>"广安", "ganzhou"=>"赣州", "fuyang"=>"阜阳", "jxfuzhou"=>"抚州", "fushun"=>"抚顺",
             "fz"=>"福州", "enshi"=>"恩施", "eerduosi"=>"鄂尔多斯", "deyang"=>"德阳", "dali"=>"大理", "dazhou"=>"达州", "chuxiong"=>"楚雄", "chifeng"=>"赤峰", "chengde"=>"承德", "cangzhou"=>"沧州", "beihai"=>"北海", "baoding"=>"保定", "baotou"=>"包头", "baise"=>"百色", "bazhong"=>"巴中",
-            "anshan"=>"鞍山", "anyang"=>"安阳", "anqing"=>"安庆", "honghe"=>"红河", "bengbu"=>"蚌埠", "lishui"=>"丽水"
+            "anshan"=>"鞍山", "anyang"=>"安阳", "anqing"=>"安庆", "honghe"=>"红河", "bengbu"=>"蚌埠", "lishui"=>"丽水",
+            "xianyang"=>"咸阳",
+            "yc"=>"银川",
+            "xn"=>"西宁",
+            "heze"=>"菏泽",
+            "tongling"=>"铜陵",
+            "huanggang"=>"黄冈",
+            "ezhou"=>"鄂州",
+            "yangquan"=>"阳泉"
         }
     end
   end
@@ -300,7 +356,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "lf" => "廊坊", "km" => "昆明", "kaifeng" => "开封", "jj" => "九江", "jdz" => "景德镇", "jingzhou" => "荆州", "jingmen" => "荆门", "jinzhou" => "锦州", "jh" => "金华", "jiaozuo" => "焦作", "jm" => "江门", "jms" => "佳木斯", "jl" => "吉林", "ja" => "吉安", "hshi" => "黄石",
       "ha" => "淮安", "huzhou" => "湖州", "hu" => "呼和浩特", "hs" => "衡水", "hd" => "邯郸", "gl" => "桂林", "guangyuan" => "广元", "ga" => "广安", "ganzhou" => "赣州", "fy" => "阜阳", "fuzhou" => "抚州", "fushun" => "抚顺", "fz" => "福州", "es" => "恩施", "erds" => "鄂尔多斯",
       "deyang" => "德阳", "dali" => "大理", "dazhou" => "达州", "cx" => "楚雄", "chifeng" => "赤峰", "chengde" => "承德", "cangzhou" => "沧州", "bh" => "北海", "bd" => "保定", "bt" => "包头", "baise" => "百色", "bazhong" => "巴中", "as" => "鞍山", "ay" => "安阳", "anqing" => "安庆",
-      "honghe" => "红河", "bengbu" => "蚌埠", "lishui" => "丽水"
+      "honghe" => "红河", "bengbu" => "蚌埠", "lishui" => "丽水",
+      "xianyang"=>"咸阳",
+      "yinchuan"=>"银川",
+      "xn"=>"西宁",
+      "heze"=>"菏泽",
+      "tongling"=>"铜陵",
+      "hg"=>"黄冈",
+      "ez"=>"鄂州",
+      "yq"=>"阳泉"
   }
 
 
@@ -316,7 +380,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
         }
       else
         {
-            'xa' => '西安','cs' => '长沙',"lz" => "兰州","suzhou"=>"宿州",
+            'xa' => '西安','cs' => '长沙',"lz" => "兰州","suzhou"=>"宿州","xj" => "乌鲁木齐",
             'qd' => '青岛', "weihai" => '威海', "yt" => '烟台', "wf" => '潍坊', "wx" => "无锡","ty" => "太原", 'zz' => '郑州',
             "cz" => "常州", 'xz' => '徐州', "nt" => '南通', "yz" => '扬州', "jn" => "济南",
             "sjz" => "石家庄", "ts" => "唐山", "baoji" => "宝鸡",
@@ -339,7 +403,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
             "lf"=>"廊坊", "km"=>"昆明", "kaifeng"=>"开封", "jj"=>"九江", "jdz"=>"景德镇", "jingzhou"=>"荆州", "jingmen"=>"荆门", "jinzhou"=>"锦州", "jh"=>"金华", "jiaozuo"=>"焦作", "jm"=>"江门", "jms"=>"佳木斯", "jl"=>"吉林", "ja"=>"吉安", "hshi"=>"黄石",
             "ha"=>"淮安", "huzhou"=>"湖州", "hu"=>"呼和浩特", "hs"=>"衡水", "hd"=>"邯郸", "gl"=>"桂林", "guangyuan"=>"广元", "ga"=>"广安", "ganzhou"=>"赣州", "fy"=>"阜阳", "fuzhou"=>"抚州", "fushun"=>"抚顺", "fz"=>"福州", "es"=>"恩施", "erds"=>"鄂尔多斯",
             "deyang"=>"德阳", "dali"=>"大理", "dazhou"=>"达州", "cx"=>"楚雄", "chifeng"=>"赤峰", "chengde"=>"承德", "cangzhou"=>"沧州", "bh"=>"北海", "bd"=>"保定", "bt"=>"包头", "baise"=>"百色", "bazhong"=>"巴中", "as"=>"鞍山", "ay"=>"安阳", "anqing"=>"安庆",
-            "honghe"=>"红河", "bengbu"=>"蚌埠", "lishui"=>"丽水"
+            "honghe"=>"红河", "bengbu"=>"蚌埠", "lishui"=>"丽水",
+            "xianyang"=>"咸阳",
+            "yinchuan"=>"银川",
+            "xn"=>"西宁",
+            "heze"=>"菏泽",
+            "tongling"=>"铜陵",
+            "hg"=>"黄冈",
+            "ez"=>"鄂州",
+            "yq"=>"阳泉"
         }
     end
   end
@@ -742,7 +814,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   #获取20个城市的代码及名称, 针对che168网站
   # UserSystem::CarUserInfo.get_city_code_name
   def self.get_city_code_name
-    need_cities = ["宿州"]
+    need_cities = ["咸阳", "银川", "西宁", "菏泽", "铜陵", "黄冈", "鄂州", "阳泉"]
     provinces = {"440000" => "广东", "370000" => "山东", "330000" => "浙江", "320000" => "江苏", "130000" => "河北",
                  "410000" => "河南", "110000" => "北京", "210000" => "辽宁", "310000" => "上海", "500000" => "重庆",
                  "350000" => "福建", "450000" => "广西", "520000" => "贵州", "460000" => "海南", "620000" => "甘肃",

@@ -25,7 +25,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       "昆明", "开封", "九江", "景德镇", "荆州", "荆门", "锦州", "金华", "焦作", "江门", "佳木斯", "吉林",
       "吉安", "黄石", "淮安", "湖州", "呼和浩特", "衡水", "邯郸", "桂林", "广元", "广安", "赣州", "阜阳",
       "抚州", "抚顺", "福州", "恩施", "鄂尔多斯", "德阳", "大理", "达州", "楚雄", "赤峰", "承德", "沧州", "北海",
-      "保定", "包头", "百色", "巴中", "鞍山", "安阳", "安庆", "红河", "蚌埠", "丽水"
+      "保定", "包头", "百色", "巴中", "鞍山", "安阳", "安庆", "红河", "蚌埠", "丽水",
+      "咸阳", "乌鲁木齐", "银川", "西宁", "菏泽", "铜陵", "黄冈", "鄂州", "阳泉"
   ]
 
 
@@ -42,7 +43,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
         "昆明", "开封", "九江", "景德镇", "荆州", "荆门", "锦州", "金华", "焦作", "江门", "佳木斯", "吉林",
         "吉安", "黄石", "淮安", "湖州", "呼和浩特", "衡水", "邯郸", "桂林", "广元", "广安", "赣州", "阜阳",
         "抚州", "抚顺", "福州", "恩施", "鄂尔多斯", "德阳", "大理", "达州", "楚雄", "赤峰", "承德", "沧州", "北海",
-        "保定", "包头", "百色", "巴中", "鞍山", "安阳", "安庆", "红河", "蚌埠", "丽水"
+        "保定", "包头", "百色", "巴中", "鞍山", "安阳", "安庆", "红河", "蚌埠", "丽水",
+        "咸阳", "乌鲁木齐", "银川", "西宁", "菏泽", "铜陵", "黄冈", "鄂州", "阳泉"
     ].include? city_name
       return '13cfe7dfa0dd2fe5e2a7d5fb467099a6', '4SA-1012' # Eric 秘钥
     elsif ['福州', '厦门', '上海',"苏州","合肥","成都"].include? city_name
@@ -124,11 +126,11 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     end
 
     unless ['上海', '福州', '厦门'].include? ycui.city_chinese
-      if ycui.che_ling.to_i < 2009
-        ycui.aishi_upload_status = '车龄过老'
-        ycui.save!
-        return
-      end
+      # if ycui.che_ling.to_i < 2009
+      #   ycui.aishi_upload_status = '车龄过老'
+      #   ycui.save!
+      #   return
+      # end
 
       # if ['众泰', "五菱", '长安商用', '奇瑞', '力帆', '金杯', '江淮', '哈飞', '哈弗', '东风小康', '宝骏', '五菱汽车', '五十铃', '昌河', '依维柯', '福田', '东风风神', '东风'].include? ycui.brand
       #   ycui.aishi_upload_status = '品牌外车，暂排除'
@@ -136,11 +138,11 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       #   return
       # end
 
-      if ycui.milage.to_f > 15
-        ycui.aishi_upload_status = '里程太多'
-        ycui.save!
-        return
-      end
+      # if ycui.milage.to_f > 15
+      #   ycui.aishi_upload_status = '里程太多'
+      #   ycui.save!
+      #   return
+      # end
     end
 
 
