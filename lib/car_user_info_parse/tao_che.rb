@@ -11,7 +11,7 @@ module TaoChe
           if threads.length < 15
             break
           else
-            sleep 0.5
+            sleep 2
           end
         end
       end
@@ -24,8 +24,14 @@ module TaoChe
             pp "http://#{pinyin}.m.taoche.com/buycar/pges1bxcdza/?orderid=1&page=#{i}"
             response = RestClient.get "http://#{pinyin}.m.taoche.com/buycar/pges1bxcdza/?orderid=1&page=#{i}"
             content = response.body
+            # if areaname == '上海'
+            #   pp '***'*30
+            #   pp content
+            #   pp '***'*30
+            # end
             content = Nokogiri::HTML(content)
-            car_infos = content.css(".tc-car-list-h")
+            # car_infos = content.css(".tc-car-list-h")
+            car_infos = content.css(".carlist-ul-horizontal li")
             break if car_infos.blank?
             pp "本页有 #{car_infos.length} 条数据"
             car_number = car_infos.length
@@ -33,12 +39,12 @@ module TaoChe
             car_infos.each do |info|
               age_mil = info.css('p.time').text.strip
               next if age_mil.blank?
-              age_mil = age_mil.split('/')
+              age_mil = age_mil.split('|')
               # pp "车型是：#{info.css('h4').text.strip}"
               # pp "车龄：#{age_mil.first.match(/\d{4}/).to_s}"
               # pp "链接：#{info.css('a').first['href']}"
               url = info.css('a').first['href']
-              result = UserSystem::CarUserInfo.create_car_user_info che_xing: info.css('h4').text.strip,
+              result = UserSystem::CarUserInfo.create_car_user_info che_xing: info.css('.name').text.strip,
                                                                     che_ling: age_mil.first.match(/\d{4}/).to_s,
                                                                     milage: age_mil.last.match(/[\d.]{1,10}/).to_s,
                                                                     detail_url: url,
@@ -109,6 +115,7 @@ module TaoChe
     end
   end
 
+  # TaoChe.update_one_detail 4493914
   def self.update_one_detail car_user_info_id
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
 
@@ -120,17 +127,19 @@ module TaoChe
       response = RestClient.get(car_user_info.detail_url)
 
       detail_content = response.body
+
       detail_content = Nokogiri::HTML(detail_content)
-      name = detail_content.css('.shjtit')[0].text.strip
+      name = detail_content.css('.s-pt').text.strip
+      pp name
 
-      phone = (detail_content.css('.xqdinh p')[1].text.match /\d{11}/).to_s
-
-      note = (detail_content.css('.mjmstext')[0].text rescue '')
-
-      price = detail_content.css('.jiagmain p em')[0].text.match(/[\d.]{1,10}/).to_s
-
+      phone = (detail_content.css('.s-pb').text.match /\d{11}/).to_s
+      pp phone
+      note = (detail_content.css('.seller-dec').text rescue '')
+      pp note
+      price = detail_content.css('.left-pri').text.match(/[\d.]{1,10}/).to_s
+      pp price
       fabushijian = '2010-10-01' #detail_content.css('.chytext p')[0].text.gsub('发布','').strip
-
+      pp fabushijian
       UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                             name: name,
                                             phone: phone.to_s,
