@@ -470,7 +470,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     #更新数据模块
     car_user_info.name = params[:name].gsub('联系TA', '先生女士') unless params[:name].blank?
 
-    car_user_info.name.gsub!(/\r|\n|\t|\s/,'') unless car_user_info.name.blank?
+    car_user_info.name.gsub!(/\r|\n|\t|\s|\(个人\)|（个人）/,'') unless car_user_info.name.blank?
+
     car_user_info.name.gsub!('为保护用户隐私该电话3分钟后失效，请快速拨打哦~', '') unless car_user_info.name.blank?
     car_user_info.phone = params[:phone]
     car_user_info.note = params[:note]
