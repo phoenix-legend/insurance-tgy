@@ -99,7 +99,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       return
     end
 
-    unless ["福州", "厦门", '苏州', "杭州", "上海",   "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? cui.city_chinese
+    unless ["福州", "厦门", '苏州', "杭州", "上海",   "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? ycui.city_chinese
       if not ycui.is_city_match
         pp '城市不匹配'
         ycui.aishi_upload_status = '城市不匹配'
@@ -120,7 +120,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(ycui.phone)
     cui.save!
 
-    unless ["福州", "厦门", '苏州', "杭州", "上海",   "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? cui.city_chinese
+    unless ["福州", "厦门", '苏州', "杭州", "上海",   "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? ycui.city_chinese
       if not cui.phone_city.blank?
         unless cui.city_chinese == cui.phone_city
           ycui.aishi_upload_status = '非本地车'
@@ -162,7 +162,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
     key, number = UserSystem::AishiCarUserInfo.get_key_numbers ycui.city_chinese
 
-    if key == '4SA-1011' and ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? cui.city_chinese
+    if key == '4SA-1011' and ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? ycui.city_chinese
       key, number = '4SA-1019', 'c41430f5db8d2e6ce2f4bcbdba60150c'
     end
 
@@ -238,6 +238,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     cui.save!
 
     UserSystem::AishiCarUserInfo.upload_to_aishi cui
+
+    UserSystem::AishiCarUserInfo.upload_to_aishi UserSystem::AishiCarUserInfo.find(2048165)
 
   end
 
