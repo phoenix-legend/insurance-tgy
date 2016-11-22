@@ -162,7 +162,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
     key, number = UserSystem::AishiCarUserInfo.get_key_numbers ycui.city_chinese
 
-    if number == '4SA-1011' and ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? ycui.city_chinese
+    if false and number == '4SA-1011' and ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? ycui.city_chinese
       number, key = '4SA-1019', 'c41430f5db8d2e6ce2f4bcbdba60150c'
     end
 
