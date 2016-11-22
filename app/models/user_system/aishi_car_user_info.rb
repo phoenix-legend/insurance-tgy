@@ -99,12 +99,15 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       return
     end
 
-    if not ycui.is_city_match
-      pp '城市不匹配'
-      ycui.aishi_upload_status = '城市不匹配'
-      ycui.save!
-      return
+    unless ["福州", "厦门", '苏州', "杭州", "上海",   "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? cui.city_chinese
+      if not ycui.is_city_match
+        pp '城市不匹配'
+        ycui.aishi_upload_status = '城市不匹配'
+        ycui.save!
+        return
+      end
     end
+
 
 
 
@@ -116,15 +119,18 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     cui = ycui.car_user_info
     cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(ycui.phone)
     cui.save!
-    if not cui.phone_city.blank?
-      unless cui.city_chinese == cui.phone_city
-        ycui.aishi_upload_status = '非本地车'
-        ycui.save!
-        return
+
+    unless ["福州", "厦门", '苏州', "杭州", "上海",   "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? cui.city_chinese
+      if not cui.phone_city.blank?
+        unless cui.city_chinese == cui.phone_city
+          ycui.aishi_upload_status = '非本地车'
+          ycui.save!
+          return
+        end
       end
     end
 
-    unless ['上海', '福州', '厦门'].include? ycui.city_chinese
+    # unless ['上海', '福州', '厦门'].include? ycui.city_chinese
       # if ycui.che_ling.to_i < 2009
       #   ycui.aishi_upload_status = '车龄过老'
       #   ycui.save!
@@ -142,7 +148,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       #   ycui.save!
       #   return
       # end
-    end
+    # end
 
 
     # key = "033bd94b1168d7e4f0d644c3c95e35bf" #测试
@@ -155,6 +161,10 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     # number = "4SA-1011" #正式
 
     key, number = UserSystem::AishiCarUserInfo.get_key_numbers ycui.city_chinese
+
+    if key == '4SA-1011' and ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? cui.city_chinese
+      key, number = '4SA-1019', 'c41430f5db8d2e6ce2f4bcbdba60150c'
+    end
 
     require 'digest/md5'
 
