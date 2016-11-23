@@ -162,8 +162,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
     key, number = UserSystem::AishiCarUserInfo.get_key_numbers ycui.city_chinese
 
-    if false and number == '4SA-1011' and ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? ycui.city_chinese
-      number, key = '4SA-1019', 'c41430f5db8d2e6ce2f4bcbdba60150c'
+    if number == '4SA-1011' and ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? ycui.city_chinese
+      number, key = '4SA-1019', 'c2b2aa3e4f45075d848140d9c2f9dc3a'
     end
 
     require 'digest/md5'
@@ -239,7 +239,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
     UserSystem::AishiCarUserInfo.upload_to_aishi cui
 
-    UserSystem::AishiCarUserInfo.upload_to_aishi UserSystem::AishiCarUserInfo.find(2048165)
+    # UserSystem::AishiCarUserInfo.upload_to_aishi UserSystem::AishiCarUserInfo.find(2048167)
 
   end
 
