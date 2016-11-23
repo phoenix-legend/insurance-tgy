@@ -1132,8 +1132,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # UserSystem::CarUserInfo.get_info_for_zhenteng_lianyungang
   def self.get_info_for_zhenteng_lianyungang
-    # return unless Time.now.hour == 7
-    # return unless Time.now.min >= 50
+    return unless Time.now.hour == 7
+    return unless Time.now.min >= 50
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
     record_number = 0
