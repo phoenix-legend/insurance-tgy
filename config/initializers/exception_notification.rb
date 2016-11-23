@@ -16,14 +16,14 @@ ExceptionNotification.configure do |config|
   # Notifiers =================================================================
 
   # Email notifier sends notifications by email.
-  if Rails.env.production?
-    config.add_notifier :email, {
-      :email_prefix         => "[错误] ",
-      :sender_address       => %{"Notifier" <noreply@ikidstv.com>},
-      :exception_recipients => %w{ericliu@ikidstv.com},
-      :ignore_exceptions    => ['BusinessException'] + ExceptionNotifier.ignored_exceptions
-    }
-  end
+  # if Rails.env.production?
+  #   config.add_notifier :email, {
+  #     :email_prefix         => "[错误] ",
+  #     :sender_address       => %{"Notifier" <noreply@ikidstv.com>},
+  #     :exception_recipients => %w{ericliu@ikidstv.com},
+  #     :ignore_exceptions    => ['BusinessException'] + ExceptionNotifier.ignored_exceptions
+  #   }
+  # end
 
   # Campfire notifier sends notifications to your Campfire room. Requires 'tinder' gem.
   # config.add_notifier :campfire, {

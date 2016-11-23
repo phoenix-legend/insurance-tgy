@@ -34,6 +34,8 @@ namespace :zongjie do
 		if match_data.length > 4
 			pp '前一次未执行完毕，退出任务'
 		else
+			#把连云港数据给振腾
+			UserSystem::CarUserInfo.get_info_for_zhenteng_lianyungang
 			# 上传数据到U车
 			UserSystem::YoucheCarUserInfo.upload_to_youche
 			#更新又一车的数据
@@ -49,6 +51,13 @@ namespace :zongjie do
 		end
 	end
 
+
+
+
+	desc "开机启动，永远循环  rake zongjie:refresh_ip_proxy RAILS_ENV=production"
+	task :refresh_ip_proxy => :environment do
+		RestClientProxy.refresh_proxy_ip
+	end
 
 
 

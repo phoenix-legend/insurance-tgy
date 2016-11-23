@@ -28,6 +28,7 @@ module Insurance
     require Rails.root.join('lib/car_user_info_parse/baixing.rb')
     require Rails.root.join('lib/car_user_info_parse/upload_tian_tian.rb')
     require Rails.root.join('lib/car_user_info_parse/wuba.rb')
+    require Rails.root.join('lib/car_user_info_parse/rest_client_proxy.rb')
 
     config.action_mailer.raise_delivery_errors = true
     config.action_controller.include_all_helpers = false

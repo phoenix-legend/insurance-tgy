@@ -33,25 +33,26 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
   def get_web_content
     if params[:content_filter].blank?
       render ''
-      return
+    else
+      areaid = params[:areaid]
+      website_name = params[:website_name]
+      content = CGI::unescape(params[:content_filter])
+      case website_name
+        when "wuba_citys"
+          Wuba.get_car_user_list_v2 content, areaid
+        when 'che168_citys'
+          Che168.get_car_user_list_v2 content, areaid
+        when 'taoche_citys'
+          TaoChe.get_car_user_list_v2 content, areaid #未测试
+        when 'baixing_citys'
+          Baixing.get_car_user_list_v2 content, areaid
+        when 'ganji_citys'
+          Ganji.get_car_user_list_v2 content, areaid
+        else
+          ''
+      end
     end
-    areaid = params[:areaid]
-    website_name = params[:website_name]
-    content = CGI::unescape(params[:content_filter])
-    case website_name
-      when "wuba_citys"
-        Wuba.get_car_user_list_v2 content, areaid
-      when 'che168_citys'
-        Che168.get_car_user_list_v2 content, areaid
-      when 'taoche_citys'
-        TaoChe.get_car_user_list_v2 content, areaid #未测试
-      when 'baixing_citys'
-        Baixing.get_car_user_list_v2 content, areaid
-      when 'ganji_citys'
-        Ganji.get_car_user_list_v2 content, areaid
-      else
-        ''
-    end
+
   end
 
 

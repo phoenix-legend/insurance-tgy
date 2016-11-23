@@ -9,11 +9,8 @@ module Baixing
       begin
         pp "现在跑..百姓 #{areaname}"
         1.upto 3 do |i|
-          sleep 6+rand(4)
           url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}" # url = "http://haerbin.baixing.com/m/ershouqiche/?page=1&per_page=10"
-          content = RestClient.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
-          content = content.body
-          # pp content
+          content = RestClientProxy.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
           break if content.blank?
           # content.gsub!('item top', 'eric')
           # content.gsub!('item pinned', 'eric')
@@ -96,7 +93,7 @@ module Baixing
 
   end
 
-  # Baixing.
+  # Baixing.update_one_detail
   def self.update_one_detail car_user_info_id
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
     return unless car_user_info.name.blank?
@@ -106,15 +103,17 @@ module Baixing
       puts '更新明细'
       # detail_url = "http://guangzhou.baixing.com/m/ershouqiche/a1028370758.html"
       detail_url = car_user_info.detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
-      sleep 3+rand(5)
-      response = RestClient.get(detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
+
+      response = RestClientProxy.get(detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
+
+      detail_content1 = response
+
       if response.match /此信息未通过审核/
         car_user_info.need_update = false
         car_user_info.save
         return
       end
 
-      detail_content1 = response.body
       detail_content1.gsub!('content normal-content long-content', 'eric_content')
       detail_content1.gsub!('content normal-content', 'eric_content')
       detail_content1.gsub!('friendly datetime', 'fabushijian')
@@ -125,6 +124,7 @@ module Baixing
       begin
         phone = detail_content.css(".num")[0].text
       rescue Exception => e
+        # pp detail_content1
         phone = detail_content.css(".contact-main-txt")[0].text
       end
 
