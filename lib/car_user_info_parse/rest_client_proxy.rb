@@ -41,6 +41,7 @@ module RestClientProxy
     response = RestClient.get url, header
     response = response.body
     response = response.force_encoding('UTF-8')
+    RestClient.proxy = nil
     response
   end
 end
