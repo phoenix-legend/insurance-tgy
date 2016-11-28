@@ -275,7 +275,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
   # UserSystem::AishiCarUserInfo.batch_query_aishi
   def self.batch_query_aishi
-    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 1300000 and (aishi_yaoyue is null or aishi_yaoyue = '未知')").find_each do |cui|
+    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 1907590 and (aishi_yaoyue is null or aishi_yaoyue = '未知')").find_each do |cui|
+      next if cui.id == 2027590
       next if cui.aishi_yaoyue == '成功'
       next if cui.aishi_yaoyue == '失败'
       response = nil
@@ -302,6 +303,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
         next
       end
       # next if cui.shiai_message == response
+      next if response.to_hash.to_s.length > 500
       cui.shiai_message = response.to_hash.to_s
       next if response["result"]["status"].blank?
 
@@ -364,6 +366,21 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       end
 
       if cui.business1_name.match /朋友/
+        cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败','邀约成功'].include? cui.business_last_status
+                             '成功'
+                           elsif ['创建失败', '检测失败', '邀约失败'].include? cui.business_last_status
+                             '失败'
+                           else
+                             '未知'
+                           end
+        if cui.changed?
+          cui.aishi_yaoyue_time = Time.now.chinese_format
+          cui.aishi_yaoyue_day = Time.now.chinese_format_day
+        end
+        cui.save!
+      end
+
+      if cui.business1_name.match /车置宝/
         cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败','邀约成功'].include? cui.business_last_status
                              '成功'
                            elsif ['创建失败', '检测失败', '邀约失败'].include? cui.business_last_status
