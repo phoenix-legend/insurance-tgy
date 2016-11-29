@@ -6,14 +6,12 @@ module RestClientProxy
 
     while true
       begin
-        puts '...'
         # 获取代理信息
         RestClient.proxy = nil
         url = "http://api.ip.data5u.com/dynamic/get.html?order=64a868c8fc23532cdd38ccb125b72873"
         response = RestClient.get url
         proxy_url = "http://#{response.body.gsub("\n", '')}"
         if redis[:proxy_ip] == proxy_url
-          sleep 1
           next
         end
         #验证代理信息
@@ -24,14 +22,14 @@ module RestClientProxy
         }
         content = response.body
         content = content.force_encoding('UTF-8')
-        if content.match /二手/
-
+        if content.match /百姓|二手/
           redis[:proxy_ip] = proxy_url
           puts "#{Time.now.chinese_format} #{proxy_url}"
-
+          sleep 5
           redis.expire :proxy_ip, 300 #最多放5分钟
         end
       rescue Exception => e
+        # pp e
       end
       # sleep 2
     end
