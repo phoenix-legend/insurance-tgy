@@ -23,11 +23,11 @@ module RestClientProxy
           redis[:proxy_ip] = proxy_url
           puts "#{Time.now.chinese_format} #{proxy_url}"
 
-          redis.expire :proxy_ip, 300   #最多放5分钟
+          redis.expire :proxy_ip, 300 #最多放5分钟
         end
       rescue Exception => e
       end
-      sleep 2
+      # sleep 2
     end
   end
 
@@ -38,7 +38,10 @@ module RestClientProxy
 
   def self.get url, header
     RestClient.proxy = RestClientProxy.get_proxy_ip
-    response = RestClient.get url, header
+    response =nil
+    Timeout::timeout(5) {
+      response = RestClient.get url, header
+    }
     response = response.body
     response = response.force_encoding('UTF-8')
     RestClient.proxy = nil
