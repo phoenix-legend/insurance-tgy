@@ -2,6 +2,8 @@ module RestClientProxy
   require 'timeout'
   # RestClientProxy.refresh_proxy_ip
   def self.refresh_proxy_ip
+    redis = Redis.current
+
     while true
       begin
         puts '...'
@@ -10,6 +12,10 @@ module RestClientProxy
         url = "http://api.ip.data5u.com/dynamic/get.html?order=64a868c8fc23532cdd38ccb125b72873"
         response = RestClient.get url
         proxy_url = "http://#{response.body.gsub("\n", '')}"
+        if redis[:proxy_ip] == proxy_url
+          sleep 1
+          next
+        end
         #验证代理信息
         RestClient.proxy = proxy_url
         response = nil
@@ -19,7 +25,7 @@ module RestClientProxy
         content = response.body
         content = content.force_encoding('UTF-8')
         if content.match /二手/
-          redis = Redis.current
+
           redis[:proxy_ip] = proxy_url
           puts "#{Time.now.chinese_format} #{proxy_url}"
 
