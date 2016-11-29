@@ -2,7 +2,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
 
   # CITY = ['上海', '苏州', '杭州','合肥','宿州']
-  CITY = ['上海', '苏州', '杭州','合肥','成都']
+  CITY = ['上海', '苏州', '杭州','合肥','成都','福州']
   # CITY = ['上海', '杭州','合肥']
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
@@ -155,11 +155,11 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     # 针对苏，杭，成都 进行严格限制量。
     if ['苏州', '杭州', '成都', '合肥','宿州'].include? yc_car_user_info.city_chinese
 
-      if Time.now.hour < 6 and ['苏州','合肥'].include? yc_car_user_info.city_chinese
-        yc_car_user_info.youyiche_upload_status = '时间太早'
-        yc_car_user_info.save!
-        return
-      end
+      # if Time.now.hour < 6 and ['苏州','合肥'].include? yc_car_user_info.city_chinese
+      #   yc_car_user_info.youyiche_upload_status = '时间太早'
+      #   yc_car_user_info.save!
+      #   return
+      # end
 
       cui = yc_car_user_info.car_user_info
       cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
@@ -204,7 +204,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
       #对量进行严格控制
       # peiliang = {"苏州" => 40, "杭州" => 30, "成都" => 50}
-      peiliang = {"苏州" => 80, "杭州" => 500, "成都" => 140, "合肥" => 800, '宿州' => 25}
+      peiliang = {"苏州" => 100, "杭州" => 500, "成都" => 700, "合肥" => 800, '宿州' => 25}
       liang = peiliang[yc_car_user_info.city_chinese]
       yijingyoudeliang = UserSystem::YouyicheCarUserInfo.where("city_chinese = ? and created_day = ? and youyiche_id is not null", yc_car_user_info.city_chinese, Time.now.chinese_format_day).count
       if yijingyoudeliang > liang
