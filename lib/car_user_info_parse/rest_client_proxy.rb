@@ -98,8 +98,8 @@ module RestClientProxy
   end
 
   def self.get url, header
+    proxy_ip = RestClientProxy.get_proxy_ip
     begin
-      proxy_ip = RestClientProxy.get_proxy_ip
       RestClient.proxy = proxy_ip
       pp "代理是：#{proxy_ip}"
       response = nil
@@ -111,12 +111,12 @@ module RestClientProxy
       RestClient.proxy = nil
       if response.length < 300
         redis = Redis.current
-        redis[:proxy_ip] = nil
+        redis[:proxy_ip] = nil if proxy_ip == redis[:proxy_ip]
       end
       return response
     rescue Exception => e
       redis = Redis.current
-      redis[:proxy_ip] = nil
+      redis[:proxy_ip] = nil if proxy_ip == redis[:proxy_ip]
     end
 
   end
