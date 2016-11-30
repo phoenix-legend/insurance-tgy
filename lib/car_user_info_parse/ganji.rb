@@ -328,7 +328,10 @@ module Ganji
 
 
       if detail_content.match /您访问的速度太快/
+        redis[car_user_info.detail_url] = 'n'
+        redis.expire car_user_info.detail_url, 60
         sleep 30
+
         car_user_info.destroy
       end
       # pp '-----'
@@ -363,8 +366,11 @@ module Ganji
       pp '-------------------------------------'
       pp e
       pp $@
-      car_user_info.need_update = false
-      car_user_info.save
+      redis[car_user_info.detail_url] = 'n'
+      redis.expire car_user_info.detail_url, 60
+      car_user_info.destroy
+      # car_user_info.need_update = false
+      # car_user_info.save
     end
 
 

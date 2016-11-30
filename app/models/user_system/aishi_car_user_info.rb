@@ -193,15 +193,15 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   def self.create_user_info_from_car_user_info car_user_info
     if car_user_info.is_pachong == false and UserSystem::AishiCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
-        if ["苏州"].include? car_user_info.city_chinese
-          youyiche_number = UserSystem::YouyicheCarUserInfo.where("phone = ? and youyiche_id is not null", car_user_info.phone).count
-          return if youyiche_number > 0
-        end
-
-        if ["杭州","上海"].include? car_user_info.city_chinese
-          youyiche_number = UserSystem::YouyicheCarUserInfo.where("phone = ? and youyiche_id is not null", car_user_info.phone).count
-          return if youyiche_number > 0 and rand(10)>5
-        end
+        # if ["苏州"].include? car_user_info.city_chinese
+        #   youyiche_number = UserSystem::YouyicheCarUserInfo.where("phone = ? and youyiche_id is not null", car_user_info.phone).count
+        #   return if youyiche_number > 0
+        # end
+        #
+        # if ["杭州","上海"].include? car_user_info.city_chinese
+        #   youyiche_number = UserSystem::YouyicheCarUserInfo.where("phone = ? and youyiche_id is not null", car_user_info.phone).count
+        #   return if youyiche_number > 0 and rand(10)>5
+        # end
 
         #数据回传到优车
         UserSystem::AishiCarUserInfo.create_car_info name: car_user_info.name,
