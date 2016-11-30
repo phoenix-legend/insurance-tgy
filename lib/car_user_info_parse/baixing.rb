@@ -175,8 +175,9 @@ module Baixing
     rescue Exception => e
       pp e
       pp $@
-      car_user_info.need_update = false
-      car_user_info.save
+      car_user_info.destroy
+      # car_user_info.need_update = false
+      # car_user_info.save
     end
 
   end
