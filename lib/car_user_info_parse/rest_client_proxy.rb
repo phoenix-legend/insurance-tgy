@@ -99,8 +99,9 @@ module RestClientProxy
 
   def self.get url, header
     begin
-      RestClient.proxy = RestClientProxy.get_proxy_ip
-
+      proxy_ip = RestClientProxy.get_proxy_ip
+      RestClient.proxy = proxy_ip
+      pp "代理是：#{proxy_ip}"
       response = nil
       Timeout::timeout(10) {
         response = RestClient.get url, header
