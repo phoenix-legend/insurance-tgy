@@ -78,7 +78,7 @@ module RestClientProxy
           }
           content = response.body
           content = content.force_encoding('UTF-8')
-          if content.match /百姓|二手/
+          if content.match /百姓|二手/ and content.length > 400
             redis[:proxy_ip] = proxy_url
             puts "#{Time.now.chinese_format} #{proxy_url}"
             sleep 20
