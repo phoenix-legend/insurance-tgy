@@ -62,26 +62,28 @@ module RestClientProxy
             next
           end
 
-          redis[:proxy_ip] = proxy_url
-          puts "#{Time.now.chinese_format} #{proxy_url}"
-          1.upto 20 do |i|
-            next if redis[:proxy_ip].blank?
-            sleep 1
-          end
+          # redis[:proxy_ip] = proxy_url
+          # puts "#{Time.now.chinese_format} #{proxy_url}"
+          # 1.upto 20 do |i|
+          #   next if redis[:proxy_ip].blank?
+          #   sleep 1
+          # end
+
+
             #验证代理信息
-            # RestClient.proxy = proxy_url
-            # response = nil
-            # Timeout::timeout(10) {
-            #   response = RestClient.get 'http://www.baixing.com', {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
-            # }
-            # content = response.body
-            # content = content.force_encoding('UTF-8')
-            # if content.match /百姓|二手/
-            #   redis[:proxy_ip] = proxy_url
-            #   puts "#{Time.now.chinese_format} #{proxy_url}"
-            #   sleep 120
-            #   redis.expire :proxy_ip, 300 #最多放5分钟
-            # end
+          RestClient.proxy = proxy_url
+          response = nil
+          Timeout::timeout(10) {
+            response = RestClient.get 'http://www.baixing.com', {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+          }
+          content = response.body
+          content = content.force_encoding('UTF-8')
+          if content.match /百姓|二手/
+            redis[:proxy_ip] = proxy_url
+            puts "#{Time.now.chinese_format} #{proxy_url}"
+            sleep 20
+            redis.expire :proxy_ip, 300 #最多放5分钟
+          end
         rescue Exception => e
           pp e
         end
