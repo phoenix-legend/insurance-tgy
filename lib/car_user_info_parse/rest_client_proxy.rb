@@ -43,46 +43,49 @@ module RestClientProxy
 
     while true
 
-    # 获取代理信息
-    RestClient.proxy = nil
-    # url = "http://api.ip.data5u.com/dynamic/get.html?order=64a868c8fc23532cdd38ccb125b72873"
-    # url = "http://tpv.daxiangdaili.com/ip/?tid=558075121539166&num=1&delay=3&category=2&foreign=none"
-    # url = "http://dev.kuaidaili.com/api/getproxy/?orderid=968048212439589&num=30&area=%E5%A4%A7%E9%99%86&b_pcchrome=1&b_pcie=1&b_pcff=1&protocol=1&method=1&an_tr=1&an_an=1&an_ha=1&sp1=1&sp2=1&quality=1&sort=1&sep=2"
-    url = "http://dps.kuaidaili.com/api/getdps/?orderid=938048575858941&num=20&ut=1&sep=2"
+      # 获取代理信息
+      RestClient.proxy = nil
+      # url = "http://api.ip.data5u.com/dynamic/get.html?order=64a868c8fc23532cdd38ccb125b72873"
+      # url = "http://tpv.daxiangdaili.com/ip/?tid=558075121539166&num=1&delay=3&category=2&foreign=none"
+      # url = "http://dev.kuaidaili.com/api/getproxy/?orderid=968048212439589&num=30&area=%E5%A4%A7%E9%99%86&b_pcchrome=1&b_pcie=1&b_pcff=1&protocol=1&method=1&an_tr=1&an_an=1&an_ha=1&sp1=1&sp2=1&quality=1&sort=1&sep=2"
+      url = "http://dps.kuaidaili.com/api/getdps/?orderid=938048575858941&num=20&ut=1&sep=2"
 
-    response = RestClient.get url
-    ips = response.body.split("\n")
-    ips.each do |ip|
-      begin
-        # proxy_url = "http://ericliu1002000:t2bd3107@#{ip}"
-        proxy_url = "http://#{ip}"
-        pp proxy_url
-        sleep 2
-        if redis[:proxy_ip] == proxy_url
-          next
+      response = RestClient.get url
+      ips = response.body.split("\n")
+      ips.each do |ip|
+        begin
+          # proxy_url = "http://ericliu1002000:t2bd3107@#{ip}"
+          proxy_url = "http://#{ip}"
+          pp proxy_url
+          # sleep 1
+          if redis[:proxy_ip] == proxy_url
+            next
+          end
+
+          redis[:proxy_ip] = proxy_url
+          puts "#{Time.now.chinese_format} #{proxy_url}"
+          1.upto 20 do |i|
+            next if redis[:proxy_ip].blank?
+            sleep 1
+          end
+            #验证代理信息
+            # RestClient.proxy = proxy_url
+            # response = nil
+            # Timeout::timeout(10) {
+            #   response = RestClient.get 'http://www.baixing.com', {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+            # }
+            # content = response.body
+            # content = content.force_encoding('UTF-8')
+            # if content.match /百姓|二手/
+            #   redis[:proxy_ip] = proxy_url
+            #   puts "#{Time.now.chinese_format} #{proxy_url}"
+            #   sleep 120
+            #   redis.expire :proxy_ip, 300 #最多放5分钟
+            # end
+        rescue Exception => e
+          pp e
         end
-
-        redis[:proxy_ip] = proxy_url
-        puts "#{Time.now.chinese_format} #{proxy_url}"
-        sleep 10
-        #验证代理信息
-        # RestClient.proxy = proxy_url
-        # response = nil
-        # Timeout::timeout(10) {
-        #   response = RestClient.get 'http://www.baixing.com', {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
-        # }
-        # content = response.body
-        # content = content.force_encoding('UTF-8')
-        # if content.match /百姓|二手/
-        #   redis[:proxy_ip] = proxy_url
-        #   puts "#{Time.now.chinese_format} #{proxy_url}"
-        #   sleep 120
-        #   redis.expire :proxy_ip, 300 #最多放5分钟
-        # end
-      rescue Exception => e
-        pp e
       end
-    end
 
 
     end
@@ -95,15 +98,25 @@ module RestClientProxy
   end
 
   def self.get url, header
-    RestClient.proxy = RestClientProxy.get_proxy_ip
-    # RestClient.proxy = nil
-    response =nil
-    Timeout::timeout(10) {
-      response = RestClient.get url, header
-    }
-    response = response.body
-    response = response.force_encoding('UTF-8')
-    RestClient.proxy = nil
-    response
+    begin
+      RestClient.proxy = RestClientProxy.get_proxy_ip
+
+      response = nil
+      Timeout::timeout(10) {
+        response = RestClient.get url, header
+      }
+      response = response.body
+      response = response.force_encoding('UTF-8')
+      RestClient.proxy = nil
+      if response.length < 300
+        redis = Redis.current
+        redis[:proxy_ip] = nil
+      end
+      return response
+    rescue Exception => e
+      redis = Redis.current
+      redis[:proxy_ip] = nil
+    end
+
   end
 end
