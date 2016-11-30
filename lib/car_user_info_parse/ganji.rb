@@ -94,13 +94,13 @@ module Ganji
       begin
         pp "现在跑赶集.. #{areaname}"
         1.upto 3 do |i|
-          # sleep 4+rand(4)
+          sleep 4+rand(4)
           url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=1&deal_type=1&page=#{i}"
           # url = "http://wap.ganji.com/sh/ershouche/?back=search&agent=1&deal_type=1&page=1"
           # url = "http://wap.ganji.com/su/ershouche/?back=search&agent=1&deal_type=1&page=1"
-          # content = RestClient.get url
-          content = RestClientProxy.get url, {}
-          # content = content.body
+          content = RestClient.get url
+          # content = RestClientProxy.get url, {}
+          content = content.body
 
           if content.blank?
             pp '..........'
@@ -319,16 +319,16 @@ module Ganji
 
     begin
       pp "开始跑明细 #{car_user_info.id}"
-      # sleep 1
-      # response = RestClient.get(car_user_info.detail_url)
-      response = RestClientProxy.get car_user_info.detail_url, {}
-      # detail_content = response.body
-      detail_content = response
+      sleep 1
+      response = RestClient.get(car_user_info.detail_url)
+      # response = RestClientProxy.get car_user_info.detail_url, {}
+      detail_content = response.body
+      # detail_content = response
 
 
 
       if detail_content.match /您访问的速度太快/
-        # sleep 30
+        sleep 30
         car_user_info.destroy
       end
       # pp '-----'
