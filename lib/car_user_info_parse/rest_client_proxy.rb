@@ -110,13 +110,13 @@ module RestClientProxy
       response = response.force_encoding('UTF-8')
       RestClient.proxy = nil
       if response.length < 300
-        redis = Redis.current
-        redis[:proxy_ip] = nil if proxy_ip == redis[:proxy_ip]
+        # redis = Redis.current
+        # redis[:proxy_ip] = nil if proxy_ip == redis[:proxy_ip]
       end
       return response
     rescue Exception => e
-      redis = Redis.current
-      redis[:proxy_ip] = nil if proxy_ip == redis[:proxy_ip]
+      # redis = Redis.current
+      # redis[:proxy_ip] = nil if proxy_ip == redis[:proxy_ip]
     end
 
   end
