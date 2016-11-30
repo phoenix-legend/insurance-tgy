@@ -111,6 +111,7 @@ module RestClientProxy
     response = response.force_encoding('UTF-8')
     RestClient.proxy = nil
     if response.length < 300
+      pp  'IP被封'
       # redis = Redis.current
       # redis[:proxy_ip] = nil if proxy_ip == redis[:proxy_ip]
     end
