@@ -104,6 +104,7 @@ module RestClientProxy
       pp "代理是：#{proxy_ip}"
       response = nil
       Timeout::timeout(10) {
+        pp "代理是  #{RestClient.proxy}   ...."
         response = RestClient.get url, header
       }
       response = response.body
