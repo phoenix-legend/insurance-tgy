@@ -1546,17 +1546,17 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   # UserSystem::CarUserInfo.pao_baixing
   def self.pao_baixing
     while true
-      UserSystem::CarUserInfo.run_baixing 0
-      sleep 1
-      UserSystem::CarUserInfo.run_baixing 1
-
-      sleep 1
-      UserSystem::CarUserInfo.run_baixing 0
-      sleep 1
-      UserSystem::CarUserInfo.run_baixing 1
-      sleep 1
+      # UserSystem::CarUserInfo.run_baixing 0
+      # sleep 1
+      # UserSystem::CarUserInfo.run_baixing 1
+      #
+      # sleep 1
+      # UserSystem::CarUserInfo.run_baixing 0
+      # sleep 1
+      # UserSystem::CarUserInfo.run_baixing 1
+      # sleep 1
       UserSystem::CarUserInfo.run_baixing 2
-      sleep 1
+      # sleep 1
 
     end
   end
