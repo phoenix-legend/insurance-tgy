@@ -100,12 +100,13 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     end
 
     unless ["福州", "厦门", '苏州', "杭州", "上海",   "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? ycui.city_chinese
-      if not ycui.is_city_match
-        pp '城市不匹配'
-        ycui.aishi_upload_status = '城市不匹配'
-        ycui.save!
-        return
-      end
+      # 放宽条件
+      # if not ycui.is_city_match
+      #   pp '城市不匹配'
+      #   ycui.aishi_upload_status = '城市不匹配'
+      #   ycui.save!
+      #   return
+      # end
     end
 
 

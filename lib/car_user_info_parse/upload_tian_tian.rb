@@ -59,11 +59,12 @@ module UploadTianTian
         end
       end
 
-      if car_user_info.name.match /^小/ and car_user_info.name.length == 2
-        car_user_info.tt_upload_status = '疑似走私车或车商'
-        car_user_info.save!
-        return
-      end
+      # 2016-12-5 去掉
+      # if car_user_info.name.match /^小/ and car_user_info.name.length == 2
+      #   car_user_info.tt_upload_status = '疑似走私车或车商'
+      #   car_user_info.save!
+      #   return
+      # end
 
 
       if /^[a-z|A-Z|0-9|-|_]+$/.match car_user_info.name
@@ -88,11 +89,12 @@ module UploadTianTian
         return
       end
 
-      if ['金杯', '五菱汽车', "五菱", '五十铃', '昌河', '奥迪', '宝马', '宾利', '奔驰', '路虎', '保时捷', '江淮', '东风小康', '依维柯', '长安商用', '福田', '东风风神', '东风', '一汽'].include? car_user_info.brand
-        car_user_info.tt_upload_status = '品牌外车，暂排除'
-        car_user_info.save!
-        return
-      end
+      # 2016-12-5 去掉
+      # if ['金杯', '五菱汽车', "五菱", '五十铃', '昌河', '奥迪', '宝马', '宾利', '奔驰', '路虎', '保时捷', '江淮', '东风小康', '依维柯', '长安商用', '福田', '东风风神', '东风', '一汽'].include? car_user_info.brand
+      #   car_user_info.tt_upload_status = '品牌外车，暂排除'
+      #   car_user_info.save!
+      #   return
+      # end
 
       unless car_user_info.note.blank?
         ['QQ', '求购', '牌照', '批发', '私家一手车', '一手私家车', '身份', '身 份', '身~份', '个体经商', '过不了户', '帮朋友', '外地',

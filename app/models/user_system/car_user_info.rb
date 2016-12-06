@@ -1425,7 +1425,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     return unless (Time.now.hour > 9 and Time.now.hour < 22)
     return unless Time.now.min > 30
 
-    s = '261d684f6b7d9af996a5691e7106075e'
+    # s = '261d684f6b7d9af996a5691e7106075e'
+    s = 'f01e6a7630788097d7cb0c180d500330'
     cuis = UserSystem::CarUserInfo.where("tt_source in ('2-474','2-474-602','2-474-602') and tt_id is not null and id > 3001992 and created_at > '2016-10-01'")
     cuis.find_each do |cui|
       # cui = UserSystem::CarUserInfo.find 1181521
@@ -1437,7 +1438,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                                                                          brand: cui.brand,
                                                                                          source: cui.tt_source,
                                                                                          response_id: cui.tt_id,
-                                                                                         number: 'PRO103',
+                                                                                         # number: 'PRO103',
+                                                                                         number: 'kk',
                                                                                          sign: Digest::MD5.hexdigest("#{cui.phone}#{s}")
                                                                                       }
       response = JSON.parse response.body
@@ -1559,20 +1561,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       # sleep 1
 
     end
-  end
-
-  def self.test_proxy_ip
-    RestClient.proxy = "http://113.121.150.104:8888"
-    response = RestClient.get 'http://guangzhou.baixing.com/m/ershouqiche/a1028370758.html'
-    response.body.force_encoding('UTF-8')
-
-    RestClient.proxy = nil
-    url = "http://api.ip.data5u.com/dynamic/get.html?order=64a868c8fc23532cdd38ccb125b72873"
-    response = RestClient.get url
-
-    RestClient.proxy = "http://#{response.body.gsub("\n",'')}"
-    response = RestClient.get 'http://guangzhou.baixing.com/m/ershouqiche/a1028370758.html'
-    pp response
   end
 
 
