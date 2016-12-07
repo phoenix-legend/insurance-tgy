@@ -322,7 +322,7 @@ module Ganji
       # sleep 4+rand(4)
       response = RestClientProxy.get(car_user_info.detail_url)
       # response = RestClientProxy.get car_user_info.detail_url, {}
-      detail_content = response.body
+      # detail_content = response.body
       # pp detail_content
       # detail_content = detail_content.force_encoding('UTF-8')
       # detail_content = response
