@@ -328,6 +328,7 @@ module Ganji
 
 
       if detail_content.match /您访问的速度太快/
+        redis = Redis.current
         redis[car_user_info.detail_url] = 'n'
         redis.expire car_user_info.detail_url, 60
         sleep 30
