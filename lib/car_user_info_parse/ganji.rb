@@ -319,10 +319,12 @@ module Ganji
 
     begin
       pp "开始跑明细 #{car_user_info.id}"
-      sleep 1
+      # sleep 4+rand(4)
       response = RestClient.get(car_user_info.detail_url)
       # response = RestClientProxy.get car_user_info.detail_url, {}
       detail_content = response.body
+      # pp detail_content
+      # detail_content = detail_content.force_encoding('UTF-8')
       # detail_content = response
 
 
@@ -367,6 +369,7 @@ module Ganji
       pp '-------------------------------------'
       pp e
       pp $@
+      redis = Redis.current
       redis[car_user_info.detail_url] = 'n'
       redis.expire car_user_info.detail_url, 60
       car_user_info.destroy
