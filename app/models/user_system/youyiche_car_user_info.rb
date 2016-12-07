@@ -153,7 +153,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     # end
 
     # 针对苏，杭，成都 进行严格限制量。
-    if ['苏州', '杭州', '成都', '合肥','宿州'].include? yc_car_user_info.city_chinese
+    if ['苏州', '杭州', '成都', '合肥','宿州', '福州'].include? yc_car_user_info.city_chinese
 
       # if Time.now.hour < 6 and ['苏州','合肥'].include? yc_car_user_info.city_chinese
       #   yc_car_user_info.youyiche_upload_status = '时间太早'
