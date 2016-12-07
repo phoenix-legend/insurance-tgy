@@ -100,7 +100,7 @@ module Ganji
           # url = "http://wap.ganji.com/su/ershouche/?back=search&agent=1&deal_type=1&page=1"
           content = RestClientProxy.get url
           # content = RestClientProxy.get url, {}
-          content = content.body
+          # content = content.body
 
           if content.blank?
             pp '..........'
