@@ -98,6 +98,7 @@ module Ganji
           url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=1&deal_type=1&page=#{i}"
           # url = "http://wap.ganji.com/sh/ershouche/?back=search&agent=1&deal_type=1&page=1"
           # url = "http://wap.ganji.com/su/ershouche/?back=search&agent=1&deal_type=1&page=1"
+          url = 'http://wap.ganji.com/cq/ershouche/?back=search&agent=1&deal_type=1&page=1'
           content = RestClientProxy.get url
           # content = RestClientProxy.get url, {}
           # content = content.body
@@ -113,7 +114,7 @@ module Ganji
 
           content = Nokogiri::HTML(content)
           # car_infos = content.css(".mod-list .list-item")
-          car_infos = content.css(".infor")
+          car_infos = content.css(".inforBox .infor")
           pp "car infos length is #{car_infos.length}"
           break if car_infos.blank?
           car_number = car_infos.length
@@ -138,6 +139,7 @@ module Ganji
               cheling_licheng.split(/上牌|万公里/)[1] rescue 2012
             end
             is_cheshang = (chexing.match /个人/).blank?
+            next if chexing.length > 200
             cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: chexing,
                                                                    che_ling: cheling,
                                                                    milage: licheng,
