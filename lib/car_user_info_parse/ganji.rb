@@ -102,6 +102,10 @@ module Ganji
           # content = RestClientProxy.get url, {}
           # content = content.body
 
+          if ! content.valid_encoding?
+            content = content.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8')
+          end
+
           if content.blank?
             pp '..........'
             break
@@ -325,9 +329,11 @@ module Ganji
       # detail_content = response.body
       # pp detail_content
       # detail_content = detail_content.force_encoding('UTF-8')
-      # detail_content = response
+      detail_content = response
 
-
+      if ! detail_content.valid_encoding?
+        detail_content = detail_content.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8')
+      end
 
       if detail_content.match /您访问的速度太快/
         redis = Redis.current
