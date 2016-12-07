@@ -335,7 +335,7 @@ module Ganji
         detail_content = detail_content.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8')
       end
 
-      if detail_content.match /您访问的速度太快/
+      if detail_content.match /您访问的速度太快|爬虫/
         redis = Redis.current
         redis[car_user_info.detail_url] = 'n'
         redis.expire car_user_info.detail_url, 60
@@ -375,7 +375,7 @@ module Ganji
       pp '-------------------------------------'
       pp e
       pp $@
-      pp detail_content
+      # pp detail_content
       redis = Redis.current
       redis[car_user_info.detail_url] = 'n'
       redis.expire car_user_info.detail_url, 60
