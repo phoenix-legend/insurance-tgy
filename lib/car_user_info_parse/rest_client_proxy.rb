@@ -103,7 +103,11 @@ module RestClientProxy
     redis[:proxy_ip]
   end
 
-  def self.get url, header
+  def self.get url, header={}
+    if RestClientProxy.get_local_ip != '10-19-104-142'
+      response = RestClient.get url, header
+      return response.body
+    end
     pp url
     proxy_ip = RestClientProxy.get_proxy_ip
     # begin
@@ -130,5 +134,12 @@ module RestClientProxy
     # redis[:proxy_ip] = nil if proxy_ip == redis[:proxy_ip]
     # end
 
+  end
+
+  def self.get_local_ip
+    require 'socket'
+    # IPSocket.getaddress(Socket.gethostname)
+    # TCPSocket.gethostbyname(Socket.gethostname)
+    Socket.gethostname
   end
 end

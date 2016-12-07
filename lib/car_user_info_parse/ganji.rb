@@ -98,7 +98,7 @@ module Ganji
           url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=1&deal_type=1&page=#{i}"
           # url = "http://wap.ganji.com/sh/ershouche/?back=search&agent=1&deal_type=1&page=1"
           # url = "http://wap.ganji.com/su/ershouche/?back=search&agent=1&deal_type=1&page=1"
-          content = RestClient.get url
+          content = RestClientProxy.get url
           # content = RestClientProxy.get url, {}
           content = content.body
 
@@ -320,7 +320,7 @@ module Ganji
     begin
       pp "开始跑明细 #{car_user_info.id}"
       # sleep 4+rand(4)
-      response = RestClient.get(car_user_info.detail_url)
+      response = RestClientProxy.get(car_user_info.detail_url)
       # response = RestClientProxy.get car_user_info.detail_url, {}
       detail_content = response.body
       # pp detail_content
