@@ -94,56 +94,78 @@ module Ganji
       begin
         pp "现在跑赶集.. #{areaname}"
         1.upto 3 do |i|
-          sleep 4+rand(4) if  RestClientProxy.get_local_ip != '10-19-104-142'
+          sleep 4+rand(4) if RestClientProxy.get_local_ip != '10-19-104-142'
           url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=1&deal_type=1&page=#{i}"
           # url = "http://wap.ganji.com/sh/ershouche/?back=search&agent=1&deal_type=1&page=1"
           # url = "http://wap.ganji.com/su/ershouche/?back=search&agent=1&deal_type=1&page=1"
           # url = 'http://wap.ganji.com/cq/ershouche/?back=search&agent=1&deal_type=1&page=1'
-          content = RestClientProxy.get url
+          content = RestClientProxy.get url, {
+                                               'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
+                                               'Cookie' => 'ganji_uuid=5283133772326517092624; ganji_xuuid=f60ba7d5-b4de-4c7b-b8e0-890ad74ebaea.1463541968024; citydomain=xiangyang; Hm_lvt_73a12ba5aced499cae6ff7c0a9a989eb=1463541966,1463794955; __utma=32156897.2034222174.1460360232.1463548883.1463794938.4; wap_list_view_type=pic; __utmganji_v20110909=0xe17e1688f8364e8228f5a20bbf08f82; GANJISESSID=8295e329b8cd9f5ebc25d9e09e1e7800; index_city_refuse=refuse; gr_user_id=8fcb69d6-a9e2-43f2-b05d-955ce16276a5; cityDomain=sh; gr_session_id_b500fd00659c602c=2f3e7532-899b-4dab-8670-1eb629322b9c; mobversionbeta=2.0; Hm_lvt_66fdcdd2a4078dde0960b72e77483d4e=1481157061; Hm_lpvt_66fdcdd2a4078dde0960b72e77483d4e=1481157567; ganji_temp=on'
+
+                                           }
           # content = RestClientProxy.get url, {}
           # content = content.body
 
-          if ! content.valid_encoding?
-            content = content.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8')
-          end
-
-          if content.blank?
-            pp '..........'
-            break
-          end
-
+          # if ! content.valid_encoding?
+          #   content = content.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8')
+          # end
+          #
+          # if content.blank?
+          #   pp '..........'
+          #   break
+          # end
+          pp content
           content = Nokogiri::HTML(content)
-          # car_infos = content.css(".mod-list .list-item")
-          car_infos = content.css(".inforBox .infor")
+          car_infos = content.css(".list-item")
+          # car_infos = content.css(".inforBox .infor")
           pp "car infos length is #{car_infos.length}"
           break if car_infos.blank?
           car_number = car_infos.length
           exists_car_number = 0
 
           car_infos.each do |car_info|
-            detail_url = car_info.attributes["href"].value
-            detail_url.gsub!('_', '/')
-            chexing = car_info.css('.iName').text
-            chexing.gsub!(/\n|\s/, '')
 
+            url = car_info.css('a')[0].attributes["href"].value
+            url = url.split('?')[0]
+
+            chexing = car_info.css('a')[0].text
+
+            cheling_licheng = car_info.css('.meta')[0].text
+            cheling_licheng.strip!
+            cheling = cheling_licheng.split('/')[0]
+            licheng = cheling_licheng.split('/')[1]
+
+
+            cheling.gsub!('年', '')
+            cheling = Date.today.year - cheling.to_i
             price = car_info.css('.price').text
-            price.gsub!('万元', '')
 
-            cheling_licheng = car_info.css('.iol').text
-            cheling = begin
-              cheling_licheng.split('年')[0] rescue 2012
-            end
-            cheling.gsub!('  ', '')
-            cheling.gsub!('\n|\s|\r', '')
-            licheng = begin
-              cheling_licheng.split(/上牌|万公里/)[1] rescue 2012
-            end
-            is_cheshang = (chexing.match /个人/).blank?
-            next if chexing.length > 200
+            is_cheshang = false
+
+            # detail_url = car_info.attributes["href"].value
+            # detail_url.gsub!('_', '/')
+            # chexing = car_info.css('.iName').text
+            # chexing.gsub!(/\n|\s/, '')
+            #
+            # price = car_info.css('.price').text
+            # price.gsub!('万元', '')
+            #
+            # cheling_licheng = car_info.css('.iol').text
+            # cheling = begin
+            #   cheling_licheng.split('年')[0] rescue 2012
+            # end
+            # cheling.gsub!('  ', '')
+            # cheling.gsub!('\n|\s|\r', '')
+            # licheng = begin
+            #   cheling_licheng.split(/上牌|万公里/)[1] rescue 2012
+            # end
+            # is_cheshang = (chexing.match /个人/).blank?
+            # next if chexing.length > 200
             cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: chexing,
                                                                    che_ling: cheling,
                                                                    milage: licheng,
-                                                                   detail_url: "http://wap.ganji.com#{detail_url.split('?')[0]}",
+                                                                   detail_url: url,
                                                                    city_chinese: areaname,
                                                                    price: price,
                                                                    site_name: 'ganji',
@@ -315,7 +337,7 @@ module Ganji
 
 
   def self.update_one_detail car_user_info_id
-    # car_user_info_id = 1270818
+    # car_user_info_id = 4922735
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
 
     return unless car_user_info.name.blank?
@@ -325,17 +347,20 @@ module Ganji
 
     begin
       pp "开始跑明细 #{car_user_info.id}"
-      sleep 4+rand(4) if  RestClientProxy.get_local_ip != '10-19-104-142'
-      response = RestClientProxy.get(car_user_info.detail_url)
+      sleep 4+rand(4) if RestClientProxy.get_local_ip != '10-19-104-142'
+      response = RestClientProxy.get(car_user_info.detail_url, {
+                                                                 'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
+                                                                 'Cookie' => 'ganji_uuid=5283133772326517092624; ganji_xuuid=f60ba7d5-b4de-4c7b-b8e0-890ad74ebaea.1463541968024; citydomain=xiangyang; Hm_lvt_73a12ba5aced499cae6ff7c0a9a989eb=1463541966,1463794955; __utma=32156897.2034222174.1460360232.1463548883.1463794938.4; wap_list_view_type=pic; __utmganji_v20110909=0xe17e1688f8364e8228f5a20bbf08f82; GANJISESSID=8295e329b8cd9f5ebc25d9e09e1e7800; index_city_refuse=refuse; gr_user_id=8fcb69d6-a9e2-43f2-b05d-955ce16276a5; cityDomain=sh; gr_session_id_b500fd00659c602c=2f3e7532-899b-4dab-8670-1eb629322b9c; mobversionbeta=2.0; Hm_lvt_66fdcdd2a4078dde0960b72e77483d4e=1481157061; Hm_lpvt_66fdcdd2a4078dde0960b72e77483d4e=1481157567; ganji_temp=on'
+                                                             })
       # response = RestClientProxy.get car_user_info.detail_url, {}
       # detail_content = response.body
       # pp detail_content
       # detail_content = detail_content.force_encoding('UTF-8')
       detail_content = response
 
-      if ! detail_content.valid_encoding?
-        detail_content = detail_content.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8')
-      end
+      # if ! detail_content.valid_encoding?
+      #   detail_content = detail_content.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8')
+      # end
 
       if detail_content.match /您访问的速度太快|爬虫/
         redis = Redis.current
@@ -348,22 +373,48 @@ module Ganji
       # pp '-----'
       # pp detail_content
       # pp '-----'
-      detail_content.gsub!('fc8d f12', 'fabushijian')
+
       detail_content = Nokogiri::HTML(detail_content)
+      detail_content = detail_content.css('.mod-detail')
+      fabushijian = detail_content.css('.detail-meta span')[0].text
+      fabushijian.strip!
+      fabushijian.gsub!('发布:', '')
 
-      phone = detail_content.css('.tel-area-phone')[0].attributes["data-phone"].value
-
-      name = detail_content.css('.car-shop').css('p')[0].text
-      name.gsub!(/\s|\n|个人|联系人/, '')
-
-      note = detail_content.css('.comm-area').text
-      note.gsub!('  ', '')
-      note.gsub!(/\r|\n/, '')
+      phone = detail_content.css('.phone-contact a')[0].attributes['href'].value.gsub('tel:', '')
 
 
-      fabushijian = begin
-        detail_content.css('.fabushijian').text[0..10] rescue '刚刚'
+      name = ''
+      note = ''
+      details = detail_content.css('.detail-describe p')
+      is_cheshang = "0"
+      details.each do |detail|
+        case detail.text
+          when /详细信息/
+            note = detail.text
+            note.gsub!('详细信息：', '')
+          when /联系人/
+            name = detail.text
+            if name.match /商家/
+              is_cheshang = '1'
+            end
+            name.gsub!('联系人：', '')
+            name.gsub!(/\[商家\]|\[个人\]/, '')
+        end
       end
+
+      # phone = detail_content.css('.tel-area-phone')[0].attributes["data-phone"].value
+
+      # name = detail_content.css('.car-shop').css('p')[0].text
+      # name.gsub!(/\s|\n|个人|联系人/, '')
+      #
+      # note = detail_content.css('.comm-area').text
+      # note.gsub!('  ', '')
+      # note.gsub!(/\r|\n/, '')
+
+
+      # fabushijian = begin
+      #   detail_content.css('.fabushijian').text[0..10] rescue '刚刚'
+      # end
 
 
       pp "开始跑明细 #{car_user_info.id}  准备更新"
@@ -371,7 +422,8 @@ module Ganji
                                             name: name,
                                             phone: phone,
                                             note: note,
-                                            fabushijian: fabushijian
+                                            fabushijian: fabushijian,
+                                            is_cheshang: is_cheshang
 
     rescue Exception => e
       pp '-------------------------------------'

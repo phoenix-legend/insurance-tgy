@@ -308,11 +308,30 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
   def self.create_car_user_info2 options
+
+    redis = Redis.current
+    begin
+      if redis[options[:detail_url]] == 'y'
+        return nil
+      end
+    rescue Exception => e
+    end
+
+
+
     user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]
-    return nil if user_infos.length > 0
+    if user_infos.length > 0
+      redis[options[:detail_url]] = 'y'
+      redis.expire options[:detail_url], 7*24*60*60
+      return nil
+    end
+
 
     car_user_info = UserSystem::CarUserInfo.new options
+    car_user_info.name.gsub!(/\r|\n|\t/, '') unless car_user_info.name.blank?
     car_user_info.save!
+    redis[options[:detail_url]] = 'y'
+    redis.expire options[:detail_url], 7*24*60*60
     car_user_info.id
   end
 
