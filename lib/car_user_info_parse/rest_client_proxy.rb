@@ -41,7 +41,10 @@ module RestClientProxy
   def self.refresh_proxy_ip
     redis = Redis.current
 
+    num = 0
     while true
+      num += 1
+      break if num == 50
 
       # 获取代理信息
       RestClient.proxy = nil
