@@ -2,7 +2,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
 
   # CITY = ['上海', '苏州', '杭州','合肥','宿州']
-  CITY = ['上海', '苏州', '杭州','合肥','成都','福州']
+  CITY = ['上海', '苏州', '杭州','成都','福州']
   # CITY = ['上海', '杭州','合肥']
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
