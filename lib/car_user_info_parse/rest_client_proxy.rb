@@ -44,7 +44,7 @@ module RestClientProxy
     num = 0
     while true
       num += 1
-      break if num == 50
+      break if num == 3
 
       # 获取代理信息
       RestClient.proxy = nil
@@ -119,6 +119,13 @@ module RestClientProxy
     # response = nil
     # Timeout::timeout(10) {
     pp "代理是  #{RestClient.proxy}   ...."
+
+    if proxy_ip.blank?
+      sleep 1
+      pp '获取ip失败'
+      return ''
+    end
+
     response = RestClient.get url, header
     # }
     response = response.body
