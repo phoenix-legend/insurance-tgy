@@ -29,11 +29,12 @@ module Wuba
             # i = 1
             url = "http://#{areaid}.58.com/ershouche/0/pn#{i}/"
             pp url
-            content = RestClient.get url
+            content = RestClient.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
             content = content.body
+            content.gsub!('infoList list-info', 'list_infos_eric')
             break if content.blank?
             content = Nokogiri::HTML(content)
-            trs = content.css('.tbimg tr')
+            trs = content.css('.list_infos_eric .item')
             car_number = trs.length
             exists_car_number = 0
             trs.each do |tr|
@@ -44,7 +45,7 @@ module Wuba
 
 
               begin
-                chexing = tr.css('td .t')[0].text
+                chexing = tr.css('.info-title strong')[0].text
               rescue
                 car_number = car_number -1
                 pp tr.to_s
@@ -54,7 +55,8 @@ module Wuba
 
               price = 2
               begin
-                price = tr.css('.tc .pri')[0].text
+                price = tr.css('.info-desc-tag-price')[0].text.strip
+                  price.gsub!('万', '')
               rescue
                 car_number = car_number -1
                 pp tr.to_s
@@ -62,13 +64,15 @@ module Wuba
                 next
               end
 
-              cheling = tr.css('.t p')[0].children[0].text
-              cheling = cheling.gsub(/购于|年|\n|\r|\s/, '')
-              milage = begin
-                tr.css('.t p')[0].children[2].text rescue '8.0'
-              end
-              milage = milage.gsub(/万|公里/, '')
-              url = tr.css('td .t')[0].attributes["href"].value
+              cheling_licheng = tr.css('.info-desc-detail').text
+
+              cheling = cheling_licheng.split('年')[0]
+              milage = cheling_licheng.split('年')[1]
+              milage.gsub(/\s|万|公里/,'')
+
+
+              url = tr.css('a')[0].attributes["href"].value
+              # url = tr.css('td .t')[0].attributes["href"].value
               begin
                 if url.match /http:\/\/short/
                   url_short = url
