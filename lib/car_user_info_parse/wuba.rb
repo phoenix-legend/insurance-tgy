@@ -511,6 +511,7 @@ module Wuba
       # end
       if phone_is_shangjia
         # 对于商家，也不存在口令，直接return
+        name = '先生女士' if name.blank?
         UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                               name: name,
                                               phone: phone,
