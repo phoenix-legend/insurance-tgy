@@ -3,7 +3,8 @@ module Wuba
   # Wuba.get_car_user_list
   # 获取58部分城市的车辆列表
   def self.get_car_user_list lest_number = 20, sub_city_party = 0
-    # return true;
+    sleep 10
+    return true;
     # city_hash = ::UserSystem::CarUserInfo::WUBA_CITY
     city_hash = ::UserSystem::CarUserInfo.get_58_sub_cities sub_city_party
     threads = []
@@ -392,7 +393,7 @@ module Wuba
       api_url = "http://app.58.com/api/detail/ershouche/#{id_name}?appId=3&format=json&localname=#{city_name}&platform=ios&sidDict=%7B%22PGTID%22%3A%22%22%2C%22GTID%22%3A%22130722508192553938177207060%22%7D&version=7.1.1"
       pp api_url
       # api_url = 'http://app.58.com/api/detail/ershouche/25901110150859?appId=3&format=json&localname=sy&platform=ios&sidDict=%7B%22PGTID%22%3A%22%22%2C%22GTID%22%3A%22130722508192553938177207060%22%7D&version=7.1.1'
-      response = RestClient.get api_url
+      response = RestClient.get api_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
       response = response.body
       response = JSON.parse response
 
@@ -448,7 +449,7 @@ module Wuba
     end
   end
 
-  # Wuba.update_one_detail 1175137
+  # Wuba.update_one_detail 5039025
   # 使用口令的方式抓数据
   def self.update_one_detail_kouling car_user_info_id
     # car_user_info_id = 1055829
@@ -467,7 +468,7 @@ module Wuba
       detail_content = response.body
       # detail_content.gsub!('intro-per intro-center','personname')
       # detail_content.gsub!('intro-per','personname')
-      detail_content.gsub!('person-name', 'personname')
+      detail_content.gsub!('person-nameCont', 'personname')
       detail_content.gsub!('abstract-info-txt clear', 'fbsj')
       detail_content.gsub!('detailinfo-box desClose', 'notenote')
       detail_content.gsub!('person-phoneNumber', 'persophone')
