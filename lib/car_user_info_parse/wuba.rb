@@ -3,8 +3,8 @@ module Wuba
   # Wuba.get_car_user_list
   # 获取58部分城市的车辆列表
   def self.get_car_user_list lest_number = 20, sub_city_party = 0
-    sleep 10
-    return true;
+    # sleep 10
+    # return true;
     # city_hash = ::UserSystem::CarUserInfo::WUBA_CITY
     city_hash = ::UserSystem::CarUserInfo.get_58_sub_cities sub_city_party
     threads = []
@@ -105,7 +105,7 @@ module Wuba
 
                 unless u.blank?
                   c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
-                  Wuba.update_one_detail c.id if not c.blank?
+                  Wuba.update_one_detail_kouling c.id if not c.blank?
                 end
               end
               exists_car_number = exists_car_number + 1 if result == 1
@@ -497,7 +497,7 @@ module Wuba
 
 
       note = begin
-        detail_content.css('.notenote').text rescue ''
+        detail_content.css('.notenote p').text rescue ''
       end
       note.gsub!('联系我时，请说是在58同城上看到的，谢谢！', '')
 
