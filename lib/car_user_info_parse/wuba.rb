@@ -432,7 +432,7 @@ module Wuba
 
       #姓名，手机号，备注，发布时间
 
-
+      name = '先生女士' if name.blank?
       UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                             name: name,
                                             phone: phone,
