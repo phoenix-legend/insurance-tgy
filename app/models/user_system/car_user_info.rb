@@ -275,7 +275,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       when 1
         UserSystem::CarUserInfo.get_city_hash UserSystem::CarUserInfo::WUBA_CITY, UserSystem::CarUserInfo::CITY2
       else
-        UserSystem::CarUserInfo.get_city_hash UserSystem::CarUserInfo::WUBA_CITY, UserSystem::CarUserInfo::CITY3
+        UserSystem::CarUserInfo.get_city_hash UserSystem::CarUserInfo::WUBA_CITY, UserSystem::CarUserInfo::CITY3.shuffle
     end
   end
 
