@@ -47,7 +47,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     ].include? city_name
       return '13cfe7dfa0dd2fe5e2a7d5fb467099a6', '4SA-1012' # Eric 秘钥
     elsif ['福州', '厦门', '上海',"苏州","合肥"].include? city_name
-      if rand(10)<6
+      if rand(10)<4
         return '13cfe7dfa0dd2fe5e2a7d5fb467099a6', '4SA-1012'
       else
         return "098f6bcd4621d373cade4e832627b4f6", "4SA-1011"
@@ -70,6 +70,37 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     ycui.name = ycui.name.gsub('(', '')
     ycui.name = ycui.name.gsub(')', '')
     ycui.save!
+
+    key, number = UserSystem::AishiCarUserInfo.get_key_numbers ycui.city_chinese
+
+    if number == '4SA-1011' and ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? ycui.city_chinese
+      number, key = '4SA-1019', 'c2b2aa3e4f45075d848140d9c2f9dc3a'
+    end
+
+    require 'digest/md5'
+
+    if ['苏州'].include? ycui.city_chinese
+      response = RestClient.post "http://api.formal.4scenter.com/index.php?r=apicar/signup", {mobile: ycui.phone,
+                                                                                              name: ycui.name.gsub('(个人)', ''),
+                                                                                              city: "#{ycui.city_chinese}市",
+                                                                                              brand: ycui.brand,
+                                                                                              number: number,
+                                                                                              mileage: (ycui.milage).to_i*10000,
+                                                                                              car_age: (Date.today.year-ycui.che_ling)*12 ,
+                                                                                              sign: Digest::MD5.hexdigest("#{number}#{key}")
+                                                                                           }
+      response = JSON.parse response.body
+      pp response
+      ycui.aishi_upload_status = '已上传'
+      ycui.aishi_upload_message = response["message"]
+      ycui.numbers = number
+      ycui.k = key
+      if response["error"] == "false"
+        ycui.aishi_id = response["result"]["id"]
+      end
+      ycui.save!
+      return
+    end
 
 
     if ycui.phone.blank? or ycui.brand.blank?
@@ -161,13 +192,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     # key = "098f6bcd4621d373cade4e832627b4f6" #正式
     # number = "4SA-1011" #正式
 
-    key, number = UserSystem::AishiCarUserInfo.get_key_numbers ycui.city_chinese
 
-    if number == '4SA-1011' and ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? ycui.city_chinese
-      number, key = '4SA-1019', 'c2b2aa3e4f45075d848140d9c2f9dc3a'
-    end
-
-    require 'digest/md5'
 
     response = RestClient.post "http://api.formal.4scenter.com/index.php?r=apicar/signup", {mobile: ycui.phone,
                                                                                             name: ycui.name.gsub('(个人)', ''),
