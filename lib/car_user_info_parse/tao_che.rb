@@ -115,7 +115,7 @@ module TaoChe
     end
   end
 
-  # TaoChe.update_one_detail 5077860
+  # TaoChe.update_one_detail 5090030
   def self.update_one_detail car_user_info_id
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
 
@@ -133,7 +133,7 @@ module TaoChe
       pp name
 
       tmp_url = car_user_info.detail_url.gsub('.html','')
-      che_number = new_url.split('p-')[1] # 获取淘车网的车源编号
+      che_number = tmp_url.split('p-')[1] # 获取淘车网的车源编号
       response_ = RestClient.get "http://ershouche.h5.yiche.com/car/car#{che_number}.html?ref=4L_ycesc_app&from=singlemessage&isappinstalled=1",
                                 "User-Agent" => "Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_3 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Mobile/10B329 MicroMessenger/5.0.1"
 
