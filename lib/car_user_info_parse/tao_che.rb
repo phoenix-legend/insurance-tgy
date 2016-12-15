@@ -115,7 +115,7 @@ module TaoChe
     end
   end
 
-  # TaoChe.update_one_detail 4493914
+  # TaoChe.update_one_detail 5077860
   def self.update_one_detail car_user_info_id
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
 
@@ -132,8 +132,24 @@ module TaoChe
       name = detail_content.css('.s-pt').text.strip
       pp name
 
-      phone = (detail_content.css('.s-pb').text.match /\d{11}/).to_s
-      pp phone
+      tmp_url = car_user_info.detail_url.gsub('.html','')
+      che_number = new_url.split('p-')[1] # 获取淘车网的车源编号
+      response_ = RestClient.get "http://ershouche.h5.yiche.com/car/car#{che_number}.html?ref=4L_ycesc_app&from=singlemessage&isappinstalled=1",
+                                "User-Agent" => "Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_3 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Mobile/10B329 MicroMessenger/5.0.1"
+
+      response_ = response_.body
+      response_.gsub!('six_gg_pic marb0', 'dianhuadiv')
+      response_ = Nokogiri::HTML(response_)
+      phone_ = response_.css('.dianhuadiv a')[0].attributes["href"].value
+      phone_.gsub!('tel:','')
+      phone_.strip!
+      phone = phone_
+
+
+
+
+      # phone = (detail_content.css('.s-pb').text.match /\d{11}/).to_s
+      # pp phone
       note = (detail_content.css('.seller-dec').text rescue '')
       pp note
       price = detail_content.css('.left-pri').text.match(/[\d.]{1,10}/).to_s
