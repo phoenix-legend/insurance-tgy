@@ -116,6 +116,10 @@ module TaoChe
   end
 
   # TaoChe.update_one_detail 5090030
+  # cuis = UserSystem::CarUserInfo.where "id > 4806257 and site_name = 'taoche'"
+  # cuis.each do |cui|
+  #   TaoChe.update_one_detail cui.id
+  # end
   def self.update_one_detail car_user_info_id
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
 

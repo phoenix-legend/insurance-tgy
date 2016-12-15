@@ -299,6 +299,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       return 1
     end
 
+
+
     car_user_info = UserSystem::CarUserInfo.new options
     car_user_info.name.gsub!(/\r|\n|\t/, '') unless car_user_info.name.blank?
     car_user_info.save!
@@ -567,7 +569,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   def self.run_che168 sub_city_party = 0
-    [1..1000].each do |i|
+
       begin
         Che168.get_car_user_list sub_city_party
       rescue Exception => e
@@ -575,7 +577,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
       pp '168再来一遍。。。'
       pp "168现在时间 #{Time.now.chinese_format}"
-    end
+
 
 
     # begin
@@ -600,7 +602,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
   def self.run_58 sub_city_party = 0
-    [1..1000].each do |i|
+
       begin
         Wuba.get_car_user_list 20, sub_city_party
       rescue Exception => e
@@ -614,11 +616,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
       pp '58再来一遍。。。'
       pp "58现在时间 #{Time.now.chinese_format}"
-    end
+
   end
 
   def self.run_ganji party = 0
-    [1..1000].each do |i|
+
       begin
         Ganji.get_car_user_list party
       rescue Exception => e
@@ -632,7 +634,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
       pp '赶集再来一遍。。。'
       pp "现在赶集时间 #{Time.now.chinese_format}"
-    end
+
   end
 
   def self.run_baixing party = 0

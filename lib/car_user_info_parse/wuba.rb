@@ -10,11 +10,11 @@ module Wuba
     threads = []
     city_hash.each_pair do |areaid, areaname|
       threads.delete_if { |thread| thread.status == false }
-      if threads.length > 15
+      if threads.length > 10
         pp "现在共有#{threads.length}个线程正在运行"
         while true
           threads.delete_if { |thread| thread.status == false }
-          if threads.length < 15
+          if threads.length < 10
             break
           else
             # pp "现在共有#{threads.length}个线程正在运行"
