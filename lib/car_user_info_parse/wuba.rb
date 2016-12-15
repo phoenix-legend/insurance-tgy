@@ -3,31 +3,25 @@ module Wuba
   # Wuba.get_car_user_list
   # 获取58部分城市的车辆列表
   def self.get_car_user_list lest_number = 20, sub_city_party = 0
-    # sleep 10
-    # return true;
-    # city_hash = ::UserSystem::CarUserInfo::WUBA_CITY
     city_hash = ::UserSystem::CarUserInfo.get_58_sub_cities sub_city_party
-    threads = []
+    # threads = []
     city_hash.each_pair do |areaid, areaname|
-      threads.delete_if { |thread| thread.status == false }
-      if threads.length > 3
-        pp "现在共有#{threads.length}个线程正在运行"
-        while true
-          threads.delete_if { |thread| thread.status == false }
-          if threads.length < 3
-            break
-          else
-            # pp "现在共有#{threads.length}个线程正在运行"
-            # pp Time.now
-            sleep 0.5
-          end
-        end
-      end
-      t = Thread.new do
+      # threads.delete_if { |thread| thread.status == false }
+      # if threads.length > 3
+      #   pp "现在共有#{threads.length}个线程正在运行"
+      #   while true
+      #     threads.delete_if { |thread| thread.status == false }
+      #     if threads.length < 2
+      #       break
+      #     else
+      #       sleep 0.5
+      #     end
+      #   end
+      # end
+      # t = Thread.new do
         begin
           pp "现在跑58.. #{areaname}"
           1.upto 1 do |i|
-            # i = 1
             url = "http://#{areaid}.58.com/ershouche/0/pn#{i}/"
             pp url
             content = RestClient.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
@@ -118,24 +112,21 @@ module Wuba
           end
 
 
-            # ActiveRecord::Base.connection.close
         rescue Exception => e
           pp e
           pp $@
-          # ActiveRecord::Base.connection.close
 
         end
-      end
+      # end
 
-      threads << t
+      # threads << t
     end
 
-    1.upto(2000) do
-      sleep(1)
-      # pp '休息.......'
-      threads.delete_if { |thread| thread.status == false }
-      break if threads.blank?
-    end
+    # 1.upto(2000) do
+    #   sleep(1)
+    #   threads.delete_if { |thread| thread.status == false }
+    #   break if threads.blank?
+    # end
   end
 
 
