@@ -4,13 +4,13 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
   CITY = [
       # "福州", "厦门",
-      '苏州', "杭州", "上海",   "合肥",
-      "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都",
-      '天津',  '武汉', '重庆',
+      '苏州', "杭州", "上海", "合肥",
+      "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京", "成都",
+      '天津', '武汉', '重庆',
       "郑州", "长沙", "西安", "青岛", "威海", "烟台",
       "潍坊", "无锡", "常州", "徐州", "南通", "扬州", "济南",
       "石家庄", "唐山", "太原", "宝鸡", "洛阳", "南阳", "新乡", "湘潭", "株洲", "常德",
-      "岳阳", "沈阳", "大连", "营口", "泉州", "长春", "哈尔滨", "大庆",  "芜湖", "南宁", "南昌",
+      "岳阳", "沈阳", "大连", "营口", "泉州", "长春", "哈尔滨", "大庆", "芜湖", "南宁", "南昌",
 
       "运城", "晋中", "临汾", "大同", "遵义", "兰州", "呼和浩特",
       "贵阳", "惠州", "嘉兴", "中山", "肇庆", "绵阳", "襄阳", "宜昌",
@@ -46,7 +46,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
         "咸阳", "乌鲁木齐", "银川", "西宁", "菏泽", "铜陵", "黄冈", "鄂州", "阳泉"
     ].include? city_name
       return '13cfe7dfa0dd2fe5e2a7d5fb467099a6', '4SA-1012' # Eric 秘钥
-    elsif ['福州', '厦门', '上海',"苏州","合肥"].include? city_name
+    elsif ['福州', '厦门', '上海', "苏州", "合肥"].include? city_name
       if rand(10)<4
         return '13cfe7dfa0dd2fe5e2a7d5fb467099a6', '4SA-1012'
       else
@@ -73,7 +73,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
     key, number = UserSystem::AishiCarUserInfo.get_key_numbers ycui.city_chinese
 
-    if number == '4SA-1011' and ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? ycui.city_chinese
+    if number == '4SA-1011' and ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京", "成都"].include? ycui.city_chinese
       number, key = '4SA-1019', 'c2b2aa3e4f45075d848140d9c2f9dc3a'
     end
 
@@ -86,7 +86,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
                                                                                               brand: ycui.brand,
                                                                                               number: number,
                                                                                               mileage: (ycui.milage).to_i*10000,
-                                                                                              car_age: (Date.today.year-ycui.che_ling)*12 ,
+                                                                                              car_age: (Date.today.year-ycui.che_ling)*12,
                                                                                               sign: Digest::MD5.hexdigest("#{number}#{key}")
                                                                                            }
       response = JSON.parse response.body
@@ -130,7 +130,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       return
     end
 
-    unless ["福州", "厦门", '苏州', "杭州", "上海",   "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? ycui.city_chinese
+    unless ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京", "成都"].include? ycui.city_chinese
       # 放宽条件
       # if not ycui.is_city_match
       #   pp '城市不匹配'
@@ -139,8 +139,6 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       #   return
       # end
     end
-
-
 
 
     return if ycui.phone.blank?
@@ -152,7 +150,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(ycui.phone)
     cui.save!
 
-    unless ["福州", "厦门", '苏州', "杭州", "上海",   "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京","成都"].include? ycui.city_chinese
+    unless ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京", "成都"].include? ycui.city_chinese
       if not cui.phone_city.blank?
         unless cui.city_chinese == cui.phone_city
           ycui.aishi_upload_status = '非本地车'
@@ -163,23 +161,23 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     end
 
     # unless ['上海', '福州', '厦门'].include? ycui.city_chinese
-      # if ycui.che_ling.to_i < 2009
-      #   ycui.aishi_upload_status = '车龄过老'
-      #   ycui.save!
-      #   return
-      # end
+    # if ycui.che_ling.to_i < 2009
+    #   ycui.aishi_upload_status = '车龄过老'
+    #   ycui.save!
+    #   return
+    # end
 
-      # if ['众泰', "五菱", '长安商用', '奇瑞', '力帆', '金杯', '江淮', '哈飞', '哈弗', '东风小康', '宝骏', '五菱汽车', '五十铃', '昌河', '依维柯', '福田', '东风风神', '东风'].include? ycui.brand
-      #   ycui.aishi_upload_status = '品牌外车，暂排除'
-      #   ycui.save!
-      #   return
-      # end
+    # if ['众泰', "五菱", '长安商用', '奇瑞', '力帆', '金杯', '江淮', '哈飞', '哈弗', '东风小康', '宝骏', '五菱汽车', '五十铃', '昌河', '依维柯', '福田', '东风风神', '东风'].include? ycui.brand
+    #   ycui.aishi_upload_status = '品牌外车，暂排除'
+    #   ycui.save!
+    #   return
+    # end
 
-      # if ycui.milage.to_f > 15
-      #   ycui.aishi_upload_status = '里程太多'
-      #   ycui.save!
-      #   return
-      # end
+    # if ycui.milage.to_f > 15
+    #   ycui.aishi_upload_status = '里程太多'
+    #   ycui.save!
+    #   return
+    # end
     # end
 
 
@@ -193,14 +191,13 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     # number = "4SA-1011" #正式
 
 
-
     response = RestClient.post "http://api.formal.4scenter.com/index.php?r=apicar/signup", {mobile: ycui.phone,
                                                                                             name: ycui.name.gsub('(个人)', ''),
                                                                                             city: "#{ycui.city_chinese}市",
                                                                                             brand: ycui.brand,
                                                                                             number: number,
                                                                                             mileage: (ycui.milage).to_i*10000,
-                                                                                            car_age: (Date.today.year-ycui.che_ling)*12 ,
+                                                                                            car_age: (Date.today.year-ycui.che_ling)*12,
                                                                                             sign: Digest::MD5.hexdigest("#{number}#{key}")
                                                                                          }
     response = JSON.parse response.body
@@ -286,9 +283,18 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       # next if cui.aishi_yaoyue == '失败'
       # next if cui.aishi_yaoyue == '成功'
       next if cui.aishi_upload_message.match /交易成功/
+      tok = case cui.numbers
+              when '4SA-1012'
+                "9278d068a56b92433be7208970e6f812"
+              when '4SA-1011'
+                'dcd7f18c776dbaddfea4ce0ed5d2cfc3'
+              when '4SA-1019'
+                '41d3e660a53644e1bb8b84f35e35d23e'
+            end
       response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/querysignupone', {number: cui.numbers,
                                                                                                       sign: Digest::MD5.hexdigest("#{cui.numbers}#{cui.k}"),
-                                                                                                      id: cui.aishi_id
+                                                                                                      id: cui.aishi_id,
+                                                                                                      token: tok
                                                                                                    }
       response = JSON.parse response.body
       if response["result"]["status"] == '交易成功'
@@ -307,9 +313,18 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       next if cui.aishi_yaoyue == '失败'
       response = nil
       begin
+        tok = case cui.numbers
+                when '4SA-1012'
+                  "9278d068a56b92433be7208970e6f812"
+                when '4SA-1011'
+                  'dcd7f18c776dbaddfea4ce0ed5d2cfc3'
+                when '4SA-1019'
+                  '41d3e660a53644e1bb8b84f35e35d23e'
+              end
         response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/querysignupone', {number: cui.numbers,
                                                                                                         sign: Digest::MD5.hexdigest("#{cui.numbers}#{cui.k}"),
-                                                                                                        id: cui.aishi_id
+                                                                                                        id: cui.aishi_id,
+                                                                                                        token: tok
                                                                                                      }
 
 
@@ -377,7 +392,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       end
 
       if cui.business1_name.match /人人/
-        cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败','邀约成功'].include? cui.business_last_status
+        cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败', '邀约成功'].include? cui.business_last_status
                              '成功'
                            elsif ['创建失败', '检测失败', '邀约失败'].include? cui.business_last_status
                              '失败'
@@ -392,7 +407,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       end
 
       if cui.business1_name.match /朋友/
-        cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败','邀约成功'].include? cui.business_last_status
+        cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败', '邀约成功'].include? cui.business_last_status
                              '成功'
                            elsif ['创建失败', '检测失败', '邀约失败'].include? cui.business_last_status
                              '失败'
@@ -407,7 +422,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       end
 
       if cui.business1_name.match /车置宝/
-        cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败','邀约成功'].include? cui.business_last_status
+        cui.aishi_yaoyue = if ['检测成功', '竞拍成功', '竞拍失败', '交易成功', '交易失败', '邀约成功'].include? cui.business_last_status
                              '成功'
                            elsif ['创建失败', '检测失败', '邀约失败'].include? cui.business_last_status
                              '失败'

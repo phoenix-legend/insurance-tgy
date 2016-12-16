@@ -5,7 +5,7 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
   def self.create_kouling_car_user_info car_user_info_id
     klcui = UserSystem::KouLingCarUserInfo.new :car_user_info_id => car_user_info_id
     klcui.save!
-    if ["上海", "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "重庆", "佛山","天津","武汉", "无锡"].include? klcui.car_user_info.city_chinese
+    if ['深圳', '南京', '广州', '武汉', '佛山', '天津', '东莞', '重庆', '厦门', '北京', '上海', '成都', '杭州', '苏州', '福州', '合肥'].include? klcui.car_user_info.city_chinese
       klcui.vip_flg = 'vip'
       klcui.save!
     end
@@ -14,10 +14,13 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
   #获取未提交口令
   def self.get_wei_tijiao_kouling deviceid = 'unknow'
     UserSystem::DeviceAccessLog.update_device_access deviceid
+    machine_name = devce_id[-3..-1]
     UserSystem::KouLingCarUserInfo.transaction do
       # return nil
       kouling_car_infos = UserSystem::KouLingCarUserInfo.where("vip_flg = ?", 'vip').order(id: :desc).limit(10)
-      kouling_car_infos = UserSystem::KouLingCarUserInfo.order(id: :desc).limit(10)  if kouling_car_infos.blank?
+      if not ['094'].include? machine_name #094 机器为重点城市预留
+        kouling_car_infos = UserSystem::KouLingCarUserInfo.order(id: :desc).limit(10) if kouling_car_infos.blank?
+      end
       return nil if kouling_car_infos.blank?
       number = rand(kouling_car_infos.length)
       kouling = kouling_car_infos[number]
@@ -37,8 +40,6 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
 
       return cui
     end
-
-
   end
 
 
@@ -47,7 +48,7 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
     pp Time.now.chinese_format
     x = UserSystem::KouLingCarUserInfo.limit 1
     return unless x.blank?
-    cuis = UserSystem::CarUserInfo.where("wuba_kouling_status = 'yitijiao' and wuba_kouling_shouji_huilai_time is null and wuba_kouling_tijiao_shouji_time < ? and created_at > ? and email_status < 15",(Time.now-40.seconds),(Time.now - 12.hours))
+    cuis = UserSystem::CarUserInfo.where("wuba_kouling_status = 'yitijiao' and wuba_kouling_shouji_huilai_time is null and wuba_kouling_tijiao_shouji_time < ? and created_at > ? and email_status < 15", (Time.now-40.seconds), (Time.now - 12.hours))
     cuis.each do |cui|
       UserSystem::KouLingCarUserInfo.create_kouling_car_user_info cui.id
     end
