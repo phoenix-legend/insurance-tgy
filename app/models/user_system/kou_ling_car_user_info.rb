@@ -14,7 +14,7 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
   #获取未提交口令
   def self.get_wei_tijiao_kouling deviceid = 'unknow'
     UserSystem::DeviceAccessLog.update_device_access deviceid
-    machine_name = devce_id[-3..-1]
+    machine_name = deviceid[-3..-1]
     UserSystem::KouLingCarUserInfo.transaction do
       # return nil
       kouling_car_infos = UserSystem::KouLingCarUserInfo.where("vip_flg = ?", 'vip').order(id: :desc).limit(10)
