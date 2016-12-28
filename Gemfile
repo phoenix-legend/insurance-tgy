@@ -68,3 +68,5 @@ gem "will_paginate-foundation"
 gem 'ruby-pinyin'
 
 gem 'therubyracer',  platforms: :ruby
+
+# gem 'selenium-webdriver'

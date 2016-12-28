@@ -96,19 +96,19 @@ module UploadTianTian
       #   return
       # end
 
-      unless car_user_info.note.blank?
-        ['QQ', '求购', '牌照', '批发', '私家一手车', '一手私家车', '身份', '身 份', '身~份', '个体经商', '过不了户', '帮朋友', '外地',
-         '贷款', '女士一手', '包过户', '原漆', '原版漆', '当天开走', '美女', '车辆说明', '车辆概述', '选购', '一个螺丝',
-         '精品', '驾驶证', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
-         '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信', 'wx', '微 信',
-         '威信', '加微', '评估师点评', '车主自述', "溦 信", '电话量大', '包你满意', '刷卡', '办理', '纯正', '抢购', '心动', '本车', '送豪礼'].each do |kw|
-          if car_user_info.note.include? kw
-            car_user_info.tt_upload_status = '疑似车商'
-            car_user_info.save!
-            return
-          end
-        end
-      end
+      # unless car_user_info.note.blank?
+      #   ['QQ', '求购', '牌照', '批发', '私家一手车', '一手私家车', '身份', '身 份', '身~份', '个体经商', '过不了户', '帮朋友', '外地',
+      #    '贷款', '女士一手', '包过户', '原漆', '原版漆', '当天开走', '美女', '车辆说明', '车辆概述', '选购', '一个螺丝',
+      #    '精品', '驾驶证', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
+      #    '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信', 'wx', '微 信',
+      #    '威信', '加微', '评估师点评', '车主自述', "溦 信", '电话量大', '包你满意', '刷卡', '办理', '纯正', '抢购', '心动', '本车', '送豪礼'].each do |kw|
+      #     if car_user_info.note.include? kw
+      #       car_user_info.tt_upload_status = '疑似车商'
+      #       car_user_info.save!
+      #       return
+      #     end
+      #   end
+      # end
 
     end
 
@@ -167,18 +167,30 @@ module UploadTianTian
 
       #赶集8城市给胡磊
       if car_user_info.site_name == 'ganji' and CITY1.include?(car_user_info.city_chinese)
+        if rand(100) < 20
+          UploadTianTian.tt_pai_v2_0_qq car_user_info
+          return
+        end
         UploadTianTian.tt_pai_v1_0_hulei car_user_info
         return
       end
 
 
       if car_user_info.site_name == '58' and ['成都', '杭州','南京'].include?(car_user_info.city_chinese)
+        if rand(100) < 20
+          UploadTianTian.tt_pai_v2_0_qq car_user_info
+          return
+        end
         UploadTianTian.tt_pai_v1_0_hulei car_user_info
         return
       end
 
       # 剩余所有的全部导入到郭正的渠道
       if UploadTianTian::CITY.include? car_user_info.city_chinese
+        if rand(100) < 25
+          UploadTianTian.tt_pai_v2_0_qq car_user_info
+          return
+        end
         UploadTianTian.tt_pai_v2_0_guozheng car_user_info
         return
       end
@@ -342,6 +354,44 @@ module UploadTianTian
     end
   end
 
+  #天天这边给唐金搞的新接口
+  #UploadTianTian.tt_pai_v2_0_qq
+  def self.tt_pai_v2_0_qq user_info
+    s = '1579089ae5ae1d9b559f3082c4e44148'
+    appkey = 'shiaicaigou'
+    qudao = '2-263-266'
+    domain = "openapi.ttpai.cn"
+
+    #使用redis统计当天送上去的数据量
+
+    params = []
+    user_info = user_info.reload
+    return if user_info.tt_upload_status != 'weishangchuan'
+    params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
+    params << [:mobile, UploadTianTian.escape2(user_info.phone)]
+    params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
+    params << [:brand, UploadTianTian.escape2(user_info.brand)]
+    params << [:source, UploadTianTian.escape2(qudao)]
+    params << [:appkey, UploadTianTian.escape2(appkey)]
+    params << [:sign, UploadTianTian.escape2(Digest::MD5.hexdigest("#{user_info.phone}#{s}"))]
+    response = RestClient.get "#{domain}/api/v2.0/ttp_sign_up?#{URI.encode_www_form params}"
+    pp response
+    response = JSON.parse response.body
+    error = response["error"]
+    message = response["message"]
+    id = begin
+      response["result"]["id"] rescue -1
+    end
+    user_info.tt_source = qudao
+    user_info.tt_created_day = user_info.created_at.chinese_format_day
+    user_info.tt_id = id if not id.blank?
+    user_info.tt_code = error
+    user_info.tt_message = message
+    user_info.tt_upload_status = '已上传'
+    user_info.save!
+
+  end
+
 
   def self.escape2 str
     str = CGI::escape str
@@ -366,7 +416,7 @@ module UploadTianTian
   # UploadTianTian.query_order
   # 天天数据查询接口1.0版本，主要用于胡磊三个渠道数据更新
   def self.query_order
-    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null").order(id: :desc)
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('23-23-4','23-23-5','23-23-1')").order(id: :desc)
     i = 0
     car_user_infos.find_each do |car_user_info|
       url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
@@ -387,7 +437,7 @@ module UploadTianTian
   # UploadTianTian.query_order2
   # 天天接口查询2.0版本，目前用于郭正一个渠道更新数据
   def self.query_order2
-    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and tt_source in ('2-307-317', '2-306-314','2-474','2-474-602')")
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('2-307-317', '2-306-314','2-474','2-474-602', ''2-263-266'')")
     i = 0
     car_user_infos.find_each do |car_user_info|
       # car_user_info = ::UserSystem::CarUserInfo.where("tt_id  = 21924728").first

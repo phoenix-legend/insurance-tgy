@@ -300,7 +300,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
 
-
     car_user_info = UserSystem::CarUserInfo.new options
     car_user_info.name.gsub!(/\r|\n|\t/, '') unless car_user_info.name.blank?
     car_user_info.save!
