@@ -362,8 +362,6 @@ module UploadTianTian
     qudao = '2-263-266'
     domain = "openapi.ttpai.cn"
 
-    #使用redis统计当天送上去的数据量
-
     params = []
     user_info = user_info.reload
     return if user_info.tt_upload_status != 'weishangchuan'
@@ -437,7 +435,7 @@ module UploadTianTian
   # UploadTianTian.query_order2
   # 天天接口查询2.0版本，目前用于郭正一个渠道更新数据
   def self.query_order2
-    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('2-307-317', '2-306-314','2-474','2-474-602', ''2-263-266'')")
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('2-307-317', '2-306-314','2-474','2-474-602', '2-263-266')")
     i = 0
     car_user_infos.find_each do |car_user_info|
       # car_user_info = ::UserSystem::CarUserInfo.where("tt_id  = 21924728").first
