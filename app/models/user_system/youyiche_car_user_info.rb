@@ -204,7 +204,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
       #对量进行严格控制
       # peiliang = {"苏州" => 40, "杭州" => 30, "成都" => 50}
-      peiliang = {"苏州" => 100, "杭州" => 500, "成都" => 700, "合肥" => 800, '宿州' => 25, "福州" => 200}
+      peiliang = {"苏州" => 160, "杭州" => 500, "成都" => 700, "合肥" => 800, '宿州' => 25, "福州" => 200}
       liang = peiliang[yc_car_user_info.city_chinese]
       yijingyoudeliang = UserSystem::YouyicheCarUserInfo.where("city_chinese = ? and created_day = ? and youyiche_id is not null", yc_car_user_info.city_chinese, Time.now.chinese_format_day).count
       if yijingyoudeliang > liang
