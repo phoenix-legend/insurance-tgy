@@ -5,7 +5,7 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
   def self.create_kouling_car_user_info car_user_info_id
     klcui = UserSystem::KouLingCarUserInfo.new :car_user_info_id => car_user_info_id
     klcui.save!
-    if ['深圳', '南京', '广州', '武汉', '佛山', '天津', '东莞', '重庆', '厦门', '北京', '上海', '成都', '杭州', '苏州', '福州', '合肥'].include? klcui.car_user_info.city_chinese
+    if UserSystem::CarUserInfo::IMPRTANT_CITY.include? klcui.car_user_info.city_chinese
       klcui.vip_flg = 'vip'
       klcui.save!
     end
@@ -18,7 +18,7 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
     UserSystem::KouLingCarUserInfo.transaction do
       # return nil
       kouling_car_infos = UserSystem::KouLingCarUserInfo.where("vip_flg = ?", 'vip').order(id: :desc).limit(10)
-      if not ['094'].include? machine_name #094 机器为重点城市预留
+      if not ['094','003'].include? machine_name #094 机器为重点城市预留
         kouling_car_infos = UserSystem::KouLingCarUserInfo.order(id: :desc).limit(10) if kouling_car_infos.blank?
       end
       return nil if kouling_car_infos.blank?

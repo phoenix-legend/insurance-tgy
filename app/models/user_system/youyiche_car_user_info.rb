@@ -2,7 +2,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
 
 
-  CITY = ['上海', '苏州', '杭州','成都','福州','合肥']
+  CITY = ['上海', '苏州', '杭州', '成都', '福州', '合肥']
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
@@ -72,7 +72,11 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       return
     end
 
-    return unless yc_car_user_info.phone.match /\d{11}/
+    unless yc_car_user_info.phone.match /\d{11}/
+      yc_car_user_info.youyiche_upload_status = '手机号不正确'
+      yc_car_user_info.save!
+      return
+    end
 
     if not CITY.include? yc_car_user_info.city_chinese
       pp '城市不对'
@@ -153,7 +157,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     # end
 
     # 针对苏，杭，成都 进行严格限制量。
-    if ['苏州', '杭州', '成都', '合肥','宿州', '福州'].include? yc_car_user_info.city_chinese
+    if ['苏州', '杭州', '成都', '合肥', '宿州', '福州'].include? yc_car_user_info.city_chinese
 
       # if Time.now.hour < 6 and ['苏州','合肥'].include? yc_car_user_info.city_chinese
       #   yc_car_user_info.youyiche_upload_status = '时间太早'
@@ -208,16 +212,18 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       liang = peiliang[yc_car_user_info.city_chinese]
       yijingyoudeliang = UserSystem::YouyicheCarUserInfo.where("city_chinese = ? and created_day = ? and youyiche_id is not null", yc_car_user_info.city_chinese, Time.now.chinese_format_day).count
       if yijingyoudeliang > liang
-      # xemail  = if rand(10)<6 then 'lanyu@uguoyuan.cn' else 'lanjing@uguoyuan.cn' end
-      # yc_car_user_info.youyiche_upload_status = "。超出配额-给兰-#{xemail}"
-      # yc_car_user_info.save!
-      #
-      # #超出配额给兰昱。
-      #
-      #
-      # (MailSend.send_content xemail, '', "#{yc_car_user_info.name} 有车要卖",
-      #                        "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.brand}").deliver
-      return
+        # xemail  = if rand(10)<6 then 'lanyu@uguoyuan.cn' else 'lanjing@uguoyuan.cn' end
+        # yc_car_user_info.youyiche_upload_status = "。超出配额-给兰-#{xemail}"
+        # yc_car_user_info.save!
+        #
+        # #超出配额给兰昱。
+        #
+        #
+        # (MailSend.send_content xemail, '', "#{yc_car_user_info.name} 有车要卖",
+        #                        "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.brand}").deliver
+        yc_car_user_info.youyiche_upload_status = '过量'
+        yc_car_user_info.save!
+        return
       end
 
     end
@@ -237,9 +243,17 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
         "name" => yc_car_user_info.name,
         "phone" => yc_car_user_info.phone,
         "isSell" => 1,
-        "city" => if ['宿州'].include? yc_car_user_info.city_chinese then '合肥' else yc_car_user_info.city_chinese end,
+        "city" => if ['宿州'].include? yc_car_user_info.city_chinese then
+                    '合肥'
+                  else
+                    yc_car_user_info.city_chinese
+                  end,
         "type" => "线上合作-数据合作",
-        "origin" => if ['宿州'].include? yc_car_user_info.city_chinese then 'xuzuo-ahsz' else "xuzuo" end,
+        "origin" => if ['宿州'].include? yc_car_user_info.city_chinese then
+                      'xuzuo-ahsz'
+                    else
+                      "xuzuo"
+                    end,
         "brand" => yc_car_user_info.brand
     }
 
@@ -262,35 +276,24 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
 
   # UserSystem::YouyicheCarUserInfo.query_youyiche
+  # 2017-01-06 为缩短查询时间，只关注最近30天提交的数据
   def self.query_youyiche
     return if Time.now.hour < 9
     return if Time.now.hour > 21
     return unless Time.now.min < 10
     # host_name = 'uat.youyiche.com' #测试环境
     host_name = "b.youyiche.com" #正式环境
-    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and (youyiche_yaoyue is null or youyiche_yaoyue in ('未拨通','失败','重复'))").find_each do |cui|
-    #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
-    #   response = JSON.parse response.body
-    #   status = response[0]["status"].strip
-    #   next if ['待跟进', '跟进中'].include? status
-    #   next if status.blank?
-    #   next if status == cui.youyiche_yaoyue
-    #   if status == '竞拍中'
-    #     cui.youyiche_jiance = status
-    #   end
-    #   cui.youyiche_yaoyue = status
-    #   cui.save!
-    # end
+
 
     query_q_ids = {}
     kk = 0
     sanbaideliang = 0
-    UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and (youyiche_yaoyue is null or youyiche_yaoyue in ('未拨通','失败','重复'))").find_each do |cui|
+    UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and (youyiche_yaoyue is null or youyiche_yaoyue in ('未拨通')) and id > 50000 and created_day > ?", Date.today - 30).find_each do |cui|
       kk += 1
       query_q_ids["#{kk}"] = cui.youyiche_id
       # 想加速查询，把10改为更大的数字
       if kk == (
-      if sanbaideliang < 30 then
+      if sanbaideliang < 180 then
         300
       else
         10
@@ -318,41 +321,10 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     end
 
 
-    # # 更新处于检测中的数据
-    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_jiance is null and youyiche_jiance not in ('竞拍中') and youyiche_yaoyue not in ('未拨通','失败','重复','成交')").find_each do |cui|
-    #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
-    #   response = JSON.parse response.body
-    #   status = response[0]["status"].strip
-    #   if status == '竞拍中'
-    #     cui.youyiche_jiance = status
-    #     cui.yaoyue_time = Time.now.chinese_format
-    #     cui.yaoyue_day = Time.now.chinese_format_day
-    #     cui.save!
-    #   end
-    # end
-
-
-    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_jiance is null").find_each do |cui|
-    #   next if cui.youyiche_yaoyue == '失败'
-    #   next if cui.youyiche_jiance == '竞拍中'
-    #   next if cui.youyiche_chengjiao == '失败'
-    #
-    #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
-    #   response = JSON.parse response.body
-    #   # pp response
-    #   status = response[0]["status"].strip
-    #   if status == '竞拍中'
-    #     cui.youyiche_jiance = status
-    #     cui.yaoyue_time = Time.now.chinese_format
-    #     cui.yaoyue_day = Time.now.chinese_format_day
-    #     cui.save!
-    #   end
-    # end
-
     query_q_ids = {}
     kk = 0
     sanbaideliang = 0
-    UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_jiance is null").find_each do |cui|
+    UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_jiance is null  and id > 50000 and created_day > ?", Date.today - 30).find_each do |cui|
       next if cui.youyiche_yaoyue == '失败'
       next if cui.youyiche_jiance == '竞拍中'
       next if cui.youyiche_chengjiao == '失败'
@@ -362,7 +334,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
       # 想加速查询，把5改为更大的数字
       if kk == (
-      if sanbaideliang < 60 then
+      if sanbaideliang < 180 then
         300
       else
         10
@@ -382,51 +354,18 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
           end
         end
 
-
         query_q_ids = {}
       end
     end
 
-
-    #
-    #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
-    #   response = JSON.parse response.body
-    #   # pp response
-    #   status = response[0]["status"].strip
-    #   if status == '竞拍中'
-    #     cui.youyiche_jiance = status
-    #     cui.yaoyue_time = Time.now.chinese_format
-    #     cui.yaoyue_day = Time.now.chinese_format_day
-    #     cui.save!
-    #   end
-    # end
-
-
-    # 更新成交的数据
-    UserSystem::YouyicheCarUserInfo.chengjiaogengxin
-
-
-    if false
-      # 查看报价
-      i = []
-      host_name = "b.youyiche.com" #正式环境
-      UserSystem::YouyicheCarUserInfo.where("youyiche_chengjiao = '成交'").each do |cui|
-        response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", {"0" => cui.youyiche_id}.to_json, :content_type => 'application/json'
-        response = JSON.parse response.body
-        pp response
-        i << response[0]["trade_price"]
-      end
-
-      k = 0
-      i.each do |ii|
-        k += ii.to_f
-      end
-    end
-
+    # 更新成交的数据   临时不查询成交信息 2017-01-06，因为没用
+    # UserSystem::YouyicheCarUserInfo.chengjiaogengxin
 
   end
 
+
   # UserSystem::YouyicheCarUserInfo.chengjiaogengxin
+  # 查看又一车有多少车辆成交，成交价格多少。
   def self.chengjiaogengxin
     #一次更新所有数据   最终结果
     host_name = "b.youyiche.com" #正式环境
@@ -449,6 +388,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   end
 
   # UserSystem::YouyicheCarUserInfo.jiancelu
+  # 一开始竞标的时候需要多关注， 已不再使用
   def self.jiancelu
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new

@@ -1,13 +1,9 @@
 module UploadTianTian
 
-  CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆", "佛山","北京"]
+  CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆", "佛山", "北京"]
   # CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆", "佛山"]
 
   CITY1 = ["上海", "成都", "杭州", "佛山"]
-
-
-
-
 
 
   # 需要上传的数据。
@@ -162,12 +158,11 @@ module UploadTianTian
     car_user_info.save!
 
 
-
     if is_select
 
       #赶集8城市给胡磊
       if car_user_info.site_name == 'ganji' and CITY1.include?(car_user_info.city_chinese)
-        if rand(100) < 20
+        if rand(100) < 25
           UploadTianTian.tt_pai_v2_0_qq car_user_info
           return
         end
@@ -176,8 +171,8 @@ module UploadTianTian
       end
 
 
-      if car_user_info.site_name == '58' and ['成都', '杭州','南京'].include?(car_user_info.city_chinese)
-        if rand(100) < 20
+      if car_user_info.site_name == '58' and ['成都', '杭州', '南京'].include?(car_user_info.city_chinese)
+        if rand(100) < 25
           UploadTianTian.tt_pai_v2_0_qq car_user_info
           return
         end
@@ -187,7 +182,7 @@ module UploadTianTian
 
       # 剩余所有的全部导入到郭正的渠道
       if UploadTianTian::CITY.include? car_user_info.city_chinese
-        if rand(100) < 25
+        if rand(100) < 30
           UploadTianTian.tt_pai_v2_0_qq car_user_info
           return
         end
@@ -414,7 +409,7 @@ module UploadTianTian
   # UploadTianTian.query_order
   # 天天数据查询接口1.0版本，主要用于胡磊三个渠道数据更新
   def self.query_order
-    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('23-23-4','23-23-5','23-23-1')").order(id: :desc)
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('23-23-4','23-23-5','23-23-1') and tt_created_day > ?", Date.today - 30).order(id: :desc)
     i = 0
     car_user_infos.find_each do |car_user_info|
       url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
@@ -435,7 +430,7 @@ module UploadTianTian
   # UploadTianTian.query_order2
   # 天天接口查询2.0版本，目前用于郭正一个渠道更新数据
   def self.query_order2
-    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('2-307-317', '2-306-314','2-474','2-474-602', '2-263-266')")
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('2-307-317', '2-306-314','2-474','2-474-602', '2-263-266') and tt_created_day > ?", Date.today - 30)
     i = 0
     car_user_infos.find_each do |car_user_info|
       # car_user_info = ::UserSystem::CarUserInfo.where("tt_id  = 21924728").first
@@ -554,10 +549,6 @@ module UploadTianTian
       cui.save!
     end
 
-    #  统计某个渠道某天有多少提交，多少成功意向
-    # select tt_yaoyue_day,tt_source, count(*) from car_user_infos where tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day is not null group by tt_source, tt_yaoyue_day order by tt_yaoyue_day asc
-    #
-    # select tt_created_day,tt_source, count(*) from car_user_infos where tt_id is not null and tt_created_day is not null group by tt_source, tt_created_day order by tt_created_day asc
   end
 
 
@@ -586,7 +577,7 @@ module UploadTianTian
     book = Spreadsheet::Workbook.new
     # ['23-23-1', '23-23-4', '23-23-5','2-307-317','2-306-314'].each_with_index do |qudao, i|
     # ['23-23-1', '23-23-4', '23-23-5'].each_with_index do |qudao, i|
-      ['2-307-317','2-306-314'].each_with_index do |qudao, i|
+    ['2-307-317', '2-306-314'].each_with_index do |qudao, i|
       cuis = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_source = '#{qudao}' and tt_yaoyue_day >= '#{start_day}' and  tt_yaoyue_day <= '#{end_day}' and tt_yaoyue = '成功' and tt_yaoyue_day is not null")
       cuis.order(tt_yaoyue_day: :asc, tt_source: :asc)
       sheet1 = book.create_worksheet name: "#{qudao}意向列表"
@@ -610,11 +601,13 @@ module UploadTianTian
 
 
   # UploadTianTian.xiazai_tt_create_detail_by_day '2016-08-01', '2016-08-31'
+  # 下载某时间段内的天天创建
   def self.xiazai_tt_create_detail_by_day start_day = '2016-04-01', end_day = '2016-04-30'
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
     # ['23-23-1', '23-23-4', '23-23-5'].each_with_index do |qudao, i|
-    ['2-307-317', '2-306-314'].each_with_index do |qudao, i|
+    ['2-307-317', '2-306-314', '2-474', '2-474-602'].each_with_index do |qudao, i|
+      # ['2-263-266'].each_with_index do |qudao, i|
       cuis = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_source = '#{qudao}' and tt_created_day >= '#{start_day}' and  tt_created_day <= '#{end_day}'")
       cuis.order(tt_yaoyue_day: :asc, tt_source: :asc)
       sheet1 = book.create_worksheet name: "#{qudao}意向列表"
@@ -639,8 +632,11 @@ module UploadTianTian
 
   # UploadTianTian.query_order_shibai
   #  把失败的数据，再更新一遍，以便从失败中捡漏
+  # 2017-01-06 增加  只捡最近45天的漏
   def self.query_order_shibai
-    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '失败' and tt_source in ('23-23-1','23-23-4','23-23-5')").order(id: :desc)
+
+    return unless Time.now.day > 27
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '失败' and tt_source in ('23-23-1','23-23-4','23-23-5') and tt_created_day > ? ", Date.today - 45).order(id: :desc)
     i = 0
     car_user_infos.find_each do |car_user_info|
       url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
@@ -662,7 +658,7 @@ module UploadTianTian
     pp "本次新增#{i}个。 "
 
 
-    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '失败' and tt_source in ('2-307-317', '2-306-314')")
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '失败' and tt_source in ('2-307-317', '2-306-314','2-474','2-474-602', '2-263-266') and tt_created_day > ?", Date.today - 45)
     i = 0
     car_user_infos.find_each do |car_user_info|
       # car_user_info = ::UserSystem::CarUserInfo.where("tt_id  = 21924728").first
