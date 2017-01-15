@@ -26,14 +26,20 @@ module Baixing
           url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}" # url = "http://haerbin.baixing.com/m/ershouqiche/?page=1&per_page=10"
           content = RestClientProxy.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
 
-          break if content.blank?
+          if content.blank?
+            pp '内容为空'
+            break
+          end
           # content.gsub!('item top', 'eric')
           # content.gsub!('item pinned', 'eric')
           content.gsub!('item special', 'eric')
           content = Nokogiri::HTML(content)
           car_infos = content.css('.eric')
           car_infos = car_infos.select { |c| c.css('.jiaji').length==0 }
-          break if car_infos.blank?
+          if car_infos.blank?
+            pp 'car info 不存在'
+            break
+          end
           car_number = car_infos.length
           exists_car_number = 0
           car_infos.each do |car_info|
@@ -61,7 +67,7 @@ module Baixing
             exists_car_number = exists_car_number + 1 if result == 1
           end
           if car_number - exists_car_number < 8
-            puts '百姓 本页数据全部存在，跳出'
+            pp "百姓 本页数据全部存在，跳出 #{car_number}"
             break
           end
         end

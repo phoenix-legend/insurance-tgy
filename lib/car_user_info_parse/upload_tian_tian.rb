@@ -571,13 +571,13 @@ module UploadTianTian
   end
 
   # 指定日期区间的意向数据。
-  # UploadTianTian.xiazai_tt_yaoyue_detail_by_day '2016-08-01', '2016-08-31'
+  # UploadTianTian.xiazai_tt_yaoyue_detail_by_day '2016-12-01', '2016-12-31'
   def self.xiazai_tt_yaoyue_detail_by_day start_day = '2016-04-01', end_day = '2016-04-30'
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
     # ['23-23-1', '23-23-4', '23-23-5','2-307-317','2-306-314'].each_with_index do |qudao, i|
-    # ['23-23-1', '23-23-4', '23-23-5'].each_with_index do |qudao, i|
-    ['2-307-317', '2-306-314'].each_with_index do |qudao, i|
+    ['23-23-1', '23-23-4', '23-23-5'].each_with_index do |qudao, i|
+    # ['2-307-317', '2-306-314'].each_with_index do |qudao, i|
       cuis = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_source = '#{qudao}' and tt_yaoyue_day >= '#{start_day}' and  tt_yaoyue_day <= '#{end_day}' and tt_yaoyue = '成功' and tt_yaoyue_day is not null")
       cuis.order(tt_yaoyue_day: :asc, tt_source: :asc)
       sheet1 = book.create_worksheet name: "#{qudao}意向列表"

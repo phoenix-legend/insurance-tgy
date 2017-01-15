@@ -115,7 +115,7 @@ module Ganji
           #   pp '..........'
           #   break
           # end
-          pp content
+
           content = Nokogiri::HTML(content)
           car_infos = content.css(".list-item")
           # car_infos = content.css(".inforBox .infor")
