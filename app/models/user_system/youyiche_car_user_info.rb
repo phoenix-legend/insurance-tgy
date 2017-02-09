@@ -2,7 +2,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
 
 
-  CITY = ['上海', '苏州', '杭州', '成都', '福州', '合肥']
+  # CITY = ['上海', '苏州', '杭州', '成都', '福州', '合肥']
+  CITY = ['上海', '苏州', '杭州', '成都', '福州']
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
@@ -166,15 +167,15 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       # end
 
       cui = yc_car_user_info.car_user_info
-      cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
-      cui.save!
-      if not cui.phone_city.blank?
-        unless cui.city_chinese == cui.phone_city
-          yc_car_user_info.youyiche_upload_status = '非本地车'
-          yc_car_user_info.save!
-          return
-        end
-      end
+      # cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
+      # cui.save!
+      # if not cui.phone_city.blank?
+      #   unless cui.city_chinese == cui.phone_city
+      #     yc_car_user_info.youyiche_upload_status = '非本地车'
+      #     yc_car_user_info.save!
+      #     return
+      #   end
+      # end
 
 
       if cui.note.match /^出售/
@@ -190,25 +191,25 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       end
 
 
-      config_key_words = 0
-      ["天窗", "导航", "倒车雷达", "电动调节座椅", "后视镜加热", "后视镜电动调节", "多功能方向盘", "轮毂", "dvd",
-       "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜",
-       "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "空调",
-       "倒镜", "后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速", "一分钱"].each do |kw|
-        config_key_words+=1 if cui.note.include? kw
-      end
-
-
-      # 过多配置描述，一般车商
-      if config_key_words > 6
-        yc_car_user_info.youyiche_upload_status = '疑似车商，'
-        yc_car_user_info.save!
-        return
-      end
+      # config_key_words = 0
+      # ["天窗", "导航", "倒车雷达", "电动调节座椅", "后视镜加热", "后视镜电动调节", "多功能方向盘", "轮毂", "dvd",
+      #  "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜",
+      #  "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "空调",
+      #  "倒镜", "后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速", "一分钱"].each do |kw|
+      #   config_key_words+=1 if cui.note.include? kw
+      # end
+      #
+      #
+      # # 过多配置描述，一般车商
+      # if config_key_words > 6
+      #   yc_car_user_info.youyiche_upload_status = '疑似车商，'
+      #   yc_car_user_info.save!
+      #   return
+      # end
 
       #对量进行严格控制
       # peiliang = {"苏州" => 40, "杭州" => 30, "成都" => 50}
-      peiliang = {"苏州" => 160, "杭州" => 500, "成都" => 700, "合肥" => 800, '宿州' => 25, "福州" => 200}
+      peiliang = {"苏州" => 460, "杭州" => 500, "成都" => 700, "合肥" => 800, '宿州' => 25, "福州" => 200}
       liang = peiliang[yc_car_user_info.city_chinese]
       yijingyoudeliang = UserSystem::YouyicheCarUserInfo.where("city_chinese = ? and created_day = ? and youyiche_id is not null", yc_car_user_info.city_chinese, Time.now.chinese_format_day).count
       if yijingyoudeliang > liang

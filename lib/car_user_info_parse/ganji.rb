@@ -86,7 +86,7 @@ module Ganji
   #  Ganji.get_car_user_list  单线程sleep 版
   def self.get_car_user_list party = 0
 
-    return if Time.now.hour > 2 and Time.now.hour < 4
+    # return if Time.now.hour > 2 and Time.now.hour < 4
 
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
 
@@ -94,7 +94,7 @@ module Ganji
       begin
         pp "现在跑赶集.. #{areaname}"
         1.upto 3 do |i|
-          sleep 1+rand(2) if RestClientProxy.get_local_ip != '10-19-104-142'
+          # sleep 1+rand(2) if RestClientProxy.get_local_ip != '10-19-104-142'
           url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=1&deal_type=1&page=#{i}"
           # url = "http://wap.ganji.com/sh/ershouche/?back=search&agent=1&deal_type=1&page=1"
           # url = "http://wap.ganji.com/su/ershouche/?back=search&agent=1&deal_type=1&page=1"
@@ -347,7 +347,7 @@ module Ganji
 
     begin
       pp "开始跑明细 #{car_user_info.id}"
-      sleep 1+rand(2) if RestClientProxy.get_local_ip != '10-19-104-142'
+      # sleep 1+rand(2) if RestClientProxy.get_local_ip != '10-19-104-142'
       response = RestClientProxy.get(car_user_info.detail_url, {
                                                                  'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
                                                                  'Cookie' => 'ganji_uuid=5283133772326517092624; ganji_xuuid=f60ba7d5-b4de-4c7b-b8e0-890ad74ebaea.1463541968024; citydomain=xiangyang; Hm_lvt_73a12ba5aced499cae6ff7c0a9a989eb=1463541966,1463794955; __utma=32156897.2034222174.1460360232.1463548883.1463794938.4; wap_list_view_type=pic; __utmganji_v20110909=0xe17e1688f8364e8228f5a20bbf08f82; GANJISESSID=8295e329b8cd9f5ebc25d9e09e1e7800; index_city_refuse=refuse; gr_user_id=8fcb69d6-a9e2-43f2-b05d-955ce16276a5; cityDomain=sh; gr_session_id_b500fd00659c602c=2f3e7532-899b-4dab-8670-1eb629322b9c; mobversionbeta=2.0; Hm_lvt_66fdcdd2a4078dde0960b72e77483d4e=1481157061; Hm_lpvt_66fdcdd2a4078dde0960b72e77483d4e=1481157567; ganji_temp=on'
