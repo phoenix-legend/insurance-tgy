@@ -3,7 +3,7 @@ module UploadTianTian
   CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆", "佛山", "北京"]
   # CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆", "佛山"]
 
-  CITY1 = ["上海", "成都", "杭州", "佛山"]
+  CITY1 = ["成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "重庆", "佛山", "北京"]
 
 
   # 需要上传的数据。
@@ -161,28 +161,44 @@ module UploadTianTian
     if is_select
 
       #赶集8城市给胡磊
-      if car_user_info.site_name == 'ganji' and CITY1.include?(car_user_info.city_chinese)
-        if rand(100) < 25
-          UploadTianTian.tt_pai_v2_0_qq car_user_info
-          return
-        end
-        UploadTianTian.tt_pai_v1_0_hulei car_user_info
-        return
-      end
+      # if car_user_info.site_name == 'ganji' and CITY1.include?(car_user_info.city_chinese)
+      #   if rand(100) < 30
+      #     UploadTianTian.tt_pai_v2_0_qq car_user_info
+      #     return
+      #   end
+      #   UploadTianTian.tt_pai_v1_0_hulei car_user_info
+      #   return
+      # end
 
 
-      if car_user_info.site_name == '58' and ['成都', '杭州', '南京'].include?(car_user_info.city_chinese)
-        if rand(100) < 25
-          UploadTianTian.tt_pai_v2_0_qq car_user_info
-          return
-        end
-        UploadTianTian.tt_pai_v1_0_hulei car_user_info
-        return
-      end
+      # if car_user_info.site_name == '58' and CITY1.include?(car_user_info.city_chinese)
+      #   if rand(100) < 30
+      #     UploadTianTian.tt_pai_v2_0_qq car_user_info
+      #     return
+      #   end
+      #   UploadTianTian.tt_pai_v1_0_hulei car_user_info
+      #   return
+      # end
 
       # 剩余所有的全部导入到郭正的渠道
-      if UploadTianTian::CITY.include? car_user_info.city_chinese
-        if rand(100) < 30
+      # if UploadTianTian::CITY.include? car_user_info.city_chinese
+      #   if rand(100) < 30
+      #     UploadTianTian.tt_pai_v2_0_qq car_user_info
+      #     return
+      #   end
+      #   UploadTianTian.tt_pai_v2_0_guozheng car_user_info
+      #   return
+      # end
+
+      if CITY1.include?(car_user_info.city_chinese)
+        if rand(100) < 35
+          UploadTianTian.tt_pai_v2_0_qq car_user_info
+          return
+        end
+        UploadTianTian.tt_pai_v1_0_hulei car_user_info
+        return
+      else
+        if rand(100) < 35
           UploadTianTian.tt_pai_v2_0_qq car_user_info
           return
         end
@@ -577,7 +593,7 @@ module UploadTianTian
     book = Spreadsheet::Workbook.new
     # ['23-23-1', '23-23-4', '23-23-5','2-307-317','2-306-314'].each_with_index do |qudao, i|
     ['23-23-1', '23-23-4', '23-23-5'].each_with_index do |qudao, i|
-    # ['2-307-317', '2-306-314'].each_with_index do |qudao, i|
+      # ['2-307-317', '2-306-314'].each_with_index do |qudao, i|
       cuis = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_source = '#{qudao}' and tt_yaoyue_day >= '#{start_day}' and  tt_yaoyue_day <= '#{end_day}' and tt_yaoyue = '成功' and tt_yaoyue_day is not null")
       cuis.order(tt_yaoyue_day: :asc, tt_source: :asc)
       sheet1 = book.create_worksheet name: "#{qudao}意向列表"
