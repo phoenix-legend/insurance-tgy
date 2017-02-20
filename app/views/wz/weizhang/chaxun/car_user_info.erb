@@ -50,9 +50,9 @@
        next if d < Date.new(2016, 2, 15)
        ['58', 'ganji', 'baixing', 'che168', 'taoche', 'zuoxi'].each do |source|
 
-         tijiaoshu = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and created_at > ? and created_at < ?", source, "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         tijiaoshu = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and created_at > ? and created_at < ? and tt_source in ('23-23-4','23-23-5','23-23-1','2-307-317','2-306-314','2-474','2-474-602')", source, "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
 
-         chenggongshu = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ?", source, "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         chenggongshu = UserSystem::CarUserInfo.where("tt_id is not null and site_name = ? and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ? and tt_source in ('23-23-4','23-23-5','23-23-1','2-307-317','2-306-314','2-474','2-474-602')", source, "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
          source_name = case source
                          when 'taoche'
                            '淘车'
@@ -92,11 +92,11 @@
          end %>
 
       <%
-         all_tijiaoshu = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ?", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         all_tijiaoshu = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ? and tt_source in ('23-23-4','23-23-5','23-23-1','2-307-317','2-306-314','2-474','2-474-602')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
          all_tijiaoshu1 = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ? and tt_source in ('23-23-4','23-23-5','23-23-1')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
          all_tijiaoshu2 = UserSystem::CarUserInfo.where("tt_id is not null  and created_at > ? and created_at < ? and tt_source in ('2-307-317','2-306-314','2-474','2-474-602')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
 
-         all_chenggongshu = UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ?", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
+         all_chenggongshu = UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ? and tt_source in ('23-23-4','23-23-5','23-23-1','2-307-317','2-306-314','2-474','2-474-602')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
          all_chenggongshu1 = UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ? and tt_source in ('23-23-4','23-23-5','23-23-1')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
          all_chenggongshu2 = UserSystem::CarUserInfo.where("tt_id is not null  and tt_yaoyue = '成功' and tt_yaoyue_time > ? and tt_yaoyue_time < ? and tt_source in ('2-307-317','2-306-314','2-474','2-474-602')", "#{d.chinese_format_day} 00:00:00", "#{d.chinese_format_day} 23:59:59").count
       %>
