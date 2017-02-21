@@ -190,21 +190,22 @@ module UploadTianTian
       #   return
       # end
 
-      if CITY1.include?(car_user_info.city_chinese)
+      # 2017-02-21 数据全部给胡磊
+      # if CITY1.include?(car_user_info.city_chinese)
         if rand(100) < 35
           UploadTianTian.tt_pai_v2_0_qq car_user_info
           return
         end
         UploadTianTian.tt_pai_v1_0_hulei car_user_info
         return
-      else
-        if rand(100) < 35
-          UploadTianTian.tt_pai_v2_0_qq car_user_info
-          return
-        end
-        UploadTianTian.tt_pai_v2_0_guozheng car_user_info
-        return
-      end
+      # else
+        # if rand(100) < 35
+        #   UploadTianTian.tt_pai_v2_0_qq car_user_info
+        #   return
+        # end
+        # UploadTianTian.tt_pai_v2_0_guozheng car_user_info
+        # return
+      # end
 
     end
   end
