@@ -430,11 +430,17 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UploadTianTian.upload_one_tt car_user_info
 
     UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
-    #同步至又一车
-    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     # 同步给人人车
     UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
+
+    #朋友E车
+    UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+
+    #同步至又一车
+    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
+
+
 
     # 同步至车置宝  车置宝作废
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
@@ -445,8 +451,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     #同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
-    #同步至车城
-    UserSystem::CheChengCarUserInfo.create_user_info_from_car_user_info car_user_info
+    #同步至车城   车城作废
+    # UserSystem::CheChengCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
   end
@@ -472,9 +478,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # 同步给人人车
     UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
 
-    # 同步至又一车
+
     UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
 
+    #朋友E车
+    UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+
+    # 同步至又一车
     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     # 同步至a s
@@ -483,10 +493,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # 同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
-    #同步至车城
-    UserSystem::CheChengCarUserInfo.create_user_info_from_car_user_info car_user_info
-
-
+    #同步至车城  车城作废
+    # UserSystem::CheChengCarUserInfo.create_user_info_from_car_user_info car_user_info
+    
   end
 
   # 车商检验流程

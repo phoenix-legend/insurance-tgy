@@ -278,7 +278,7 @@ class UserSystem::CheChengCarUserInfo < ActiveRecord::Base
                                  customer_id: cui.checheng_id
       response = JSON.parse response.body
       response["data"].each do |k|
-        pp "#{cui.id}...#{k["car_status_msg"]}"
+        # pp "#{cui.id}...#{k["car_status_msg"]}"
         if k["car_status_msg"] == '成交'
           pp response
           pp "###"*10
