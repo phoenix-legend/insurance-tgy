@@ -191,7 +191,8 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
 
     response = RestClient.post host_name, {
         token: '24c81a87a1e97ea3f3b83aff71e2b184',
-        phone: yc_car_user_info.phone
+        phone: yc_car_user_info.phone,
+        car_area: yc_car_user_info.city_chinese
     }
 
     response = JSON.parse response.body
