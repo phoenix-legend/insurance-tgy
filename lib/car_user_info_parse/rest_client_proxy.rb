@@ -44,7 +44,7 @@ module RestClientProxy
     num = 0
     while true
       num += 1
-      break if num == 3
+      break if num == 2
 
       # 获取代理信息
       RestClient.proxy = nil
@@ -63,6 +63,13 @@ module RestClientProxy
           # sleep 1
           if redis[:proxy_ip] == proxy_url
             next
+          end
+
+          if redis[proxy_url] == '1'
+            next
+          else
+            redis[proxy_url] = '1'
+            redis.expire proxy_url, 300
           end
 
           # redis[:proxy_ip] = proxy_url
@@ -85,8 +92,8 @@ module RestClientProxy
             pp content
             redis[:proxy_ip] = proxy_url
             puts "#{Time.now.chinese_format} #{proxy_url}"
-            redis.expire :proxy_ip, 300 #最多放5分钟
-            1.upto 20 do |x|
+            redis.expire :proxy_ip, 3000 #最多放5分钟
+            1.upto 200 do |x|
               break if redis[:proxy_ip].blank?
               sleep 1
             end
@@ -151,5 +158,20 @@ module RestClientProxy
     # IPSocket.getaddress(Socket.gethostname)
     # TCPSocket.gethostbyname(Socket.gethostname)
     Socket.gethostname
+  end
+
+  # RestClientProxy.kk
+  def self.kk
+    require "selenium-webdriver"
+    driver = Selenium::WebDriver.for :ff
+    driver.navigate.to  "http://www.58.com"
+
+    keyword_element = driver.find_element :id => 'keyword'
+    keyword_element.click
+    keyword_element.send_keys['abc']
+
+    submit_element = driver.find_element :id =>'searchbtn'
+    submit_element.click
+
   end
 end
