@@ -127,6 +127,7 @@ module RestClientProxy
       abc = 1
       while abc < 60
         abc += 1
+        proxy_ip = RestClientProxy.get_proxy_ip
          if proxy_ip.blank?
            sleep 1
            pp '等待代理更新'
