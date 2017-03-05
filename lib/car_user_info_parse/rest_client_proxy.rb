@@ -121,17 +121,28 @@ module RestClientProxy
     pp url
     proxy_ip = RestClientProxy.get_proxy_ip
     # begin
+
+
+    if proxy_ip.blank?
+      abc = 1
+      while abc < 60
+        abc += 1
+         if proxy_ip.blank?
+           sleep 1
+           pp '等待代理更新'
+         else
+           pp '已获取新代理'
+           break
+         end
+      end
+      return ''
+    end
+
     RestClient.proxy = proxy_ip
-    pp "代理是：#{proxy_ip}"
+    # pp "代理是：#{proxy_ip}"
     # response = nil
     # Timeout::timeout(10) {
     pp "代理是  #{RestClient.proxy}   ...."
-
-    if proxy_ip.blank?
-      sleep 1
-      pp '获取ip失败'
-      return ''
-    end
 
     response = RestClient.get url, header
     # }
