@@ -209,7 +209,7 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
 
 
   def self.query_result
-    UserSystem::PengyoucheCarUserInfo.where("pengyou_id is not null and pengyou_id > 1320000").each do |cui|
+    UserSystem::PengyoucheCarUserInfo.where("pengyou_id is not null ").each do |cui|
       host_name =  "http://api.fecar.com/msg/query"
       response = RestClient.post host_name, {
           token: '24c81a87a1e97ea3f3b83aff71e2b184',

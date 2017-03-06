@@ -130,7 +130,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       return
     end
 
-    unless ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京", "成都"].include? ycui.city_chinese
+    # unless ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京", "成都"].include? ycui.city_chinese
       # 放宽条件
       # if not ycui.is_city_match
       #   pp '城市不匹配'
@@ -138,7 +138,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       #   ycui.save!
       #   return
       # end
-    end
+    # end
 
 
     return if ycui.phone.blank?
