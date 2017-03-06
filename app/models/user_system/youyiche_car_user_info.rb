@@ -285,6 +285,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     kk = 0
     sanbaideliang = 0
     UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and (youyiche_yaoyue is null or youyiche_yaoyue in ('未拨通')) and id > 50000 and created_day > ?", Date.today - 30).find_each do |cui|
+      next if cui.youyiche_id.to_i == -1
       kk += 1
       query_q_ids["#{kk}"] = cui.youyiche_id
       # 想加速查询，把10改为更大的数字
