@@ -4,7 +4,9 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   # CITY = ['上海', '苏州', '杭州', '成都', '福州', '合肥']
   # CITY = ['上海', '苏州', '杭州', '成都', '福州']
-  CITY = ['上海', '苏州', '杭州', '成都']
+  # CITY = ['上海', '苏州', '杭州', '成都']
+
+  CITY = ["北京","南京","深圳","上海","青岛","西安","郑州","无锡","苏州","杭州","常州","重庆","武汉","长沙","成都"]
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
@@ -159,7 +161,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     # end
 
     # 针对苏，杭，成都 进行严格限制量。
-    if ['苏州', '杭州', '成都', '合肥', '宿州', '福州'].include? yc_car_user_info.city_chinese
+    # if ['苏州', '杭州', '成都', '合肥', '宿州', '福州'].include? yc_car_user_info.city_chinese
 
       # if Time.now.hour < 6 and ['苏州','合肥'].include? yc_car_user_info.city_chinese
       #   yc_car_user_info.youyiche_upload_status = '时间太早'
@@ -167,7 +169,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       #   return
       # end
 
-      cui = yc_car_user_info.car_user_info
+      # cui = yc_car_user_info.car_user_info
       # cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
       # cui.save!
       # if not cui.phone_city.blank?
@@ -179,17 +181,17 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       # end
 
 
-      if cui.note.match /^出售/
-        yc_car_user_info.youyiche_upload_status = '疑似车商'
-        yc_car_user_info.save!
-        return
-      end
-
-      if cui.che_xing.match /QQ|电话|不准|低价|私家车|咨询|一手车|精品|业务|打折|货车/
-        yc_car_user_info.youyiche_upload_status = '疑似车商'
-        yc_car_user_info.save!
-        return
-      end
+      # if cui.note.match /^出售/
+      #   yc_car_user_info.youyiche_upload_status = '疑似车商'
+      #   yc_car_user_info.save!
+      #   return
+      # end
+      #
+      # if cui.che_xing.match /QQ|电话|不准|低价|私家车|咨询|一手车|精品|业务|打折|货车/
+      #   yc_car_user_info.youyiche_upload_status = '疑似车商'
+      #   yc_car_user_info.save!
+      #   return
+      # end
 
 
       # config_key_words = 0
@@ -210,10 +212,10 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
       #对量进行严格控制
       # peiliang = {"苏州" => 40, "杭州" => 30, "成都" => 50}
-      peiliang = {"苏州" => 460, "杭州" => 500, "成都" => 700, "合肥" => 800, '宿州' => 25, "福州" => 200}
-      liang = peiliang[yc_car_user_info.city_chinese]
-      yijingyoudeliang = UserSystem::YouyicheCarUserInfo.where("city_chinese = ? and created_day = ? and youyiche_id is not null", yc_car_user_info.city_chinese, Time.now.chinese_format_day).count
-      if yijingyoudeliang > liang
+      # peiliang = {"苏州" => 460, "杭州" => 500, "成都" => 700, "合肥" => 800, '宿州' => 25, "福州" => 200}
+      # liang = peiliang[yc_car_user_info.city_chinese]
+      # yijingyoudeliang = UserSystem::YouyicheCarUserInfo.where("city_chinese = ? and created_day = ? and youyiche_id is not null", yc_car_user_info.city_chinese, Time.now.chinese_format_day).count
+      # if yijingyoudeliang > liang
         # xemail  = if rand(10)<6 then 'lanyu@uguoyuan.cn' else 'lanjing@uguoyuan.cn' end
         # yc_car_user_info.youyiche_upload_status = "。超出配额-给兰-#{xemail}"
         # yc_car_user_info.save!
@@ -223,12 +225,12 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
         #
         # (MailSend.send_content xemail, '', "#{yc_car_user_info.name} 有车要卖",
         #                        "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.brand}").deliver
-        yc_car_user_info.youyiche_upload_status = '过量'
-        yc_car_user_info.save!
-        return
-      end
+      #   yc_car_user_info.youyiche_upload_status = '过量'
+      #   yc_car_user_info.save!
+      #   return
+      # end
 
-    end
+    # end
 
     # if yc_car_user_info.city_chinese == '成都'
     #   #成都暂时给兰昱。
@@ -245,17 +247,9 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
         "name" => yc_car_user_info.name,
         "phone" => yc_car_user_info.phone,
         "isSell" => 1,
-        "city" => if ['宿州'].include? yc_car_user_info.city_chinese then
-                    '合肥'
-                  else
-                    yc_car_user_info.city_chinese
-                  end,
+        "city" => yc_car_user_info.city_chinese,
         "type" => "线上合作",
-        "origin" => if ['宿州'].include? yc_car_user_info.city_chinese then
-                      'xuzuo-ahsz'
-                    else
-                      "xuzuo"
-                    end,
+        "origin" => "xuzuo",
         "brand" => yc_car_user_info.brand
     }
 

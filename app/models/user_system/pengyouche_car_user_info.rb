@@ -184,7 +184,7 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
     end
 
 
-    # todo 上传到朋友E车
+
     host_name = "http://api.fecar.com/msg/sell" #正式环境
 
     # response = RestClient.post "http://api.fecar.com/msg/sell", params.to_json, :content_type => 'application/json'
@@ -205,6 +205,20 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
     end
     yc_car_user_info.save!
 
+  end
+
+
+  def self.query_result
+    UserSystem::PengyoucheCarUserInfo.where("pengyou_id is not null and pengyou_id > 1320000").each do |cui|
+      host_name =  "http://api.fecar.com/msg/query"
+      response = RestClient.post host_name, {
+          token: '24c81a87a1e97ea3f3b83aff71e2b184',
+          id: cui.pengyou_id.to_i
+      }
+      response = JSON.parse response.body
+      next if response["data"]["car_status_msg"] == '暂无卖车信息'
+      pp response
+    end
   end
 
 end
