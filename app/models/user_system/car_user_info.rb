@@ -462,7 +462,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   #用于网站调用
   def self.update_58_phone_detail params
 
+
     car_user_info = UserSystem::CarUserInfo.find params[:id]
+    return if not car_user_info.phone.blank?
     phone = params[:phone]
     phone.gsub!('-', '')
     phone = phone.match(/\d{11}$/).to_s

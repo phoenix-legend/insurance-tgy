@@ -1,5 +1,130 @@
 module Wuba
 
+
+  # url =
+  # Wuba.get_phone_by_userinfo "http://qd.58.com/ershouche/29304765491892x.shtml"
+  def self.get_phone_by_userinfo url
+    # url = "http://qd.58.com/ershouche/29304765491892x.shtml"
+    #获取用户id
+    sleep 1
+    content = RestClient.get url, {
+        'User-Agent' => 'Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Mobile Safari/537.36',
+        "Cookie" => 'f=n; cookieuid=fe381b34-65b8-470c-b39c-1168a8c8c640; id58=05cDFFWQErahRK6kFErWAg==; __ag_cm_=1435571528704; jjqp=1; ag_fid=O5XPZqteqcIjuuvF; bj58_id58s="cFNlMnlwQjNaek11NTIxMw=="; br58=index_old; gr_user_id=2fd1e7a2-acd5-4c9a-8776-0757b6db2bfc; __utma=253535702.876986337.1463542865.1463548490.1471528581.3; 58home=linyixian; sessionid=46dd4432-3aa3-4b85-90c0-8a8f9c452864; ishome=true; als=0; selectcity=yes; car_detail_app_open=8; prompt=personalId; Hm_lvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; Hm_lpvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; commonTopbar_myfeet_tooltip=end; car_list_app_open=7; userip=101.45.219.92; tc_userid=0; job_detail_app_open=3; job_detail_show_time=2; Hm_lvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899518; Hm_lpvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899532; house_finalpage_app_open=4; m58comvp=t08v115.159.229.15; house_list_app_open=5; city=3144; cookieuid1=c5/npli/YPedgnSPBaywAg==; GA_GTID=0d40009c-01b5-a5f7-024a-863e35b8d819; _ga=GA1.2.876986337.1463542865; nearCity=%5B%7B%22cityName%22%3A%22%E5%8C%97%E4%BA%AC%22%2C%22city%22%3A%22bj%22%7D%2C%7B%22cityName%22%3A%22%E4%B8%8A%E6%B5%B7%22%2C%22city%22%3A%22sh%22%7D%2C%7B%22cityName%22%3A%22%E5%AE%89%E9%A1%BA%22%2C%22city%22%3A%22anshun%22%7D%5D; webps=A; curr_platform=pc; firstLogin=true; ipcity=sh%7C%u4E0A%u6D77%7C0; bdshare_firstime=1488944272624; f=n; bangbigtip2=1; commontopbar_city=122%7C%u9752%u5C9B%7Cqd; __track_id=20170308115320762839203278110577014; myfeet_tooltip=end; bj58_new_uv=16; JSESSIONID=B4D90C778C6E5268D157E94A952163C0; Hm_lvt_ef9ab733a6772ffc77e498ec3aee46bd=1488944272,1488948327; Hm_lpvt_ef9ab733a6772ffc77e498ec3aee46bd=1488948327; 58tj_uuid=330b45e3-a726-4c76-99fa-9845b0354944; new_uv=31; final_history=26155300337100%2C29225934567471%2C29304765491892%2C28673705311532'
+    }
+    content = content.body
+    if content.match /瓜子二手车直卖网259项全车检测/
+      pp '瓜子'
+      return nil
+    end
+    pp '111'
+    # pp content
+
+    matchs = content.match /"userid":(\d{14,18})/
+    matchs ||= content.match /'userid':'(\d{14,18})'/
+    if content.match /请输入验证码/
+      pp '获取用户id被封'
+      sleep 30
+    end
+    return if matchs.nil?
+    uid = matchs[1]
+      pp '222'
+    #根据用户id获取iframe链接,用于获取历史消息
+    # url = "http://my.58.com/30715922179334"
+    # uid = 43961037693201
+    pp "uid is #{uid}"
+    userinfo_content = RestClient.get "http://my.58.com/#{uid}", {
+        'User-Agent' => 'Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Mobile Safari/537.36',
+        # "Cookie" => 'f=n; cookieuid=fe381b34-65b8-470c-b39c-1168a8c8c640; id58=05cDFFWQErahRK6kFErWAg==; __ag_cm_=1435571528704; jjqp=1; ag_fid=O5XPZqteqcIjuuvF; bj58_id58s="cFNlMnlwQjNaek11NTIxMw=="; br58=index_old; gr_user_id=2fd1e7a2-acd5-4c9a-8776-0757b6db2bfc; __utma=253535702.876986337.1463542865.1463548490.1471528581.3; 58home=linyixian; sessionid=46dd4432-3aa3-4b85-90c0-8a8f9c452864; ishome=true; als=0; selectcity=yes; car_detail_app_open=8; prompt=personalId; Hm_lvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; Hm_lpvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; commonTopbar_myfeet_tooltip=end; car_list_app_open=7; userip=101.45.219.92; tc_userid=0; job_detail_app_open=3; job_detail_show_time=2; Hm_lvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899518; Hm_lpvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899532; house_finalpage_app_open=4; m58comvp=t08v115.159.229.15; house_list_app_open=5; city=3144; cookieuid1=c5/npli/YPedgnSPBaywAg==; GA_GTID=0d40009c-01b5-a5f7-024a-863e35b8d819; _ga=GA1.2.876986337.1463542865; nearCity=%5B%7B%22cityName%22%3A%22%E5%8C%97%E4%BA%AC%22%2C%22city%22%3A%22bj%22%7D%2C%7B%22cityName%22%3A%22%E4%B8%8A%E6%B5%B7%22%2C%22city%22%3A%22sh%22%7D%2C%7B%22cityName%22%3A%22%E5%AE%89%E9%A1%BA%22%2C%22city%22%3A%22anshun%22%7D%5D; webps=A; curr_platform=pc; firstLogin=true; ipcity=sh%7C%u4E0A%u6D77%7C0; bdshare_firstime=1488944272624; f=n; bangbigtip2=1; commontopbar_city=122%7C%u9752%u5C9B%7Cqd; __track_id=20170308115320762839203278110577014; myfeet_tooltip=end; bj58_new_uv=16; JSESSIONID=B4D90C778C6E5268D157E94A952163C0; Hm_lvt_ef9ab733a6772ffc77e498ec3aee46bd=1488944272,1488948327; Hm_lpvt_ef9ab733a6772ffc77e498ec3aee46bd=1488948327; 58tj_uuid=330b45e3-a726-4c76-99fa-9845b0354944; new_uv=31; final_history=26155300337100%2C29225934567471%2C29304765491892%2C28673705311532'
+    }
+    # userinfo_content = RestClient.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+    userinfo_content = userinfo_content.body
+    if userinfo_content.match /请输入验证码/
+      pp '获取用户frame被封'
+      sleep 1
+    end
+    pp '3333333'
+    userinfo_content1 = Nokogiri::HTML(userinfo_content)
+    frame_url = begin
+      "http:#{userinfo_content1.css('iframe')[0].attributes["src"].value}"
+    rescue Exception => e
+      pp '获取iframe出错'
+      pp userinfo_content
+      nil
+    end
+    pp frame_url
+
+    #从frame里获取历史消息
+    # frame_url = "http://my.58.com/home/0/0E5817AF9735058925DC71C3293F6A50"
+    return if frame_url.blank?
+    sleep 1
+    frame_content = RestClient.get frame_url, {
+        'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
+        "Cookie" => 'f=n; cookieuid=fe381b34-65b8-470c-b39c-1168a8c8c640; id58=05cDFFWQErahRK6kFErWAg==; __ag_cm_=1435571528704; jjqp=1; ag_fid=O5XPZqteqcIjuuvF; bj58_id58s="cFNlMnlwQjNaek11NTIxMw=="; br58=index_old; gr_user_id=2fd1e7a2-acd5-4c9a-8776-0757b6db2bfc; __utma=253535702.876986337.1463542865.1463548490.1471528581.3; 58home=linyixian; sessionid=46dd4432-3aa3-4b85-90c0-8a8f9c452864; ishome=true; als=0; selectcity=yes; car_detail_app_open=8; prompt=personalId; Hm_lvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; Hm_lpvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; commonTopbar_myfeet_tooltip=end; car_list_app_open=7; userip=101.45.219.92; tc_userid=0; job_detail_app_open=3; job_detail_show_time=2; Hm_lvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899518; Hm_lpvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899532; house_finalpage_app_open=4; m58comvp=t08v115.159.229.15; house_list_app_open=5; city=3144; cookieuid1=c5/npli/YPedgnSPBaywAg==; GA_GTID=0d40009c-01b5-a5f7-024a-863e35b8d819; _ga=GA1.2.876986337.1463542865; nearCity=%5B%7B%22cityName%22%3A%22%E5%8C%97%E4%BA%AC%22%2C%22city%22%3A%22bj%22%7D%2C%7B%22cityName%22%3A%22%E4%B8%8A%E6%B5%B7%22%2C%22city%22%3A%22sh%22%7D%2C%7B%22cityName%22%3A%22%E5%AE%89%E9%A1%BA%22%2C%22city%22%3A%22anshun%22%7D%5D; webps=A; curr_platform=pc; firstLogin=true; ipcity=sh%7C%u4E0A%u6D77%7C0; bdshare_firstime=1488944272624; f=n; bangbigtip2=1; commontopbar_city=122%7C%u9752%u5C9B%7Cqd; __track_id=20170308115320762839203278110577014; myfeet_tooltip=end; bj58_new_uv=16; JSESSIONID=B4D90C778C6E5268D157E94A952163C0; Hm_lvt_ef9ab733a6772ffc77e498ec3aee46bd=1488944272,1488948327; Hm_lpvt_ef9ab733a6772ffc77e498ec3aee46bd=1488948327; 58tj_uuid=330b45e3-a726-4c76-99fa-9845b0354944; new_uv=31; final_history=26155300337100%2C29225934567471%2C29304765491892%2C28673705311532'
+    }
+
+    frame_content = frame_content.body
+    if frame_content.match /请输入验证码/
+      pp '获取用户历史消息被封'
+      sleep 1
+    end
+    frame_content = Nokogiri::HTML(frame_content)
+    frame_content.css(".sc-post-con ul li").each do |li|
+      products_url = li.css('a')[0].attributes['href'].value rescue nil
+      leibie_url = li.css('a')[1].attributes['href'].value rescue nil
+
+      #products_url 即为历史消息的链接,在这里做最后一步,到里面拿手机号
+      pp "products url is #{products_url}"
+      next if products_url.blank?
+      next if products_url.match /ershouche/
+      sleep 1
+      products_content = RestClient.get products_url, {
+          'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
+          # "Cookie" => 'f=n; cookieuid=fe381b34-65b8-470c-b39c-1168a8c8c640; id58=05cDFFWQErahRK6kFErWAg==; __ag_cm_=1435571528704; jjqp=1; ag_fid=O5XPZqteqcIjuuvF; bj58_id58s="cFNlMnlwQjNaek11NTIxMw=="; br58=index_old; gr_user_id=2fd1e7a2-acd5-4c9a-8776-0757b6db2bfc; __utma=253535702.876986337.1463542865.1463548490.1471528581.3; 58home=linyixian; sessionid=46dd4432-3aa3-4b85-90c0-8a8f9c452864; ishome=true; als=0; selectcity=yes; car_detail_app_open=8; prompt=personalId; Hm_lvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; Hm_lpvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; commonTopbar_myfeet_tooltip=end; car_list_app_open=7; userip=101.45.219.92; tc_userid=0; job_detail_app_open=3; job_detail_show_time=2; Hm_lvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899518; Hm_lpvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899532; house_finalpage_app_open=4; m58comvp=t08v115.159.229.15; house_list_app_open=5; city=3144; cookieuid1=c5/npli/YPedgnSPBaywAg==; GA_GTID=0d40009c-01b5-a5f7-024a-863e35b8d819; _ga=GA1.2.876986337.1463542865; nearCity=%5B%7B%22cityName%22%3A%22%E5%8C%97%E4%BA%AC%22%2C%22city%22%3A%22bj%22%7D%2C%7B%22cityName%22%3A%22%E4%B8%8A%E6%B5%B7%22%2C%22city%22%3A%22sh%22%7D%2C%7B%22cityName%22%3A%22%E5%AE%89%E9%A1%BA%22%2C%22city%22%3A%22anshun%22%7D%5D; webps=A; curr_platform=pc; firstLogin=true; ipcity=sh%7C%u4E0A%u6D77%7C0; bdshare_firstime=1488944272624; f=n; bangbigtip2=1; commontopbar_city=122%7C%u9752%u5C9B%7Cqd; __track_id=20170308115320762839203278110577014; myfeet_tooltip=end; bj58_new_uv=16; JSESSIONID=B4D90C778C6E5268D157E94A952163C0; Hm_lvt_ef9ab733a6772ffc77e498ec3aee46bd=1488944272,1488948327; Hm_lpvt_ef9ab733a6772ffc77e498ec3aee46bd=1488948327; 58tj_uuid=330b45e3-a726-4c76-99fa-9845b0354944; new_uv=31; final_history=26155300337100%2C29225934567471%2C29304765491892%2C28673705311532'
+      }
+      products_content = products_content.body
+      if products_content.match /请输入验证码/
+        pp '最后一步被封'
+        sleep 1
+      end
+      # pp "**"*100
+      # pp "   "*100
+      # pp products_content
+
+      phone_match = products_content.match /tel:(\d{11})/
+      pp phone_match
+      phoneno_match = products_content.match /phoneNo="(\d{11})"/
+      pp phoneno_match
+      sms_match = products_content.match /sms:(\d{11})/
+      pp sms_match
+
+
+
+      phone = phone_match[1] rescue nil
+      phoneno = phoneno_match[1] rescue nil
+      phone_sms = sms_match[1] rescue nil
+
+      really_phone = phone || phoneno || phone_sms
+      return really_phone if not really_phone.blank?
+    end
+
+    nil
+
+
+  end
+
+  def self.testx
+    k = 0
+    cuis = UserSystem::CarUserInfo.where("site_name = '58'").limit(3500).order(id: :desc)
+    cuis.each do |cui|
+      next if cui.name.blank?
+      next if cui.name.match /商家|瓜子/
+      phone = Wuba.get_phone_by_userinfo cui.detail_url
+      pp "#{cui.detail_url}   #{phone}"
+      k+=1  if not phone.blank?
+    end
+    pp k
+  end
+
   # Wuba.get_car_user_list
   # 获取58部分城市的车辆列表
   def self.get_car_user_list lest_number = 20, sub_city_party = 0
@@ -19,104 +144,107 @@ module Wuba
       #   end
       # end
       # t = Thread.new do
-        begin
-          pp "现在跑58.. #{areaname}"
-          1.upto 1 do |i|
-            url = "http://#{areaid}.58.com/ershouche/0/pn#{i}/"
-            pp url
-            content = RestClient.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
-            content = content.body
-            content.gsub!('infoList list-info', 'list_infos_eric')
-            break if content.blank?
-            content = Nokogiri::HTML(content)
-            trs = content.css('.list_infos_eric .item')
-            car_number = trs.length
-            exists_car_number = 0
-            trs.each do |tr|
-              chexing = ''
-              next if tr.to_s.match /google|7天可退|259项全车检测/
+      begin
+        pp "现在跑58.. #{areaname}"
+        1.upto 1 do |i|
+          url = "http://#{areaid}.58.com/ershouche/0/pn#{i}/"
+          pp url
+          content = RestClient.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+          content = content.body
+          content.gsub!('infoList list-info', 'list_infos_eric')
+          break if content.blank?
+          content = Nokogiri::HTML(content)
+          trs = content.css('.list_infos_eric .item')
+          car_number = trs.length
+          exists_car_number = 0
+          trs.each do |tr|
+            chexing = ''
+            next if tr.to_s.match /google|7天可退|259项全车检测/
 
-              next if (begin tr.attributes["style"] rescue '' end).to_s == 'display:none;'
-
-
-              begin
-                chexing = tr.css('.info-title strong')[0].text
-              rescue
-                car_number = car_number -1
-                pp tr.to_s
-                pp 'Exception  车型获取失败'
-                next
-              end
-
-              price = 2
-              begin
-                price = tr.css('.info-desc-tag-price')[0].text.strip
-                  price.gsub!('万', '')
-              rescue
-                car_number = car_number -1
-                pp tr.to_s
-                pp 'Exception  价格获取失败'
-                next
-              end
-
-              cheling_licheng = tr.css('.info-desc-detail').text
-
-              cheling = cheling_licheng.split('年')[0]
-              milage = cheling_licheng.split('年')[1]
-              milage.gsub(/\s|万|公里/,'')
+            next if (
+            begin
+              tr.attributes["style"] rescue ''
+            end).to_s == 'display:none;'
 
 
-              url = tr.css('a')[0].attributes["href"].value
-              # url = tr.css('td .t')[0].attributes["href"].value
-              begin
-                if url.match /http:\/\/short/
-                  url_short = url
-                  url = Wuba.get_normal_url_by_short_url_and_city url, areaid
-                  # pp "翻译58shorturl #{url_short} 为 #{url}"
-                  next if url.blank?
-                end
-
-                # 如果58抓到的数据不是当前城市的，直接不进数据库
-                zhengze = "http://#{areaid}.58.com"
-                url_sx = url.match Regexp.new zhengze
-                if url_sx.blank?
-                  next
-                end
-              rescue
-
-              end
-
-              result = UserSystem::CarUserInfo.create_car_user_info che_xing: chexing,
-                                                                    price: price,
-                                                                    che_ling: cheling,
-                                                                    milage: milage,
-                                                                    detail_url: url.split('?')[0],
-                                                                    city_chinese: areaname,
-                                                                    site_name: '58'
-
-              if result == 0
-                u = url.split('?')[0]
-
-                unless u.blank?
-                  c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
-                  Wuba.update_one_detail_kouling c.id if not c.blank?
-                end
-              end
-              exists_car_number = exists_car_number + 1 if result == 1
-            end
-            if car_number - exists_car_number < lest_number
-              pp '58 本页数据全部存在，跳出'
-              break
+            begin
+              chexing = tr.css('.info-title strong')[0].text
+            rescue
+              car_number = car_number -1
+              pp tr.to_s
+              pp 'Exception  车型获取失败'
+              next
             end
 
+            price = 2
+            begin
+              price = tr.css('.info-desc-tag-price')[0].text.strip
+              price.gsub!('万', '')
+            rescue
+              car_number = car_number -1
+              pp tr.to_s
+              pp 'Exception  价格获取失败'
+              next
+            end
+
+            cheling_licheng = tr.css('.info-desc-detail').text
+
+            cheling = cheling_licheng.split('年')[0]
+            milage = cheling_licheng.split('年')[1]
+            milage.gsub(/\s|万|公里/, '')
+
+
+            url = tr.css('a')[0].attributes["href"].value
+            # url = tr.css('td .t')[0].attributes["href"].value
+            begin
+              if url.match /http:\/\/short/
+                url_short = url
+                url = Wuba.get_normal_url_by_short_url_and_city url, areaid
+                # pp "翻译58shorturl #{url_short} 为 #{url}"
+                next if url.blank?
+              end
+
+              # 如果58抓到的数据不是当前城市的，直接不进数据库
+              zhengze = "http://#{areaid}.58.com"
+              url_sx = url.match Regexp.new zhengze
+              if url_sx.blank?
+                next
+              end
+            rescue
+
+            end
+
+            result = UserSystem::CarUserInfo.create_car_user_info che_xing: chexing,
+                                                                  price: price,
+                                                                  che_ling: cheling,
+                                                                  milage: milage,
+                                                                  detail_url: url.split('?')[0],
+                                                                  city_chinese: areaname,
+                                                                  site_name: '58'
+
+            if result == 0
+              u = url.split('?')[0]
+
+              unless u.blank?
+                c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
+                Wuba.update_one_detail_kouling c.id if not c.blank?
+              end
+            end
+            exists_car_number = exists_car_number + 1 if result == 1
+          end
+          if car_number - exists_car_number < lest_number
+            pp '58 本页数据全部存在，跳出'
+            break
           end
 
-
-        rescue Exception => e
-          pp e
-          pp $@
-
         end
+
+
+      rescue Exception => e
+        pp e
+        pp $@
+
+      end
       # end
 
       # threads << t
@@ -199,7 +327,6 @@ module Wuba
         end
 
       end
-
 
 
         # ActiveRecord::Base.connection.close
@@ -525,9 +652,11 @@ module Wuba
 
       kouling = id_response.css('.info-short_url').text
       kouling = kouling.match(/https(.)*$/)[0]
+      # 2017-03-08  临时获取电话号码,通过当前用户发布的其它信息
+      phone = Wuba.get_phone_by_userinfo car_user_info.detail_url
       UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                             name: name,
-                                            # phone: phone,
+                                            phone: phone,
                                             note: note,
                                             fabushijian: time,
                                             wuba_kouling: kouling
