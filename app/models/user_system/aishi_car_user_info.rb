@@ -47,7 +47,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     ].include? city_name
       return '13cfe7dfa0dd2fe5e2a7d5fb467099a6', '4SA-1012' # Eric 秘钥
     elsif ['福州', '厦门', '上海', "苏州", "合肥"].include? city_name
-      if rand(10)<4
+      if rand(10)<6
         return '13cfe7dfa0dd2fe5e2a7d5fb467099a6', '4SA-1012'
       else
         return "098f6bcd4621d373cade4e832627b4f6", "4SA-1011"
