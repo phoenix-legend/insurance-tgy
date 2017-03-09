@@ -51,7 +51,7 @@ module Baixing
       content = RestClientProxy.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
       if content.blank?
         pp '内容为空'
-        break
+        next
       end
 
       content.gsub!('item special', 'eric')
@@ -60,13 +60,14 @@ module Baixing
       car_infos = car_infos.select { |c| c.css('.jiaji').length==0 }
       if car_infos.blank?
         pp 'car info 不存在'
-        break
+        next
       end
 
 
       detail_urls = []
       car_infos.each do |car_info|
         detail_url = car_info.css('a')[0].attributes['href'].value
+        next unless url.match /ershouqiche/
         detail_urls << detail_url
       end
 
