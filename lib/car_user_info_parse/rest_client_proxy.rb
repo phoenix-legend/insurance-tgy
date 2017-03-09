@@ -190,6 +190,7 @@ module RestClientProxy
 
   def self.restart_vps_pppoe
 
+    pp '换ip'
         `pppoe-stop`
         `pppoe-start`
 
