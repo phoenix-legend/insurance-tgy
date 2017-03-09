@@ -42,7 +42,7 @@ module Baixing
   end
 
   def self.get_car_user_list_for_vps party
-    t = Time.now.to_i
+    t = Time.now.to_i - 60
 
     city_hash = ::UserSystem::CarUserInfo.get_baixing_sub_cities party
     city_hash.each_pair do |areaid, areaname|
@@ -50,9 +50,10 @@ module Baixing
         pp "现在跑..百姓 #{areaname}"
         i = 1
         url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}"
-        sleep 1
+        sleep rand(10)
         if Time.now.to_i - t > 40
           RestClientProxy.restart_vps_pppoe
+          t = Time.now.to_i
         end
         content = RestClientProxy.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
         if content.blank?
@@ -91,6 +92,7 @@ module Baixing
           new_detail_url = detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
           if Time.now.to_i - t > 40
             RestClientProxy.restart_vps_pppoe
+            t = Time.now.to_i
             sleep rand(3)
           end
           response = RestClientProxy.get(new_detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
