@@ -71,7 +71,7 @@ module Baixing
       pp "获取到#{detail_urls.length}条记录, 准备推送"
       url_string = detail_urls.join('!!!')
       #todo 这里把detail_urls推送到服务器,再获取到新的detai_urls
-      response = RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/upload_youyiche', {urls: url_string}
+      response = RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/vps_urls', {urls: url_string}
       response = JSON.parse(response.body)
       next if response["code"] > 0
       detail_urls = response["data"]
