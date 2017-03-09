@@ -12,12 +12,12 @@ module Baixing
         city_number += 1
         if city_number%7 == 0
           pp '...... 跑一类城市'
-          UserSystem::CarUserInfo.run_baixing 0  #常规城市跑7个， 一类重点城市跑一遍
+          UserSystem::CarUserInfo.run_baixing 0 #常规城市跑7个， 一类重点城市跑一遍
         end
 
         if city_number%13 == 0
           pp '...... 跑二类城市'
-          UserSystem::CarUserInfo.run_baixing 1  #常规城市跑13个， 二类重点城市跑一遍
+          UserSystem::CarUserInfo.run_baixing 1 #常规城市跑13个， 二类重点城市跑一遍
         end
       end
       begin
@@ -148,7 +148,13 @@ module Baixing
         phone = detail_content.css(".num")[0].text
       rescue Exception => e
         # pp detail_content1
-        phone = detail_content.css(".contact-main-txt")[0].text
+        begin
+          phone = detail_content.css(".contact-main-txt")[0].text
+        rescue Exception => e
+          pp "car_user_info id is   #{car_user_info_id}"
+          raise e
+
+        end
       end
 
       che_xing = detail_content.css(".title h1").text
