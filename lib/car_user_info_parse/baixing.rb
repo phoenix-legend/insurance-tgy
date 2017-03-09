@@ -50,7 +50,7 @@ module Baixing
         pp "现在跑..百姓 #{areaname}"
         i = 1
         url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}"
-        sleep rand(10)
+        sleep 2+rand(5)
         if Time.now.to_i - t > 40
           RestClientProxy.restart_vps_pppoe
           t = Time.now.to_i
@@ -93,7 +93,7 @@ module Baixing
           if Time.now.to_i - t > 40
             RestClientProxy.restart_vps_pppoe
             t = Time.now.to_i
-            sleep rand(3)
+            sleep 2+rand(5)
           end
           response = RestClientProxy.get(new_detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
           detail_content1 = response
@@ -174,6 +174,14 @@ module Baixing
         pp e
       end
 
+    end
+
+    if party == 1
+      Baixing.get_car_user_list_for_vps 2
+    elsif party == 0
+      Baixing.get_car_user_list_for_vps 1
+    else
+      Baixing.get_car_user_list_for_vps 0
     end
 
 
