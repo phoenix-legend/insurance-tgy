@@ -6,11 +6,13 @@ module Baixing
     redis = Redis.current
     return_urls = []
     urls.each do |url|
+      next unless url.match /ershouqiche/
       next if redis[url] == 'y'
       url_number = UserSystem::CarUserInfo.count detail_url: url
       next if url_number > 0
       return_urls << url
     end
+
     return return_urls
   end
 
@@ -73,6 +75,7 @@ module Baixing
       #todo 这里把detail_urls推送到服务器,再获取到新的detai_urls
       response = RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/vps_urls', {urls: url_string}
       response = JSON.parse(response.body)
+      pp response
       next if response["code"] > 0
       detail_urls = response["data"]
       #todo 再获取detail_urls
