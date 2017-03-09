@@ -86,7 +86,7 @@ module Baixing
         #todo 这里把detail_urls推送到服务器,再获取到新的detai_urls
         response = RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/vps_urls', {urls: url_string}
         response = JSON.parse(response.body)
-        pp response
+        pp response["data"].length rescue ''
         next if response["code"] > 0
         detail_urls = response["data"]
         #todo 再获取detail_urls
