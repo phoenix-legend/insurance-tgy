@@ -98,4 +98,9 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
     @is_need = UserSystem::DeviceAccessLog.need_restart params[:machine_name]
   end
 
+  def upload_youyiche
+    cui = UserSystem::YouyicheCarUserInfo.find_by_id params[:id]
+    UserSystem::YouyicheCarUserInfo.upload_youyiche cui,2
+  end
+
 end

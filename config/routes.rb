@@ -132,6 +132,7 @@ Rails.application.routes.draw do
           get :need_chongqi
           get :get_all_city_codes
           post :get_web_content
+          post :upload_youyiche
         end
       end
     end

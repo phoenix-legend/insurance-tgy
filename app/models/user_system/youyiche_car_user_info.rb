@@ -53,13 +53,20 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     cui.created_day = cui.created_at.chinese_format_day
     cui.save!
 
-    UserSystem::YouyicheCarUserInfo.upload_youyiche cui
+    if RestClientProxy.get_local_ip.match /domain/
+      RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/upload_youyiche', {id: cui.id}
+    else
+      UserSystem::YouyicheCarUserInfo.upload_youyiche cui
+    end
+
+    return cui
   end
 
 
   # yc_car_user_info = UserSystem::YouyicheCarUserInfo.find id
   # UserSystem::YouyicheCarUserInfo.upload_youyiche yc_car_user_info
-  def self.upload_youyiche yc_car_user_info
+  def self.upload_youyiche yc_car_user_info, j = 1
+    yc_car_user_info.youyiche_chengjiao = "#{j}" if j > 1
 
     yc_car_user_info.name = yc_car_user_info.name.gsub('(个人)', '')
     yc_car_user_info.save!
@@ -300,7 +307,9 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
         sanbaideliang += 1
         response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", query_q_ids.to_json, :content_type => 'application/json'
         pp response.body
+
         response = JSON.parse response.body
+        pp response
         response.each do |xx|
           status = xx["status"].strip
           next if ['待跟进', '跟进中'].include? status
@@ -340,6 +349,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
         sanbaideliang += 1
         response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", query_q_ids.to_json, :content_type => 'application/json'
         response = JSON.parse response.body
+        pp response
         response.each do |xx|
           status = xx["status"].strip
           if status == '竞拍中'
