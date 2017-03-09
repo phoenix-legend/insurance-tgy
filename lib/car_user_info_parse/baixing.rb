@@ -55,7 +55,10 @@ module Baixing
           RestClientProxy.restart_vps_pppoe
           t = Time.now.to_i
         end
-        content = RestClientProxy.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+        content = RestClientProxy.get url, {
+            'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
+            'Cookie' => '__trackId=145580384816263; gr_user_id=72d355ac-f1e1-4d96-be12-3ea8cfd67970; BDTUJIAID=ef984cb6f7678800238c64e4353d9720; FTAPI_BLOCK_SLOT=FUCKIE; FTAPI_ST=FUCKIE; FTAPI_PVC=1011094-1-io5eyl3m; __city=shanghai; __s=nbsqplqpt45kb1ch3kp3i42651; Hm_lvt_5a727f1b4acc5725516637e03b07d3d2=1489068517; Hm_lpvt_5a727f1b4acc5725516637e03b07d3d2=1489068517; _gat=1; __sense_session_pv=2; _ga=GA1.2.716856832.1455803851; Hm_lvt_767685c7b1f25e1d49aa5a5f9555dc7d=1489068526; Hm_lpvt_767685c7b1f25e1d49aa5a5f9555dc7d=1489068526'
+        }
         if content.blank?
           pp '内容为空'
           next
@@ -95,7 +98,9 @@ module Baixing
             t = Time.now.to_i
             sleep 5+rand(5)
           end
-          response = RestClientProxy.get(new_detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
+          response = RestClientProxy.get(new_detail_url, {
+              'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
+              'Cookie' => '__trackId=145580384816263; gr_user_id=72d355ac-f1e1-4d96-be12-3ea8cfd67970; BDTUJIAID=ef984cb6f7678800238c64e4353d9720; FTAPI_BLOCK_SLOT=FUCKIE; FTAPI_ST=FUCKIE; FTAPI_PVC=1011094-1-io5eyl3m; __city=shanghai; __s=nbsqplqpt45kb1ch3kp3i42651; Hm_lvt_5a727f1b4acc5725516637e03b07d3d2=1489068517; Hm_lpvt_5a727f1b4acc5725516637e03b07d3d2=1489068517; _gat=1; __sense_session_pv=2; _ga=GA1.2.716856832.1455803851; Hm_lvt_767685c7b1f25e1d49aa5a5f9555dc7d=1489068526; Hm_lpvt_767685c7b1f25e1d49aa5a5f9555dc7d=1489068526'})
           detail_content1 = response
 
           next if response.match /此信息未通过审核/
