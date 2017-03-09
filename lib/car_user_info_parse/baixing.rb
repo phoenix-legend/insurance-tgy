@@ -25,6 +25,7 @@ module Baixing
         1.upto 3 do |i|
           url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}" # url = "http://haerbin.baixing.com/m/ershouqiche/?page=1&per_page=10"
           content = RestClientProxy.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+          RestClientProxy.restart_vps_pppoe
 
           if content.blank?
             pp '内容为空'
@@ -125,6 +126,7 @@ module Baixing
       # detail_url = "http://guangzhou.baixing.com/m/ershouqiche/a1028370758.html"
       detail_url = car_user_info.detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
 
+      RestClientProxy.restart_vps_pppoe
       response = RestClientProxy.get(detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
 
       detail_content1 = response
