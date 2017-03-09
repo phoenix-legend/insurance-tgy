@@ -47,7 +47,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-gem 'nokogiri'
+gem 'nokogiri', '1.6.7.2'
 gem 'eric_tools', '0.0.6'
 gem 'rest-client'
 gem "multi_xml"
