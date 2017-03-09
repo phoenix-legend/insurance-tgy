@@ -106,6 +106,7 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
   def vps_urls
     string_urls = params[:urls]
     urls = string_urls.split('!!!')
+    pp urls.length
     @return_urls = Baixing.get_detail_urls_for_vps urls
   end
 

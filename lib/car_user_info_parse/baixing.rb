@@ -8,8 +8,8 @@ module Baixing
     urls.each do |url|
       next unless url.match /ershouqiche/
       next if redis[url] == 'y'
-      url_number = UserSystem::CarUserInfo.count detail_url: url
-      next if url_number > 0
+      cui = UserSystem::CarUserInfo.where detail_url: url
+      next unless cui.blank?
       return_urls << url
     end
 
