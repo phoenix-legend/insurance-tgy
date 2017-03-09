@@ -57,6 +57,11 @@ namespace :zongjie do
 	desc "开机启动，永远循环  rake zongjie:refresh_ip_proxy RAILS_ENV=production"
 	task :refresh_ip_proxy => :environment do
 		RestClientProxy.refresh_proxy_ip
+  end
+
+	desc "百姓网VPS跑起来  rake zongjie:vps_baixing RAILS_ENV=production"
+	task :vps_baixing => :environment do
+		Baixing.get_car_user_list_for_vps 0
 	end
 
 

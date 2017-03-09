@@ -186,7 +186,8 @@ module Baixing
     elsif party == 0
       Baixing.get_car_user_list_for_vps 1
     else
-      Baixing.get_car_user_list_for_vps 0
+      # Baixing.get_car_user_list_for_vps 0
+      nil
     end
 
 
