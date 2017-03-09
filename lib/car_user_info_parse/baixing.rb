@@ -42,121 +42,134 @@ module Baixing
   end
 
   def self.get_car_user_list_for_vps party
+    t = Time.now.to_i
 
     city_hash = ::UserSystem::CarUserInfo.get_baixing_sub_cities party
     city_hash.each_pair do |areaid, areaname|
-      pp "现在跑..百姓 #{areaname}"
-      i = 1
-      url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}"
-      content = RestClientProxy.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
-      if content.blank?
-        pp '内容为空'
-        next
-      end
+      begin
+        pp "现在跑..百姓 #{areaname}"
+        i = 1
+        url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}"
+        sleep 1
+        if Time.now.to_i - t > 40
+          RestClientProxy.restart_vps_pppoe
+        end
+        content = RestClientProxy.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+        if content.blank?
+          pp '内容为空'
+          next
+        end
 
-      content.gsub!('item special', 'eric')
-      content = Nokogiri::HTML(content)
-      car_infos = content.css('.eric')
-      car_infos = car_infos.select { |c| c.css('.jiaji').length==0 }
-      if car_infos.blank?
-        pp 'car info 不存在'
-        next
-      end
+        content.gsub!('item special', 'eric')
+        content = Nokogiri::HTML(content)
+        car_infos = content.css('.eric')
+        car_infos = car_infos.select { |c| c.css('.jiaji').length==0 }
+        if car_infos.blank?
+          pp 'car info 不存在'
+          next
+        end
 
 
-      detail_urls = []
-      car_infos.each do |car_info|
-        detail_url = car_info.css('a')[0].attributes['href'].value
-        next unless url.match /ershouqiche/
-        detail_urls << detail_url
-      end
+        detail_urls = []
+        car_infos.each do |car_info|
+          detail_url = car_info.css('a')[0].attributes['href'].value
+          next unless url.match /ershouqiche/
+          detail_urls << detail_url
+        end
 
-      pp "获取到#{detail_urls.length}条记录, 准备推送"
-      url_string = detail_urls.join('!!!')
-      #todo 这里把detail_urls推送到服务器,再获取到新的detai_urls
-      response = RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/vps_urls', {urls: url_string}
-      response = JSON.parse(response.body)
-      pp response
-      next if response["code"] > 0
-      detail_urls = response["data"]
-      #todo 再获取detail_urls
-      detail_urls.each do |detail_url|
-        puts '更新明细'
-        new_detail_url = detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
-        response = RestClientProxy.get(new_detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
-        detail_content1 = response
+        pp "获取到#{detail_urls.length}条记录, 准备推送"
+        url_string = detail_urls.join('!!!')
+        #todo 这里把detail_urls推送到服务器,再获取到新的detai_urls
+        response = RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/vps_urls', {urls: url_string}
+        response = JSON.parse(response.body)
+        pp response
+        next if response["code"] > 0
+        detail_urls = response["data"]
+        #todo 再获取detail_urls
+        detail_urls.each do |detail_url|
+          puts '更新明细'
+          new_detail_url = detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
+          if Time.now.to_i - t > 40
+            RestClientProxy.restart_vps_pppoe
+            sleep rand(3)
+          end
+          response = RestClientProxy.get(new_detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
+          detail_content1 = response
 
-        next if response.match /此信息未通过审核/
+          next if response.match /此信息未通过审核/
 
-        detail_content1.gsub!('content normal-content long-content', 'eric_content')
-        detail_content1.gsub!('content normal-content', 'eric_content')
-        detail_content1.gsub!('friendly datetime', 'fabushijian')
+          detail_content1.gsub!('content normal-content long-content', 'eric_content')
+          detail_content1.gsub!('content normal-content', 'eric_content')
+          detail_content1.gsub!('friendly datetime', 'fabushijian')
 
-        detail_content = Nokogiri::HTML(detail_content1)
-        phone = nil
-        begin
-          phone = detail_content.css(".num")[0].text
-        rescue Exception => e
+          detail_content = Nokogiri::HTML(detail_content1)
+          phone = nil
           begin
-            phone = detail_content.css(".contact-main-txt")[0].text
+            phone = detail_content.css(".num")[0].text
           rescue Exception => e
-            pp "car_user_info id is   #{detail_url}"
-            raise e
+            begin
+              phone = detail_content.css(".contact-main-txt")[0].text
+            rescue Exception => e
+              pp "car_user_info id is   #{detail_url}"
+              raise e
+            end
           end
-        end
 
-        che_xing = detail_content.css(".title h1").text
-        fabushijian = begin
-          detail_content.css(".fabushijian").text rescue '2010-01-01'
-        end
-
-        che_ling = begin
-          detail_content.css(".detail .content .info").children[0].children[0].content rescue '3010-01'
-        end
-        che_ling = che_ling.split('-')[0]
-        licheng = begin
-          detail_content.css(".detail .content .info").children[1].children[0].content rescue '80000'
-        end
-
-        metas = detail_content.css(".top-meta li")
-        metas.each do |meta|
-          if meta.children[0].text.match /上牌/
-            che_ling = meta.children[1].text.split('年')[0]
+          che_xing = detail_content.css(".title h1").text
+          fabushijian = begin
+            detail_content.css(".fabushijian").text rescue '2010-01-01'
           end
-          if meta.children[0].text.match /里程/
-            licheng = meta.children[1].text
+
+          che_ling = begin
+            detail_content.css(".detail .content .info").children[0].children[0].content rescue '3010-01'
           end
+          che_ling = che_ling.split('-')[0]
+          licheng = begin
+            detail_content.css(".detail .content .info").children[1].children[0].content rescue '80000'
+          end
+
+          metas = detail_content.css(".top-meta li")
+          metas.each do |meta|
+            if meta.children[0].text.match /上牌/
+              che_ling = meta.children[1].text.split('年')[0]
+            end
+            if meta.children[0].text.match /里程/
+              licheng = meta.children[1].text
+            end
+          end
+          licheng = licheng.gsub(/万|公里/, '')
+
+          if che_ling == '暂无'
+            che_ling = '2013'
+            licheng = '4'
+          end
+
+
+          name = '先生女士'
+          note = begin
+            detail_content.css(".eric_content")[0].text rescue ''
+          end
+
+          a = {:detail_url => detail_url,
+               name: name,
+               phone: phone,
+               note: note,
+               fabushijian: fabushijian,
+               che_xing: che_xing,
+               che_ling: che_ling,
+               milage: licheng,
+               city_chinese: areaname,
+               site_name: 'baixing',
+               is_cheshang: 0
+          }
+
+          #todo 把以上提交过去, 如果数据库中已存在, 那么就忽略,不存在,保存后加入到redis中
+
+          RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/vps_create_and_upload', {cui: a}
+          # over, 下一个提交
         end
-        licheng = licheng.gsub(/万|公里/, '')
-
-        if che_ling == '暂无'
-          che_ling = '2013'
-          licheng = '4'
-        end
-
-
-        name = '先生女士'
-        note = begin
-          detail_content.css(".eric_content")[0].text rescue ''
-        end
-
-        a = {:detail_url => detail_url,
-             name: name,
-             phone: phone,
-             note: note,
-             fabushijian: fabushijian,
-             che_xing: che_xing,
-             che_ling: che_ling,
-             milage: licheng,
-             city_chinese: areaname,
-             site_name: 'baixing',
-             is_cheshang: 0
-        }
-
-        #todo 把以上提交过去, 如果数据库中已存在, 那么就忽略,不存在,保存后加入到redis中
-
-        RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/vps_create_and_upload', {cui: a}
-        # over, 下一个提交
+      rescue Exception => e
+        pp e
       end
 
     end
