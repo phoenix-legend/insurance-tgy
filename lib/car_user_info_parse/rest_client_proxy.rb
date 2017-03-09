@@ -189,7 +189,7 @@ module RestClientProxy
 
 
   def self.restart_vps_pppoe
-    if RestClientProxy.get_local_ip.match /domain/
+    if RestClientProxy.get_local_ip.match /\./
       redis = Redis.current
       key = "vps_#{RestClientProxy.get_local_ip}"
       if Time.now.to_i - redis[key].to_i > 45

@@ -132,7 +132,9 @@ Rails.application.routes.draw do
           get :need_chongqi
           get :get_all_city_codes
           post :get_web_content
-          post :upload_youyiche
+          # post :upload_youyiche
+          post :vps_create_and_upload
+          post :vps_urls
         end
       end
     end

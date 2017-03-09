@@ -53,11 +53,11 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     cui.created_day = cui.created_at.chinese_format_day
     cui.save!
 
-    if RestClientProxy.get_local_ip.match /domain/
-      RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/upload_youyiche', {id: cui.id}
-    else
+
+
+
       UserSystem::YouyicheCarUserInfo.upload_youyiche cui
-    end
+
 
     return cui
   end

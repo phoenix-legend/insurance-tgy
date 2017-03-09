@@ -1,5 +1,166 @@
 module Baixing
 
+  #获取来自vps的detail_url, 然后判断是否存在,返回不存在的链接
+  def self.get_detail_urls_for_vps urls
+    return [] if urls.blank?
+    redis = Redis.current
+    return_urls = []
+    urls.each do |url|
+      next if redis[url] == 'y'
+      url_number = UserSystem::CarUserInfo.count detail_url: url
+      next if url_number > 0
+      return_urls << url
+    end
+    return return_urls
+  end
+
+  #接受来自vps的参数,创建并提交到相对应的网站
+  def self.create_car_user_infos_from_vps params
+    result = UserSystem::CarUserInfo.create_car_user_info che_ling: "3010",
+                                                          milage: 8.8,
+                                                          detail_url: params[:detail_url],
+                                                          city_chinese: params[:city_chinese],
+                                                          site_name: params[:site_name],
+                                                          is_cheshang: params[:is_cheshang]
+    if result == 0
+      u = params[:detail_url]
+      unless u.blank?
+        car_user_info = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
+
+        UserSystem::CarUserInfo.update_detail id: car_user_info.id,
+                                              name: params[:name],
+                                              phone: params[:phone],
+                                              note: params[:note],
+                                              fabushijian: params[:fabushijian],
+                                              che_xing: params[:che_xing],
+                                              che_ling: params[:che_ling],
+                                              licheng: params[:milage]
+      end
+    end
+  end
+
+  def self.get_car_user_list_for_vps party
+
+    city_hash = ::UserSystem::CarUserInfo.get_baixing_sub_cities party
+    city_hash.each_pair do |areaid, areaname|
+      pp "现在跑..百姓 #{areaname}"
+      i = 1
+      url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}"
+      content = RestClientProxy.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+      if content.blank?
+        pp '内容为空'
+        break
+      end
+
+      content.gsub!('item special', 'eric')
+      content = Nokogiri::HTML(content)
+      car_infos = content.css('.eric')
+      car_infos = car_infos.select { |c| c.css('.jiaji').length==0 }
+      if car_infos.blank?
+        pp 'car info 不存在'
+        break
+      end
+
+
+      detail_urls = []
+      car_infos.each do |car_info|
+        detail_url = car_info.css('a')[0].attributes['href'].value
+        detail_urls << detail_url
+      end
+
+      pp "获取到#{detail_urls.length}条记录, 准备推送"
+      url_string = detail_urls.join('!!!')
+      #todo 这里把detail_urls推送到服务器,再获取到新的detai_urls
+      response = RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/upload_youyiche', {urls: url_string}
+      response = JSON.parse(response.body)
+      next if response["code"] > 0
+      detail_urls = response["data"]
+      #todo 再获取detail_urls
+      detail_urls.each do |detail_url|
+        puts '更新明细'
+        new_detail_url = detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
+        response = RestClientProxy.get(new_detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
+        detail_content1 = response
+
+        next if response.match /此信息未通过审核/
+
+        detail_content1.gsub!('content normal-content long-content', 'eric_content')
+        detail_content1.gsub!('content normal-content', 'eric_content')
+        detail_content1.gsub!('friendly datetime', 'fabushijian')
+
+        detail_content = Nokogiri::HTML(detail_content1)
+        phone = nil
+        begin
+          phone = detail_content.css(".num")[0].text
+        rescue Exception => e
+          begin
+            phone = detail_content.css(".contact-main-txt")[0].text
+          rescue Exception => e
+            pp "car_user_info id is   #{detail_url}"
+            raise e
+          end
+        end
+
+        che_xing = detail_content.css(".title h1").text
+        fabushijian = begin
+          detail_content.css(".fabushijian").text rescue '2010-01-01'
+        end
+
+        che_ling = begin
+          detail_content.css(".detail .content .info").children[0].children[0].content rescue '3010-01'
+        end
+        che_ling = che_ling.split('-')[0]
+        licheng = begin
+          detail_content.css(".detail .content .info").children[1].children[0].content rescue '80000'
+        end
+
+        metas = detail_content.css(".top-meta li")
+        metas.each do |meta|
+          if meta.children[0].text.match /上牌/
+            che_ling = meta.children[1].text.split('年')[0]
+          end
+          if meta.children[0].text.match /里程/
+            licheng = meta.children[1].text
+          end
+        end
+        licheng = licheng.gsub(/万|公里/, '')
+
+        if che_ling == '暂无'
+          che_ling = '2013'
+          licheng = '4'
+        end
+
+
+        name = '先生女士'
+        note = begin
+          detail_content.css(".eric_content")[0].text rescue ''
+        end
+
+        a = {:detail_url => detail_url,
+             name: name,
+             phone: phone,
+             note: note,
+             fabushijian: fabushijian,
+             che_xing: che_xing,
+             che_ling: che_ling,
+             milage: licheng,
+             city_chinese: areaname,
+             site_name: 'baixing',
+             is_cheshang: 0
+        }
+
+        #todo 把以上提交过去, 如果数据库中已存在, 那么就忽略,不存在,保存后加入到redis中
+
+        RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/vps_create_and_upload', {cui: a}
+        # over, 下一个提交
+      end
+
+    end
+
+
+  end
+
+
   # Baixing.get_car_user_list
   def self.get_car_user_list party = 0
     pp "现在时间:#{Time.now.chinese_format}"
@@ -25,7 +186,7 @@ module Baixing
         1.upto 3 do |i|
           url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}" # url = "http://haerbin.baixing.com/m/ershouqiche/?page=1&per_page=10"
           content = RestClientProxy.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
-          RestClientProxy.restart_vps_pppoe
+
 
           if content.blank?
             pp '内容为空'
@@ -126,7 +287,7 @@ module Baixing
       # detail_url = "http://guangzhou.baixing.com/m/ershouqiche/a1028370758.html"
       detail_url = car_user_info.detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
 
-      RestClientProxy.restart_vps_pppoe
+
       response = RestClientProxy.get(detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
 
       detail_content1 = response

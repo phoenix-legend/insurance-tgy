@@ -98,9 +98,19 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
     @is_need = UserSystem::DeviceAccessLog.need_restart params[:machine_name]
   end
 
-  def upload_youyiche
-    cui = UserSystem::YouyicheCarUserInfo.find_by_id params[:id]
-    UserSystem::YouyicheCarUserInfo.upload_youyiche cui,2
+  # def upload_youyiche
+  #   cui = UserSystem::YouyicheCarUserInfo.find_by_id params[:id]
+  #   UserSystem::YouyicheCarUserInfo.upload_youyiche cui,2
+  # end
+
+  def vps_urls
+    string_urls = params[:urls]
+    urls = string_urls.split('!!!')
+    @return_urls = Baixing.get_detail_urls_for_vps urls
+  end
+
+  def vps_create_and_upload
+    Baixing.create_car_user_infos_from_vps params[:cui]
   end
 
 end
