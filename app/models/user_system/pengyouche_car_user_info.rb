@@ -208,6 +208,7 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
   end
 
 
+  # UserSystem::PengyoucheCarUserInfo.query_result
   def self.query_result
     UserSystem::PengyoucheCarUserInfo.where("pengyou_id is not null ").each do |cui|
       host_name =  "http://api.fecar.com/msg/query"
