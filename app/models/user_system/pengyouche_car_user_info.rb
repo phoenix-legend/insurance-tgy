@@ -210,6 +210,8 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
 
   # UserSystem::PengyoucheCarUserInfo.query_result
   def self.query_result
+    shangjianumber = 0
+    youxiaonumber = 0
     UserSystem::PengyoucheCarUserInfo.where("pengyou_id is not null ").each do |cui|
       host_name =  "http://api.fecar.com/msg/query"
       response = RestClient.post host_name, {
@@ -218,8 +220,12 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
       }
       response = JSON.parse response.body
       next if response["data"]["car_status_msg"] == '暂无卖车信息'
+      youxiaonumber += 1
+      shangjianumber += 1 if  response["data"]["car_status_msg"] == '上架成功'
       pp response
     end
+    pp shangjianumber
+    pp youxiaonumber
   end
 
 end

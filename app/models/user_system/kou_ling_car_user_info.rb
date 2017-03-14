@@ -44,7 +44,10 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
 
 
   # 异常数据回笼处理  有时手机端会出现get掉的数据不给post回来，这种情况下，就得重新放回来，分发给手机
+
+  #58客户端不能使用,此函数暂停。
   def self.hui_long
+    return
     pp Time.now.chinese_format
     x = UserSystem::KouLingCarUserInfo.limit 1
     return unless x.blank?

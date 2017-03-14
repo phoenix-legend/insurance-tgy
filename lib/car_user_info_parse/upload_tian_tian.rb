@@ -163,7 +163,7 @@ module UploadTianTian
 
     if is_select
 
-        if rand(100) < 35
+        if rand(100) < 43
           UploadTianTian.tt_pai_v2_0_qq car_user_info
           return
         end

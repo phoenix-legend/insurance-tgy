@@ -6,7 +6,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   # CITY = ['上海', '苏州', '杭州', '成都', '福州']
   # CITY = ['上海', '苏州', '杭州', '成都']
 
-  CITY = ["北京","南京","深圳","上海","青岛","西安","郑州","无锡","苏州","杭州","常州","重庆","武汉","长沙","成都"]
+  CITY = ["北京", "南京", "深圳", "上海", "青岛", "西安", "郑州", "无锡", "苏州", "杭州", "常州", "重庆", "武汉", "长沙", "成都"]
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
@@ -54,9 +54,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     cui.save!
 
 
-
-
-      UserSystem::YouyicheCarUserInfo.upload_youyiche cui
+    UserSystem::YouyicheCarUserInfo.upload_youyiche cui
 
 
     return cui
@@ -170,72 +168,72 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     # 针对苏，杭，成都 进行严格限制量。
     # if ['苏州', '杭州', '成都', '合肥', '宿州', '福州'].include? yc_car_user_info.city_chinese
 
-      # if Time.now.hour < 6 and ['苏州','合肥'].include? yc_car_user_info.city_chinese
-      #   yc_car_user_info.youyiche_upload_status = '时间太早'
-      #   yc_car_user_info.save!
-      #   return
-      # end
+    # if Time.now.hour < 6 and ['苏州','合肥'].include? yc_car_user_info.city_chinese
+    #   yc_car_user_info.youyiche_upload_status = '时间太早'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
-      # cui = yc_car_user_info.car_user_info
-      # cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
-      # cui.save!
-      # if not cui.phone_city.blank?
-      #   unless cui.city_chinese == cui.phone_city
-      #     yc_car_user_info.youyiche_upload_status = '非本地车'
-      #     yc_car_user_info.save!
-      #     return
-      #   end
-      # end
-
-
-      # if cui.note.match /^出售/
-      #   yc_car_user_info.youyiche_upload_status = '疑似车商'
-      #   yc_car_user_info.save!
-      #   return
-      # end
-      #
-      # if cui.che_xing.match /QQ|电话|不准|低价|私家车|咨询|一手车|精品|业务|打折|货车/
-      #   yc_car_user_info.youyiche_upload_status = '疑似车商'
-      #   yc_car_user_info.save!
-      #   return
-      # end
+    # cui = yc_car_user_info.car_user_info
+    # cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
+    # cui.save!
+    # if not cui.phone_city.blank?
+    #   unless cui.city_chinese == cui.phone_city
+    #     yc_car_user_info.youyiche_upload_status = '非本地车'
+    #     yc_car_user_info.save!
+    #     return
+    #   end
+    # end
 
 
-      # config_key_words = 0
-      # ["天窗", "导航", "倒车雷达", "电动调节座椅", "后视镜加热", "后视镜电动调节", "多功能方向盘", "轮毂", "dvd",
-      #  "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜",
-      #  "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "空调",
-      #  "倒镜", "后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速", "一分钱"].each do |kw|
-      #   config_key_words+=1 if cui.note.include? kw
-      # end
-      #
-      #
-      # # 过多配置描述，一般车商
-      # if config_key_words > 6
-      #   yc_car_user_info.youyiche_upload_status = '疑似车商，'
-      #   yc_car_user_info.save!
-      #   return
-      # end
+    # if cui.note.match /^出售/
+    #   yc_car_user_info.youyiche_upload_status = '疑似车商'
+    #   yc_car_user_info.save!
+    #   return
+    # end
+    #
+    # if cui.che_xing.match /QQ|电话|不准|低价|私家车|咨询|一手车|精品|业务|打折|货车/
+    #   yc_car_user_info.youyiche_upload_status = '疑似车商'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
-      #对量进行严格控制
-      # peiliang = {"苏州" => 40, "杭州" => 30, "成都" => 50}
-      # peiliang = {"苏州" => 460, "杭州" => 500, "成都" => 700, "合肥" => 800, '宿州' => 25, "福州" => 200}
-      # liang = peiliang[yc_car_user_info.city_chinese]
-      # yijingyoudeliang = UserSystem::YouyicheCarUserInfo.where("city_chinese = ? and created_day = ? and youyiche_id is not null", yc_car_user_info.city_chinese, Time.now.chinese_format_day).count
-      # if yijingyoudeliang > liang
-        # xemail  = if rand(10)<6 then 'lanyu@uguoyuan.cn' else 'lanjing@uguoyuan.cn' end
-        # yc_car_user_info.youyiche_upload_status = "。超出配额-给兰-#{xemail}"
-        # yc_car_user_info.save!
-        #
-        # #超出配额给兰昱。
-        #
-        #
-        # (MailSend.send_content xemail, '', "#{yc_car_user_info.name} 有车要卖",
-        #                        "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.brand}").deliver
-      #   yc_car_user_info.youyiche_upload_status = '过量'
-      #   yc_car_user_info.save!
-      #   return
-      # end
+
+    # config_key_words = 0
+    # ["天窗", "导航", "倒车雷达", "电动调节座椅", "后视镜加热", "后视镜电动调节", "多功能方向盘", "轮毂", "dvd",
+    #  "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜",
+    #  "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "空调",
+    #  "倒镜", "后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速", "一分钱"].each do |kw|
+    #   config_key_words+=1 if cui.note.include? kw
+    # end
+    #
+    #
+    # # 过多配置描述，一般车商
+    # if config_key_words > 6
+    #   yc_car_user_info.youyiche_upload_status = '疑似车商，'
+    #   yc_car_user_info.save!
+    #   return
+    # end
+
+    #对量进行严格控制
+    # peiliang = {"苏州" => 40, "杭州" => 30, "成都" => 50}
+    # peiliang = {"苏州" => 460, "杭州" => 500, "成都" => 700, "合肥" => 800, '宿州' => 25, "福州" => 200}
+    # liang = peiliang[yc_car_user_info.city_chinese]
+    # yijingyoudeliang = UserSystem::YouyicheCarUserInfo.where("city_chinese = ? and created_day = ? and youyiche_id is not null", yc_car_user_info.city_chinese, Time.now.chinese_format_day).count
+    # if yijingyoudeliang > liang
+    # xemail  = if rand(10)<6 then 'lanyu@uguoyuan.cn' else 'lanjing@uguoyuan.cn' end
+    # yc_car_user_info.youyiche_upload_status = "。超出配额-给兰-#{xemail}"
+    # yc_car_user_info.save!
+    #
+    # #超出配额给兰昱。
+    #
+    #
+    # (MailSend.send_content xemail, '', "#{yc_car_user_info.name} 有车要卖",
+    #                        "#{yc_car_user_info.phone}   #{yc_car_user_info.name}  #{yc_car_user_info.brand}").deliver
+    #   yc_car_user_info.youyiche_upload_status = '过量'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
     # end
 
@@ -287,11 +285,29 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     # host_name = 'uat.youyiche.com' #测试环境
     host_name = "b.youyiche.com" #正式环境
 
+    # query_q_ids = {}
+    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_jiance is null  and id > 84000 and created_day > ?", Date.today - 30).find_each do |cui|
+    #   next if cui.youyiche_yaoyue == '失败'
+    #   next if cui.youyiche_jiance == '竞拍中'
+    #   next if cui.youyiche_chengjiao == '失败'
+    #
+    #
+    #   query_q_ids[0] = cui.youyiche_id
+    #
+    #   # 想加速查询，把5改为更大的数字
+    #
+    #
+    #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", query_q_ids.to_json, :content_type => 'application/json'
+    #   response = JSON.parse response.body
+    #   pp response
+    #
+    # end
+
 
     query_q_ids = {}
     kk = 0
     sanbaideliang = 0
-    UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and (youyiche_yaoyue is null or youyiche_yaoyue in ('未拨通')) and id > 50000 and created_day > ?", Date.today - 30).find_each do |cui|
+    UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and (youyiche_yaoyue is null or youyiche_yaoyue in ('未拨通')) and id > 70000 and created_day > ?", Date.today - 30).find_each do |cui|
       next if cui.youyiche_id.to_i == -1
       kk += 1
       query_q_ids["#{kk}"] = cui.youyiche_id
@@ -330,7 +346,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     query_q_ids = {}
     kk = 0
     sanbaideliang = 0
-    UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_jiance is null  and id > 50000 and created_day > ?", Date.today - 30).find_each do |cui|
+    UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_jiance is null  and id > 70000 and created_day > ?", Date.today - 30).find_each do |cui|
       next if cui.youyiche_yaoyue == '失败'
       next if cui.youyiche_jiance == '竞拍中'
       next if cui.youyiche_chengjiao == '失败'
