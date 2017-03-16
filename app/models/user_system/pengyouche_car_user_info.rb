@@ -100,16 +100,16 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
       return
     end
 
-    if !yc_car_user_info.car_user_info.note.blank? and yc_car_user_info.car_user_info.note.match /\d{11}/
-      yc_car_user_info.pengyou_upload_status = '疑似走私车'
-      yc_car_user_info.save!
-      return
-    end
-    if !yc_car_user_info.car_user_info.che_xing.blank? and yc_car_user_info.car_user_info.che_xing.match /\d{11}/
-      yc_car_user_info.pengyou_upload_status = '疑似走私车'
-      yc_car_user_info.save!
-      return
-    end
+    # if !yc_car_user_info.car_user_info.note.blank? and yc_car_user_info.car_user_info.note.match /\d{11}/
+    #   yc_car_user_info.pengyou_upload_status = '疑似走私车'
+    #   yc_car_user_info.save!
+    #   return
+    # end
+    # if !yc_car_user_info.car_user_info.che_xing.blank? and yc_car_user_info.car_user_info.che_xing.match /\d{11}/
+    #   yc_car_user_info.pengyou_upload_status = '疑似走私车'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
     ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ'].each do |kw|
       if yc_car_user_info.name.include? kw or yc_car_user_info.car_user_info.che_xing.include? kw
@@ -119,46 +119,46 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
       end
     end
 
-    if /^[a-z|A-Z|0-9|-|_]+$/.match yc_car_user_info.name
-      yc_car_user_info.pengyou_upload_status = '疑似走私车'
-      yc_car_user_info.save!
-      return
-    end
+    # if /^[a-z|A-Z|0-9|-|_]+$/.match yc_car_user_info.name
+    #   yc_car_user_info.pengyou_upload_status = '疑似走私车'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
     #还有用手机号，QQ号做名字的。
-    if /[0-9]+/.match yc_car_user_info.name
-      yc_car_user_info.pengyou_upload_status = '疑似走私车'
-      yc_car_user_info.save!
-      return
-    end
+    # if /[0-9]+/.match yc_car_user_info.name
+    #   yc_car_user_info.pengyou_upload_status = '疑似走私车'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
     #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
-    tmp_chexing = yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
-    tmp_note = yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '')
-    if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
-      yc_car_user_info.pengyou_upload_status = '疑似走私车'
-      yc_car_user_info.save!
-      return
-    end
+    # tmp_chexing = yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
+    # tmp_note = yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '')
+    # if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
+    #   yc_car_user_info.pengyou_upload_status = '疑似走私车'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
 
     cui = yc_car_user_info.car_user_info
     cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
     cui.save!
-    if not cui.phone_city.blank?
-      unless cui.city_chinese == cui.phone_city
-        yc_car_user_info.pengyou_upload_status = '非本地车'
-        yc_car_user_info.save!
-        return
-      end
-    end
+    # if not cui.phone_city.blank?
+    #   unless cui.city_chinese == cui.phone_city
+    #     yc_car_user_info.pengyou_upload_status = '非本地车'
+    #     yc_car_user_info.save!
+    #     return
+    #   end
+    # end
 
 
-    if cui.note.match /^出售/
-      yc_car_user_info.pengyou_upload_status = '疑似车商'
-      yc_car_user_info.save!
-      return
-    end
+    # if cui.note.match /^出售/
+    #   yc_car_user_info.pengyou_upload_status = '疑似车商'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
     if cui.che_xing.match /QQ|电话|不准|低价|私家车|咨询|一手车|精品|业务|打折|货车/
       yc_car_user_info.pengyou_upload_status = '疑似车商'
@@ -177,11 +177,11 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
 
 
     # 过多配置描述，一般车商
-    if config_key_words > 6
-      yc_car_user_info.pengyou_upload_status = '疑似车商，'
-      yc_car_user_info.save!
-      return
-    end
+    # if config_key_words > 6
+    #   yc_car_user_info.pengyou_upload_status = '疑似车商，'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
 
 
