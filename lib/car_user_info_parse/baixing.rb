@@ -41,7 +41,7 @@ module Baixing
     end
   end
 
-  def self.get_car_user_list_for_vps party
+  def self.get_car_user_list_for_vps party, is_continue = "true"
     t = Time.now.to_i - 60
 
     city_hash = ::UserSystem::CarUserInfo.get_baixing_sub_cities party
@@ -181,9 +181,9 @@ module Baixing
 
     end
 
-    if party == 1
+    if party == 1 and is_continue == 'true'
       Baixing.get_car_user_list_for_vps 2
-    elsif party == 0
+    elsif party == 0 and is_continue == 'true'
       Baixing.get_car_user_list_for_vps 1
     else
       # Baixing.get_car_user_list_for_vps 0

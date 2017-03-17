@@ -33,7 +33,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     if ['太原', '郑州', '长沙', '运城', '晋中', '临汾', '大同', "兰州", "呼和浩特",
         "大连", "贵阳", "惠州", "嘉兴", "中山", "肇庆", "绵阳", "襄阳", "宜昌",
         "滨州", "德州", "东营", "济宁", "临沂", "日照", "泰安", "枣庄", "宁波", "宿迁", "泰州", "盐城", "镇江",
-        "郑州", "长沙", "西安", 
+        "郑州", "长沙", "西安",
         "石家庄", "唐山",
         "自贡", "淄博", "资阳", "驻马店", "珠海", "长治", "漳州", "张家口", "玉林", "益阳", "义乌", "宜春",
         "宜宾", "盐城", "延边", "雅安", "许昌", "邢台", "信阳", "孝感", "咸宁", "温州", "通辽", "铁岭",
@@ -455,5 +455,40 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   # end
 
 
+# UserSystem::AishiCarUserInfo.xxx
+  def self.xxx
+    1.upto 40 do |page|
+      begin
+      url = "http://shanghai.baixing.com/m/qiufang/m178893/?page=#{page}"
+      # sleep 4
+      response = RestClientProxy.get url
+
+      response = Nokogiri::HTML(response)
+
+      lis = response.css(".media-body-title")
+      lis.each do |li|
+        # pp li
+        href = begin
+        li.css('a')[0].attributes["href"].value
+        rescue
+          next
+          end
+
+        next unless href.match /qiufang/
+        next unless href.match /http/
+        pp href
+        title = li.css(".media-body-title","a")[0].text
+        pp title
+        sleep 10+rand(20)
+
+        detail_content = RestClientProxy.get href
+        detail_content = Nokogiri::HTML(detail_content)
+        pp detail_content.css("#mobileNumber").text
+        pp "***"*8
+      end
+      rescue
+        end
+    end
+  end
 end
 __END__

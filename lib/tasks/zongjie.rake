@@ -61,7 +61,10 @@ namespace :zongjie do
 
 	desc "百姓网VPS跑起来  rake zongjie:vps_baixing RAILS_ENV=production"
 	task :vps_baixing => :environment do
-		Baixing.get_car_user_list_for_vps 0
+    continue = ENV['continue'] || 'true'
+    party = (ENV['party'] || '0').to_i
+    pp continue, party
+		Baixing.get_car_user_list_for_vps party, continue
 	end
 
 
