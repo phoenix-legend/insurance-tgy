@@ -148,7 +148,7 @@ class ErShouFang < ActiveRecord::Base
         response = RestClient.get url, 'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
         response= response.body
         response = JSON.parse(response)
-        pp response
+        
         pp "#{zhen_code}  第#{page}页"
         if response["errno"] == 0
           pp "共#{response["data"]["list"].length}条"
