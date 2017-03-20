@@ -210,16 +210,30 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
 
   # UserSystem::PengyoucheCarUserInfo.query_result
   def self.query_result
+    return unless (Time.now.hour == 12 or Time.now.hour == 22)
+    return unless Time.now.min > 40
     shangjianumber = 0
     youxiaonumber = 0
-    UserSystem::PengyoucheCarUserInfo.where("pengyou_id is not null ").each do |cui|
+    UserSystem::PengyoucheCarUserInfo.where("pengyou_id is not null and created_day > ?",  Date.today - 40).each do |cui|
+      next if cui.pengyou_jiance == '成功'
+
       host_name =  "http://api.fecar.com/msg/query"
       response = RestClient.post host_name, {
           token: '24c81a87a1e97ea3f3b83aff71e2b184',
           id: cui.pengyou_id.to_i
       }
       response = JSON.parse response.body
-      next if response["data"]["car_status_msg"] == '暂无卖车信息'
+      pp response["data"]["car_status_msg"]
+      if response["data"]["car_status_msg"] == '暂无卖车信息'
+        next
+      end
+
+      cui.pengyou_yaoyue = response["data"]["car_status_msg"]
+      cui.pengyou_jiance = '成功'
+      cui.yaoyue_time = Time.now
+      cui.yaoyue_day = Time.now.chinese_format_day
+      cui.save!
+
       youxiaonumber += 1
       shangjianumber += 1 if  response["data"]["car_status_msg"] == '上架成功'
       pp response

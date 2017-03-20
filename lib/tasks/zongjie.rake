@@ -47,7 +47,9 @@ namespace :zongjie do
 			# 上传数据给胡磊
 			UserSystem::CarUserInfo.upload_to_hulei
 			# 更新U车数据
-			UserSystem::YoucheCarUserInfo.query_youche_status
+			# UserSystem::YoucheCarUserInfo.query_youche_status
+      #更新朋友E车, 凌晨1点和下午9点后半个小时, 更新两次
+			UserSystem::PengyoucheCarUserInfo.query_result
 		end
 	end
 
