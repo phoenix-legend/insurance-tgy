@@ -2,7 +2,7 @@ module UploadTianTian
 
   #2017-02-24 临时去掉  北京，天津，武汉, "上海", "重庆"
   # CITY = [ "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "佛山"]
-  CITY = ["重庆","合肥","杭州","宁波","东莞","南宁","成都","武汉","深圳"]
+  CITY = ["重庆", "合肥", "杭州", "宁波", "东莞", "南宁", "成都", "武汉", "深圳"]
   # CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆", "佛山", "北京"]
 
 
@@ -163,12 +163,12 @@ module UploadTianTian
 
     if is_select
 
-        if rand(100) < 43
-          UploadTianTian.tt_pai_v2_0_qq car_user_info
-          return
-        end
-        UploadTianTian.tt_pai_v1_0_hulei car_user_info
+      if rand(100) < 43
+        UploadTianTian.tt_pai_v2_0_qq car_user_info
         return
+      end
+      UploadTianTian.tt_pai_v1_0_hulei car_user_info
+      return
 
     end
   end
@@ -214,6 +214,7 @@ module UploadTianTian
     user_info.tt_message = message
     user_info.tt_upload_status = '已上传'
     user_info.save!
+    UploadTianTian.upload_to_hulei_not_yitihua cui
   end
 
 
@@ -329,7 +330,7 @@ module UploadTianTian
     end
   end
 
-  #天天这边给唐金搞的新接口
+  #天天这边给俺搞的新接口
   #UploadTianTian.tt_pai_v2_0_qq
   def self.tt_pai_v2_0_qq user_info
     s = '1579089ae5ae1d9b559f3082c4e44148'
@@ -362,6 +363,7 @@ module UploadTianTian
     user_info.tt_message = message
     user_info.tt_upload_status = '已上传'
     user_info.save!
+    UploadTianTian.upload_to_hulei_not_yitihua user_info
 
   end
 
@@ -692,6 +694,47 @@ module UploadTianTian
     end
 
     return ''
+  end
+
+  #实时在胡磊那边备份一次
+  # UploadTianTian.upload_to_hulei_not_yitihua cui
+  def self.upload_to_hulei_not_yitihua cui
+    cui = cui.reload
+    return if cui.tt_id.blank?
+    return unless cui.tt_jiance.blank?
+
+    n, s = 1, 2
+    if ['23-23-5', '23-23-4', '23-23-1'].include? cui.tt_source
+      n, s = "4SA-1011", 'dcd7f18c776dbaddfea4ce0ed5d2cfc3'
+    elsif ['2-263-266'].include? cui.tt_source
+      n, s = '4SA-1012', "13cfe7dfa0dd2fe5e2a7d5fb467099a6"
+    else
+      return
+    end
+
+
+
+    url = 'http://api.formal.4scenter.com//index.php?r=apicar/getresponse'
+
+
+    k = {"response_id" => cui.tt_id,
+     "number" => n,
+     "sign" => Digest::MD5.hexdigest("#{n}#{s}"),
+     "source" =>'ttpc',
+     "key_data" => cui.created_at.chinese_format,
+     "city" => cui.city_chinese,
+     "mobile" => cui.phone,
+     "brand" => cui.brand,
+     "name"  => cui.name}
+
+
+    response = RestClient.post url, k
+
+    response = JSON.parse response
+    if response["error"] == 'false'
+      cui.tt_jiance = '1'
+    end
+
   end
 
 end

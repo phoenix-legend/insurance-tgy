@@ -444,9 +444,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
 
 
-    UploadTianTian.upload_one_tt car_user_info
+
 
     UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
+
+    UploadTianTian.upload_one_tt car_user_info
 
     #同步至又一车
     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -1516,7 +1518,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     number = "4SA-1011" #正式
     url = 'http://api.formal.4scenter.com/index.php?r=apicar/save_car'
 
-    cuis = UserSystem::CarUserInfo.where("tt_source in ('23-23-5','23-23-4','23-23-1') and tt_id is not null and created_at > '2016-10-01'")
+    cuis = UserSystem::CarUserInfo.where("tt_source in ('23-23-5','23-23-4','23-23-1') and tt_id is not null and created_at > ?", Time.now - 3.days)
     cuis.find_each do |cui|
 
       next if cui.tt_chengjiao == '已提交GZ'
@@ -1608,6 +1610,35 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       # sleep 1
 
     end
+  end
+
+
+  def is_upload qudao
+
+
+  end
+
+  def is_ganji_upload
+
+    redis = Redis.current
+    begin
+      if redis[options[:detail_url]] == 'y'
+        return 1
+      end
+    rescue Exception => e
+    end
+  end
+
+  def is_58_upload
+
+  end
+
+  def is_168_upload
+
+  end
+
+  def is_baixing_upload
+
   end
 
 

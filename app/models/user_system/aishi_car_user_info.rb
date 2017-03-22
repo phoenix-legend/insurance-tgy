@@ -285,7 +285,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       next if cui.aishi_upload_message.match /交易成功/
       tok = case cui.numbers
               when '4SA-1012'
-                "9278d068a56b92433be7208970e6f812"
+                "13cfe7dfa0dd2fe5e2a7d5fb467099a6"
               when '4SA-1011'
                 'dcd7f18c776dbaddfea4ce0ed5d2cfc3'
               when '4SA-1019'
