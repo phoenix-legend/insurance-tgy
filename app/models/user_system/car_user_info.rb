@@ -423,14 +423,24 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     #专门针对赶集历史数据做校验
     reg = Regexp.new Time.now.strftime("%m-%d")
-    return if car_user_info.fabushijian.blank?
+
+    if car_user_info.site_name == 'ganji' and car_user_info.fabushijian.blank?
+      car_user_info.tt_upload_status = '没有发布时间'
+      car_user_info.save!
+      return
+    end
+
     if car_user_info.site_name == 'ganji' and !(car_user_info.fabushijian.to_s.match reg)
       car_user_info.tt_yaoyue = '历史遗留数据'
       car_user_info.save!
       return
     end
 
-    return unless UserSystem::CarUserInfo.is_upload car_user_info.site_name
+    unless UserSystem::CarUserInfo.is_upload car_user_info.site_name
+      car_user_info.tt_upload_status = '数据超限'
+      car_user_info.save!
+      return
+    end
 
     # cuis = UserSystem::CarUserInfo.where("site_name = 'ganji'").order(id: :desc).limit(10000)
     # cuis.each do |car_user_info|
