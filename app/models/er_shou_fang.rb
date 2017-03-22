@@ -112,9 +112,9 @@ class ErShouFang < ActiveRecord::Base
                               price_date: Date.today
         price.save!
 
-        last_price = FangPrice.where("id < ?", price.id).order(id: :desc).first
-        price.add_price = price.price - last_price.price
-        price.add_unit_price = price.unit_price - last_price.unit_price
+        last_price = FangPrice.where("id < ? and er_shou_fang_id  = ?", price.id, price.er_shou_fang_id).order(id: :desc).first
+        price.add_price = price.price.to_i - last_price.price.to_i
+        price.add_unit_price = price.unit_price.to_i - last_price.unit_price.to_i
         price.save!
 
         unless (fang.mark.to_s.match /is_five_year/).blank?
