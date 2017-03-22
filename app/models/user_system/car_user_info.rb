@@ -11,6 +11,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # CURRENT_ID = 171550  第一次导入
   CURRENT_ID = 2400000
+  GANJIUPLOAD = 'ganjiupload'
+  WUBAUPLOAD = 'wubaupload'
+  YAOLIUBAUPLOAD = '168upload'
+  BAIXINGUPLOAD = 'baixingupload'
 
   CITY1 = ['上海', '成都', '杭州', '苏州', '福州', '合肥', "西安", "郑州", "长沙", "常州", "南宁", "济南"]
   CITY2 = ['深圳', '南京', '广州', '武汉', '佛山', '天津', '东莞', '重庆', '厦门', '北京', "无锡", "宁波"]
@@ -426,6 +430,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       return
     end
 
+    return unless UserSystem::CarUserInfo.is_upload car_user_info.site_name
+
     # cuis = UserSystem::CarUserInfo.where("site_name = 'ganji'").order(id: :desc).limit(10000)
     # cuis.each do |car_user_info|
     #   reg = Regexp.new Time.now.strftime("%m-%d")
@@ -442,8 +448,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     return if car_user_info.site_name == '58' and car_user_info.phone.blank?
     car_user_info = car_user_info.reload
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
-
-
 
 
     UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
@@ -469,13 +473,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     #同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
-      #同步至车城   车城作废
-      # UserSystem::CheChengCarUserInfo.create_user_info_from_car_user_info car_user_info
+    #同步至车城   车城作废
+    # UserSystem::CheChengCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
   end
 
-      #用于网站调用
+  #用于网站调用
   def self.update_58_phone_detail params
 
 
@@ -519,7 +523,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   end
 
-      # 车商检验流程
+  # 车商检验流程
   def self.che_shang_jiao_yan car_user_info, is_fenxi = false
     begin
       UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info if is_fenxi
@@ -680,7 +684,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-      #UserSystem::CarUserInfo.run_men true
+  #UserSystem::CarUserInfo.run_men true
   def self.run_men run_list = true
 
     if run_list
@@ -737,8 +741,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-      #获取20个城市的代码及名称, 针对che168网站
-      # UserSystem::CarUserInfo.get_city_code_name
+  #获取20个城市的代码及名称, 针对che168网站
+  # UserSystem::CarUserInfo.get_city_code_name
   def self.get_city_code_name
     need_cities = ["咸阳", "银川", "西宁", "菏泽", "铜陵", "黄冈", "鄂州", "阳泉"]
     provinces = {"440000" => "广东", "370000" => "山东", "330000" => "浙江", "320000" => "江苏", "130000" => "河北",
@@ -874,7 +878,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-      # 生成每小时xls
+  # 生成每小时xls
   def self.generate_xls_of_car_user_info car_user_infos
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
@@ -913,7 +917,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     file_path
   end
 
-      # class UserSystem::CarUserInfo < ActiveRecord::Base
+  # class UserSystem::CarUserInfo < ActiveRecord::Base
   def self.update_all_brand
     # cui = UserSystem::CarUserInfo.where("brand is not null").order(id: :desc).first
     # cuis = UserSystem::CarUserInfo.where("id > #{cui.id} and brand is  null and phone is not null")
@@ -928,7 +932,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
   end
 
-      # end
+  # end
 
   def update_brand
     return unless self.brand.blank?
@@ -954,9 +958,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   end
 
-      # class UserSystem::CarUserInfo < ActiveRecord::Base
-      # 为开新临时导出上海的成功数据，导前一天的数据, 邮件给KK， OO 和我。  业务现已停止
-      # UserSystem::CarUserInfo.get_kaixin_info
+  # class UserSystem::CarUserInfo < ActiveRecord::Base
+  # 为开新临时导出上海的成功数据，导前一天的数据, 邮件给KK， OO 和我。  业务现已停止
+  # UserSystem::CarUserInfo.get_kaixin_info
   def self.get_kaixin_info
     cuis = UserSystem::CarUserInfo.where("id > 172006 and city_chinese = '上海' and tt_yaoyue = '成功' and tt_yaoyue_day = ? and tt_chengjiao is null", Date.today)
     return if cuis.length == 0
@@ -995,10 +999,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-      # class UserSystem::CarUserInfo < ActiveRecord::Base
-      # 导出数据给车王。
-      # 现在只要天津和上海数据。每天下午3点定时导出前一天下午3点到今天下午3点的数据。
-      # UserSystem::CarUserInfo.get_info_to_chewang
+  # class UserSystem::CarUserInfo < ActiveRecord::Base
+  # 导出数据给车王。
+  # 现在只要天津和上海数据。每天下午3点定时导出前一天下午3点到今天下午3点的数据。
+  # UserSystem::CarUserInfo.get_info_to_chewang
   def self.get_info_to_chewang
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
@@ -1041,7 +1045,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   end
 
-      # UserSystem::CarUserInfo.get_info_for_zhenteng_lianyungang
+  # UserSystem::CarUserInfo.get_info_for_zhenteng_lianyungang
   def self.get_info_for_zhenteng_lianyungang
     return unless Time.now.hour == 7
     return unless Time.now.min >= 50
@@ -1089,9 +1093,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-      # 导出数据给晓玥。
-      # 一次一个城市
-      # UserSystem::CarUserInfo.get_info_to_xiaoyue
+  # 导出数据给晓玥。
+  # 一次一个城市
+  # UserSystem::CarUserInfo.get_info_to_xiaoyue
   def self.get_info_to_xiaoyue
     id_hash = {
         "上海" => 2388481
@@ -1140,9 +1144,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-      # class UserSystem::CarUserInfo < ActiveRecord::Base
-      # 导出北京数据
-      # UserSystem::CarUserInfo.get_info_to_chewang
+  # class UserSystem::CarUserInfo < ActiveRecord::Base
+  # 导出北京数据
+  # UserSystem::CarUserInfo.get_info_to_chewang
   def self.get_info_to_youche
 
     Spreadsheet.client_encoding = 'UTF-8'
@@ -1201,7 +1205,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-      # UserSystem::CarUserInfo.get_info_to_renren
+  # UserSystem::CarUserInfo.get_info_to_renren
   def self.get_info_to_renren
 
     # 人人车优化笔记
@@ -1428,7 +1432,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   end
 
-      #获取手机号对应的城市 ， 废弃
+  #获取手机号对应的城市 ， 废弃
   def self.phone_city
 
     UserSystem::CarUserInfo.where("phone_city is null and id > 500000 and phone is not null and tt_code is not null").order(id: :desc).find_each do |cui|
@@ -1469,7 +1473,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
   end
 
-      #UserSystem::CarUserInfo.upload_guozheng
+  #UserSystem::CarUserInfo.upload_guozheng
   def self.upload_guozheng
     return unless (Time.now.hour > 9 and Time.now.hour < 22)
     return unless Time.now.min > 30
@@ -1505,7 +1509,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
   end
 
-      # UserSystem::CarUserInfo.upload_to_hulei
+  # UserSystem::CarUserInfo.upload_to_hulei
   def self.upload_to_hulei
     return unless (Time.now.hour > 9 and Time.now.hour < 22)
     return unless Time.now.min > 30
@@ -1552,8 +1556,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-      #上海企业黄页
-      # UserSystem::CarUserInfo.huangye
+  #上海企业黄页
+  # UserSystem::CarUserInfo.huangye
   def self.huangye
     num = 0
     821.upto 8321 do |i|
@@ -1593,8 +1597,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-      #用于在自己机器上临时跑百姓网
-      # UserSystem::CarUserInfo.pao_baixing
+  #用于在自己机器上临时跑百姓网
+  # UserSystem::CarUserInfo.pao_baixing
   def self.pao_baixing
     while true
       # UserSystem::CarUserInfo.run_baixing 0
@@ -1613,36 +1617,86 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-  def is_upload qudao
-
+  #查询是否可以上传数据,根据不同的数据渠道
+  def self.is_upload qudao
+    redis = Redis.current
+    result = case qudao
+               when 'ganji'
+                 redis[GANJIUPLOAD]
+               when '58'
+                 redis[WUBAUPLOAD]
+               when 'che168'
+                 redis[YAOLIUBAUPLOAD]
+               when 'baixing'
+                 redis[BAIXINGUPLOAD]
+               else
+                 '' #坐席或其它平台过来, 默认都可以
+             end
+    #值为YES字符串或者为空, 都表示可以上传,其它值不可以上传
+    if result == 'YES' || result.blank?
+      return true
+    else
+      return false
+    end
 
   end
 
-  def is_ganji_upload
-
+  #查询是否可以上传数据,根据不同的数据渠道
+  def self.set_not_upload qudao
     redis = Redis.current
-    begin
-      if redis[options[:detail_url]] == 'y'
-        return 1
-      end
-    rescue Exception => e
+    case qudao
+      when 'ganji'
+        redis[GANJIUPLOAD] = 'NO'
+      when '58'
+        redis[WUBAUPLOAD]= 'NO'
+      when 'che168'
+        redis[YAOLIUBAUPLOAD]= 'NO'
+      when 'baixing'
+        redis[BAIXINGUPLOAD]= 'NO'
+      else
+        '' #坐席或其它平台过来, 默认都可以
     end
   end
 
-  def is_58_upload
-
+  #查询是否可以上传数据,根据不同的数据渠道
+  def self.set_upload qudao
+    redis = Redis.current
+    case qudao
+      when 'ganji'
+        redis[GANJIUPLOAD] = 'YES'
+      when '58'
+        redis[WUBAUPLOAD]= 'YES'
+      when 'che168'
+        redis[YAOLIUBAUPLOAD]= 'YES'
+      when 'baixing'
+        redis[BAIXINGUPLOAD]= 'YES'
+      else
+        '' #坐席或其它平台过来, 默认都可以
+    end
   end
 
-  def is_168_upload
 
+  # UserSystem::CarUserInfo.watch_qudao_exception
+  def self.watch_qudao_exception
+    ['58', 'ganji', 'baixing', 'che168'].each do |site_name|
+      num = UserSystem::CarUserInfo.where("created_at > ? and created_at < ? and tt_id is not null and site_name = ?", Time.now - 5.minutes, Time.now, site_name).count
+      if num > 15
+        set_not_upload site_name
+        MailSend.send_content('xiaoqi.liu@uguoyuan.cn',
+                              '37020447@qq.com;yoyolt3@163.com',
+                              "不得了了, #{site_name} 不好用了,暂停进数据",
+                              "不得了了, #{site_name} 不好用了,暂停进数据, 处理完以后记得手动开启"
+
+        ).deliver
+      else
+        pp '正常'
+      end
+
+    end
   end
 
-  def is_baixing_upload
 
-  end
-
-
-  end
+end
 __END__
 ***********备份的代码*******************
 

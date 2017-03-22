@@ -19,7 +19,10 @@ namespace :zongjie do
 		if match_data.length > 4
 			pp '前一次未执行完毕，退出任务'
 		else
-			UserSystem::KouLingCarUserInfo.hui_long
+			# UserSystem::KouLingCarUserInfo.hui_long
+
+      #暂时不处理回笼, 这里利用每分钟执行的特点,来监控数据异常情况
+			UserSystem::CarUserInfo.watch_qudao_exception
 		end
 	end
 

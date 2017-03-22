@@ -732,7 +732,8 @@ module UploadTianTian
 
     response = JSON.parse response
     if response["error"] == 'false'
-      cui.tt_jiance = '1'
+      cui.tt_jiance = response["result"]["id"]
+      cui.save!
     end
 
   end
