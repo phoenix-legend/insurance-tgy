@@ -7,8 +7,8 @@ class ErShouFang < ActiveRecord::Base
   def self.shanghai_run
 
     return unless Time.now.hour == 7
-    return unless Time.now.min >= 20
-    return unless Time.now.min <= 30
+    return unless Time.now.min >= 0
+    return unless Time.now.min <= 10
 
 
     qu_name = CGI::escape '浦东'
