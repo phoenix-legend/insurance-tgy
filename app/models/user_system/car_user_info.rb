@@ -12,9 +12,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   # CURRENT_ID = 171550  第一次导入
   CURRENT_ID = 2400000
 
-  CITY1 = ['上海','成都','杭州','苏州','福州','合肥',"西安", "郑州", "长沙", "常州","南宁","济南"]
-  CITY2 = ['深圳','南京','广州','武汉','佛山','天津','东莞','重庆','厦门','北京', "无锡","宁波"]
-  CITY3 = [ "青岛", "威海", "烟台", "潍坊", "兰州", "太原", "徐州", "南通", "扬州", "济南", "石家庄", "唐山", "宝鸡", "宿州", "洛阳",
+  CITY1 = ['上海', '成都', '杭州', '苏州', '福州', '合肥', "西安", "郑州", "长沙", "常州", "南宁", "济南"]
+  CITY2 = ['深圳', '南京', '广州', '武汉', '佛山', '天津', '东莞', '重庆', '厦门', '北京', "无锡", "宁波"]
+  CITY3 = ["青岛", "威海", "烟台", "潍坊", "兰州", "太原", "徐州", "南通", "扬州", "济南", "石家庄", "唐山", "宝鸡", "宿州", "洛阳",
            "南阳", "新乡", "湘潭", "株洲", "常德", "岳阳", "沈阳", "大连", "营口", "乌鲁木齐", "泉州", "长春", "哈尔滨", "大庆", "芜湖", "南昌", "惠州", "肇庆",
            "中山", "嘉兴", "贵阳", "遵义", "呼和浩特", "绵阳", "襄阳", "宜昌", "大同", "晋中", "临汾", "运城", "滨州", "德州", "东营", "济宁", "临沂", "日照", "泰安", "枣庄",
            "宿迁", "泰州", "盐城", "镇江", "自贡", "淄博", "资阳", "驻马店", "珠海", "长治", "漳州", "张家口", "玉林", "益阳", "义乌", "宜春", "宜宾", "延边", "雅安",
@@ -32,7 +32,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
     new_hash
   end
-
 
 
   EMAIL_STATUS = {0 => '待导', 1 => '已导', 2 => '不导入'}
@@ -68,7 +67,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
               "511600" => "广安", "510800" => "广元", "510500" => "泸州", "511100" => "乐山", "511400" => "眉山", "511300" => "南充", "511000" => "内江", "510400" => "攀枝花", "510900" => "遂宁",
               "511800" => "雅安", "511500" => "宜宾", "512000" => "资阳", "510300" => "自贡", "140400" => "长治", "532300" => "楚雄",
               "532900" => "大理", "532500" => "红河", "530100" => "昆明", "530300" => "曲靖", "340800" => "安庆", "340300" => "蚌埠",
-              "341200" => "阜阳", "341500" => "六安", "340500" => "马鞍山","371700" => "菏泽","420700" => "鄂州","421100" => "黄冈","640100" => "银川","630100" => "西宁","140300" => "阳泉", "340700" => "铜陵"
+              "341200" => "阜阳", "341500" => "六安", "340500" => "马鞍山", "371700" => "菏泽", "420700" => "鄂州", "421100" => "黄冈", "640100" => "银川", "630100" => "西宁", "140300" => "阳泉", "340700" => "铜陵"
   }
 
 
@@ -128,7 +127,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   }
 
 
-  IMPRTANT_CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "佛山", "东莞", "重庆", "北京", "福州", "厦门","合肥"]
+  IMPRTANT_CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "佛山", "东莞", "重庆", "北京", "福州", "厦门", "合肥"]
 
 
   #百姓人人车+天天拍
@@ -319,7 +318,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
 
-
     user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]
     if user_infos.length > 0
       redis[options[:detail_url]] = 'y'
@@ -419,6 +417,25 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       return
     end
 
+    #专门针对赶集历史数据做校验
+    reg = Regexp.new Time.now.strftime("%m-%d")
+    return if car_user_info.fabushijian.blank?
+    if car_user_info.site_name == 'ganji' and !(car_user_info.fabushijian.to_s.match reg)
+      car_user_info.tt_yaoyue = '历史遗留数据'
+      car_user_info.save!
+      return
+    end
+
+    # cuis = UserSystem::CarUserInfo.where("site_name = 'ganji'").order(id: :desc).limit(10000)
+    # cuis.each do |car_user_info|
+    #   reg = Regexp.new Time.now.strftime("%m-%d")
+    #   unless (car_user_info.site_name == 'ganji' and !(car_user_info.fabushijian.to_s.match reg))
+    #
+    #     pp car_user_info.fabushijian
+    #     pp reg
+    #     pp (car_user_info.site_name == 'ganji' and !(car_user_info.fabushijian.to_s.match reg))
+    #   end
+    # end
 
     # 58数据先不上传，等待手机端提交过来
     # 2016-07-21 现在采用接口和口令两种并存
@@ -441,9 +458,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
-
-
-
     # 同步至车置宝  车置宝作废
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
 
@@ -453,13 +467,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     #同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
-    #同步至车城   车城作废
-    # UserSystem::CheChengCarUserInfo.create_user_info_from_car_user_info car_user_info
+      #同步至车城   车城作废
+      # UserSystem::CheChengCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
   end
 
-  #用于网站调用
+      #用于网站调用
   def self.update_58_phone_detail params
 
 
@@ -492,7 +506,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
-
     # 同步至a s
     UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
 
@@ -504,7 +517,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   end
 
-  # 车商检验流程
+      # 车商检验流程
   def self.che_shang_jiao_yan car_user_info, is_fenxi = false
     begin
       UserSystem::CarBusinessUserInfo.add_business_user_info_phone car_user_info if is_fenxi
@@ -584,14 +597,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   def self.run_che168 sub_city_party = 0
 
-      begin
-        Che168.get_car_user_list sub_city_party
-      rescue Exception => e
-        pp e
-      end
-      pp '168再来一遍。。。'
-      pp "168现在时间 #{Time.now.chinese_format}"
-
+    begin
+      Che168.get_car_user_list sub_city_party
+    rescue Exception => e
+      pp e
+    end
+    pp '168再来一遍。。。'
+    pp "168现在时间 #{Time.now.chinese_format}"
 
 
     # begin
@@ -617,37 +629,37 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   def self.run_58 sub_city_party = 0
 
-      begin
-        Wuba.get_car_user_list 20, sub_city_party
-      rescue Exception => e
-        pp e
-      end
+    begin
+      Wuba.get_car_user_list 20, sub_city_party
+    rescue Exception => e
+      pp e
+    end
 
-      begin
-        #Wuba.update_detail
-      rescue Exception => e
-        pp e
-      end
-      pp '58再来一遍。。。'
-      pp "58现在时间 #{Time.now.chinese_format}"
+    begin
+      #Wuba.update_detail
+    rescue Exception => e
+      pp e
+    end
+    pp '58再来一遍。。。'
+    pp "58现在时间 #{Time.now.chinese_format}"
 
   end
 
   def self.run_ganji party = 0
 
-      begin
-        Ganji.get_car_user_list party
-      rescue Exception => e
-        pp e
-      end
+    begin
+      Ganji.get_car_user_list party
+    rescue Exception => e
+      pp e
+    end
 
-      begin
-        # Ganji.update_detail
-      rescue Exception => e
-        pp e
-      end
-      pp '赶集再来一遍。。。'
-      pp "现在赶集时间 #{Time.now.chinese_format}"
+    begin
+      # Ganji.update_detail
+    rescue Exception => e
+      pp e
+    end
+    pp '赶集再来一遍。。。'
+    pp "现在赶集时间 #{Time.now.chinese_format}"
 
   end
 
@@ -666,7 +678,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-  #UserSystem::CarUserInfo.run_men true
+      #UserSystem::CarUserInfo.run_men true
   def self.run_men run_list = true
 
     if run_list
@@ -723,8 +735,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-  #获取20个城市的代码及名称, 针对che168网站
-  # UserSystem::CarUserInfo.get_city_code_name
+      #获取20个城市的代码及名称, 针对che168网站
+      # UserSystem::CarUserInfo.get_city_code_name
   def self.get_city_code_name
     need_cities = ["咸阳", "银川", "西宁", "菏泽", "铜陵", "黄冈", "鄂州", "阳泉"]
     provinces = {"440000" => "广东", "370000" => "山东", "330000" => "浙江", "320000" => "江苏", "130000" => "河北",
@@ -860,7 +872,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-  # 生成每小时xls
+      # 生成每小时xls
   def self.generate_xls_of_car_user_info car_user_infos
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
@@ -899,7 +911,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     file_path
   end
 
-  # class UserSystem::CarUserInfo < ActiveRecord::Base
+      # class UserSystem::CarUserInfo < ActiveRecord::Base
   def self.update_all_brand
     # cui = UserSystem::CarUserInfo.where("brand is not null").order(id: :desc).first
     # cuis = UserSystem::CarUserInfo.where("id > #{cui.id} and brand is  null and phone is not null")
@@ -914,7 +926,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
   end
 
-  # end
+      # end
 
   def update_brand
     return unless self.brand.blank?
@@ -940,9 +952,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   end
 
-  # class UserSystem::CarUserInfo < ActiveRecord::Base
-  # 为开新临时导出上海的成功数据，导前一天的数据, 邮件给KK， OO 和我。  业务现已停止
-  # UserSystem::CarUserInfo.get_kaixin_info
+      # class UserSystem::CarUserInfo < ActiveRecord::Base
+      # 为开新临时导出上海的成功数据，导前一天的数据, 邮件给KK， OO 和我。  业务现已停止
+      # UserSystem::CarUserInfo.get_kaixin_info
   def self.get_kaixin_info
     cuis = UserSystem::CarUserInfo.where("id > 172006 and city_chinese = '上海' and tt_yaoyue = '成功' and tt_yaoyue_day = ? and tt_chengjiao is null", Date.today)
     return if cuis.length == 0
@@ -981,10 +993,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-  # class UserSystem::CarUserInfo < ActiveRecord::Base
-  # 导出数据给车王。
-  # 现在只要天津和上海数据。每天下午3点定时导出前一天下午3点到今天下午3点的数据。
-  # UserSystem::CarUserInfo.get_info_to_chewang
+      # class UserSystem::CarUserInfo < ActiveRecord::Base
+      # 导出数据给车王。
+      # 现在只要天津和上海数据。每天下午3点定时导出前一天下午3点到今天下午3点的数据。
+      # UserSystem::CarUserInfo.get_info_to_chewang
   def self.get_info_to_chewang
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
@@ -1027,7 +1039,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   end
 
-  # UserSystem::CarUserInfo.get_info_for_zhenteng_lianyungang
+      # UserSystem::CarUserInfo.get_info_for_zhenteng_lianyungang
   def self.get_info_for_zhenteng_lianyungang
     return unless Time.now.hour == 7
     return unless Time.now.min >= 50
@@ -1069,15 +1081,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     if false
       RestClient.post 'http://www.baixing.com/api/mobile/ershouqiche/ad?apiFormatter=AdList&suggestOn=0&AF_adList=category&structure=umbrella&src2listing=firstCategoryCheliang&area=m30&from=0&size=30', {
-                                                                                                                                                                                                            "__trackId" => "147952348938128"
-                                                                                                                                                                                                        }
+          "__trackId" => "147952348938128"
+      }
     end
   end
 
 
-  # 导出数据给晓玥。
-  # 一次一个城市
-  # UserSystem::CarUserInfo.get_info_to_xiaoyue
+      # 导出数据给晓玥。
+      # 一次一个城市
+      # UserSystem::CarUserInfo.get_info_to_xiaoyue
   def self.get_info_to_xiaoyue
     id_hash = {
         "上海" => 2388481
@@ -1126,9 +1138,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-  # class UserSystem::CarUserInfo < ActiveRecord::Base
-  # 导出北京数据
-  # UserSystem::CarUserInfo.get_info_to_chewang
+      # class UserSystem::CarUserInfo < ActiveRecord::Base
+      # 导出北京数据
+      # UserSystem::CarUserInfo.get_info_to_chewang
   def self.get_info_to_youche
 
     Spreadsheet.client_encoding = 'UTF-8'
@@ -1187,7 +1199,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-  # UserSystem::CarUserInfo.get_info_to_renren
+      # UserSystem::CarUserInfo.get_info_to_renren
   def self.get_info_to_renren
 
     # 人人车优化笔记
@@ -1414,7 +1426,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   end
 
-  #获取手机号对应的城市 ， 废弃
+      #获取手机号对应的城市 ， 废弃
   def self.phone_city
 
     UserSystem::CarUserInfo.where("phone_city is null and id > 500000 and phone is not null and tt_code is not null").order(id: :desc).find_each do |cui|
@@ -1455,7 +1467,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
   end
 
-  #UserSystem::CarUserInfo.upload_guozheng
+      #UserSystem::CarUserInfo.upload_guozheng
   def self.upload_guozheng
     return unless (Time.now.hour > 9 and Time.now.hour < 22)
     return unless Time.now.min > 30
@@ -1476,7 +1488,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                                                                          # number: 'PRO103',
                                                                                          number: 'kk',
                                                                                          sign: Digest::MD5.hexdigest("#{cui.phone}#{s}")
-                                                                                      }
+      }
       response = JSON.parse response.body
       pp response
       if response["error"] == "false"
@@ -1491,7 +1503,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
   end
 
-  # UserSystem::CarUserInfo.upload_to_hulei
+      # UserSystem::CarUserInfo.upload_to_hulei
   def self.upload_to_hulei
     return unless (Time.now.hour > 9 and Time.now.hour < 22)
     return unless Time.now.min > 30
@@ -1519,7 +1531,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                        source: cui.tt_source,
                                        sign: Digest::MD5.hexdigest("#{cui.phone}#{key}"),
                                        response_id: cui.tt_id,
-                                    }
+      }
       response = JSON.parse response.body
 
       pp response
@@ -1538,8 +1550,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-  #上海企业黄页
-  # UserSystem::CarUserInfo.huangye
+      #上海企业黄页
+      # UserSystem::CarUserInfo.huangye
   def self.huangye
     num = 0
     821.upto 8321 do |i|
@@ -1579,8 +1591,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-  #用于在自己机器上临时跑百姓网
-  # UserSystem::CarUserInfo.pao_baixing
+      #用于在自己机器上临时跑百姓网
+      # UserSystem::CarUserInfo.pao_baixing
   def self.pao_baixing
     while true
       # UserSystem::CarUserInfo.run_baixing 0
@@ -1599,7 +1611,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
 
-end
+  end
 __END__
 ***********备份的代码*******************
 

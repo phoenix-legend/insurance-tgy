@@ -78,10 +78,10 @@ module Ganji
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
     threads = []
     city_hash.each_pair do |areaid, areaname|
-      if threads.length > 5
+      if threads.length > 3
         while true
           threads.delete_if { |thread| thread.status == false }
-          if threads.length < 5
+          if threads.length < 3
             break
           else
             sleep 0.5
