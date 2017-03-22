@@ -63,7 +63,7 @@ module Ganji
             break
           end
         end
-          ActiveRecord::Base.connection.close
+        ActiveRecord::Base.connection.close
 
       rescue Exception => e
         ActiveRecord::Base.connection.close
@@ -72,8 +72,8 @@ module Ganji
     end
   end
 
-  #  Ganji.get_car_user_list_mult_threads 多线程版
-  def self.get_car_user_list party = 0
+  #  Ganji.get_car_user_list_mult_threads 多线程 3g版
+  def self.get_car_user_list_3g party = 0
 
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
     threads = []
@@ -154,6 +154,105 @@ module Ganji
       threads.delete_if { |thread| thread.status == false }
       break if threads.blank?
     end
+  end
+
+
+  # 从www网站上获取列表, 3g版由于拿不到及时性高的数据作废
+  # Ganji.get_car_user_list 0
+  def self.get_car_user_list party = 0
+
+    city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
+
+    city_hash.each_pair do |areaid, areaname|
+
+      begin
+        pp "现在跑赶集.. #{areaname}"
+        # 赶集注销掉分页循环,只跑第一页即可
+        # 1.upto 1 do |i|
+        # url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=1&deal_type=1&page=#{i}"
+
+        url = "http://#{areaid}.ganji.com/ershouche/a1/"
+        content = RestClientProxy.get url, {
+            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
+            'Cookie' => 'ganji_uuid=5283133772326517092624; ganji_xuuid=f60ba7d5-b4de-4c7b-b8e0-890ad74ebaea.1463541968024; Hm_lvt_73a12ba5aced499cae6ff7c0a9a989eb=1463541966,1463794955; wap_list_view_type=pic; gr_user_id=8fcb69d6-a9e2-43f2-b05d-955ce16276a5; GANJISESSID=f4096cfc2cde87d4b1622848d2afce66; mobversionbeta=3g; index_city_refuse=refuse; GANJI_SID=d727f98d-2205-42b7-c9e5-796c36bd8984; __utmganji_v20110909=0xe17e1688f8364e8228f5a20bbf08f82; cityDomain=hz; webimverran=82; statistics_clientid=me; ErshoucheDetailPageScreenType=1440; citydomain=sh; __utmt=1; Hm_lvt_8dba7bd668299d5dabbd8190f14e4d34=1490169006; Hm_lpvt_8dba7bd668299d5dabbd8190f14e4d34=1490174240; ganji_login_act=1490174240592; lg=1; vehicle_list_view_type=1; _gl_tracker=%7B%22ca_source%22%3A%22-%22%2C%22ca_name%22%3A%22-%22%2C%22ca_kw%22%3A%22-%22%2C%22ca_id%22%3A%22-%22%2C%22ca_s%22%3A%22self%22%2C%22ca_n%22%3A%22-%22%2C%22ca_i%22%3A%22-%22%2C%22sid%22%3A56930235227%7D; __utma=32156897.2034222174.1460360232.1490168931.1490174031.6; __utmb=32156897.10.10.1490174031; __utmc=32156897; __utmz=32156897.1490168931.5.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)'
+        }
+
+
+
+        content.gsub!('list-pic clearfix cursor_pointer ', 'dlclass')
+        content.gsub!('comNum js-price', 'priceclass')
+
+        content = Nokogiri::HTML(content)
+
+        #todo 去置顶,正则匹配
+        #todo 去商家,正则匹配
+        #todo 获取车源编号,车型,里程,车龄,根据编号生成链接,车价
+
+        car_infos = content.css('.dlclass')
+        # car_infos = content.css(".list-item")
+        pp "car infos length is #{car_infos.length}"
+        break if car_infos.blank?
+
+
+        car_infos.each do |car_info|
+
+          if car_info.to_s.match /ico-stick-yellow/
+            pp '置顶'
+            next
+          end
+
+          if car_info.to_s.match /商家/
+            pp '商家'
+            next
+          end
+
+          car_ganji_number = begin
+            car_info.attributes["id"].value rescue ''
+          end
+          next if car_ganji_number.blank?
+          car_ganji_number.gsub!('puid-', '')
+          url = "http://wap.ganji.com/#{areaid}/ershouche/#{car_ganji_number}x"
+
+
+          chexing = car_info.css('.infor .infor-titbox a').text
+
+          cheling = car_info.css('.infor .infor-dep .js-license strong').text
+
+          licheng = car_info.css('.infor .infor-dep .js-roadHaul strong').text.to_i
+
+          cheling.gsub!('年', '')
+          cheling = Date.today.year - cheling.to_i
+          price = car_info.css('.priceclass').text
+          is_cheshang = false
+          cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: chexing,
+                                                                 che_ling: cheling,
+                                                                 milage: licheng,
+                                                                 detail_url: url,
+                                                                 city_chinese: areaname,
+                                                                 price: price,
+                                                                 site_name: 'ganji',
+                                                                 is_cheshang: is_cheshang
+
+
+          unless cui_id.blank?
+            begin
+              Ganji.update_one_detail cui_id
+            rescue Exception => e
+              pp "赶集出错"
+              pp e
+            end
+          end
+
+        end
+
+          # end
+      rescue Exception => e
+        pp e
+      end
+
+
+    end
+
   end
 
   #  Ganji.get_car_user_list  单线程sleep 版
