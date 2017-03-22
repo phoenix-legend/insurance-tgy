@@ -6,6 +6,10 @@ class ErShouFang < ActiveRecord::Base
   # ErShouFang.shanghai_run
   def self.shanghai_run
 
+    return unless Time.now.hour == 7
+    return unless Time.now.min >= 20
+    return unless Time.now.min <= 30
+
 
     qu_name = CGI::escape '浦东'
     qu_code = 310115

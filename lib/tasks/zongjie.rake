@@ -34,8 +34,10 @@ namespace :zongjie do
 		if match_data.length > 4
 			pp '前一次未执行完毕，退出任务'
 		else
-			#把连云港数据给振腾
+			#把连云港数据给振腾  早上7点50的任务
 			UserSystem::CarUserInfo.get_info_for_zhenteng_lianyungang
+      #更新房产数据  早上7点20的任务
+      ErShouFang.shanghai_run
 			# 上传数据到U车
 			UserSystem::YoucheCarUserInfo.upload_to_youche
 			#更新又一车的数据
@@ -43,9 +45,9 @@ namespace :zongjie do
 			# 去侍埃更新数据， 程序内控制18点40分,20点40分再更新一次
 			UserSystem::AishiCarUserInfo.query_aishi
 			# 上传数据给郭正
-			UserSystem::CarUserInfo.upload_guozheng
+			# UserSystem::CarUserInfo.upload_guozheng
 			# 上传数据给胡磊
-			UserSystem::CarUserInfo.upload_to_hulei
+			# UserSystem::CarUserInfo.upload_to_hulei
 			# 更新U车数据
 			# UserSystem::YoucheCarUserInfo.query_youche_status
       #更新朋友E车, 凌晨1点和下午9点后半个小时, 更新两次

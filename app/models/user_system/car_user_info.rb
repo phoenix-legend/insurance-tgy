@@ -1073,7 +1073,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     file_path
 
     MailSend.send_car_user_infos('727973281@qq.com',
-                                 '13472446647@163.com',
+                                 '',
                                  record_number,
                                  "连云港最新数据-#{Time.now.chinese_format}",
                                  [file_path]

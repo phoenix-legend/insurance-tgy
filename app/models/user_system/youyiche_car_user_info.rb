@@ -279,8 +279,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   # UserSystem::YouyicheCarUserInfo.query_youyiche
   # 2017-01-06 为缩短查询时间，只关注最近30天提交的数据
   def self.query_youyiche
-    return if Time.now.hour < 9
-    return if Time.now.hour > 21
+    return unless  Time.now.hour == 15
+    return unless  Time.now.hour == 20
     return unless Time.now.min < 10
     # host_name = 'uat.youyiche.com' #测试环境
     host_name = "b.youyiche.com" #正式环境
