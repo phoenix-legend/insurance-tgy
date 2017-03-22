@@ -60,16 +60,20 @@ class ErShouFang < ActiveRecord::Base
     up_prices = FangPrice.where('price_date = ? and add_price > 0', Date.today)
     total_up_price = 0
     up_prices.collect{|up_price| total_up_price += up_price.add_unit_price}
+    total_up_unit_price = 0
+    up_prices.collect{|up_price| total_up_unit_price += up_price.unit_price}
 
     down_prices = FangPrice.where('price_date = ? and add_price < 0', Date.today)
     total_down_price = 0
     down_prices.collect{|down_price| total_down_price += down_price.add_unit_price}
+    total_down_unit_price = 0
+    down_prices.collect{|down_price| total_down_unit_price += down_price.unit_price}
     MailSend.send_content('xiaoqi.liu@uguoyuan.cn',
                           '',
                           "#{Date.today} 房价变动",
                           "今日新增房源#{new_prices.length}套,均单价#{total_new_price/new_prices.length}
-房价上调#{up_prices.length}套,均价单价上调#{total_up_price/up_prices.length}元
-房价下调#{down_prices.length}套,均价单价下调#{-1*total_down_price/down_prices.length}元
+房价上调#{up_prices.length}套,均价单价上调#{total_up_price/up_prices.length}元, 均单价#{total_up_unit_price/up_prices.length}元
+房价下调#{down_prices.length}套,均价单价下调#{-1*total_down_price/down_prices.length}元,均单价#{total_down_unit_price/down_prices.length}元
 "
 
     ).deliver
