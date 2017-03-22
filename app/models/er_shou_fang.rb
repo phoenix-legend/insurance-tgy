@@ -102,7 +102,7 @@ class ErShouFang < ActiveRecord::Base
         fang = price.er_shou_fang
         fang.last_price = fangzi_detail["showPrice"].to_i
         fang.last_unit_price = fangzi_detail["unitPrice"].to_i
-        fang.mark = fangzi_detail["tags"].join(','),
+        fang.mark = fangzi_detail["tags"].join(',')
             fang.save!
 
         price = FangPrice.new lianjia_id: fangzi_detail["houseSellId"],
@@ -117,19 +117,19 @@ class ErShouFang < ActiveRecord::Base
         price.add_unit_price = price.unit_price - last_price.unit_price
         price.save!
 
-        unless (fang.mark.match /is_five_year/).blank?
+        unless (fang.mark.to_s.match /is_five_year/).blank?
           fang.is_five = true
         end
 
-        unless (fang.mark.match /is_subway_house/).blank?
+        unless (fang.mark.to_s.match /is_subway_house/).blank?
           fang.is_subway = true
         end
 
-        unless (fang.mark.match /is_two_year/).blank?
+        unless (fang.mark.to_s.match /is_two_year/).blank?
           fang.is_two = true
         end
 
-        unless (fang.mark.match /is_key/).blank?
+        unless (fang.mark.to_s.match /is_key/).blank?
           fang.is_key = true
         end
 
