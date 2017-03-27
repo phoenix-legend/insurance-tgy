@@ -567,7 +567,8 @@ module UploadTianTian
     car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('23-23-4','23-23-5','23-23-1') and tt_created_day > ?", Date.today - 30).order(id: :desc)
     i = 0
     car_user_infos.find_each do |car_user_info|
-      url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
+      s = if car_user_info.tt_chengjiao == '4SA-1011' then '23-23-15' else car_user_info.tt_source end
+      url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{s}"
       response = RestClient.get url
       response = JSON.parse response
       pp "#{response["result"]["invite"]} ~~  #{car_user_info.tt_id}"
@@ -590,7 +591,8 @@ module UploadTianTian
     i = 0
     car_user_infos.find_each do |car_user_info|
       # car_user_info = ::UserSystem::CarUserInfo.where("tt_id  = 21924728").first
-      url = "http://openapi.ttpai.cn/api/v2.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{car_user_info.tt_source}"
+      s = if car_user_info.tt_chengjiao == '4SA-1012' then '23-23-15' else car_user_info.tt_source end
+      url = "http://openapi.ttpai.cn/api/v2.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{s}"
       response = RestClient.get url
       response = JSON.parse response
       pp "#{response["result"]["invite"]} ~~  #{car_user_info.tt_id}"
