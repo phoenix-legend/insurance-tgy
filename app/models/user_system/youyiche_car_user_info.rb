@@ -6,7 +6,10 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   # CITY = ['上海', '苏州', '杭州', '成都', '福州']
   # CITY = ['上海', '苏州', '杭州', '成都']
 
-  CITY = ["北京", "南京", "深圳", "上海", "青岛", "西安", "郑州", "无锡", "苏州", "杭州", "常州", "重庆", "武汉", "长沙", "成都"]
+  CITY = ["北京", "南京", "深圳", "上海", "青岛", "西安", "郑州", "无锡", "苏州", "杭州", "常州", "重庆", "武汉", "长沙", "成都",
+          "太原",   "南昌",   "昆明",    "宁波",  "东莞",  "济南" ,  "南宁"]
+
+
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
