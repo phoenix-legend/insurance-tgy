@@ -403,7 +403,7 @@ module UploadTianTian
     user_info = user_info.reload
     return if user_info.tt_upload_status != 'weishangchuan'
 
-    n, s = "4SA-1011", 'dcd7f18c776dbaddfea4ce0ed5d2cfc3'
+    n, s = "4SA-1011", '098f6bcd4621d373cade4e832627b4f6'
 
     params[:number] = n
     params[:sign] = Digest::MD5.hexdigest("#{n}#{s}")
@@ -415,15 +415,17 @@ module UploadTianTian
     response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/ttpinsert', params
     response = JSON.parse response.body
     pp response
-    response = response[0]
+    # response = response[0]
 
 
     error = response["error"]
     message = response["message"]
 
     user_info.tt_created_day = user_info.created_at.chinese_format_day
+    user_info.tt_upload_status = "4Aerror#{message}"
     if error.to_s == 'true'
       user_info.tt_message = "4Aerror#{message}"
+
       user_info.save!
       return
     end
@@ -469,13 +471,14 @@ module UploadTianTian
     response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/ttpinsert', params
     response = JSON.parse response.body
     pp response
-    response = response[0]
+    # response = response[0]
 
 
     error = response["error"]
     message = response["message"]
 
     user_info.tt_created_day = user_info.created_at.chinese_format_day
+    user_info.tt_upload_status = "4Aerror#{message}"
     if error.to_s == 'true'
       user_info.tt_message = "4Aerror#{message}"
       user_info.save!
