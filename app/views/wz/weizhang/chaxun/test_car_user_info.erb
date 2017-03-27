@@ -21,9 +21,9 @@ yx_qq_today_maoshuju_counts = ::UserSystem::CarUserInfo.where("tt_id is not null
 yx_qq_yesterday_maoshuju_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ? and tt_source in ('2-263-266')", Date.yesterday).count
 
    %>
-测试p：<%=yx_qq_month_counts%> / <%=yx_month_counts%>
-测试p_msj today/yesterday：<%=yx_qq_today_maoshuju_counts%> / <%=yx_qq_yesterday_maoshuju_counts%>
-
+测试p：<%=yx_qq_month_counts%> / <%=yx_month_counts%><br/>
+测试p_毛数据 today/yesterday：<%=yx_qq_today_maoshuju_counts%> / <%=yx_qq_yesterday_maoshuju_counts%>
+<br/>
 
 <%
 
@@ -34,8 +34,51 @@ yx_qq_yesterday_maoshuju_counts = ::UserSystem::CarUserInfo.where("tt_id is not 
   ro_yx_qq_yesterday_maoshuju_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ? and tt_source in ('2-775-778')", Date.yesterday).count
 
 %>
-ro测试p：<%=ro_yx_qq_month_counts%> / <%=ro_yx_month_counts%>
+<br/>
+
+ro测试p：<%=ro_yx_qq_month_counts%> / <%=ro_yx_month_counts%><br/>
 ro测试p_msj today/yesterday：<%=ro_yx_qq_today_maoshuju_counts%> / <%=ro_yx_qq_yesterday_maoshuju_counts%>
+
+<%
+
+  ro_yx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day >= ?  and tt_source in ('2-775-778')", Date.new(Date.today.year, Date.today.month, 1)).count
+  ro_yx_qq_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day = ? and tt_source in ('2-775-778')", Date.today).count
+
+  ro_yx_qq_today_maoshuju_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ? and tt_source in ('2-775-778')", Date.today).count
+  ro_yx_qq_yesterday_maoshuju_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ? and tt_source in ('2-775-778')", Date.yesterday).count
+
+%>
+ro测试p：<%=ro_yx_qq_month_counts%> / <%=ro_yx_month_counts%><br/>
+ro测试p_msj today/yesterday：<%=ro_yx_qq_today_maoshuju_counts%> / <%=ro_yx_qq_yesterday_maoshuju_counts%>
+
+<br/>
+<%
+  wubamaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = '58'", Date.today).count
+  ganjimaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'ganji'", Date.today).count
+  baixingmaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'baixing'", Date.today).count
+  che168maoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'che168'", Date.today).count
+  zuoximaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'zuoxi'", Date.today).count
+%>
+58: <%= wubamaoshuju %><br/>
+ganji: <%= ganjimaoshuju %><br/>
+baixing:<%= baixingmaoshuju %><br/>
+che168:<%= che168maoshuju %><br/>
+zuoxi:<%= zuoximaoshuju %><br/>
+
+<br/>
+昨日<br/>
+<%
+  wubamaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = '58'", Date.yesterday).count
+  ganjimaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'ganji'", Date.yesterday).count
+  baixingmaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'baixing'", Date.yesterday).count
+  che168maoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'che168'", Date.yesterday).count
+  zuoximaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'zuoxi'", Date.yesterday).count
+%>
+58: <%= wubamaoshuju %><br/>
+ganji: <%= ganjimaoshuju %><br/>
+baixing:<%= baixingmaoshuju %><br/>
+che168:<%= che168maoshuju %><br/>
+zuoxi:<%= zuoximaoshuju %><br/>
 
 
 <style type="text/css">
