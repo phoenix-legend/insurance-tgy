@@ -464,7 +464,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     UploadTianTian.upload_one_tt car_user_info
 
-    #同步至又一车
+    #先临时把一部分数据传给金针菇, 为提高优先级,先临时放到这里。测试通过后,再移回去
+    if rand(10)<4
+      UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
+    end
+
+      #同步至又一车
     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     # 同步给人人车
@@ -477,8 +482,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # 同步至车置宝  车置宝作废
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
 
+
+    # if rand(10)<4
+    #   UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # end
+
     # 同步至4A
     UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
+
+
 
     #同步至优车
     UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -508,6 +520,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
     UploadTianTian.upload_one_tt car_user_info
+
+    #先临时把一部分数据传给金针菇, 为提高优先级,先临时放到这里。测试通过后,再移回去
+    if rand(10)<4
+      UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
+    end
 
     # 同步至又一车
     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
