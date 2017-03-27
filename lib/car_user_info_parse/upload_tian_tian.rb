@@ -2,11 +2,12 @@ module UploadTianTian
 
   #2017-02-24 临时去掉  北京，天津，武汉, "上海", "重庆"
   # CITY = [ "成都", "深圳", "南京", "广州", "苏州", "杭州", "东莞", "佛山"]
-  CITY = ["重庆", "合肥", "杭州", "宁波", "东莞", "南宁", "成都", "武汉", "深圳"]
-  # CITY = ["上海", "成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "杭州", "东莞", "重庆", "佛山", "北京"]
+  CITY = ["重庆", "合肥", "杭州", "宁波", "东莞", "南宁", "成都", "武汉", "深圳","西安","广州",
+          "上海","北京","苏州","南京","天津","广州","佛山"]
 
+  CITY_YL = ["上海","北京","苏州","南京","天津","佛山"]
+  #   上海、北京、成都、重庆、杭州、苏州、南京、天津、深圳、广州、东莞、佛山、武汉 YL这边支持的城市,一点一点往上加
 
-  # CITY1 = ["成都", "深圳", "南京", "广州", "武汉", "天津", "苏州", "重庆", "佛山", "北京"]
 
 
   # 需要上传的数据。
@@ -142,6 +143,8 @@ module UploadTianTian
       is_select = false
     end
 
+
+
     # 车价小于1万的，跳过
     # unless car_user_info.price.blank?
     #   car_user_info.price.gsub!('万', '')
@@ -163,6 +166,25 @@ module UploadTianTian
 
     if is_select
 
+      #城市符合的情况下,给源鹿
+      if CITY_YL.include? car_user_info.city_chinese
+        yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('2-775-778') and tt_id is not null", Date.today).count
+        if yl_count > 180
+          car_user_info.tt_upload_status = 'yl超限'
+          car_user_info.save!
+          return
+        end
+        UploadTianTian.tt_pai_v2_0_yl car_user_info
+        return
+      end
+
+
+      yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('2-263-266', '23-23-4','23-23-5','23-23-1') and tt_id is not null", Date.today).count
+      if yl_count > 130
+        car_user_info.tt_upload_status = 'hl&kk超限'
+        car_user_info.save!
+        return
+      end
       if rand(100) < 43
         UploadTianTian.tt_pai_v2_0_qq car_user_info
         return
@@ -220,115 +242,115 @@ module UploadTianTian
 
   #郭正的天天拍2.0接口，新合同
   #UploadTianTian.tt_pai_v2_0_guozheng
-  def self.tt_pai_v2_0_guozheng user_info
-
-    # 现在要全部给唐金
-    UploadTianTian.tt_pai_v2_0_tangjin user_info
-    return
-
-    redis_key = "#{ Date.today.chinese_format_day}_tangjin_upload_number"
-    redis = Redis.current
-    if redis['to_tangjin_qudao_number']
-      redis.expire 'to_tangjin_qudao_number', 7*24*60*60
-    end
-    if redis[redis_key].to_i < redis['to_tangjin_qudao_number'].to_i
-      UploadTianTian.tt_pai_v2_0_tangjin user_info
-      return
-    end
-
-
-    #测试环境
-    # domain = "sandbox.openapi.ttpai.cn"
-    # s = "3ee710fd91922986627461fccf8f7886"
-    # appkey = 'flower'
-    # qudao = '2-307'
-
-    #正式环境，已废弃
-    # s = "83c78d166b59e953032eef673296faef"
-    # appkey = 'flower'
-    # qudao = '2-307-317'
-    # domain = "openapi.ttpai.cn"
-
-    s = 'ce7807d55f0a40fbbd5ddb0f1c92756c'
-    appkey = 'tree'
-    qudao = '2-306-314'
-    domain = "openapi.ttpai.cn"
-
-
-    params = []
-    user_info = user_info.reload
-    return if user_info.tt_upload_status != 'weishangchuan'
-    params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
-    params << [:mobile, UploadTianTian.escape2(user_info.phone)]
-    params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
-    params << [:brand, UploadTianTian.escape2(user_info.brand)]
-    params << [:source, UploadTianTian.escape2(qudao)]
-    params << [:appkey, UploadTianTian.escape2(appkey)]
-    params << [:sign, UploadTianTian.escape2(Digest::MD5.hexdigest("#{user_info.phone}#{s}"))]
-    response = RestClient.get "#{domain}/api/v2.0/ttp_sign_up?#{URI.encode_www_form params}"
-    pp response
-    response = JSON.parse response.body
-    error = response["error"]
-    message = response["message"]
-    id = begin
-      response["result"]["id"] rescue -1
-    end
-    user_info.tt_source = qudao
-    user_info.tt_created_day = user_info.created_at.chinese_format_day
-    user_info.tt_id = id if not id.blank?
-    user_info.tt_code = error
-    user_info.tt_message = message
-    user_info.tt_upload_status = '已上传'
-    user_info.save!
-  end
+  # def self.tt_pai_v2_0_guozheng user_info
+  #
+  #   # 现在要全部给唐金
+  #   UploadTianTian.tt_pai_v2_0_tangjin user_info
+  #   return
+  #
+  #   redis_key = "#{ Date.today.chinese_format_day}_tangjin_upload_number"
+  #   redis = Redis.current
+  #   if redis['to_tangjin_qudao_number']
+  #     redis.expire 'to_tangjin_qudao_number', 7*24*60*60
+  #   end
+  #   if redis[redis_key].to_i < redis['to_tangjin_qudao_number'].to_i
+  #     UploadTianTian.tt_pai_v2_0_tangjin user_info
+  #     return
+  #   end
+  #
+  #
+  #   #测试环境
+  #   # domain = "sandbox.openapi.ttpai.cn"
+  #   # s = "3ee710fd91922986627461fccf8f7886"
+  #   # appkey = 'flower'
+  #   # qudao = '2-307'
+  #
+  #   #正式环境，已废弃
+  #   # s = "83c78d166b59e953032eef673296faef"
+  #   # appkey = 'flower'
+  #   # qudao = '2-307-317'
+  #   # domain = "openapi.ttpai.cn"
+  #
+  #   s = 'ce7807d55f0a40fbbd5ddb0f1c92756c'
+  #   appkey = 'tree'
+  #   qudao = '2-306-314'
+  #   domain = "openapi.ttpai.cn"
+  #
+  #
+  #   params = []
+  #   user_info = user_info.reload
+  #   return if user_info.tt_upload_status != 'weishangchuan'
+  #   params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
+  #   params << [:mobile, UploadTianTian.escape2(user_info.phone)]
+  #   params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
+  #   params << [:brand, UploadTianTian.escape2(user_info.brand)]
+  #   params << [:source, UploadTianTian.escape2(qudao)]
+  #   params << [:appkey, UploadTianTian.escape2(appkey)]
+  #   params << [:sign, UploadTianTian.escape2(Digest::MD5.hexdigest("#{user_info.phone}#{s}"))]
+  #   response = RestClient.get "#{domain}/api/v2.0/ttp_sign_up?#{URI.encode_www_form params}"
+  #   pp response
+  #   response = JSON.parse response.body
+  #   error = response["error"]
+  #   message = response["message"]
+  #   id = begin
+  #     response["result"]["id"] rescue -1
+  #   end
+  #   user_info.tt_source = qudao
+  #   user_info.tt_created_day = user_info.created_at.chinese_format_day
+  #   user_info.tt_id = id if not id.blank?
+  #   user_info.tt_code = error
+  #   user_info.tt_message = message
+  #   user_info.tt_upload_status = '已上传'
+  #   user_info.save!
+  # end
 
 
   #天天这边给唐金搞的新接口
   #UploadTianTian.tt_pai_v2_0_tangjin
-  def self.tt_pai_v2_0_tangjin user_info
-    s = 'ed0c79e867028c60ce4137407728538c'
-    appkey = 'xiaomeigui'
-    qudao = '2-474-602'
-    domain = "openapi.ttpai.cn"
-
-    #使用redis统计当天送上去的数据量
-
-    params = []
-    user_info = user_info.reload
-    return if user_info.tt_upload_status != 'weishangchuan'
-    params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
-    params << [:mobile, UploadTianTian.escape2(user_info.phone)]
-    params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
-    params << [:brand, UploadTianTian.escape2(user_info.brand)]
-    params << [:source, UploadTianTian.escape2(qudao)]
-    params << [:appkey, UploadTianTian.escape2(appkey)]
-    params << [:sign, UploadTianTian.escape2(Digest::MD5.hexdigest("#{user_info.phone}#{s}"))]
-    response = RestClient.get "#{domain}/api/v2.0/ttp_sign_up?#{URI.encode_www_form params}"
-    pp response
-    response = JSON.parse response.body
-    error = response["error"]
-    message = response["message"]
-    id = begin
-      response["result"]["id"] rescue -1
-    end
-    user_info.tt_source = qudao
-    user_info.tt_created_day = user_info.created_at.chinese_format_day
-    user_info.tt_id = id if not id.blank?
-    user_info.tt_code = error
-    user_info.tt_message = message
-    user_info.tt_upload_status = '已上传'
-    user_info.save!
-    if user_info.tt_id.to_i > 0
-      redis_key = "#{ Date.today.chinese_format_day}_tangjin_upload_number"
-      redis = Redis.current
-      if redis[redis_key].blank?
-        redis[redis_key] = 0
-        redis.expire redis_key, 2*24*60*60
-      else
-        redis[redis_key] = redis[redis_key].to_i + 1
-      end
-    end
-  end
+  # def self.tt_pai_v2_0_tangjin user_info
+  #   s = 'ed0c79e867028c60ce4137407728538c'
+  #   appkey = 'xiaomeigui'
+  #   qudao = '2-474-602'
+  #   domain = "openapi.ttpai.cn"
+  #
+  #   #使用redis统计当天送上去的数据量
+  #
+  #   params = []
+  #   user_info = user_info.reload
+  #   return if user_info.tt_upload_status != 'weishangchuan'
+  #   params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
+  #   params << [:mobile, UploadTianTian.escape2(user_info.phone)]
+  #   params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
+  #   params << [:brand, UploadTianTian.escape2(user_info.brand)]
+  #   params << [:source, UploadTianTian.escape2(qudao)]
+  #   params << [:appkey, UploadTianTian.escape2(appkey)]
+  #   params << [:sign, UploadTianTian.escape2(Digest::MD5.hexdigest("#{user_info.phone}#{s}"))]
+  #   response = RestClient.get "#{domain}/api/v2.0/ttp_sign_up?#{URI.encode_www_form params}"
+  #   pp response
+  #   response = JSON.parse response.body
+  #   error = response["error"]
+  #   message = response["message"]
+  #   id = begin
+  #     response["result"]["id"] rescue -1
+  #   end
+  #   user_info.tt_source = qudao
+  #   user_info.tt_created_day = user_info.created_at.chinese_format_day
+  #   user_info.tt_id = id if not id.blank?
+  #   user_info.tt_code = error
+  #   user_info.tt_message = message
+  #   user_info.tt_upload_status = '已上传'
+  #   user_info.save!
+  #   if user_info.tt_id.to_i > 0
+  #     redis_key = "#{ Date.today.chinese_format_day}_tangjin_upload_number"
+  #     redis = Redis.current
+  #     if redis[redis_key].blank?
+  #       redis[redis_key] = 0
+  #       redis.expire redis_key, 2*24*60*60
+  #     else
+  #       redis[redis_key] = redis[redis_key].to_i + 1
+  #     end
+  #   end
+  # end
 
   #天天这边给俺搞的新接口
   #UploadTianTian.tt_pai_v2_0_qq
@@ -336,6 +358,45 @@ module UploadTianTian
     s = '1579089ae5ae1d9b559f3082c4e44148'
     appkey = 'shiaicaigou'
     qudao = '2-263-266'
+    domain = "openapi.ttpai.cn"
+
+    params = []
+    user_info = user_info.reload
+    return if user_info.tt_upload_status != 'weishangchuan'
+    params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
+    params << [:mobile, UploadTianTian.escape2(user_info.phone)]
+    params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
+    params << [:brand, UploadTianTian.escape2(user_info.brand)]
+    params << [:source, UploadTianTian.escape2(qudao)]
+    params << [:appkey, UploadTianTian.escape2(appkey)]
+    params << [:sign, UploadTianTian.escape2(Digest::MD5.hexdigest("#{user_info.phone}#{s}"))]
+    response = RestClient.get "#{domain}/api/v2.0/ttp_sign_up?#{URI.encode_www_form params}"
+    pp response
+    response = JSON.parse response.body
+    error = response["error"]
+    message = response["message"]
+    id = begin
+      response["result"]["id"] rescue -1
+    end
+    user_info.tt_source = qudao
+    user_info.tt_created_day = user_info.created_at.chinese_format_day
+    user_info.tt_id = id if not id.blank?
+    user_info.tt_code = error
+    user_info.tt_message = message
+    user_info.tt_upload_status = '已上传'
+    user_info.save!
+    UploadTianTian.upload_to_hulei_not_yitihua user_info
+
+  end
+
+
+  #天天芮欧(源鹿)
+  #UploadTianTian.tt_pai_v2_0_yl
+  def self.tt_pai_v2_0_yl user_info
+
+    s = 'b2fc17d41d78dc579bcdaefab3555c2a'
+    appkey = 'fenghuang'
+    qudao = '2-775-778'
     domain = "openapi.ttpai.cn"
 
     params = []
@@ -412,7 +473,8 @@ module UploadTianTian
   # UploadTianTian.query_order2
   # 天天接口查询2.0版本，目前用于郭正一个渠道更新数据
   def self.query_order2
-    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('2-307-317', '2-306-314','2-474','2-474-602', '2-263-266') and tt_created_day > ?", Date.today - 30)
+    # car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('2-775-778','2-307-317', '2-306-314','2-474','2-474-602', '2-263-266') and tt_created_day > ?", Date.today - 30)
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('2-775-778', '2-263-266') and tt_created_day > ?", Date.today - 30)
     i = 0
     car_user_infos.find_each do |car_user_info|
       # car_user_info = ::UserSystem::CarUserInfo.where("tt_id  = 21924728").first
