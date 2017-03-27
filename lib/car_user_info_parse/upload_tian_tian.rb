@@ -428,7 +428,7 @@ module UploadTianTian
     user_info.tt_message = message
     user_info.tt_upload_status = '已上传'
     user_info.save!
-    UploadTianTian.upload_to_hulei_not_yitihua user_info
+    
 
   end
 
