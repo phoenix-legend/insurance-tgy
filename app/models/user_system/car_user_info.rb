@@ -465,7 +465,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UploadTianTian.upload_one_tt car_user_info
 
     #先临时把一部分数据传给金针菇, 为提高优先级,先临时放到这里。测试通过后,再移回去
-    if rand(10)<4
+    if rand(10)<2
       UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
     end
 
@@ -522,7 +522,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UploadTianTian.upload_one_tt car_user_info
 
     #先临时把一部分数据传给金针菇, 为提高优先级,先临时放到这里。测试通过后,再移回去
-    if rand(10)<4
+    if rand(10)< 2
       UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
     end
 
