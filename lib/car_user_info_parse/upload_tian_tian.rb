@@ -184,7 +184,7 @@ module UploadTianTian
 
 
       yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('2-263-266', '23-23-4','23-23-5','23-23-1') and tt_id is not null", Date.today).count
-      if yl_count > 130
+      if yl_count > 100
         car_user_info.tt_upload_status = 'hl&kk超限'
         car_user_info.save!
         return
@@ -201,47 +201,48 @@ module UploadTianTian
 
 
   # UploadTianTian.tt_pai_v1_0_hulei
-  def self.tt_pai_v1_0_hulei car_user_info
-    qudao = "23-23-1"
-    if car_user_info.site_name == 'baixing' or car_user_info.site_name == 'zuoxi'
-      qudao = "23-23-4"
-    elsif car_user_info.site_name == '58'
-      qudao = "23-23-5"
-    end
-
-    domain = "openapi.ttpai.cn"
-    s = "1579089ae5ae1d9b559f3082c4e44148"
-    user_info = car_user_info
-    params = []
-    user_info = user_info.reload
-    return if car_user_info.tt_upload_status != 'weishangchuan'
-    params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
-    params << [:mobile, UploadTianTian.escape2(user_info.phone)]
-    params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
-    params << [:brand, UploadTianTian.escape2(user_info.brand)]
-    pp "渠道为#{qudao}"
-    params << [:source, UploadTianTian.escape2(qudao)]
-    params << [:appkey, UploadTianTian.escape2('shiaicaigou')]
-
-    params << [:sign, UploadTianTian.escape2(Digest::MD5.hexdigest("#{user_info.phone}#{s}"))]
-
-    response = RestClient.get "#{domain}/api/v1.1/ttp_sign_up?#{URI.encode_www_form params}"
-    pp response
-    response = JSON.parse response.body
-    error = response["error"]
-    message = response["message"]
-    id = begin
-      response["result"]["id"] rescue -1
-    end
-    user_info.tt_source = qudao
-    user_info.tt_created_day = user_info.created_at.chinese_format_day
-    user_info.tt_id = id if not id.blank?
-    user_info.tt_code = error
-    user_info.tt_message = message
-    user_info.tt_upload_status = '已上传'
-    user_info.save!
-    UploadTianTian.upload_to_hulei_not_yitihua cui
-  end
+  # 2017-03-27 胡磊直连注销
+  # def self.tt_pai_v1_0_hulei car_user_info
+  #   qudao = "23-23-1"
+  #   if car_user_info.site_name == 'baixing' or car_user_info.site_name == 'zuoxi'
+  #     qudao = "23-23-4"
+  #   elsif car_user_info.site_name == '58'
+  #     qudao = "23-23-5"
+  #   end
+  #
+  #   domain = "openapi.ttpai.cn"
+  #   s = "1579089ae5ae1d9b559f3082c4e44148"
+  #   user_info = car_user_info
+  #   params = []
+  #   user_info = user_info.reload
+  #   return if car_user_info.tt_upload_status != 'weishangchuan'
+  #   params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
+  #   params << [:mobile, UploadTianTian.escape2(user_info.phone)]
+  #   params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
+  #   params << [:brand, UploadTianTian.escape2(user_info.brand)]
+  #   pp "渠道为#{qudao}"
+  #   params << [:source, UploadTianTian.escape2(qudao)]
+  #   params << [:appkey, UploadTianTian.escape2('shiaicaigou')]
+  #
+  #   params << [:sign, UploadTianTian.escape2(Digest::MD5.hexdigest("#{user_info.phone}#{s}"))]
+  #
+  #   response = RestClient.get "#{domain}/api/v1.1/ttp_sign_up?#{URI.encode_www_form params}"
+  #   pp response
+  #   response = JSON.parse response.body
+  #   error = response["error"]
+  #   message = response["message"]
+  #   id = begin
+  #     response["result"]["id"] rescue -1
+  #   end
+  #   user_info.tt_source = qudao
+  #   user_info.tt_created_day = user_info.created_at.chinese_format_day
+  #   user_info.tt_id = id if not id.blank?
+  #   user_info.tt_code = error
+  #   user_info.tt_message = message
+  #   user_info.tt_upload_status = '已上传'
+  #   user_info.save!
+  #   # UploadTianTian.upload_to_hulei_not_yitihua cui
+  # end
 
 
   #郭正的天天拍2.0接口，新合同
@@ -357,39 +358,147 @@ module UploadTianTian
   # end
 
   #天天这边给俺搞的新接口
+  # 2017-03-27  不直连天天, 改用接口
   #UploadTianTian.tt_pai_v2_0_qq
-  def self.tt_pai_v2_0_qq user_info
-    s = '1579089ae5ae1d9b559f3082c4e44148'
-    appkey = 'shiaicaigou'
-    qudao = '2-263-266'
-    domain = "openapi.ttpai.cn"
+  # def self.tt_pai_v2_0_qq user_info
+  #   s = '1579089ae5ae1d9b559f3082c4e44148'
+  #   appkey = 'shiaicaigou'
+  #   qudao = '2-263-266'
+  #   domain = "openapi.ttpai.cn"
+  #
+  #   params = []
+  #   user_info = user_info.reload
+  #   return if user_info.tt_upload_status != 'weishangchuan'
+  #   params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
+  #   params << [:mobile, UploadTianTian.escape2(user_info.phone)]
+  #   params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
+  #   params << [:brand, UploadTianTian.escape2(user_info.brand)]
+  #   params << [:source, UploadTianTian.escape2(qudao)]
+  #   params << [:appkey, UploadTianTian.escape2(appkey)]
+  #   params << [:sign, UploadTianTian.escape2(Digest::MD5.hexdigest("#{user_info.phone}#{s}"))]
+  #   response = RestClient.get "#{domain}/api/v2.0/ttp_sign_up?#{URI.encode_www_form params}"
+  #   pp response
+  #   response = JSON.parse response.body
+  #   error = response["error"]
+  #   message = response["message"]
+  #   id = begin
+  #     response["result"]["id"] rescue -1
+  #   end
+  #   user_info.tt_source = qudao
+  #   user_info.tt_created_day = user_info.created_at.chinese_format_day
+  #   user_info.tt_id = id if not id.blank?
+  #   user_info.tt_code = error
+  #   user_info.tt_message = message
+  #   user_info.tt_upload_status = '已上传'
+  #   user_info.save!
+  #   UploadTianTian.upload_to_hulei_not_yitihua user_info
+  #
+  # end
 
-    params = []
+
+
+  def self.tt_pai_v1_0_hulei user_info
+    params = {}
+    qudao = '23-23-1'
     user_info = user_info.reload
     return if user_info.tt_upload_status != 'weishangchuan'
-    params << [:name, UploadTianTian.escape2(user_info.name.gsub('(个人)', ''))]
-    params << [:mobile, UploadTianTian.escape2(user_info.phone)]
-    params << [:city, UploadTianTian.escape2(user_info.city_chinese)]
-    params << [:brand, UploadTianTian.escape2(user_info.brand)]
-    params << [:source, UploadTianTian.escape2(qudao)]
-    params << [:appkey, UploadTianTian.escape2(appkey)]
-    params << [:sign, UploadTianTian.escape2(Digest::MD5.hexdigest("#{user_info.phone}#{s}"))]
-    response = RestClient.get "#{domain}/api/v2.0/ttp_sign_up?#{URI.encode_www_form params}"
-    pp response
+
+    n, s = "4SA-1011", 'dcd7f18c776dbaddfea4ce0ed5d2cfc3'
+
+    params[:number] = n
+    params[:sign] = Digest::MD5.hexdigest("#{n}#{s}")
+    params[:key_data] = user_info.created_at.chinese_format
+    params[:city] = "#{user_info.city_chinese}市"
+    params[:mobile] = user_info.phone
+    params[:brand] = user_info.brand
+    params[:name] = user_info.name
+    response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/ttpinsert', params
     response = JSON.parse response.body
+    pp response
+    response = response[0]
+
+
     error = response["error"]
     message = response["message"]
-    id = begin
-      response["result"]["id"] rescue -1
-    end
-    user_info.tt_source = qudao
+
     user_info.tt_created_day = user_info.created_at.chinese_format_day
+    if error.to_s == 'true'
+      user_info.tt_message = "4Aerror#{message}"
+      user_info.save!
+      return
+    end
+
+
+
+    id = begin
+      response["result"]["ttpdate"]["result"]["id"] rescue ''
+    end
+    message = "4A#{response["result"]["id"]}~#{response["result"]["ttpdate"]["message"]}"
+
+    user_info.tt_source = qudao
+    user_info.tt_chengjiao = n
+
+    ttp_error_code = if response["result"]["ttpdate"]["error"].to_s == "true" then 1 else 0 end
     user_info.tt_id = id if not id.blank?
-    user_info.tt_code = error
+    user_info.tt_code = ttp_error_code
     user_info.tt_message = message
     user_info.tt_upload_status = '已上传'
     user_info.save!
-    UploadTianTian.upload_to_hulei_not_yitihua user_info
+    # UploadTianTian.upload_to_hulei_not_yitihua user_info
+
+  end
+
+  def self.tt_pai_v2_0_qq user_info
+
+
+    params = {}
+    qudao = '2-263-266'
+    user_info = user_info.reload
+    return if user_info.tt_upload_status != 'weishangchuan'
+
+    # n, s = "4SA-1011", 'dcd7f18c776dbaddfea4ce0ed5d2cfc3'
+
+    n, s = '4SA-1012', "13cfe7dfa0dd2fe5e2a7d5fb467099a6"
+    params[:number] = n
+    params[:sign] = Digest::MD5.hexdigest("#{n}#{s}")
+    params[:key_data] = user_info.created_at.chinese_format
+    params[:city] = "#{user_info.city_chinese}市"
+    params[:mobile] = user_info.phone
+    params[:brand] = user_info.brand
+    params[:name] = user_info.name
+    response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/ttpinsert', params
+    response = JSON.parse response.body
+    pp response
+    response = response[0]
+
+
+    error = response["error"]
+    message = response["message"]
+
+    user_info.tt_created_day = user_info.created_at.chinese_format_day
+    if error.to_s == 'true'
+      user_info.tt_message = "4Aerror#{message}"
+      user_info.save!
+      return
+    end
+
+
+
+    id = begin
+      response["result"]["ttpdate"]["result"]["id"] rescue ''
+    end
+    message = "4A#{response["result"]["id"]}~#{response["result"]["ttpdate"]["message"]}"
+
+    user_info.tt_source = qudao
+    user_info.tt_chengjiao = n
+
+    ttp_error_code = if response["result"]["ttpdate"]["error"].to_s == "true" then 1 else 0 end
+    user_info.tt_id = id if not id.blank?
+    user_info.tt_code = ttp_error_code
+    user_info.tt_message = message
+    user_info.tt_upload_status = '已上传'
+    user_info.save!
+    # UploadTianTian.upload_to_hulei_not_yitihua user_info
 
   end
 
@@ -428,7 +537,6 @@ module UploadTianTian
     user_info.tt_message = message
     user_info.tt_upload_status = '已上传'
     user_info.save!
-    
 
   end
 
