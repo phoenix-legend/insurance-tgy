@@ -1,14 +1,15 @@
-class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
+class UserSystem::JinzhenguCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
+  SIGN = '6df23610-4124-4a42-896d-975086e06675'
 
-  CITY = ['上海', '苏州', '杭州', '南京', '济南', '深圳']
+  CITY = ["北京", "鞍山", "邯郸", "保定", "包头", "呼和浩特", "福州", "厦门", "泉州", "兰州", "合肥", "常德", "常州", "成都", "德阳", "绵阳", "达州", "大连", "东莞", "佛山", "广州", "惠州", "贵阳", "哈尔滨", "杭州", "宁波", "南京", "湖州", "济宁", "嘉兴", "金华", "临沂", "昆明", "柳州", "洛阳", "南昌", "南宁", "南阳", "南通", "青岛", "伸到", "上海", "深圳", "石家庄", "苏州", "太原", "唐山", "天津", "威海", "潍坊", "烟台", "芜湖", "无锡", "武汉", "襄阳", "西安", "湘潭", "新乡", "宿迁", "徐州", "扬州", "宜昌", "宜宾", "赣州", "重庆", "长沙", "长春", "郑州", "中山", "淄博", "济南", "肇庆", "廊坊", "沈阳", "咸阳", "乌鲁木齐"]
 
-  # UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+  # UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
-    if car_user_info.is_pachong == false and car_user_info.is_real_cheshang == false and UserSystem::PengyoucheCarUserInfo::CITY.include?(car_user_info.city_chinese)
+    if car_user_info.is_pachong == false and car_user_info.is_real_cheshang == false and UserSystem::JinzhenguCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
 
-        UserSystem::PengyoucheCarUserInfo.create_car_info name: car_user_info.name.gsub('(个人)', ''),
+        UserSystem::JinzhenguCarUserInfo.create_car_info name: car_user_info.name.gsub('(个人)', ''),
                                                           phone: car_user_info.phone,
                                                           brand: car_user_info.brand,
                                                           city_chinese: car_user_info.city_chinese,
@@ -20,7 +21,7 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
                                                           is_city_match: car_user_info.is_city_match,
                                                           is_pachong: car_user_info.is_pachong,
                                                           is_repeat_one_month: car_user_info.is_repeat_one_month,
-                                                          pengyou_upload_status: '未上传',
+                                                          jinzhengu_upload_status: '未上传',
                                                           site_name: car_user_info.site_name,
                                                           created_day: car_user_info.tt_created_day
       rescue Exception => e
@@ -33,101 +34,101 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
   # 创建优车车主信息
   def self.create_car_info options
 
-    cui = UserSystem::PengyoucheCarUserInfo.find_by_car_user_info_id options[:car_user_info_id]
+    cui = UserSystem::JinzhenguCarUserInfo.find_by_car_user_info_id options[:car_user_info_id]
     return unless cui.blank?
 
-    cui = UserSystem::PengyoucheCarUserInfo.find_by_phone options[:phone]
+    cui = UserSystem::JinzhenguCarUserInfo.find_by_phone options[:phone]
     return unless cui.blank?
 
-    cui = UserSystem::PengyoucheCarUserInfo.new options
+    cui = UserSystem::JinzhenguCarUserInfo.new options
     cui.save!
 
     cui.created_day = cui.created_at.chinese_format_day
     cui.save!
 
-    UserSystem::PengyoucheCarUserInfo.upload_pengyouche cui
+    UserSystem::JinzhenguCarUserInfo.upload_jinzhengu cui
   end
 
 
-  def self.upload_pengyouche yc_car_user_info
+  def self.upload_jinzhengu yc_car_user_info
 
     yc_car_user_info.name = yc_car_user_info.name.gsub('(个人)', '')
     yc_car_user_info.save!
 
     if yc_car_user_info.phone.blank? #or yc_car_user_info.brand.blank?
-      yc_car_user_info.pengyou_upload_status = '信息不完整'
+      yc_car_user_info.jinzhengu_upload_status = '信息不完整'
       yc_car_user_info.save!
       return
     end
 
     if yc_car_user_info.name.blank?
-      yc_car_user_info.pengyou_upload_status = '姓名不对'
+      yc_car_user_info.jinzhengu_upload_status = '姓名不对'
       yc_car_user_info.save!
       return
     end
 
     unless yc_car_user_info.phone.match /\d{11}/
-      yc_car_user_info.pengyou_upload_status = '手机号不正确'
+      yc_car_user_info.jinzhengu_upload_status = '手机号不正确'
       yc_car_user_info.save!
       return
     end
 
     if not CITY.include? yc_car_user_info.city_chinese
       pp '城市不对'
-      yc_car_user_info.pengyou_upload_status = '城市不对'
+      yc_car_user_info.jinzhengu_upload_status = '城市不对'
       yc_car_user_info.save!
       return
     end
 
     if yc_car_user_info.is_real_cheshang
       pp '车商'
-      yc_car_user_info.pengyou_upload_status = '车商'
+      yc_car_user_info.jinzhengu_upload_status = '车商'
       yc_car_user_info.save!
       return
     end
 
     if yc_car_user_info.is_pachong
       pp '爬虫'
-      yc_car_user_info.pengyou_upload_status = '爬虫'
+      yc_car_user_info.jinzhengu_upload_status = '爬虫'
       yc_car_user_info.save!
       return
     end
 
     if not yc_car_user_info.is_city_match
       pp '城市不匹配'
-      yc_car_user_info.pengyou_upload_status = '城市不匹配'
+      yc_car_user_info.jinzhengu_upload_status = '城市不匹配'
       yc_car_user_info.save!
       return
     end
 
     # if !yc_car_user_info.car_user_info.note.blank? and yc_car_user_info.car_user_info.note.match /\d{11}/
-    #   yc_car_user_info.pengyou_upload_status = '疑似走私车'
+    #   yc_car_user_info.jinzhengu_upload_status = '疑似走私车'
     #   yc_car_user_info.save!
     #   return
     # end
     # if !yc_car_user_info.car_user_info.che_xing.blank? and yc_car_user_info.car_user_info.che_xing.match /\d{11}/
-    #   yc_car_user_info.pengyou_upload_status = '疑似走私车'
+    #   yc_car_user_info.jinzhengu_upload_status = '疑似走私车'
     #   yc_car_user_info.save!
     #   return
     # end
 
     ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ'].each do |kw|
       if yc_car_user_info.name.include? kw or yc_car_user_info.car_user_info.che_xing.include? kw
-        yc_car_user_info.pengyou_upload_status = '疑似走私车或车商'
+        yc_car_user_info.jinzhengu_upload_status = '疑似走私车或车商'
         yc_car_user_info.save!
         return
       end
     end
 
     # if /^[a-z|A-Z|0-9|-|_]+$/.match yc_car_user_info.name
-    #   yc_car_user_info.pengyou_upload_status = '疑似走私车'
+    #   yc_car_user_info.jinzhengu_upload_status = '疑似走私车'
     #   yc_car_user_info.save!
     #   return
     # end
 
     #还有用手机号，QQ号做名字的。
     # if /[0-9]+/.match yc_car_user_info.name
-    #   yc_car_user_info.pengyou_upload_status = '疑似走私车'
+    #   yc_car_user_info.jinzhengu_upload_status = '疑似走私车'
     #   yc_car_user_info.save!
     #   return
     # end
@@ -136,7 +137,7 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
     # tmp_chexing = yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
     # tmp_note = yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '')
     # if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
-    #   yc_car_user_info.pengyou_upload_status = '疑似走私车'
+    #   yc_car_user_info.jinzhengu_upload_status = '疑似走私车'
     #   yc_car_user_info.save!
     #   return
     # end
@@ -147,7 +148,7 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
     cui.save!
     # if not cui.phone_city.blank?
     #   unless cui.city_chinese == cui.phone_city
-    #     yc_car_user_info.pengyou_upload_status = '非本地车'
+    #     yc_car_user_info.jinzhengu_upload_status = '非本地车'
     #     yc_car_user_info.save!
     #     return
     #   end
@@ -155,13 +156,13 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
 
 
     # if cui.note.match /^出售/
-    #   yc_car_user_info.pengyou_upload_status = '疑似车商'
+    #   yc_car_user_info.jinzhengu_upload_status = '疑似车商'
     #   yc_car_user_info.save!
     #   return
     # end
 
     if cui.che_xing.match /QQ|电话|不准|低价|私家车|咨询|一手车|精品|业务|打折|货车/
-      yc_car_user_info.pengyou_upload_status = '疑似车商'
+      yc_car_user_info.jinzhengu_upload_status = '疑似车商'
       yc_car_user_info.save!
       return
     end
@@ -178,68 +179,45 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
 
     # 过多配置描述，一般车商
     # if config_key_words > 6
-    #   yc_car_user_info.pengyou_upload_status = '疑似车商，'
+    #   yc_car_user_info.jinzhengu_upload_status = '疑似车商，'
     #   yc_car_user_info.save!
     #   return
     # end
 
 
-
-    host_name = "http://api.fecar.com/msg/sell" #正式环境
-
     # response = RestClient.post "http://api.fecar.com/msg/sell", params.to_json, :content_type => 'application/json'
 
-    response = RestClient.post host_name, {
-        token: '24c81a87a1e97ea3f3b83aff71e2b184',
-        phone: yc_car_user_info.phone,
-        car_area: yc_car_user_info.city_chinese
+    host_name = "http://leads.jingzhengu.com/Interface/JZGReceivingClues.ashx" #正式环境
+    param = {
+        Sign: SIGN,
+        StyleName: cui.brand,
+        CityName: cui.city_chinese,
+        RegDate: "#{cui.che_ling}年1月",
+        Mileage: cui.milage,
+        ClueType: '卖车',
+        ContactsName: cui.name,
+        ContactsPhone: cui.phone
     }
 
-    response = JSON.parse response.body
 
-    yc_car_user_info.pengyou_upload_status = '已上传'
+
+    response = RestClient.post host_name, {
+        ClusData: param.to_json
+    }
+
+
+
+    response = JSON.parse response.body
+    pp response
+
+    yc_car_user_info.jinzhengu_upload_status = '已上传'
     if response["status_code"] == 1
-      yc_car_user_info.pengyou_id = response["data"]["id"]
+      yc_car_user_info.jinzhengu_id = response["data"]["id"]
     else
-      yc_car_user_info.pengyou_status_message = response['status_msg']
+      yc_car_user_info.jinzhengu_status_message = response['status_msg']
     end
     yc_car_user_info.save!
 
-  end
-
-
-  # UserSystem::PengyoucheCarUserInfo.query_result
-  def self.query_result
-    return unless (Time.now.hour == 12 or Time.now.hour == 22)
-    return unless Time.now.min > 40
-    shangjianumber = 0
-    youxiaonumber = 0
-    UserSystem::PengyoucheCarUserInfo.where("pengyou_id is not null and created_day > ?",  Date.today - 40).each do |cui|
-      next unless cui.pengyou_yaoyue.blank?
-
-      host_name =  "http://api.fecar.com/msg/query"
-      response = RestClient.post host_name, {
-          token: '24c81a87a1e97ea3f3b83aff71e2b184',
-          id: cui.pengyou_id.to_i
-      }
-      response = JSON.parse response.body
-      pp response["data"]["car_status_msg"]
-      if response["data"]["car_status_msg"] == '暂无卖车信息'
-        next
-      end
-
-      cui.pengyou_yaoyue = response["data"]["car_status_msg"]
-      cui.pengyou_jiance = '成功'
-      cui.yaoyue_time = Time.now
-      cui.yaoyue_day = Time.now.chinese_format_day
-      cui.save!
-
-      youxiaonumber += 1
-      shangjianumber += 1 if  response["data"]["car_status_msg"] == '上架成功'
-      pp response
-    end
-    pp shangjianumber
-    pp youxiaonumber
   end
 
 end
