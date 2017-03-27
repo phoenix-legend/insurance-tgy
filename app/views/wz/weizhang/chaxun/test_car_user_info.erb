@@ -42,19 +42,21 @@ ro天天毛数据 今天/昨天：<%=ro_yx_qq_today_maoshuju_counts%> / <%=ro_yx
 
 
 <br/>
-<br/>
+今日<br/>
 <%
   wubamaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = '58'", Date.today).count
   ganjimaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'ganji'", Date.today).count
   baixingmaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'baixing'", Date.today).count
   che168maoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'che168'", Date.today).count
   zuoximaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'zuoxi'", Date.today).count
+  zongmaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  ", Date.today).count
 %>
 58: <%= wubamaoshuju %><br/>
 ganji: <%= ganjimaoshuju %><br/>
 baixing:<%= baixingmaoshuju %><br/>
 che168:<%= che168maoshuju %><br/>
 zuoxi:<%= zuoximaoshuju %><br/>
+总:<%= zongmaoshuju %><br/>
 
 <br/>
 昨日<br/>
@@ -64,13 +66,14 @@ zuoxi:<%= zuoximaoshuju %><br/>
   baixingmaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'baixing'", Date.yesterday).count
   che168maoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'che168'", Date.yesterday).count
   zuoximaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  and site_name = 'zuoxi'", Date.yesterday).count
+  zongmaoshuju = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ?  ", Date.yesterday).count
 %>
 58: <%= wubamaoshuju %><br/>
 ganji: <%= ganjimaoshuju %><br/>
 baixing:<%= baixingmaoshuju %><br/>
 che168:<%= che168maoshuju %><br/>
 zuoxi:<%= zuoximaoshuju %><br/>
-
+总:<%= zongmaoshuju %><br/>
 
 <style type="text/css">
     body, table {
