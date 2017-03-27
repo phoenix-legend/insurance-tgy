@@ -211,8 +211,9 @@ class UserSystem::JinzhenguCarUserInfo < ActiveRecord::Base
     pp response
 
     yc_car_user_info.jinzhengu_upload_status = '已上传'
-    if response["status_code"] == 1
+    if response["status"] == 100
       yc_car_user_info.jinzhengu_id = response["data"]["id"]
+      yc_car_user_info.jinzhengu_status_message = response['status_msg']
     else
       yc_car_user_info.jinzhengu_status_message = response['status_msg']
     end
