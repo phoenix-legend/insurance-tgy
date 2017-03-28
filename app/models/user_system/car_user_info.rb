@@ -1707,7 +1707,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   def self.watch_qudao_exception
     ['58', 'ganji', 'baixing', 'che168'].each do |site_name|
       num = UserSystem::CarUserInfo.where("created_at > ? and created_at < ? and tt_id is not null and site_name = ?", Time.now - 5.minutes, Time.now, site_name).count
-      if num > 15
+      if num > 1
         set_not_upload site_name
         MailSend.send_content('xiaoqi.liu@uguoyuan.cn',
                               '37020447@qq.com;yoyolt3@163.com',
