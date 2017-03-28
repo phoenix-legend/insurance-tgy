@@ -1686,6 +1686,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   end
 
   #查询是否可以上传数据,根据不同的数据渠道
+  # UserSystem::CarUserInfo.set_upload 'ganji'
   def self.set_upload qudao
     redis = Redis.current
     case qudao
@@ -1707,7 +1708,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   def self.watch_qudao_exception
     ['58', 'ganji', 'baixing', 'che168'].each do |site_name|
       num = UserSystem::CarUserInfo.where("created_at > ? and created_at < ? and tt_id is not null and site_name = ?", Time.now - 5.minutes, Time.now, site_name).count
-      if num > 1
+      if num > 15
         set_not_upload site_name
         MailSend.send_content('xiaoqi.liu@uguoyuan.cn',
                               '37020447@qq.com;yoyolt3@163.com',
