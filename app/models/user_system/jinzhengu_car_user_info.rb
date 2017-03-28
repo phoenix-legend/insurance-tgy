@@ -6,7 +6,7 @@ class UserSystem::JinzhenguCarUserInfo < ActiveRecord::Base
 
   # UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
-    # return nil
+    return nil
     if car_user_info.is_pachong == false and car_user_info.is_real_cheshang == false and UserSystem::JinzhenguCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
 
