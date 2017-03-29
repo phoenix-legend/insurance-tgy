@@ -12,6 +12,14 @@ module UploadTianTian
   CITY_YL = ["上海","北京","苏州","南京","天津","佛山","重庆","成都"]
   #   上海、北京、成都、重庆、杭州、苏州、南京、天津、深圳、广州、东莞、佛山、武汉 YL这边支持的城市,一点一点往上加
 
+  SOURCE_YL = '2-775-778'   #yl这边的source
+  SOURCE_HL_ZL = '23-23-15'  #通过一体化直连过去的source, 我们只用它来查询
+
+  SOURCE_QQ = '2-263-266'
+  SOURCE_KK1 = '23-23-1'
+  SOURCE_KK2 = '23-23-4'
+  SOURCE_KK3 = '23-23-5'
+
 
 
   # 需要上传的数据。
@@ -172,7 +180,7 @@ module UploadTianTian
 
       #城市符合的情况下,给源鹿
       if CITY_YL.include? car_user_info.city_chinese
-        yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('2-775-778') and tt_id is not null", Date.today).count
+        yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
         if yl_count > 270
           car_user_info.tt_upload_status = 'yl超限'
           car_user_info.save!
@@ -183,7 +191,7 @@ module UploadTianTian
       end
 
 
-      yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('2-263-266', '23-23-4','23-23-5','23-23-1') and tt_id is not null", Date.today).count
+      yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_QQ}', '#{SOURCE_KK1}','#{SOURCE_KK2}','#{SOURCE_KK3}') and tt_id is not null", Date.today).count
       if yl_count > 100
         car_user_info.tt_upload_status = 'hl&kk超限'
         car_user_info.save!
@@ -454,7 +462,7 @@ module UploadTianTian
 
 
     params = {}
-    qudao = '2-263-266'
+    qudao = SOURCE_QQ
     user_info = user_info.reload
     return if user_info.tt_upload_status != 'weishangchuan'
 
@@ -512,7 +520,7 @@ module UploadTianTian
 
     s = 'b2fc17d41d78dc579bcdaefab3555c2a'
     appkey = 'fenghuang'
-    qudao = '2-775-778'
+    qudao = SOURCE_YL
     domain = "openapi.ttpai.cn"
 
     params = []
@@ -570,7 +578,7 @@ module UploadTianTian
     car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('23-23-4','23-23-5','23-23-1') and tt_created_day > ?", Date.today - 30).order(id: :desc)
     i = 0
     car_user_infos.find_each do |car_user_info|
-      s = if car_user_info.tt_chengjiao == '4SA-1011' then '23-23-15' else car_user_info.tt_source end
+      s = if car_user_info.tt_chengjiao == '4SA-1011' then SOURCE_HL_ZL else car_user_info.tt_source end
       url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{s}"
       response = RestClient.get url
       response = JSON.parse response
@@ -589,12 +597,12 @@ module UploadTianTian
   # UploadTianTian.query_order2
   # 天天接口查询2.0版本，目前用于郭正一个渠道更新数据
   def self.query_order2
-    # car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('2-775-778','2-307-317', '2-306-314','2-474','2-474-602', '2-263-266') and tt_created_day > ?", Date.today - 30)
-    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('2-775-778', '2-263-266') and tt_created_day > ?", Date.today - 30)
+    # car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('#{SOURCE_YL}','2-307-317', '2-306-314','2-474','2-474-602', '2-263-266') and tt_created_day > ?", Date.today - 30)
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('#{SOURCE_YL}', '#{SOURCE_QQ}') and tt_created_day > ?", Date.today - 30)
     i = 0
     car_user_infos.find_each do |car_user_info|
       # car_user_info = ::UserSystem::CarUserInfo.where("tt_id  = 21924728").first
-      s = if car_user_info.tt_chengjiao == '4SA-1012' then '23-23-15' else car_user_info.tt_source end
+      s = if car_user_info.tt_chengjiao == '4SA-1012' then SOURCE_HL_ZL else car_user_info.tt_source end
       url = "http://openapi.ttpai.cn/api/v2.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{s}"
       response = RestClient.get url
       response = JSON.parse response
@@ -819,7 +827,7 @@ module UploadTianTian
     pp "本次新增#{i}个。 "
 
 
-    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '失败' and tt_source in ('2-307-317', '2-306-314','2-474','2-474-602', '2-263-266') and tt_created_day > ?", Date.today - 45)
+    car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '失败' and tt_source in ('2-307-317', '2-306-314','2-474','2-474-602', '#{SOURCE_QQ}') and tt_created_day > ?", Date.today - 45)
     i = 0
     car_user_infos.find_each do |car_user_info|
       # car_user_info = ::UserSystem::CarUserInfo.where("tt_id  = 21924728").first
@@ -883,9 +891,9 @@ module UploadTianTian
     return unless cui.tt_jiance.blank?
 
     n, s = 1, 2
-    if ['23-23-5', '23-23-4', '23-23-1'].include? cui.tt_source
+    if [SOURCE_KK1, SOURCE_KK2, SOURCE_KK3].include? cui.tt_source
       n, s = "4SA-1011", 'dcd7f18c776dbaddfea4ce0ed5d2cfc3'
-    elsif ['2-263-266'].include? cui.tt_source
+    elsif [SOURCE_QQ].include? cui.tt_source
       n, s = '4SA-1012', "13cfe7dfa0dd2fe5e2a7d5fb467099a6"
     else
       return
