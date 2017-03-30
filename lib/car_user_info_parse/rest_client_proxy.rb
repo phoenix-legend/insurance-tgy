@@ -126,7 +126,7 @@ module RestClientProxy
     proxy_ip = RestClientProxy.get_proxy_ip
     # 临时先用它这个代理
     # sleep 2
-    # proxy_ip = "http://zz02:zz02@222.184.35.196:32826 "||RestClientProxy.get_proxy_ip
+    # proxy_ip = "http://zz02:zz02@222.184.35.196:32826"||RestClientProxy.get_proxy_ip
     # begin
 
 
