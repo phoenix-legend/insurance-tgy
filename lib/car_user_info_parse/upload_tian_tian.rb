@@ -61,7 +61,7 @@ module UploadTianTian
 
     if false and car_user_info.city_chinese == '北京'
       return if car_user_info.name.blank?
-      ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ'].each do |kw|
+      ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ','经理','老板','总', '求购','赶集'].each do |kw|
         if car_user_info.name.include? kw or car_user_info.che_xing.include? kw
           car_user_info.tt_upload_status = '疑似走私车或车商'
           car_user_info.save!
