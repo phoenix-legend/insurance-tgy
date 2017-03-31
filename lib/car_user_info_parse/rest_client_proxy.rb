@@ -81,7 +81,7 @@ module RestClientProxy
     end
 
 
-    response = response.body
+    response = response.body unless response.class == String
     response = response.force_encoding('UTF-8')
     RestClient.proxy = nil
     if response.length < 300
