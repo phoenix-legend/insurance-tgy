@@ -202,22 +202,23 @@ module Baixing
     city_hash = ::UserSystem::CarUserInfo.get_baixing_sub_cities party
     city_hash.each_pair do |areaid, areaname|
 
-      if UserSystem::CarUserInfo::CITY3.include? areaname
-        city_number += 1
-        if city_number%7 == 0
-          pp '...... 跑一类城市'
-          UserSystem::CarUserInfo.run_baixing 0 #常规城市跑7个， 一类重点城市跑一遍
-        end
-
-        if city_number%13 == 0
-          pp '...... 跑二类城市'
-          UserSystem::CarUserInfo.run_baixing 1 #常规城市跑13个， 二类重点城市跑一遍
-        end
-      end
+      # if UserSystem::CarUserInfo::CITY3.include? areaname
+      #   city_number += 1
+      #   if city_number%7 == 0
+      #     pp '...... 跑一类城市'
+      #     UserSystem::CarUserInfo.run_baixing 0 #常规城市跑7个， 一类重点城市跑一遍
+      #   end
+      #
+      #   if city_number%13 == 0
+      #     pp '...... 跑二类城市'
+      #     UserSystem::CarUserInfo.run_baixing 1 #常规城市跑13个， 二类重点城市跑一遍
+      #   end
+      # end
       begin
         pp "现在跑..百姓 #{areaname}"
         1.upto 3 do |i|
           url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}" # url = "http://haerbin.baixing.com/m/ershouqiche/?page=1&per_page=10"
+          sleep 2+rand(3)
           content = RestClientProxy.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
 
 
@@ -428,7 +429,7 @@ module Baixing
         # car_user_info = UserSystem::CarUserInfo.find 689516
 
         detail_url = car_user_info.detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
-        sleep 2
+        sleep 2+rand(5)
         response = RestClient.get(detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'})
         if response.match /此信息未通过审核/
           car_user_info.need_update = false

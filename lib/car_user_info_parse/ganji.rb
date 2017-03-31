@@ -13,11 +13,12 @@ module Ganji
         1.upto 3 do |i|
           url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=1&deal_type=1&page=#{i}"
 
-          content = RestClientProxy.get url, {
+          content = RestClient.get url, {
               'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
               'Cookie' => 'ganji_uuid=5283133772326517092624; ganji_xuuid=f60ba7d5-b4de-4c7b-b8e0-890ad74ebaea.1463541968024; citydomain=xiangyang; Hm_lvt_73a12ba5aced499cae6ff7c0a9a989eb=1463541966,1463794955; __utma=32156897.2034222174.1460360232.1463548883.1463794938.4; wap_list_view_type=pic; __utmganji_v20110909=0xe17e1688f8364e8228f5a20bbf08f82; GANJISESSID=8295e329b8cd9f5ebc25d9e09e1e7800; index_city_refuse=refuse; gr_user_id=8fcb69d6-a9e2-43f2-b05d-955ce16276a5; cityDomain=sh; gr_session_id_b500fd00659c602c=2f3e7532-899b-4dab-8670-1eb629322b9c; mobversionbeta=2.0; Hm_lvt_66fdcdd2a4078dde0960b72e77483d4e=1481157061; Hm_lpvt_66fdcdd2a4078dde0960b72e77483d4e=1481157567; ganji_temp=on'
 
           }
+          content = content.body
 
           content = Nokogiri::HTML(content)
           car_infos = content.css(".list-item")
@@ -93,11 +94,12 @@ module Ganji
           pp "现在跑赶集.. #{areaname}"
           1.upto 1 do |i|
             url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=1&deal_type=1&page=#{i}"
-            content = RestClientProxy.get url, {
+            content = RestClient.get url, {
                 'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
                 'Cookie' => 'ganji_uuid=5283133772326517092624; ganji_xuuid=f60ba7d5-b4de-4c7b-b8e0-890ad74ebaea.1463541968024; citydomain=xiangyang; Hm_lvt_73a12ba5aced499cae6ff7c0a9a989eb=1463541966,1463794955; __utma=32156897.2034222174.1460360232.1463548883.1463794938.4; wap_list_view_type=pic; __utmganji_v20110909=0xe17e1688f8364e8228f5a20bbf08f82; GANJISESSID=8295e329b8cd9f5ebc25d9e09e1e7800; index_city_refuse=refuse; gr_user_id=8fcb69d6-a9e2-43f2-b05d-955ce16276a5; cityDomain=sh; gr_session_id_b500fd00659c602c=2f3e7532-899b-4dab-8670-1eb629322b9c; mobversionbeta=2.0; Hm_lvt_66fdcdd2a4078dde0960b72e77483d4e=1481157061; Hm_lpvt_66fdcdd2a4078dde0960b72e77483d4e=1481157567; ganji_temp=on'
 
             }
+            content = content.body
             content = Nokogiri::HTML(content)
             car_infos = content.css(".list-item")
             pp "car infos length is #{car_infos.length}"
@@ -172,10 +174,11 @@ module Ganji
         # url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=1&deal_type=1&page=#{i}"
 
         url = "http://#{areaid}.ganji.com/ershouche/a1/"
-        content = RestClientProxy.get url, {
+        content = RestClient.get url, {
             'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
             'Cookie' => 'ganji_uuid=5283133772326517092624; ganji_xuuid=f60ba7d5-b4de-4c7b-b8e0-890ad74ebaea.1463541968024; Hm_lvt_73a12ba5aced499cae6ff7c0a9a989eb=1463541966,1463794955; wap_list_view_type=pic; gr_user_id=8fcb69d6-a9e2-43f2-b05d-955ce16276a5; GANJISESSID=f4096cfc2cde87d4b1622848d2afce66; mobversionbeta=3g; index_city_refuse=refuse; GANJI_SID=d727f98d-2205-42b7-c9e5-796c36bd8984; __utmganji_v20110909=0xe17e1688f8364e8228f5a20bbf08f82; cityDomain=hz; webimverran=82; statistics_clientid=me; ErshoucheDetailPageScreenType=1440; citydomain=sh; __utmt=1; Hm_lvt_8dba7bd668299d5dabbd8190f14e4d34=1490169006; Hm_lpvt_8dba7bd668299d5dabbd8190f14e4d34=1490174240; ganji_login_act=1490174240592; lg=1; vehicle_list_view_type=1; _gl_tracker=%7B%22ca_source%22%3A%22-%22%2C%22ca_name%22%3A%22-%22%2C%22ca_kw%22%3A%22-%22%2C%22ca_id%22%3A%22-%22%2C%22ca_s%22%3A%22self%22%2C%22ca_n%22%3A%22-%22%2C%22ca_i%22%3A%22-%22%2C%22sid%22%3A56930235227%7D; __utma=32156897.2034222174.1460360232.1490168931.1490174031.6; __utmb=32156897.10.10.1490174031; __utmc=32156897; __utmz=32156897.1490168931.5.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)'
         }
+        content = content.body
 
 
 
@@ -324,10 +327,11 @@ module Ganji
     begin
       pp "开始跑明细 #{car_user_info.id}"
       # sleep 1+rand(2) if RestClientProxy.get_local_ip != '10-19-104-142'
-      response = RestClientProxy.get(car_user_info.detail_url, {
+      response = RestClient.get(car_user_info.detail_url, {
           'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
           'Cookie' => 'ganji_uuid=5283133772326517092624; ganji_xuuid=f60ba7d5-b4de-4c7b-b8e0-890ad74ebaea.1463541968024; citydomain=xiangyang; Hm_lvt_73a12ba5aced499cae6ff7c0a9a989eb=1463541966,1463794955; __utma=32156897.2034222174.1460360232.1463548883.1463794938.4; wap_list_view_type=pic; __utmganji_v20110909=0xe17e1688f8364e8228f5a20bbf08f82; GANJISESSID=8295e329b8cd9f5ebc25d9e09e1e7800; index_city_refuse=refuse; gr_user_id=8fcb69d6-a9e2-43f2-b05d-955ce16276a5; cityDomain=sh; gr_session_id_b500fd00659c602c=2f3e7532-899b-4dab-8670-1eb629322b9c; mobversionbeta=2.0; Hm_lvt_66fdcdd2a4078dde0960b72e77483d4e=1481157061; Hm_lpvt_66fdcdd2a4078dde0960b72e77483d4e=1481157567; ganji_temp=on'
       })
+      response = response.body
       # response = RestClientProxy.get car_user_info.detail_url, {}
       # detail_content = response.body
       # pp detail_content

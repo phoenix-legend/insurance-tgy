@@ -7,11 +7,13 @@ module UploadTianTian
 
           "上海","苏州","南京","天津","广州","佛山","重庆","成都", '绍兴','滁州','顺德','惠州','东莞','武汉','宁波','合肥','长沙','青岛','郑州','南宁']
 
-  CITY_YL = ["上海","北京","苏州","南京","天津","佛山","重庆","成都",'绍兴','滁州','顺德','惠州','东莞','武汉','宁波','合肥','长沙','青岛','郑州','南宁']
+  CITY_YL = ["上海","北京","苏州","南京","天津","佛山","重庆","成都",'绍兴','滁州','顺德','惠州','东莞','武汉','宁波',
+             '合肥','长沙','青岛','郑州','南宁']
   #   上海、北京、成都、重庆、杭州、苏州、南京、天津、深圳、广州、东莞、佛山、武汉 YL这边支持的城市,一点一点往上加
 
   SOURCE_YL = '2-775-778'   #yl这边的source
-  SOURCE_HL_ZL = '23-23-15'  #通过一体化直连过去的source, 我们只用它来查询
+  SOURCE_HL_ZL_KK = '23-23-15'  #通过一体化直连过去的source, 我们只用它来查询
+  SOURCE_HL_ZL_QQ = '2-263-282'  #通过一体化直连过去的source, 我们只用它来查询
 
   SOURCE_QQ = '2-263-266'
   SOURCE_KK1 = '23-23-1'
@@ -576,7 +578,7 @@ module UploadTianTian
     car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('23-23-4','23-23-5','23-23-1') and tt_created_day > ?", Date.today - 30).order(id: :desc)
     i = 0
     car_user_infos.find_each do |car_user_info|
-      s = if car_user_info.tt_chengjiao == '4SA-1011' then SOURCE_HL_ZL else car_user_info.tt_source end
+      s = if car_user_info.tt_chengjiao == '4SA-1011' then SOURCE_HL_ZL_KK else car_user_info.tt_source end
       url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{s}"
       response = RestClient.get url
       response = JSON.parse response
@@ -600,7 +602,7 @@ module UploadTianTian
     i = 0
     car_user_infos.find_each do |car_user_info|
       # car_user_info = ::UserSystem::CarUserInfo.where("tt_id  = 21924728").first
-      s = if car_user_info.tt_chengjiao == '4SA-1012' then SOURCE_HL_ZL else car_user_info.tt_source end
+      s = if car_user_info.tt_chengjiao == '4SA-1012' then SOURCE_HL_ZL_QQ else car_user_info.tt_source end
       url = "http://openapi.ttpai.cn/api/v2.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{s}"
       response = RestClient.get url
       response = JSON.parse response

@@ -456,39 +456,39 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
 
 # UserSystem::AishiCarUserInfo.xxx
-  def self.xxx
-    1.upto 40 do |page|
-      begin
-      url = "http://shanghai.baixing.com/m/qiufang/m178893/?page=#{page}"
-      # sleep 4
-      response = RestClientProxy.get url
-
-      response = Nokogiri::HTML(response)
-
-      lis = response.css(".media-body-title")
-      lis.each do |li|
-        # pp li
-        href = begin
-        li.css('a')[0].attributes["href"].value
-        rescue
-          next
-          end
-
-        next unless href.match /qiufang/
-        next unless href.match /http/
-        pp href
-        title = li.css(".media-body-title","a")[0].text
-        pp title
-        sleep 10+rand(20)
-
-        detail_content = RestClientProxy.get href
-        detail_content = Nokogiri::HTML(detail_content)
-        pp detail_content.css("#mobileNumber").text
-        pp "***"*8
-      end
-      rescue
-        end
-    end
-  end
+#   def self.xxx
+#     1.upto 40 do |page|
+#       begin
+#       url = "http://shanghai.baixing.com/m/qiufang/m178893/?page=#{page}"
+#       # sleep 4
+#       response = RestClientProxy.get url
+#
+#       response = Nokogiri::HTML(response)
+#
+#       lis = response.css(".media-body-title")
+#       lis.each do |li|
+#         # pp li
+#         href = begin
+#         li.css('a')[0].attributes["href"].value
+#         rescue
+#           next
+#           end
+#
+#         next unless href.match /qiufang/
+#         next unless href.match /http/
+#         pp href
+#         title = li.css(".media-body-title","a")[0].text
+#         pp title
+#         sleep 10+rand(20)
+#
+#         detail_content = RestClientProxy.get href
+#         detail_content = Nokogiri::HTML(detail_content)
+#         pp detail_content.css("#mobileNumber").text
+#         pp "***"*8
+#       end
+#       rescue
+#         end
+#     end
+#   end
 end
 __END__
