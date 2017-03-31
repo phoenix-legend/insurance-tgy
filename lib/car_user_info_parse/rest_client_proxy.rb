@@ -32,7 +32,7 @@ module RestClientProxy
   def self.refresh_proxy_ip
     [PROXYIP_GANJI1, PROXYIP_GANJI2, PROXYIP_GANJI3, PROXYIP_WUBA1, PROXYIP_WUBA2, PROXYIP_WUBA3, PROXYIP_WUBA4, PROXYIP_QITA1, PROXYIP_QITA2, PROXYIP_QITA3].each do |k|
       nameandpassword = (k.match /http:\/\/(.{11,12})@/)[1]
-      sleep 3
+      sleep 4
       `curl -u #{nameandpassword} http://ip.hahado.cn/switch-ip`
     end
 
@@ -70,7 +70,7 @@ module RestClientProxy
 
   def self.get url, header={}
     if url.match /baixing/
-      sleep 2+rand(5)
+      sleep 2+rand(4)
     end
     proxy_ip = RestClientProxy.get_proxy_ip
     RestClient.proxy = proxy_ip

@@ -50,7 +50,7 @@ module Baixing
         pp "现在跑..百姓 #{areaname}"
         i = 1
         url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}"
-        sleep 2+rand(5)
+        # sleep 2+rand(5)
         if Time.now.to_i - t > 40
           RestClientProxy.restart_vps_pppoe
           t = Time.now.to_i
@@ -96,7 +96,7 @@ module Baixing
           if Time.now.to_i - t > 40
             RestClientProxy.restart_vps_pppoe
             t = Time.now.to_i
-            sleep 2+rand(5)
+            # sleep 2+rand(5)
           end
           response = RestClientProxy.get(new_detail_url, {
               'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
@@ -218,9 +218,13 @@ module Baixing
         pp "现在跑..百姓 #{areaname}"
         1.upto 3 do |i|
           url = "http://#{areaid}.baixing.com/m/ershouqiche/?page=#{i}" # url = "http://haerbin.baixing.com/m/ershouqiche/?page=1&per_page=10"
-          
+
           content = RestClientProxy.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
 
+          if content == '503 Service Unavailable'
+            sleep 3
+            next
+          end
 
           if content.blank?
             pp '内容为空'
