@@ -69,6 +69,9 @@ module RestClientProxy
 
 
   def self.get url, header={}
+    if url.match /baixing/
+      sleep 2+rand(5)
+    end
     proxy_ip = RestClientProxy.get_proxy_ip
     RestClient.proxy = proxy_ip
     pp RestClient.proxy
