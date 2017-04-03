@@ -135,6 +135,8 @@ Rails.application.routes.draw do
           # post :upload_youyiche
           post :vps_create_and_upload
           post :vps_urls
+
+          get :get_kouling_for_kefu
         end
       end
     end

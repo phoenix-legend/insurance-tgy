@@ -83,13 +83,13 @@ module Baixing
 
         pp "获取到#{detail_urls.length}条记录, 准备推送"
         url_string = detail_urls.join('!!!')
-        #todo 这里把detail_urls推送到服务器,再获取到新的detai_urls
+
         response = RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/vps_urls', {urls: url_string}
         response = JSON.parse(response.body)
         pp response["data"].length rescue ''
         next if response["code"] > 0
         detail_urls = response["data"]
-        #todo 再获取detail_urls
+
         detail_urls.each do |detail_url|
           puts '更新明细'
           new_detail_url = detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
@@ -170,7 +170,7 @@ module Baixing
                is_cheshang: 0
           }
 
-          #todo 把以上提交过去, 如果数据库中已存在, 那么就忽略,不存在,保存后加入到redis中
+
 
           RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/vps_create_and_upload', {cui: a}
           # over, 下一个提交

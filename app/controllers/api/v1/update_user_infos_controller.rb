@@ -103,6 +103,8 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
   #   UserSystem::YouyicheCarUserInfo.upload_youyiche cui,2
   # end
 
+  # 百姓单独使用VPS在外网运行解析, 解析后的数据通过api方式提交进来。
+  # 此接口用于获取新的链接
   def vps_urls
     string_urls = params[:urls]
     urls = string_urls.split('!!!')
@@ -110,8 +112,16 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
     @return_urls = Baixing.get_detail_urls_for_vps urls
   end
 
+  # 百姓单独使用VPS在外网运行解析, 解析后的数据通过api方式提交进来。
+  # 此接口用于获取更新数据详情
   def vps_create_and_upload
     Baixing.create_car_user_infos_from_vps params[:cui]
+  end
+
+  #  给客服提取口令, 接收信息包含: openid, nickname
+  # 制作view
+  def get_kouling_for_kefu
+    @cui = UserSystem::KouLingCarUserInfo.get_kouling_for_kefu params[:openid], params[:nickname], params[:city]
   end
 
 end

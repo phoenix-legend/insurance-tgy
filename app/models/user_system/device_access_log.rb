@@ -21,7 +21,9 @@ class UserSystem::DeviceAccessLog < ActiveRecord::Base
 
 
   # 目前有2台，分别是077， 094
+  # 2017-04-02 已彻底废弃手机客户端模拟器
   def self.need_restart machine_name
+    return false
     device_access_count = UserSystem::DeviceAccessLog.where(machine_name: machine_name).
         where("last_access_time  > ?", (Time.now-10.minutes).chinese_format).count
     return true if device_access_count < 1

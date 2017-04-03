@@ -72,7 +72,7 @@ class Personal::Employee < ActiveRecord::Base
         self.teacher.update(:is_valid => false)
       elsif self.status != ::Personal::Employee::IN_SEVICE
         #self.teacher.update( :is_valid => true)
-        #todo
+        #
         #重新入职暂时不考虑
       end
 
@@ -83,7 +83,6 @@ class Personal::Employee < ActiveRecord::Base
         self.sale.update(:is_valid => false)
       elsif self.status != ::Personal::Employee::IN_SEVICE
         #self.teacher.update( :is_valid => true)
-        #todo
         #重新入职暂时不考虑
       end
 

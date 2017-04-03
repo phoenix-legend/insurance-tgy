@@ -456,6 +456,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     # 58数据先不上传，等待手机端提交过来
     # 2016-07-21 现在采用接口和口令两种并存
+    UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
     return if car_user_info.site_name == '58' and car_user_info.phone.blank?
     car_user_info = car_user_info.reload
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"

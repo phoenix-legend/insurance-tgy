@@ -187,9 +187,7 @@ module Ganji
 
         content = Nokogiri::HTML(content)
 
-        #todo 去置顶,正则匹配
-        #todo 去商家,正则匹配
-        #todo 获取车源编号,车型,里程,车龄,根据编号生成链接,车价
+
 
         car_infos = content.css('.dlclass')
         # car_infos = content.css(".list-item")
