@@ -117,7 +117,7 @@ class UserSystem::KouLingCarUserInfo < ActiveRecord::Base
 
       kcuis = UserSystem::CarUserInfo.where("site_name = '58' and phone is null and need_update = 0 and wuba_kouling_status = 'weitijiao' and created_at > ? and wuba_kouling = ?", Time.now - 24.hours, cui.wuba_kouling)
       kcuis.each do |kcui|
-        kcui.cui.wuba_kouling_status = '重复-不提交'
+        kcui.wuba_kouling_status = '重复-不提交'
         kcui.save!
       end
 
