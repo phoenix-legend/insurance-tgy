@@ -197,7 +197,7 @@ module UploadTianTian
         car_user_info.save!
         return
       end
-      if rand(100) < 43
+      if rand(100) < 43 and ['58','ganji','baixing','che168'].include? car_user_info.site_name
         UploadTianTian.tt_pai_v2_0_qq car_user_info
         return
       end
