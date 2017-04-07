@@ -1,25 +1,23 @@
 module UploadTianTian
 
 
-
-    CITY = ["杭州","深圳","西安","广州","珠海","中山",
+  CITY = ["杭州", "深圳", "西安", "广州", "珠海", "中山",
           # "北京",  #先临时取消北京
 
-          "上海","苏州","南京","天津","广州","佛山","重庆","成都", '绍兴','滁州','顺德','惠州','东莞','武汉','宁波','合肥','长沙','青岛','郑州','南宁']
+          "上海", "苏州", "南京", "天津", "广州", "佛山", "重庆", "成都", '绍兴', '滁州', '顺德', '惠州', '东莞', '武汉', '宁波', '合肥', '长沙', '青岛', '郑州', '南宁']
 
-  CITY_YL = ["上海","北京","苏州","南京","天津","佛山","重庆","成都",'绍兴','滁州','顺德','惠州','东莞','武汉','宁波',
-             '合肥','长沙','青岛','郑州','南宁']
+  CITY_YL = ["上海", "北京", "苏州", "南京", "天津", "佛山", "重庆", "成都", '绍兴', '滁州', '顺德', '惠州', '东莞', '武汉', '宁波',
+             '合肥', '长沙', '青岛', '郑州', '南宁']
   #   上海、北京、成都、重庆、杭州、苏州、南京、天津、深圳、广州、东莞、佛山、武汉 YL这边支持的城市,一点一点往上加
 
-  SOURCE_YL = '2-775-778'   #yl这边的source
-  SOURCE_HL_ZL_KK = '23-23-15'  #通过一体化直连过去的source, 我们只用它来查询
-  SOURCE_HL_ZL_QQ = '2-263-282'  #通过一体化直连过去的source, 我们只用它来查询
+  SOURCE_YL = '2-775-778' #yl这边的source
+  SOURCE_HL_ZL_KK = '23-23-15' #通过一体化直连过去的source, 我们只用它来查询
+  SOURCE_HL_ZL_QQ = '2-263-282' #通过一体化直连过去的source, 我们只用它来查询
 
   SOURCE_QQ = '2-263-266'
   SOURCE_KK1 = '23-23-1'
   SOURCE_KK2 = '23-23-4'
   SOURCE_KK3 = '23-23-5'
-
 
 
   # 需要上传的数据。
@@ -63,7 +61,7 @@ module UploadTianTian
 
     if false and car_user_info.city_chinese == '北京'
       return if car_user_info.name.blank?
-      ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ','经理','老板','总', '求购','赶集'].each do |kw|
+      ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ', '经理', '老板', '总', '求购', '赶集'].each do |kw|
         if car_user_info.name.include? kw or car_user_info.che_xing.include? kw
           car_user_info.tt_upload_status = '疑似走私车或车商'
           car_user_info.save!
@@ -156,7 +154,6 @@ module UploadTianTian
     end
 
 
-
     # 车价小于1万的，跳过
     # unless car_user_info.price.blank?
     #   car_user_info.price.gsub!('万', '')
@@ -180,24 +177,28 @@ module UploadTianTian
 
       #城市符合的情况下,给源鹿
       if CITY_YL.include? car_user_info.city_chinese
-        yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
-        if yl_count > 340
-          car_user_info.tt_upload_status = 'yl超限'
-          car_user_info.save!
+        if ['南宁', '东莞'].include? car_user_info.city_chinese and rand(100) < 70 #南京,东莞, 70%的数据进来
+          if ['北京'].include? car_user_info.city_chinese and rand(100) < 10 # 北京先进10%的数据
+          yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
+          if yl_count > 350  # 整体规模达到350个。
+            car_user_info.tt_upload_status = 'yl超限'
+            car_user_info.save!
+            return
+          end
+          UploadTianTian.tt_pai_v2_0_yl car_user_info
           return
+            end
         end
-        UploadTianTian.tt_pai_v2_0_yl car_user_info
-        return
       end
 
 
       yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_QQ}', '#{SOURCE_KK1}','#{SOURCE_KK2}','#{SOURCE_KK3}') and tt_id is not null", Date.today).count
-      if yl_count > 100
+      if yl_count > 150
         car_user_info.tt_upload_status = 'hl&kk超限'
         car_user_info.save!
         return
       end
-      if rand(100) < 43 and ['58','ganji','baixing','che168'].include? car_user_info.site_name
+      if rand(100) < 43 and ['58', 'ganji', 'baixing', 'che168'].include? car_user_info.site_name
         UploadTianTian.tt_pai_v2_0_qq car_user_info
         return
       end
@@ -404,7 +405,6 @@ module UploadTianTian
   # end
 
 
-
   def self.tt_pai_v1_0_hulei user_info
     params = {}
     qudao = '23-23-1'
@@ -439,7 +439,6 @@ module UploadTianTian
     end
 
 
-
     id = begin
       response["result"]["ttpdate"]["result"]["id"] rescue ''
     end
@@ -448,7 +447,11 @@ module UploadTianTian
     user_info.tt_source = qudao
     user_info.tt_chengjiao = n
 
-    ttp_error_code = if response["result"]["ttpdate"]["error"].to_s == "true" then 1 else 0 end
+    ttp_error_code = if response["result"]["ttpdate"]["error"].to_s == "true" then
+                       1
+                     else
+                       0
+                     end
     user_info.tt_id = id if not id.blank?
     user_info.tt_code = ttp_error_code
     user_info.tt_message = message
@@ -494,7 +497,6 @@ module UploadTianTian
     end
 
 
-
     id = begin
       response["result"]["ttpdate"]["result"]["id"] rescue ''
     end
@@ -503,7 +505,11 @@ module UploadTianTian
     user_info.tt_source = qudao
     user_info.tt_chengjiao = n
 
-    ttp_error_code = if response["result"]["ttpdate"]["error"].to_s == "true" then 1 else 0 end
+    ttp_error_code = if response["result"]["ttpdate"]["error"].to_s == "true" then
+                       1
+                     else
+                       0
+                     end
     user_info.tt_id = id if not id.blank?
     user_info.tt_code = ttp_error_code
     user_info.tt_message = message
@@ -578,7 +584,11 @@ module UploadTianTian
     car_user_infos = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue is null and id > 5000000 and tt_source in ('23-23-4','23-23-5','23-23-1') and tt_created_day > ?", Date.today - 30).order(id: :desc)
     i = 0
     car_user_infos.find_each do |car_user_info|
-      s = if car_user_info.tt_chengjiao == '4SA-1011' then SOURCE_HL_ZL_KK else car_user_info.tt_source end
+      s = if car_user_info.tt_chengjiao == '4SA-1011' then
+            SOURCE_HL_ZL_KK
+          else
+            car_user_info.tt_source
+          end
       url = "http://openapi.ttpai.cn/api/v1.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{s}"
       response = RestClient.get url
       response = JSON.parse response
@@ -602,7 +612,11 @@ module UploadTianTian
     i = 0
     car_user_infos.find_each do |car_user_info|
       # car_user_info = ::UserSystem::CarUserInfo.where("tt_id  = 21924728").first
-      s = if car_user_info.tt_chengjiao == '4SA-1012' then SOURCE_HL_ZL_QQ else car_user_info.tt_source end
+      s = if car_user_info.tt_chengjiao == '4SA-1012' then
+            SOURCE_HL_ZL_QQ
+          else
+            car_user_info.tt_source
+          end
       url = "http://openapi.ttpai.cn/api/v2.0/query_ttp_sign_up?id=#{car_user_info.tt_id}&source=#{s}"
       response = RestClient.get url
       response = JSON.parse response
@@ -900,19 +914,18 @@ module UploadTianTian
     end
 
 
-
     url = 'http://api.formal.4scenter.com//index.php?r=apicar/getresponse'
 
 
     k = {"response_id" => cui.tt_id,
-     "number" => n,
-     "sign" => Digest::MD5.hexdigest("#{n}#{s}"),
-     "source" =>'ttpc',
-     "key_data" => cui.created_at.chinese_format,
-     "city" => cui.city_chinese,
-     "mobile" => cui.phone,
-     "brand" => cui.brand,
-     "name"  => cui.name}
+         "number" => n,
+         "sign" => Digest::MD5.hexdigest("#{n}#{s}"),
+         "source" => 'ttpc',
+         "key_data" => cui.created_at.chinese_format,
+         "city" => cui.city_chinese,
+         "mobile" => cui.phone,
+         "brand" => cui.brand,
+         "name" => cui.name}
 
 
     response = RestClient.post url, k
