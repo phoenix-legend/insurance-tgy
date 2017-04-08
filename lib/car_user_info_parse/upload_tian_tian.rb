@@ -177,18 +177,18 @@ module UploadTianTian
 
       #城市符合的情况下,给源鹿
       if CITY_YL.include? car_user_info.city_chinese
-        if ['南宁', '东莞'].include? car_user_info.city_chinese and rand(100) < 70 #南京,东莞, 70%的数据进来
-          if ['北京'].include? car_user_info.city_chinese and rand(100) < 10 # 北京先进10%的数据
-          yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
-          if yl_count > 350  # 整体规模达到350个。
-            car_user_info.tt_upload_status = 'yl超限'
-            car_user_info.save!
-            return
-          end
-          UploadTianTian.tt_pai_v2_0_yl car_user_info
-          return
+        # if ['南宁', '东莞'].include? car_user_info.city_chinese and rand(100) < 70 #南京,东莞, 70%的数据进来
+        #   if ['北京'].include? car_user_info.city_chinese and rand(100) < 10 # 北京先进10%的数据
+            yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
+            if yl_count > 350 # 整体规模达到350个。
+              car_user_info.tt_upload_status = 'yl超限'
+              car_user_info.save!
+              return
             end
-        end
+            UploadTianTian.tt_pai_v2_0_yl car_user_info
+            return
+        #   end
+        # end
       end
 
 
