@@ -466,12 +466,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     UploadTianTian.upload_one_tt car_user_info
 
-    #先临时把一部分数据传给金针菇, 为提高优先级,先临时放到这里。测试通过后,再移回去
-    if rand(10)<2
-      UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
-    end
-
-      #同步至又一车
+    #同步至又一车
     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     # 同步给人人车
@@ -499,6 +494,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     #同步至车城   车城作废
     # UserSystem::CheChengCarUserInfo.create_user_info_from_car_user_info car_user_info
+
+    #先临时把一部分数据传给金针菇, 为提高优先级,先临时放到这里。测试通过后,再移回去
+    if rand(10)<2
+      UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
+    end
 
 
   end
