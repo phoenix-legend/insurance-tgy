@@ -199,10 +199,13 @@ module UploadTianTian
         return
       end
       if rand(100) < 43 and ['58', 'ganji', 'baixing', 'che168'].include? car_user_info.site_name
-        UploadTianTian.tt_pai_v2_0_qq car_user_info
+        # UploadTianTian.tt_pai_v2_0_qq car_user_info
+
+        UploadTianTian.tt_pai_v2_0_yl car_user_info
         return
       end
-      UploadTianTian.tt_pai_v1_0_hulei car_user_info
+      UploadTianTian.tt_pai_v2_0_yl car_user_info
+      # UploadTianTian.tt_pai_v1_0_hulei car_user_info
       return
 
     end
