@@ -244,7 +244,7 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
     pp youxiaonumber
   end
 
-  
+
 
 end
 __END__
