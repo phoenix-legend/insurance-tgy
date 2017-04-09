@@ -227,11 +227,14 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
         next
       end
 
-      cui.pengyou_yaoyue = response["data"]["car_status_msg"]
-      cui.pengyou_jiance = '成功'
-      cui.yaoyue_time = Time.now
-      cui.yaoyue_day = Time.now.chinese_format_day
-      cui.save!
+      if ['有效数据', '上架成功'].include? response["data"]["car_status_msg"]
+        cui.pengyou_yaoyue = response["data"]["car_status_msg"]
+        cui.pengyou_jiance = '成功'
+        cui.yaoyue_time = Time.now
+        cui.yaoyue_day = Time.now.chinese_format_day
+        cui.save!
+      end
+
 
       youxiaonumber += 1
       shangjianumber += 1 if  response["data"]["car_status_msg"] == '上架成功'
@@ -240,6 +243,8 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
     pp shangjianumber
     pp youxiaonumber
   end
+
+  
 
 end
 __END__
