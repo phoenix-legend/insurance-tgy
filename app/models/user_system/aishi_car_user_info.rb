@@ -269,8 +269,9 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
 
   # UserSystem::AishiCarUserInfo.query_aishi
+  # 4A更新放到凌晨1点,每天执行一次
   def self.query_aishi
-    return unless (Time.now.hour == 13 or Time.now.hour == 17 or Time.now.hour == 21)
+    return unless Time.now.hour == 1
     return unless Time.now.min > 40
     UserSystem::AishiCarUserInfo.batch_query_aishi
   end

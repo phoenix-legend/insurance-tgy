@@ -4,12 +4,14 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
   CITY = ['天津']
 
   def self.upload_to_youche
-    ycuis = UserSystem::YoucheCarUserInfo.where("youche_upload_status = ? ", '未上传')
+    ycuis = UserSystem::YoucheCarUserInfo.where("youche_upload_status = ? and created_day > ?", '未上传', Date.today - 2.days)
     ycuis.each do |ycui|
       is_select = true
       if not ycui.youche_id.blank?
-        return # 如果已经提交，就不再提交
+        next # 如果已经提交，就不再提交
       end
+
+      next unless ycui.youche_upload_status == '未上传'
 
       if ycui.phone.blank?
         ycui.youche_upload_status = '手机号不存在'

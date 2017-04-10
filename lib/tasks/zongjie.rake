@@ -39,13 +39,16 @@ namespace :zongjie do
 		else
 			#把连云港数据给振腾  早上7点50的任务
 			UserSystem::CarUserInfo.get_info_for_zhenteng_lianyungang
-      #更新房产数据  早上7点20的任务
+      #更新房产数据  早上7点整的任务
       ErShouFang.shanghai_run
-			# 上传数据到U车
-			UserSystem::YoucheCarUserInfo.upload_to_youche
-			#更新又一车的数据
-			UserSystem::YouyicheCarUserInfo.query_youyiche
-			# 去侍埃更新数据， 程序内控制18点40分,20点40分再更新一次
+
+      #每小时定时导出车置宝数据
+			UserSystem::YouyicheCarUserInfo.export_last_city_phones
+
+			#更新又一车的数据, 又一车不再更新
+			# UserSystem::YouyicheCarUserInfo.query_youyiche
+
+			# 去侍埃更新数据， 每天凌晨一点更新一次。
 			UserSystem::AishiCarUserInfo.query_aishi
 			# 上传数据给郭正
 			# UserSystem::CarUserInfo.upload_guozheng
@@ -55,6 +58,8 @@ namespace :zongjie do
 			# UserSystem::YoucheCarUserInfo.query_youche_status
       #更新朋友E车, 凌晨1点和下午9点后半个小时, 更新两次
 			UserSystem::PengyoucheCarUserInfo.query_result
+			# 上传数据到U车, 降低优车诚品上传优先级
+			UserSystem::YoucheCarUserInfo.upload_to_youche
 		end
 	end
 

@@ -214,7 +214,7 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
     return unless Time.now.min > 40
     shangjianumber = 0
     youxiaonumber = 0
-    UserSystem::PengyoucheCarUserInfo.where("pengyou_id is not null and created_day > ?",  Date.today - 40).each do |cui|
+    UserSystem::PengyoucheCarUserInfo.where("pengyou_id is not null and created_day > ?",  Date.today - 30).each do |cui|
       next unless cui.pengyou_yaoyue.blank?
       host_name =  "http://api.fecar.com/msg/query"
       response = RestClient.post host_name, {
