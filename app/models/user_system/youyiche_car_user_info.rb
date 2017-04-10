@@ -315,6 +315,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       row += 1
     end
 
+    return if row == 1
+
 
     dir = Rails.root.join('public', 'downloads')
     Dir.mkdir dir unless Dir.exist? dir
