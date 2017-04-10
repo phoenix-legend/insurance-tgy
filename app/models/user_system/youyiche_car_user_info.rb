@@ -7,8 +7,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   # CITY = ['上海', '苏州', '杭州', '成都']
 
   CITY = ["北京", "南京", "深圳", "上海", "青岛", "西安", "郑州", "无锡", "苏州", "杭州", "常州", "重庆", "武汉", "长沙", "成都",
-          "太原",   "南昌",   "昆明",    "宁波",  "东莞",  "济南" ,  "南宁"]
-
+          "太原", "南昌", "昆明", "宁波", "东莞", "济南", "南宁"]
 
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -253,9 +252,11 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
 
     # 新城市临时通过手动方式进行上传,在这里先进行标记
-    if ["太原",   "南昌",   "昆明",    "宁波",  "东莞",  "济南" ,  "南宁"].include? yc_car_user_info.city_chinese
+    if ["太原", "南昌", "昆明", "宁波", "东莞", "济南", "南宁"].include? yc_car_user_info.city_chinese
       yc_car_user_info.youyiche_status_message = 'need_export_excel'
       yc_car_user_info.save!
+
+      UserSystem::YouyicheCarUserInfo.export_last_city_phones2
       return
     end
 
@@ -289,15 +290,15 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   #以excel方式导出上一小时的数据
   # UserSystem::YouyicheCarUserInfo.export_last_city_phones
   def self.export_last_city_phones
-    return if Time.now.hour < 7
-    return if Time.now.hour > 22
-    return unless Time.now.min >= 0
-    return unless Time.now.min < 10
+    # return if Time.now.hour < 7
+    # return if Time.now.hour > 22
+    # return unless Time.now.min >= 0
+    # return unless Time.now.min < 10
 
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet name: "Sheet1"
-    ['客户姓名', '客户地区', '手机号码', '品牌', '车系','车型','车牌号','客户心理价(元)','上牌时间','备注'].each_with_index do |content, i|
+    ['客户姓名', '客户地区', '手机号码', '品牌', '车系', '车型', '车牌号', '客户心理价(元)', '上牌时间', '备注'].each_with_index do |content, i|
       sheet1.row(0)[i] = content
     end
     row = 1
@@ -333,13 +334,55 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   end
 
 
+  # UserSystem::YouyicheCarUserInfo.export_last_city_phones2
+  def self.export_last_city_phones2
+    # return if Time.now.hour < 7
+    # return if Time.now.hour > 22
+    # return unless Time.now.min >= 0
+    # return unless Time.now.min < 10
+
+    diqu = {"太原" => '1947',
+            "南昌" => "1919",
+            "昆明" => "2134",
+            "宁波" => "2124", "东莞" => "2067", "济南" => "1930", "南宁" => "2085"}
+
+
+    need_status = 'need_export_excel'
+    ycuis = UserSystem::YouyicheCarUserInfo.where("created_at > ? and youyiche_status_message = '#{need_status}'", Time.now - 670.minutes)
+    ycuis.each do |ycui|
+      next if ycui.name.blank?
+      next if ycui.phone.blank?
+
+      escape_shi = CGI::escape "#{ycui.city_chinese}市" rescue ''
+
+      response = `curl 'http://www.mychebao.com/czhib_promote/addInfoToFdep.htm' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' --data 'id=272&phone=#{ycui.phone}&regionid=#{diqu[ycui.city_chinese]}&location=#{escape_shi}&brand=#{begin CGI::escape ycui.brand rescue '' end}&model=#{begin CGI::escape ycui.car_user_info.cx rescue '' end}&type=#{CGI::escape "其它"}&channelId=jjj' --compressed`
+
+
+
+        # pp response
+        # pp JSON.parse response
+
+
+
+      ycui.youyiche_status_message = '已倒出'
+      ycui.save!
+
+      ycui.youyiche_chengjiao = response
+      ycui.save
+
+    end
+
+
+  end
+
+
   # UserSystem::YouyicheCarUserInfo.query_youyiche
   # 2017-01-06 为缩短查询时间，只关注最近30天提交的数据
   # 2017-04-10 切换到车置宝以后,结束又一车查询,直接return
   def self.query_youyiche
-    return  #切换到车置宝以后, 查询功能丧失
-    return unless  Time.now.hour == 15
-    return unless  Time.now.hour == 20
+    return #切换到车置宝以后, 查询功能丧失
+    return unless Time.now.hour == 15
+    return unless Time.now.hour == 20
     return unless Time.now.min < 10
     # host_name = 'uat.youyiche.com' #测试环境
     host_name = "b.youyiche.com" #正式环境
