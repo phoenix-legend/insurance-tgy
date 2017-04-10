@@ -256,7 +256,9 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       yc_car_user_info.youyiche_status_message = 'need_export_excel'
       yc_car_user_info.save!
 
-      UserSystem::YouyicheCarUserInfo.export_last_city_phones2
+      UserSystem::YouyicheCarUserInfo.upload_cui_via_web yc_car_user_info
+
+      # UserSystem::YouyicheCarUserInfo.export_last_city_phones2
       return
     end
 
@@ -350,19 +352,12 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     need_status = 'need_export_excel'
     ycuis = UserSystem::YouyicheCarUserInfo.where("created_at > ? and youyiche_status_message = '#{need_status}'", Time.now - 670.minutes)
     ycuis.each do |ycui|
-      next if ycui.name.blank?
+
       next if ycui.phone.blank?
 
       escape_shi = CGI::escape "#{ycui.city_chinese}市" rescue ''
 
       response = `curl 'http://www.mychebao.com/czhib_promote/addInfoToFdep.htm' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' --data 'id=272&phone=#{ycui.phone}&regionid=#{diqu[ycui.city_chinese]}&location=#{escape_shi}&brand=#{begin CGI::escape ycui.brand rescue '' end}&model=#{begin CGI::escape ycui.car_user_info.cx rescue '' end}&type=#{CGI::escape "其它"}&channelId=' --compressed`
-
-
-
-        # pp response
-        # pp JSON.parse response
-
-
 
       ycui.youyiche_status_message = '已倒出'
       ycui.save!
@@ -371,8 +366,20 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       ycui.save
 
     end
+  end
 
+  def self.upload_cui_via_web ycui
+    return if ycui.phone.blank?
 
+    escape_shi = CGI::escape "#{ycui.city_chinese}市" rescue ''
+
+    response = `curl 'http://www.mychebao.com/czhib_promote/addInfoToFdep.htm' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' --data 'id=272&phone=#{ycui.phone}&regionid=#{diqu[ycui.city_chinese]}&location=#{escape_shi}&brand=#{begin CGI::escape ycui.brand rescue '' end}&model=#{begin CGI::escape ycui.car_user_info.cx rescue '' end}&type=#{CGI::escape "其它"}&channelId=' --compressed`
+
+    ycui.youyiche_status_message = '已倒出'
+    ycui.save!
+
+    ycui.youyiche_chengjiao = response
+    ycui.save
   end
 
 
