@@ -256,9 +256,9 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       yc_car_user_info.youyiche_status_message = 'need_export_excel'
       yc_car_user_info.save!
 
-      UserSystem::YouyicheCarUserInfo.upload_cui_via_web yc_car_user_info
+      # UserSystem::YouyicheCarUserInfo.upload_cui_via_web yc_car_user_info
 
-      # UserSystem::YouyicheCarUserInfo.export_last_city_phones2
+      UserSystem::YouyicheCarUserInfo.export_last_city_phones2
       return
     end
 
@@ -292,10 +292,10 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   #以excel方式导出上一小时的数据
   # UserSystem::YouyicheCarUserInfo.export_last_city_phones
   def self.export_last_city_phones
-    # return if Time.now.hour < 7
-    # return if Time.now.hour > 22
-    # return unless Time.now.min >= 0
-    # return unless Time.now.min < 10
+    return if Time.now.hour < 7
+    return if Time.now.hour > 22
+    return unless Time.now.min >= 0
+    return unless Time.now.min < 10
 
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
@@ -350,7 +350,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
 
     need_status = 'need_export_excel'
-    ycuis = UserSystem::YouyicheCarUserInfo.where("created_at > ? and youyiche_status_message = '#{need_status}'", Time.now - 670.minutes)
+    ycuis = UserSystem::YouyicheCarUserInfo.where("created_at > ? and youyiche_status_message = '#{need_status}'", Time.now - 10.minutes)
     ycuis.each do |ycui|
 
       next if ycui.phone.blank?
