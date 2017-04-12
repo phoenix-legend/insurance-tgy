@@ -48,6 +48,9 @@ namespace :zongjie do
 			#更新又一车的数据, 又一车不再更新
 			# UserSystem::YouyicheCarUserInfo.query_youyiche
 
+      #瓜子网: 导出excel供测试用, 同时将24小时前的数据上传一体化。
+			UserSystem::AishiCarUserInfo.export_to_guazi_and_to_hulei
+
 			# 去侍埃更新数据， 每天凌晨一点更新一次。
 			UserSystem::AishiCarUserInfo.query_aishi
 			# 上传数据给郭正
