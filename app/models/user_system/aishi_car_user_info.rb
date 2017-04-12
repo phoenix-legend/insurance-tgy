@@ -80,28 +80,28 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
     require 'digest/md5'
 
-    if ['苏州'].include? ycui.city_chinese
-      response = RestClient.post "http://api.formal.4scenter.com/index.php?r=apicar/signup", {mobile: ycui.phone,
-                                                                                              name: ycui.name.gsub('(个人)', ''),
-                                                                                              city: "#{ycui.city_chinese}市",
-                                                                                              brand: ycui.brand,
-                                                                                              number: number,
-                                                                                              mileage: (ycui.milage).to_i*10000,
-                                                                                              car_age: (Date.today.year-ycui.che_ling)*12,
-                                                                                              sign: Digest::MD5.hexdigest("#{number}#{key}")
-                                                                                           }
-      response = JSON.parse response.body
-      pp response
-      ycui.aishi_upload_status = '已上传'
-      ycui.aishi_upload_message = response["message"]
-      ycui.numbers = number
-      ycui.k = key
-      if response["error"] == "false"
-        ycui.aishi_id = response["result"]["id"]
-      end
-      ycui.save!
-      return
-    end
+    # if ['苏州'].include? ycui.city_chinese
+    #   response = RestClient.post "http://api.formal.4scenter.com/index.php?r=apicar/signup", {mobile: ycui.phone,
+    #                                                                                           name: ycui.name.gsub('(个人)', ''),
+    #                                                                                           city: "#{ycui.city_chinese}市",
+    #                                                                                           brand: ycui.brand,
+    #                                                                                           number: number,
+    #                                                                                           mileage: (ycui.milage).to_i*10000,
+    #                                                                                           car_age: (Date.today.year-ycui.che_ling)*12,
+    #                                                                                           sign: Digest::MD5.hexdigest("#{number}#{key}")
+    #                                                                                        }
+    #   response = JSON.parse response.body
+    #   pp response
+    #   ycui.aishi_upload_status = '已上传'
+    #   ycui.aishi_upload_message = response["message"]
+    #   ycui.numbers = number
+    #   ycui.k = key
+    #   if response["error"] == "false"
+    #     ycui.aishi_id = response["result"]["id"]
+    #   end
+    #   ycui.save!
+    #   return
+    # end
 
 
     if ycui.phone.blank? or ycui.brand.blank?
@@ -131,67 +131,69 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       return
     end
 
-    # unless ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京", "成都"].include? ycui.city_chinese
-      # 放宽条件
-      # if not ycui.is_city_match
-      #   pp '城市不匹配'
-      #   ycui.aishi_upload_status = '城市不匹配'
-      #   ycui.save!
-      #   return
-      # end
-    # end
-
-
     return if ycui.phone.blank?
     return if ycui.aishi_upload_status != '未上传'
     return if ycui.name.blank?
 
 
-    # cui = ycui.car_user_info
-    # cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(ycui.phone)
-    # cui.save!
+    #开始进行严格校验, 默认校验通过
+    is_yange_jiaoyan_pass = true
 
-    # unless ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京", "成都"].include? ycui.city_chinese
-    #   if not cui.phone_city.blank?
-    #     unless cui.city_chinese == cui.phone_city
-    #       ycui.aishi_upload_status = '非本地车'
-    #       ycui.save!
-    #       return
-    #     end
-    #   end
-    # end
+    cui = ycui.car_user_info
+    cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(ycui.phone)
+    cui.save!
 
-    # unless ['上海', '福州', '厦门'].include? ycui.city_chinese
-    # if ycui.che_ling.to_i < 2009
-    #   ycui.aishi_upload_status = '车龄过老'
-    #   ycui.save!
-    #   return
-    # end
-
-    # if ['众泰', "五菱", '长安商用', '奇瑞', '力帆', '金杯', '江淮', '哈飞', '哈弗', '东风小康', '宝骏', '五菱汽车', '五十铃', '昌河', '依维柯', '福田', '东风风神', '东风'].include? ycui.brand
-    #   ycui.aishi_upload_status = '品牌外车，暂排除'
-    #   ycui.save!
-    #   return
-    # end
-
-    # if ycui.milage.to_f > 15
-    #   ycui.aishi_upload_status = '里程太多'
-    #   ycui.save!
-    #   return
-    # end
-    # end
+    if not cui.phone_city.blank?
+      unless cui.city_chinese == cui.phone_city
+        # ycui.aishi_upload_status = '非本地车'
+        # ycui.save!
+        # return
+        is_yange_jiaoyan_pass = false
+      end
+    end
 
 
-    # key = "033bd94b1168d7e4f0d644c3c95e35bf" #测试
-    # number = "4S-10009" #测试
 
-    # key = "5c7a8fe495a35f24f6674ac80c9843d8" #正式
-    # number = "4SA-1001" #正式
+    if ycui.che_ling.to_i < 2009
+      # ycui.aishi_upload_status = '车龄过老'
+      # ycui.save!
+      # return
+      is_yange_jiaoyan_pass = false
+    end
 
-    # key = "098f6bcd4621d373cade4e832627b4f6" #正式
-    # number = "4SA-1011" #正式
+    if ['众泰', "五菱", '长安商用', '奇瑞', '力帆', '金杯', '江淮', '哈飞', '哈弗', '东风小康', '宝骏', '五菱汽车', '五十铃', '昌河', '依维柯', '福田', '东风风神', '东风'].include? ycui.brand
+      # ycui.aishi_upload_status = '品牌外车，暂排除'
+      # ycui.save!
+      # return
+      is_yange_jiaoyan_pass = false
+    end
+
+    if ycui.milage.to_f > 15
+      # ycui.aishi_upload_status = '里程太多'
+      # ycui.save!
+      # return
+      is_yange_jiaoyan_pass = false
+    end
+
+    if is_yange_jiaoyan_pass
+      #严格校验通过, 做标记,待导出
+      #标记传给胡磊的时间
+      ycui.gz_upload_status = 'weidaoche'
+      ycui.yth_upload_status = 'weishangchuan'
+      ycui.yth_upload_time = Time.now + 24.hours
+      ycui.save!
+    else
+      #严格校验不通过,传给胡磊
+      UserSystem::AishiCarUserInfo.upload_hulei ycui, number, key
+    end
 
 
+
+
+  end
+
+  # 纯上传, 不做任何校验
+  def self.upload_hulei ycui, number, key
     response = RestClient.post "http://api.formal.4scenter.com/index.php?r=apicar/signup", {mobile: ycui.phone,
                                                                                             name: ycui.name.gsub('(个人)', ''),
                                                                                             city: "#{ycui.city_chinese}市",
@@ -200,7 +202,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
                                                                                             mileage: (ycui.milage).to_i*10000,
                                                                                             car_age: (Date.today.year-ycui.che_ling)*12,
                                                                                             sign: Digest::MD5.hexdigest("#{number}#{key}")
-                                                                                         }
+    }
     response = JSON.parse response.body
     pp response
     ycui.aishi_upload_status = '已上传'
@@ -296,7 +298,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
                                                                                                       sign: Digest::MD5.hexdigest("#{cui.numbers}#{cui.k}"),
                                                                                                       id: cui.aishi_id,
                                                                                                       token: tok
-                                                                                                   }
+      }
       response = JSON.parse response.body
       if response["result"]["status"] == '交易成功'
         cui.aishi_upload_message = "#{Date.today.chinese_format_day} 交易成功"
@@ -308,7 +310,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
   # UserSystem::AishiCarUserInfo.batch_query_aishi
   def self.batch_query_aishi
-    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 1907590 and (aishi_yaoyue is null or aishi_yaoyue = '未知')  and created_day > ?", Date.today - 45 ).find_each do |cui|
+    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 1907590 and (aishi_yaoyue is null or aishi_yaoyue = '未知')  and created_day > ?", Date.today - 45).find_each do |cui|
       next if cui.id == 2027590
       next if cui.aishi_yaoyue == '成功'
       next if cui.aishi_yaoyue == '失败'
@@ -326,7 +328,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
                                                                                                         sign: Digest::MD5.hexdigest("#{cui.numbers}#{cui.k}"),
                                                                                                         id: cui.aishi_id,
                                                                                                         token: tok
-                                                                                                     }
+        }
 
 
       rescue
@@ -456,40 +458,40 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   # end
 
 
-# UserSystem::AishiCarUserInfo.xxx
-#   def self.xxx
-#     1.upto 40 do |page|
-#       begin
-#       url = "http://shanghai.baixing.com/m/qiufang/m178893/?page=#{page}"
-#       # sleep 4
-#       response = RestClientProxy.get url
-#
-#       response = Nokogiri::HTML(response)
-#
-#       lis = response.css(".media-body-title")
-#       lis.each do |li|
-#         # pp li
-#         href = begin
-#         li.css('a')[0].attributes["href"].value
-#         rescue
-#           next
-#           end
-#
-#         next unless href.match /qiufang/
-#         next unless href.match /http/
-#         pp href
-#         title = li.css(".media-body-title","a")[0].text
-#         pp title
-#         sleep 10+rand(20)
-#
-#         detail_content = RestClientProxy.get href
-#         detail_content = Nokogiri::HTML(detail_content)
-#         pp detail_content.css("#mobileNumber").text
-#         pp "***"*8
-#       end
-#       rescue
-#         end
-#     end
-#   end
+  # UserSystem::AishiCarUserInfo.xxx
+  #   def self.xxx
+  #     1.upto 40 do |page|
+  #       begin
+  #       url = "http://shanghai.baixing.com/m/qiufang/m178893/?page=#{page}"
+  #       # sleep 4
+  #       response = RestClientProxy.get url
+  #
+  #       response = Nokogiri::HTML(response)
+  #
+  #       lis = response.css(".media-body-title")
+  #       lis.each do |li|
+  #         # pp li
+  #         href = begin
+  #         li.css('a')[0].attributes["href"].value
+  #         rescue
+  #           next
+  #           end
+  #
+  #         next unless href.match /qiufang/
+  #         next unless href.match /http/
+  #         pp href
+  #         title = li.css(".media-body-title","a")[0].text
+  #         pp title
+  #         sleep 10+rand(20)
+  #
+  #         detail_content = RestClientProxy.get href
+  #         detail_content = Nokogiri::HTML(detail_content)
+  #         pp detail_content.css("#mobileNumber").text
+  #         pp "***"*8
+  #       end
+  #       rescue
+  #         end
+  #     end
+  #   end
 end
 __END__

@@ -178,7 +178,7 @@ module UploadTianTian
       #城市符合的情况下,给源鹿
       if CITY_YL.include? car_user_info.city_chinese
         yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
-        if yl_count > 350 # 整体规模达到350个。
+        if yl_count > 370 # 整体规模达到350个。
           car_user_info.tt_upload_status = 'yl超限'
           car_user_info.save!
           return
@@ -188,9 +188,9 @@ module UploadTianTian
       end
 
       #北京拿出三成给YL
-      if ['北京'].include? car_user_info.city_chinese and  rand(100) < 30
+      if ['北京'].include? car_user_info.city_chinese and  rand(100) < 40
         yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
-        if yl_count > 350 # 整体规模达到350个。
+        if yl_count > 370 # 整体规模达到350个。
           car_user_info.tt_upload_status = 'yl超限'
           car_user_info.save!
           return
@@ -204,16 +204,16 @@ module UploadTianTian
       end
 
       #南宁, 东莞拿出七成给YL
-      if ['南宁','东莞'].include? car_user_info.city_chinese and rand(100) < 70
+      if ['南宁','东莞'].include? car_user_info.city_chinese and rand(100) < 80
         yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
-        if yl_count > 350 # 整体规模达到350个。
+        if yl_count > 370 # 整体规模达到350个。
           car_user_info.tt_upload_status = 'yl超限'
           car_user_info.save!
           return
         end
         UploadTianTian.tt_pai_v2_0_yl car_user_info
         return
-        # 南宁,东莞先给YL, 再给胡磊, 所以没有ELSE
+
       end
 
 

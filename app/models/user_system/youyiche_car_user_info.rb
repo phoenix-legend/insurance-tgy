@@ -63,6 +63,40 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   end
 
 
+  # def temp_upload
+  #   cuis = UserSystem::CarUserInfo.where("city_chinese = '宁波' and created_at > ?", Time.now - 20.days)
+  #   cuis.each do |cui|
+  #     pp cui.id
+  #     next if cui.tt_yaoyue == '历史遗留数据'
+  #     UserSystem::CarUserInfo.che_shang_jiao_yan cui, true
+  #     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
+  #   end
+  #
+  #   cuis = UserSystem::CarUserInfo.where("city_chinese = '东莞' and created_at > ?", Time.now - 7.days)
+  #   cuis.each do |cui|
+  #     pp cui.id
+  #     next if cui.tt_yaoyue == '历史遗留数据'
+  #     UserSystem::CarUserInfo.che_shang_jiao_yan cui, true
+  #     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
+  #   end
+  #
+  #   cuis = UserSystem::CarUserInfo.where("city_chinese = '济南' and created_at > ?", Time.now - 7.days)
+  #   cuis.each do |cui|
+  #     pp cui.id
+  #     next if cui.tt_yaoyue == '历史遗留数据'
+  #     UserSystem::CarUserInfo.che_shang_jiao_yan cui, true
+  #     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
+  #   end
+  #
+  #   cuis = UserSystem::CarUserInfo.where("city_chinese = '南宁' and created_at > ?", Time.now - 7.days)
+  #   cuis.each do |cui|
+  #     pp cui.id
+  #     next if cui.tt_yaoyue == '历史遗留数据'
+  #     UserSystem::CarUserInfo.che_shang_jiao_yan cui, true
+  #     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
+  #   end
+  # end
+
   # yc_car_user_info = UserSystem::YouyicheCarUserInfo.find id
   # UserSystem::YouyicheCarUserInfo.upload_youyiche yc_car_user_info
   def self.upload_youyiche yc_car_user_info, j = 1
@@ -256,9 +290,9 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       yc_car_user_info.youyiche_status_message = 'need_export_excel'
       yc_car_user_info.save!
 
-      # UserSystem::YouyicheCarUserInfo.upload_cui_via_web yc_car_user_info
+      UserSystem::YouyicheCarUserInfo.upload_cui_via_web yc_car_user_info
 
-      UserSystem::YouyicheCarUserInfo.export_last_city_phones2
+      # UserSystem::YouyicheCarUserInfo.export_last_city_phones2
       return
     end
 
@@ -371,15 +405,23 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   def self.upload_cui_via_web ycui
     return if ycui.phone.blank?
 
-    escape_shi = CGI::escape "#{ycui.city_chinese}市" rescue ''
+    diqu = {"太原" => '1947',
+            "南昌" => "1919",
+            "昆明" => "2134",
+            "宁波" => "2124", "东莞" => "2067", "济南" => "1930", "南宁" => "2085"}
 
-    response = `curl 'http://www.mychebao.com/czhib_promote/addInfoToFdep.htm' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' --data 'id=272&phone=#{ycui.phone}&regionid=#{diqu[ycui.city_chinese]}&location=#{escape_shi}&brand=#{begin CGI::escape ycui.brand rescue '' end}&model=#{begin CGI::escape ycui.car_user_info.cx rescue '' end}&type=#{CGI::escape "其它"}&channelId=' --compressed`
 
-    ycui.youyiche_status_message = '已倒出'
-    ycui.save!
+      escape_shi = CGI::escape "#{ycui.city_chinese}市" rescue ''
 
-    ycui.youyiche_chengjiao = response
-    ycui.save
+      response = `curl 'http://www.mychebao.com/czhib_promote/addInfoToFdep.htm' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' --data 'id=272&phone=#{ycui.phone}&regionid=#{diqu[ycui.city_chinese]}&location=#{escape_shi}&brand=#{begin CGI::escape ycui.brand rescue '' end}&model=#{begin CGI::escape ycui.car_user_info.cx rescue '' end}&type=#{CGI::escape "其它"}&channelId=' --compressed`
+
+      ycui.youyiche_status_message = '已倒出'
+      ycui.save!
+
+      ycui.youyiche_chengjiao = response
+      ycui.save
+
+
   end
 
 
