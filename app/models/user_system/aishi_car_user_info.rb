@@ -232,6 +232,12 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       end
       row = 1
 
+      # cuis = UserSystem::AishiCarUserInfo.where("id > 3823022 and gz_upload_status = ?", 'ydc')
+      # cuis.find_each do |ycui|
+      #   ycui.yth_upload_time = ycui.yth_upload_time - 10.hours
+      #   ycui.save!
+      # end
+
 
       cuis = UserSystem::AishiCarUserInfo.where("id > 3823022 and gz_upload_status = ?", 'weidaoche')
       cuis.find_each do |ycui|
@@ -275,7 +281,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
         cui.k = key
         cui.save!
       end
-      UserSystem::AishiCarUserInfo.upload_hulei ycui, cui.numbers, cui.k
+      UserSystem::AishiCarUserInfo.upload_hulei cui, cui.numbers, cui.k
       cui = cui.reload
       cui.yth_upload_status = 'ysc' #已上传
       cui.aishi_upload_message = "#{cui.aishi_upload_message}~#{Time.now.chinese_format}"
