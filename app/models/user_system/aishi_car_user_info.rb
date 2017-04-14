@@ -388,7 +388,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
   # UserSystem::AishiCarUserInfo.batch_query_aishi
   def self.batch_query_aishi
-    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 1907590 and (aishi_yaoyue is null or aishi_yaoyue = '未知')  and created_day > ?", Date.today - 30).find_each do |cui|
+
+    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 1907590 and (aishi_yaoyue is null or aishi_yaoyue = '未知')  and created_day > ?", Date.today - 10).find_each do |cui|
       next if cui.id == 2027590
       next if cui.aishi_yaoyue == '成功'
       next if cui.aishi_yaoyue == '失败'
@@ -407,6 +408,9 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
                                                                                                         id: cui.aishi_id,
                                                                                                         token: tok
         }
+
+        #早上6点未执行完毕, 就不执行了。
+        return if time.now.hour == 6
 
 
       rescue
