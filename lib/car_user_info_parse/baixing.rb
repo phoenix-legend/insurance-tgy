@@ -133,7 +133,7 @@ module Baixing
           end
 
           licheng = begin
-            detail_content.css(".bxtopmetalist li")[2].css('div').text.to_i rescue '8'
+            detail_content.css(".bxtopmetalist li")[2].css('div').text.to_i.to_s rescue '8'
           end
 
           metas = detail_content.css(".top-meta li")
@@ -368,7 +368,7 @@ module Baixing
       end
       che_ling = che_ling.split('-')[0]
       licheng = begin
-        detail_content.css(".bxtopmetalist li")[2].css('div').text.to_i rescue '8'
+        detail_content.css(".bxtopmetalist li")[2].css('div').text.to_i.to_s rescue '8'
       end
 
       metas = detail_content.css(".top-meta li")
