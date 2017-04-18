@@ -3,6 +3,7 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
   GZAPPKEY = '58886888'
   GZAPPSECRET = 'pi8E45Vft2sJ'
   GZSCODE = '204003368020000'
+  RANDSTR = 'kkkkksdflksdfjlskdfjsdlkfjsdlkfj'
 
   CITY = ['苏州', "杭州", "上海", "合肥",
           "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京", "成都",
@@ -216,17 +217,12 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
       return
     end
 
-
-
-
     host_name = "http://commapi.guazi.com/clue/carClue/AddCarSource" #正式环境
-    randstr = 'kkkkksdflksdfjlskdfjsdlkfjsdlkfj'
-
 
     param = {
         appkey: UserSystem::GuaziCarUserInfo::GZAPPKEY,
         app_secret: UserSystem::GuaziCarUserInfo::GZAPPSECRET,
-        nonce: randstr,
+        nonce: UserSystem::GuaziCarUserInfo::RANDSTR,
         expires: Time.now.to_i+6000,
         phoneNum: cui.phone,
         scode: UserSystem::GuaziCarUserInfo::GZSCODE,
@@ -242,8 +238,6 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
     response = JSON.parse(response.body)
     yc_car_user_info.guazi_upload_status = response["code"]
     yc_car_user_info.save!
-
-
   end
 
   # UserSystem::GuaziCarUserInfo.sign_params param

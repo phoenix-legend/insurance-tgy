@@ -180,7 +180,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
       #标记传给胡磊的时间
       ycui.gz_upload_status = 'weidaoche'
       ycui.yth_upload_status = 'weishangchuan'
-      ycui.yth_upload_time = Time.now + 24.hours
+      ycui.yth_upload_time = Time.now + 3.hours
       ycui.numbers = number
       ycui.k = key
       ycui.save!
@@ -223,7 +223,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   # UserSystem::AishiCarUserInfo.export_to_guazi_and_to_hulei
   def self.export_to_guazi_and_to_hulei
     #中午11点, 下午17点导出两次数据
-    if ([11, 17].include? Time.now.hour) and Time.now.min >= 0 and Time.now.min <= 10
+    #2017-04-19 凌晨, 数据自动导入做好, 不再需要导入,所以改成26, 之前是11和17
+    if false and ([11, 17].include? Time.now.hour) and Time.now.min >= 0 and Time.now.min <= 10
       Spreadsheet.client_encoding = 'UTF-8'
       book = Spreadsheet::Workbook.new
       sheet1 = book.create_worksheet name: "Sheet1"
@@ -267,6 +268,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     end
 
     # 每10分钟干一次, 给胡磊上传数据
+    # ****************************任务二
 
     cuis = UserSystem::AishiCarUserInfo.where("id > 3823022 and yth_upload_status = ? and yth_upload_time < ?", 'weishangchuan', Time.now)
     cuis.each do |cui|
