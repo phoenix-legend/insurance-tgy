@@ -108,6 +108,7 @@ module Baixing
           detail_content1.gsub!('content normal-content long-content', 'eric_content')
           detail_content1.gsub!('content normal-content', 'eric_content')
           detail_content1.gsub!('friendly datetime', 'fabushijian')
+          detail_content1.gsub!('bx-top-meta-list', 'bxtopmetalist')
 
           detail_content = Nokogiri::HTML(detail_content1)
           phone = nil
@@ -128,11 +129,11 @@ module Baixing
           end
 
           che_ling = begin
-            detail_content.css(".detail .content .info").children[0].children[0].content rescue '3010-01'
+            detail_content.css(".bxtopmetalist li")[1].css('div').text.split('年')[0] rescue '2010'
           end
-          che_ling = che_ling.split('-')[0]
+
           licheng = begin
-            detail_content.css(".detail .content .info").children[1].children[0].content rescue '80000'
+            detail_content.css(".bxtopmetalist li")[2].css('div').text.to_i rescue '8'
           end
 
           metas = detail_content.css(".top-meta li")
@@ -339,6 +340,7 @@ module Baixing
       detail_content1.gsub!('content normal-content long-content', 'eric_content')
       detail_content1.gsub!('content normal-content', 'eric_content')
       detail_content1.gsub!('friendly datetime', 'fabushijian')
+      detail_content1.gsub!('bx-top-meta-list', 'bxtopmetalist')
 
       detail_content = Nokogiri::HTML(detail_content1)
 
@@ -362,11 +364,11 @@ module Baixing
       end
 
       che_ling = begin
-        detail_content.css(".detail .content .info").children[0].children[0].content rescue '3010-01'
+        detail_content.css(".bxtopmetalist li")[1].css('div').text.split('年')[0] rescue '2010'
       end
       che_ling = che_ling.split('-')[0]
       licheng = begin
-        detail_content.css(".detail .content .info").children[1].children[0].content rescue '80000'
+        detail_content.css(".bxtopmetalist li")[2].css('div').text.to_i rescue '8'
       end
 
       metas = detail_content.css(".top-meta li")
