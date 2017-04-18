@@ -84,7 +84,7 @@ module Baixing
         pp "获取到#{detail_urls.length}条记录, 准备推送"
         url_string = detail_urls.join('!!!')
 
-        response = RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/vps_urls', {urls: url_string}
+        response = RestClientProxy.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/vps_urls', {urls: url_string}
         response = JSON.parse(response.body)
         pp response["data"].length rescue ''
         next if response["code"] > 0
