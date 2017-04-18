@@ -475,6 +475,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     #朋友E车
     UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
+    #传给瓜子
+    UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
+
 
     # 同步至车置宝  车置宝作废
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
@@ -540,6 +543,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     #朋友E车
     UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
+    #传给瓜子
+    UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     # 同步至a s
     UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
