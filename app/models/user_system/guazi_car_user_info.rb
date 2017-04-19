@@ -289,6 +289,8 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
           cui.guazi_id = response["code"]
           cui.guazi_yaoyue = '成功'
           cui.guazi_jiance = response["data"]["statusCode"].to_i
+          cui.yaoyue_time = Time.now
+          cui.yaoyue_day = Date.today
           cui.save!
           next
         end
