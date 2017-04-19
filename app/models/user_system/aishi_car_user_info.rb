@@ -391,7 +391,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   # UserSystem::AishiCarUserInfo.batch_query_aishi
   def self.batch_query_aishi
 
-    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 1907590 and (aishi_yaoyue is null or aishi_yaoyue = '未知')  and created_day > ?", Date.today - 15).find_each do |cui|
+    UserSystem::AishiCarUserInfo.where("aishi_id is not null and id > 1907590 and (aishi_yaoyue is null or aishi_yaoyue = '未知')  and created_day > ?", Date.today - 5).find_each do |cui|
       next if cui.id == 2027590
       next if cui.aishi_yaoyue == '成功'
       next if cui.aishi_yaoyue == '失败'
