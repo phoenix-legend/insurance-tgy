@@ -14,7 +14,7 @@ namespace :zongjie do
 			# 更新朋友E车, 凌晨1点和下午9点后半个小时, 更新两次
 			UserSystem::PengyoucheCarUserInfo.query_result
       #瓜子查询
-      # todo 瓜子查询
+      UserSystem::GuaziCarUserInfo.query_guazi
 		end
 	end
 

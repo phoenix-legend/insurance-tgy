@@ -231,7 +231,7 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
 
     param[:signature] = UserSystem::GuaziCarUserInfo.sign_params param
 
-    pp param
+
 
     response = RestClient.post host_name, param
     pp response.body
@@ -239,6 +239,64 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
     yc_car_user_info.guazi_upload_status = response["code"]
     yc_car_user_info.save!
   end
+
+
+  # UserSystem::GuaziCarUserInfo.query_guazi
+  def self.query_guazi
+    host_name = "http://commapi.guazi.com/clue/carClue/GuaZiGetCarClueStatus" #正式环境
+
+
+    gcui = UserSystem::GuaziCarUserInfo.where("guazi_yaoyue is null and created_at > ? and guazi_upload_status = '0'", Time.now - 15.days)
+    gcui.find_each do |cui|
+      next if cui.guazi_upload_status.blank?
+      param = {
+          appkey: UserSystem::GuaziCarUserInfo::GZAPPKEY,
+          app_secret: UserSystem::GuaziCarUserInfo::GZAPPSECRET,
+          nonce: UserSystem::GuaziCarUserInfo::RANDSTR,
+          expires: Time.now.to_i+6000,
+          phone: cui.phone,
+          source_type_code: UserSystem::GuaziCarUserInfo::GZSCODE
+      }
+
+      param[:signature] = UserSystem::GuaziCarUserInfo.sign_params param
+
+
+      # 失败  2，6，14
+      # 成功  9
+      # 待定  其它状态码
+
+
+      response = RestClient.post host_name, param
+      response = JSON.parse(response.body)
+      pp response
+      if response["code"].to_i == 11209
+        cui.guazi_id = response["code"]
+        cui.guazi_upload_status = '重复'
+        cui.save!
+        next
+      end
+
+      if response["code"].to_i == 0
+        if [2,6,14].include? response["data"]["statusCode"].to_i
+          cui.guazi_id = response["code"]
+          cui.guazi_yaoyue = '失败'
+          cui.save!
+          next
+        end
+
+        if [9].include? response["data"]["statusCode"].to_i
+          cui.guazi_id = response["code"]
+          cui.guazi_yaoyue = '成功'
+          cui.save!
+          next
+        end
+      end
+
+    end
+
+  end
+
+
 
   # UserSystem::GuaziCarUserInfo.sign_params param
   def self.sign_params params
@@ -267,3 +325,5 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
 
 end
 __END__
+
+
