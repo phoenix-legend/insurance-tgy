@@ -210,8 +210,8 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
 
   # UserSystem::PengyoucheCarUserInfo.query_result
   def self.query_result
-    return unless (Time.now.hour == 12 or Time.now.hour == 22)
-    return unless Time.now.min > 40
+    # return unless (Time.now.hour == 12 or Time.now.hour == 22)
+    # return unless Time.now.min > 40
     shangjianumber = 0
     youxiaonumber = 0
     UserSystem::PengyoucheCarUserInfo.where("pengyou_id is not null and created_day > ?",  Date.today - 30).each do |cui|
