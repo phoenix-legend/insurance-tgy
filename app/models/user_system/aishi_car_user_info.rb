@@ -226,6 +226,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   # 把该给一体化的数据,给一体化, 10分钟运行一次
   # UserSystem::AishiCarUserInfo.export_to_guazi_and_to_hulei
   def self.export_to_guazi_and_to_hulei
+    return  # 给到瓜子的量不再给胡磊
     #中午11点, 下午17点导出两次数据
     #2017-04-19 凌晨, 数据自动导入做好, 不再需要导入,所以改成26, 之前是11和17
     if false and ([11, 17].include? Time.now.hour) and Time.now.min >= 0 and Time.now.min <= 10
@@ -301,6 +302,8 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
 
   def self.create_user_info_from_car_user_info car_user_info
+    return if car_user_info.site_name == '58'
+
     if car_user_info.is_pachong == false and UserSystem::AishiCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
         # if ["苏州"].include? car_user_info.city_chinese
