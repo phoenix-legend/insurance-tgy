@@ -68,7 +68,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     # return unless ycui.site_name == 'ganji'
 
     c = UserSystem::GuaziCarUserInfo.where("car_user_info_id = ?", ycui.car_user_info_id).count
-    return if c > 0 and rand(10) < 7
+    return if c > 0 and rand(10) < 4
 
     ycui.name = ycui.name.gsub('(个人)', '')
     ycui.name = ycui.name.gsub('个人', '')
