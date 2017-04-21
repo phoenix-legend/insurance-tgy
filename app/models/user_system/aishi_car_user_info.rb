@@ -66,6 +66,10 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   def self.upload_to_aishi ycui
     # sleep 1
     # return unless ycui.site_name == 'ganji'
+
+    c = UserSystem::GuaziCarUserInfo.where("car_user_info_id = ?", ycui.car_user_info_id).count
+    return if c > 0 and rand(10) < 7
+
     ycui.name = ycui.name.gsub('(个人)', '')
     ycui.name = ycui.name.gsub('个人', '')
     ycui.name = ycui.name.gsub('(', '')
