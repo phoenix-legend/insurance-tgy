@@ -141,57 +141,59 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
 
     #开始进行严格校验, 默认校验通过
-    is_yange_jiaoyan_pass = true
+    # is_yange_jiaoyan_pass = true
+    #
+    # cui = ycui.car_user_info
+    # cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(ycui.phone)
+    # cui.save!
+    #
+    # if not cui.phone_city.blank?
+    #   unless cui.city_chinese == cui.phone_city
+    #     # ycui.aishi_upload_status = '非本地车'
+    #     # ycui.save!
+    #     # return
+    #     is_yange_jiaoyan_pass = false
+    #   end
+    # end
+    #
+    #
+    #
+    # if ycui.che_ling.to_i < 2009
+    #   # ycui.aishi_upload_status = '车龄过老'
+    #   # ycui.save!
+    #   # return
+    #   is_yange_jiaoyan_pass = false
+    # end
+    #
+    # if ['众泰', "五菱", '长安商用', '奇瑞', '力帆', '金杯', '江淮', '哈飞', '哈弗', '东风小康', '宝骏', '五菱汽车', '五十铃', '昌河', '依维柯', '福田', '东风风神', '东风'].include? ycui.brand
+    #   # ycui.aishi_upload_status = '品牌外车，暂排除'
+    #   # ycui.save!
+    #   # return
+    #   is_yange_jiaoyan_pass = false
+    # end
+    #
+    # if ycui.milage.to_f > 15
+    #   # ycui.aishi_upload_status = '里程太多'
+    #   # ycui.save!
+    #   # return
+    #   is_yange_jiaoyan_pass = false
+    # end
+    #
+    # if is_yange_jiaoyan_pass
+    #   #严格校验通过, 做标记,待导出
+    #   #标记传给胡磊的时间
+    #   ycui.gz_upload_status = 'weidaoche'
+    #   ycui.yth_upload_status = 'weishangchuan'
+    #   ycui.yth_upload_time = Time.now + 3.hours
+    #   ycui.numbers = number
+    #   ycui.k = key
+    #   ycui.save!
+    # else
+    #   #严格校验不通过,传给胡磊
+    #   UserSystem::AishiCarUserInfo.upload_hulei ycui, number, key
+    # end
 
-    cui = ycui.car_user_info
-    cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(ycui.phone)
-    cui.save!
-
-    if not cui.phone_city.blank?
-      unless cui.city_chinese == cui.phone_city
-        # ycui.aishi_upload_status = '非本地车'
-        # ycui.save!
-        # return
-        is_yange_jiaoyan_pass = false
-      end
-    end
-
-
-
-    if ycui.che_ling.to_i < 2009
-      # ycui.aishi_upload_status = '车龄过老'
-      # ycui.save!
-      # return
-      is_yange_jiaoyan_pass = false
-    end
-
-    if ['众泰', "五菱", '长安商用', '奇瑞', '力帆', '金杯', '江淮', '哈飞', '哈弗', '东风小康', '宝骏', '五菱汽车', '五十铃', '昌河', '依维柯', '福田', '东风风神', '东风'].include? ycui.brand
-      # ycui.aishi_upload_status = '品牌外车，暂排除'
-      # ycui.save!
-      # return
-      is_yange_jiaoyan_pass = false
-    end
-
-    if ycui.milage.to_f > 15
-      # ycui.aishi_upload_status = '里程太多'
-      # ycui.save!
-      # return
-      is_yange_jiaoyan_pass = false
-    end
-
-    if is_yange_jiaoyan_pass
-      #严格校验通过, 做标记,待导出
-      #标记传给胡磊的时间
-      ycui.gz_upload_status = 'weidaoche'
-      ycui.yth_upload_status = 'weishangchuan'
-      ycui.yth_upload_time = Time.now + 3.hours
-      ycui.numbers = number
-      ycui.k = key
-      ycui.save!
-    else
-      #严格校验不通过,传给胡磊
-      UserSystem::AishiCarUserInfo.upload_hulei ycui, number, key
-    end
+    UserSystem::AishiCarUserInfo.upload_hulei ycui, number, key
 
 
 
