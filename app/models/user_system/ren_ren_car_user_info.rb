@@ -185,23 +185,25 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       return
     end
 
-    if ['金杯', '五菱汽车', "五菱", '五十铃', '昌河',  '宾利',  '保时捷', '东风小康', '依维柯', '长安商用', '福田', '东风风神', '东风'].include? yc_car_user_info.brand
-      yc_car_user_info.renren_upload_status = '品牌外车，暂排除'
-      yc_car_user_info.save!
-      return
-    end
+    # 2017-04-23 去除条件
+    # if ['金杯', '五菱汽车', "五菱", '五十铃', '昌河',  '宾利',  '保时捷', '东风小康', '依维柯', '长安商用', '福田', '东风风神', '东风'].include? yc_car_user_info.brand
+    #   yc_car_user_info.renren_upload_status = '品牌外车，暂排除'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
-    ['QQ', '求购', '牌照', '批发', '私家一手车', '一手私家车', '身份', '身 份', '身~份', '个体经商', '过不了户', '帮朋友', '外地',
-     '贷款', '女士一手', '包过户', '原漆', '原版漆', '当天开走', '美女', '车辆说明', '车辆概述', '选购', '一个螺丝',
-     '精品', '驾驶证', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
-     '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信', 'wx', '微 信',
-     '威信', '加微', '评估师点评', '车主自述', "溦 信", '电话量大', '包你满意', '刷卡', '办理', '纯正', '抢购', '心动', '本车', '送豪礼'].each do |kw|
-      if yc_car_user_info.car_user_info.note.include? kw
-        yc_car_user_info.renren_upload_status = '疑似车商'
-        yc_car_user_info.save!
-        return
-      end
-    end
+    # 2017-04-23 去除条件
+    # ['QQ', '求购', '牌照', '批发', '私家一手车', '一手私家车', '身份', '身 份', '身~份', '个体经商', '过不了户', '帮朋友', '外地',
+    #  '贷款', '女士一手', '包过户', '原漆', '原版漆', '当天开走', '美女', '车辆说明', '车辆概述', '选购', '一个螺丝',
+    #  '精品', '驾驶证', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
+    #  '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信', 'wx', '微 信',
+    #  '威信', '加微', '评估师点评', '车主自述', "溦 信", '电话量大', '包你满意', '刷卡', '办理', '纯正', '抢购', '心动', '本车', '送豪礼'].each do |kw|
+    #   if yc_car_user_info.car_user_info.note.include? kw
+    #     yc_car_user_info.renren_upload_status = '疑似车商'
+    #     yc_car_user_info.save!
+    #     return
+    #   end
+    # end
 
     # 用手机号归属地的时候，最好先去表中查询一下，看看有没有外地号
     # yc_car_user_info = yc_car_user_info.car_user_info
@@ -215,16 +217,17 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     #   end
     # end
 
-    cui = yc_car_user_info.car_user_info
-    cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
-    cui.save!
-    if not cui.phone_city.blank?
-      unless cui.city_chinese == cui.phone_city
-        yc_car_user_info.renren_upload_status = '非本地车'
-        yc_car_user_info.save!
-        return
-      end
-    end
+    # 2017-04-23 去除条件
+    # cui = yc_car_user_info.car_user_info
+    # cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
+    # cui.save!
+    # if not cui.phone_city.blank?
+    #   unless cui.city_chinese == cui.phone_city
+    #     yc_car_user_info.renren_upload_status = '非本地车'
+    #     yc_car_user_info.save!
+    #     return
+    #   end
+    # end
 
 
     if yc_car_user_info.car_user_info.note.match /^出售/
@@ -240,21 +243,22 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     end
 
 
-    config_key_words = 0
-    ["天窗", "导航", "倒车雷达", "电动调节座椅", "后视镜加热", "后视镜电动调节", "多功能方向盘", "轮毂", "dvd",
-     "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜",
-     "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "空调",
-     "倒镜", "后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速", "一分钱"].each do |kw|
-      config_key_words+=1 if yc_car_user_info.car_user_info.note.include? kw
-    end
-
-
-    # 过多配置描述，一般车商
-    if config_key_words > 6
-      yc_car_user_info.renren_upload_status = '疑似车商，'
-      yc_car_user_info.save!
-      return
-    end
+    # 2017-04-23 去除条件
+    # config_key_words = 0
+    # ["天窗", "导航", "倒车雷达", "电动调节座椅", "后视镜加热", "后视镜电动调节", "多功能方向盘", "轮毂", "dvd",
+    #  "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜",
+    #  "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "空调",
+    #  "倒镜", "后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速", "一分钱"].each do |kw|
+    #   config_key_words+=1 if yc_car_user_info.car_user_info.note.include? kw
+    # end
+    #
+    #
+    # # 过多配置描述，一般车商
+    # if config_key_words > 6
+    #   yc_car_user_info.renren_upload_status = '疑似车商，'
+    #   yc_car_user_info.save!
+    #   return
+    # end
     config_key_words = 0
 
 
