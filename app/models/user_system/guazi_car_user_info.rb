@@ -237,6 +237,9 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
     pp response.body
     response = JSON.parse(response.body)
     yc_car_user_info.guazi_upload_status = response["code"]
+     if response["code"].to_i == 0
+       yc_car_user_info.guazi_status = 1
+     end
     yc_car_user_info.save!
   end
 
