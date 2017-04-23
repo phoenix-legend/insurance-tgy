@@ -64,8 +64,10 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   # 上传到埃侍
   # UserSystem::AishiCarUserInfo.upload_to_aishi ycui
   def self.upload_to_aishi ycui
+    return
     # sleep 1
     # return unless ycui.site_name == 'ganji'
+
 
     c = UserSystem::GuaziCarUserInfo.where("phone = ? and guazi_upload_status in ('0', '重复')", ycui.phone).count
     return if c > 0 #and rand(10) < 8
