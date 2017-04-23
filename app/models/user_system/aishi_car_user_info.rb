@@ -67,7 +67,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
     # sleep 1
     # return unless ycui.site_name == 'ganji'
 
-    c = UserSystem::GuaziCarUserInfo.where("car_user_info_id = ? and guazi_upload_status = '0'", ycui.car_user_info_id).count
+    c = UserSystem::GuaziCarUserInfo.where("car_user_info_id = ? and guazi_upload_status in ('0', '重复')", ycui.car_user_info_id).count
     return if c > 0 and rand(10) < 8
 
     ycui.name = ycui.name.gsub('(个人)', '')
