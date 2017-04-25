@@ -70,7 +70,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
 
 
     c = UserSystem::GuaziCarUserInfo.where("phone = ? and guazi_upload_status in ('0', '重复')", ycui.phone).count
-    return if c > 0 and rand(10) < 9
+    return if c > 0 #and rand(10) < 9
 
     ycui.name = ycui.name.gsub('(个人)', '')
     ycui.name = ycui.name.gsub('个人', '')
