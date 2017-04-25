@@ -188,7 +188,7 @@ module UploadTianTian
       end
 
       #北京拿出三成给YL
-      if ['北京'].include? car_user_info.city_chinese and  rand(100) < 70
+      if ['北京'].include? car_user_info.city_chinese and  rand(100) < 80
         yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
         if yl_count > 370 # 整体规模达到350个。
           car_user_info.tt_upload_status = 'yl超限'
