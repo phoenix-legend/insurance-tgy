@@ -20,14 +20,14 @@
 %>
 
 测试二4444：<%=a4_today_counts%> / <%=a4_month_counts%>
-<br/>
+<br/><br/>
 
 测试二GZ成功：<%=gz_today_chenggong%> / <%=gz_month_chenggong%>
-<br/><br/>
-测试二GZ创建成功：<%=gz_today_maoshuju%> 今天/ <%=gz_yesterady_maoshuju%>  昨天
-<br/><br/>
-测试二GZ提交：<%=gz_today_all_maoshuju%> 今天/ <%=gz_yesterady_all_maoshuju%> 昨天
 <br/>
+测试二GZ创建成功：<%=gz_today_maoshuju%> 今天/ <%=gz_yesterady_maoshuju%>  昨天
+<br/>
+测试二GZ提交：<%=gz_today_all_maoshuju%> 今天/ <%=gz_yesterady_all_maoshuju%> 昨天
+<br/><br/>
 <%
 
 yx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day >= ?  and tt_source in ('2-263-266')", Date.new(Date.today.year, Date.today.month, 1)).count
