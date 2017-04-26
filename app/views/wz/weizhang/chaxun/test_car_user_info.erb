@@ -12,11 +12,11 @@
    gz_month_chenggong = UserSystem::GuaziCarUserInfo.where("guazi_yaoyue = '成功' and yaoyue_day >= ?", Date.new(Date.today.year, Date.today.month, 1) ).count
 
   # 瓜子创建量
-  gz_today_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_upload_status = '0' and created_day = ?", Date.today ).count
-   gz_yesterady_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_upload_status = '0' and created_day = ?", Date.today.yesterday ).count
+  gz_today_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_id = '0' and created_day = ?", Date.today ).count
+   gz_yesterady_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_id = '0' and created_day = ?", Date.today.yesterday ).count
 
    # 瓜子提交量,包含重复和创建
-   gz_today_all_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_id = '0' and created_day = ?", Date.today ).count
+   gz_today_all_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_upload_status in ('0', '重复') and created_day = ?", Date.today ).count
    gz_yesterady_all_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_upload_status in ('0', '重复') and created_day = ?", Date.today.yesterday ).count
 
 
