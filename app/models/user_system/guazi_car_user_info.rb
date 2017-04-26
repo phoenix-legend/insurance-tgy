@@ -78,6 +78,13 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
   end
 
 
+  # gcuis = UserSystem::GuaziCarUserInfo.where("guazi_upload_status = ?", '未上传')
+  # gcuis.each do |cui|
+  #   UserSystem::GuaziCarUserInfo.upload_guazi cui
+  # end
+
+
+
   def self.upload_guazi yc_car_user_info
 
     yc_car_user_info.name = yc_car_user_info.name.gsub('(个人)', '')

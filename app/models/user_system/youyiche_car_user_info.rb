@@ -65,9 +65,10 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
 
   def temp_upload
-    [  "广州", "佛山", "南通", "嘉兴", "金华", "温州", '台州', "合肥","徐州","大连","沈阳", "天津", "哈尔滨","长春"].each do |k|
-    # ["贵阳","临沂",].each do |k|
-      cuis = UserSystem::CarUserInfo.where("city_chinese = ? and created_at > ?", k, Time.now - 10.days)
+    # 广州 195    佛山    温州  187
+    # [  "贵阳", "临沂", "广州","佛山", "南通", "嘉兴", "金华", "温州", '台州', "合肥","徐州","大连","沈阳", "天津", "哈尔滨","长春"].each do |k|
+    ["临沂", "广州"].each do |k|
+      cuis = UserSystem::CarUserInfo.where("city_chinese = ? and created_at > ?", k, Time.now - 30.days)
       cuis.each do |cui|
         pp cui.id
         next if cui.tt_yaoyue == '历史遗留数据'
@@ -165,8 +166,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     end
 
     #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
-    tmp_chexing = yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
-    tmp_note = yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '')
+    tmp_chexing = begin yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '') rescue '' end
+    tmp_note = begin yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '') rescue '' end
     if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
       yc_car_user_info.youyiche_upload_status = '疑似走私车'
       yc_car_user_info.save!
@@ -268,7 +269,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
     # 新城市临时通过手动方式进行上传,在这里先进行标记
     if ["太原", "南昌", "昆明", "宁波", "东莞", "济南", "南宁",
-        "贵阳", "临沂", "广州", "佛山", "南通", "嘉兴", "金华", "温州", '台州', "合肥","徐州","大连","沈阳", "天津", "哈尔滨","长春"].include? yc_car_user_info.city_chinese
+        "贵阳", '临沂' , "广州", "佛山", "南通", "嘉兴", "金华", "温州", '台州', "合肥","徐州","大连","沈阳", "天津", "哈尔滨","长春"].include? yc_car_user_info.city_chinese
       yc_car_user_info.youyiche_status_message = 'need_export_excel'
       yc_car_user_info.save!
 
@@ -401,7 +402,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
       escape_shi = CGI::escape "#{ycui.city_chinese}市" rescue ''
 
-      response = `curl 'http://www.mychebao.com/czhib_promote/addInfoToFdep.htm' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' --data 'id=272&phone=#{ycui.phone}&regionid=#{diqu[ycui.city_chinese]}&location=#{escape_shi}&brand=#{begin CGI::escape ycui.brand rescue '' end}&model=#{begin CGI::escape ycui.car_user_info.cx rescue '' end}&type=#{CGI::escape "其它"}&channelId=' --compressed`
+      response = `curl 'http://www.mychebao.com/czhib_promote/addInfoToFdep.htm' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' --data 'id=272&phone=#{ycui.phone}&regionid=#{diqu[ycui.city_chinese]}&location=#{escape_shi}&brand=#{begin CGI::escape ycui.brand rescue '' end}&model=#{begin CGI::escape ycui.car_user_info.cx rescue '' end}&type=#{CGI::escape "其它"}&channelId=799' --compressed`
 
       ycui.youyiche_status_message = '已倒出'
       ycui.save!
