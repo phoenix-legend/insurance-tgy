@@ -9,12 +9,24 @@
 
    gz_today_chenggong = UserSystem::GuaziCarUserInfo.where("guazi_yaoyue = '成功' and yaoyue_day = ?", Date.today ).count
    gz_month_chenggong = UserSystem::GuaziCarUserInfo.where("guazi_yaoyue = '成功' and yaoyue_day >= ?", Date.new(Date.today.year, Date.today.month, 1) ).count
+
+  # 瓜子创建量
+  gz_today_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_id = '0' and created_day = ?", Date.today ).count
+   gz_yesterady_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_id = '0' and created_day = ?", Date.today.yesterday ).count
+
+   # 瓜子提交量,包含重复和创建
+   gz_today_all_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_id is not null and created_day = ?", Date.today ).count
+   gz_yesterady_all_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_id  is not null and created_day = ?", Date.today.yesterday ).count
 %>
 
 测试二4444：<%=a4_today_counts%> / <%=a4_month_counts%>
 <br/>
 
-测试二GZ：<%=gz_today_chenggong%> / <%=gz_month_chenggong%>
+测试二GZ成功：<%=gz_today_chenggong%> / <%=gz_month_chenggong%>
+<br/><br/>
+测试二GZ创建成功：<%=gz_today_maoshuju%> 今天/ <%=gz_yesterady_maoshuju%>  昨天
+<br/><br/>
+测试二GZ提交：<%=gz_today_all_maoshuju%> 今天/ <%=gz_yesterady_all_maoshuju%> 昨天
 <br/>
 <%
 
