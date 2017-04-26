@@ -79,17 +79,17 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       return
     end
 
-     if yc_car_user_info.car_user_info.che_ling.to_i < 2008
-       yc_car_user_info.renren_upload_status = '车太老'
-       yc_car_user_info.save!
-       return
-     end
+     # if yc_car_user_info.car_user_info.che_ling.to_i < 2008
+     #   yc_car_user_info.renren_upload_status = '车太老'
+     #   yc_car_user_info.save!
+     #   return
+     # end
 
-    if yc_car_user_info.car_user_info.milage.to_i > 12
-      yc_car_user_info.renren_upload_status = '里程太多'
-      yc_car_user_info.save!
-      return
-    end
+    # if yc_car_user_info.car_user_info.milage.to_i > 12
+    #   yc_car_user_info.renren_upload_status = '里程太多'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
 
 
@@ -230,17 +230,17 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     # end
 
 
-    if yc_car_user_info.car_user_info.note.match /^出售/
-      yc_car_user_info.renren_upload_status = '疑似车商'
-      yc_car_user_info.save!
-      return
-    end
+    # if yc_car_user_info.car_user_info.note.match /^出售/
+    #   yc_car_user_info.renren_upload_status = '疑似车商'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
-    if yc_car_user_info.car_user_info.che_xing.match /QQ|电话|不准|低价|私家车|咨询|一手车|精品|业务|打折|货车|联系|处理|过户|包你/
-      yc_car_user_info.renren_upload_status = '疑似车商'
-      yc_car_user_info.save!
-      return
-    end
+    # if yc_car_user_info.car_user_info.che_xing.match /QQ|电话|不准|低价|私家车|咨询|一手车|精品|业务|打折|货车|联系|处理|过户|包你/
+    #   yc_car_user_info.renren_upload_status = '疑似车商'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
 
     # 2017-04-23 去除条件
