@@ -176,16 +176,16 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
 
 
     # 2017-04-26  进一步放宽条件
-    # cui = yc_car_user_info.car_user_info
-    # cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
-    # cui.save!
-    # if not cui.phone_city.blank?
-    #   unless cui.city_chinese == cui.phone_city
-    #     yc_car_user_info.guazi_upload_status = '非本地车'
-    #     yc_car_user_info.save!
-    #     return
-    #   end
-    # end
+    cui = yc_car_user_info.car_user_info
+    cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
+    cui.save!
+    if not cui.phone_city.blank?
+      unless cui.city_chinese == cui.phone_city
+        yc_car_user_info.guazi_upload_status = '非本地车'
+        yc_car_user_info.save!
+        return
+      end
+    end
 
 
     if cui.note.match /^出售/
@@ -202,19 +202,19 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
 
 
     # 2017-04-26  进一步放宽条件
-    # config_key_words = 0
-    # ["天窗", "导航", "倒车雷达", "电动调节座椅", "后视镜加热", "后视镜电动调节", "多功能方向盘", "轮毂", "dvd",
-    #  "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜",
-    #  "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "空调",
-    #  "倒镜", "后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速", "一分钱"].each do |kw|
-    #   config_key_words+=1 if cui.note.include? kw
-    # end
-    # # 过多配置描述，一般车商
-    # if config_key_words > 6
-    #   yc_car_user_info.guazi_upload_status = '疑似车商，'
-    #   yc_car_user_info.save!
-    #   return
-    # end
+    config_key_words = 0
+    ["天窗", "导航", "倒车雷达", "电动调节座椅", "后视镜加热", "后视镜电动调节", "多功能方向盘", "轮毂", "dvd",
+     "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜",
+     "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "空调",
+     "倒镜", "后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速", "一分钱"].each do |kw|
+      config_key_words+=1 if cui.note.include? kw
+    end
+    # 过多配置描述，一般车商
+    if config_key_words > 6
+      yc_car_user_info.guazi_upload_status = '疑似车商，'
+      yc_car_user_info.save!
+      return
+    end
 
     host_name = "http://commapi.guazi.com/clue/carClue/AddCarSource" #正式环境
 
