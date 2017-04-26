@@ -64,7 +64,7 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   # 上传到埃侍
   # UserSystem::AishiCarUserInfo.upload_to_aishi ycui
   def self.upload_to_aishi ycui
-    # return
+    return
     # sleep 1
     # return unless ycui.site_name == 'ganji'
 
