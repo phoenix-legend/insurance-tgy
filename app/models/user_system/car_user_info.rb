@@ -623,11 +623,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       return
     end
 
-    unless car_user_info.phone.blank?
-      phone_number_one_month = UserSystem::CarUserInfo.where("phone = ? and created_at > ? and tt_id is not null", car_user_info.phone, (Time.now.months_ago 1).chinese_format).count
-      car_user_info.is_repeat_one_month = phone_number_one_month > 1
-      car_user_info.save!
-    end
+    # unless car_user_info.phone.blank?
+    #   phone_number_one_month = UserSystem::CarUserInfo.where("phone = ? and created_at > ? and tt_id is not null", car_user_info.phone, (Time.now.months_ago 1).chinese_format).count
+    #   car_user_info.is_repeat_one_month = phone_number_one_month > 1
+    #   car_user_info.save!
+    # end
   end
 
 
@@ -968,7 +968,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     return unless self.brand.blank?
 
     UserSystem::CarType.all.each do |t|
-      if self.che_xing.match Regexp.new(t.name)
+      if self.che_xing.match Regexp.new(t.name, true)
         self.brand = t.car_brand.name
         self.cx = t.name
         self.save!
@@ -979,7 +979,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     return unless self.brand.blank?
 
     UserSystem::CarBrand.all.each do |brand|
-      if self.che_xing.match Regexp.new(brand.name)
+      if self.che_xing.match Regexp.new(brand.name, true)
         self.brand = brand.name
         self.save!
         break
