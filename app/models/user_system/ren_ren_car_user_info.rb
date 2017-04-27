@@ -110,8 +110,10 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
 
     if not CITY.include? yc_car_user_info.city_chinese
       pp '城市不对'
-      yc_car_user_info.renren_upload_status = '城市不对'
-      yc_car_user_info.save!
+      # yc_car_user_info.renren_upload_status = '城市不对'
+      # yc_car_user_info.save!
+
+      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
       return
     end
 
@@ -119,6 +121,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       pp '车商'
       yc_car_user_info.renren_upload_status = '车商'
       yc_car_user_info.save!
+      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
       return
     end
 
@@ -126,6 +129,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       pp '爬虫'
       yc_car_user_info.renren_upload_status = '爬虫'
       yc_car_user_info.save!
+      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
       return
     end
 
@@ -133,18 +137,21 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       pp '城市不匹配'
       yc_car_user_info.renren_upload_status = '城市不匹配'
       yc_car_user_info.save!
+      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
       return
     end
 
     if !yc_car_user_info.car_user_info.note.blank? and yc_car_user_info.car_user_info.note.match /\d{11}/
       yc_car_user_info.renren_upload_status = '疑似走私车'
       yc_car_user_info.save!
+      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
       return
     end
 
     if !yc_car_user_info.car_user_info.che_xing.blank? and yc_car_user_info.car_user_info.che_xing.match /\d{11}/
       yc_car_user_info.renren_upload_status = '疑似走私车'
       yc_car_user_info.save!
+      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
       return
     end
 
@@ -152,13 +159,17 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       if yc_car_user_info.name.include? kw or yc_car_user_info.car_user_info.che_xing.include? kw
         yc_car_user_info.renren_upload_status = '疑似走私车或车商'
         yc_car_user_info.save!
+        UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
         return
+
       end
+
     end
 
     if yc_car_user_info.name.match /^小/ and yc_car_user_info.name.length == 2
       yc_car_user_info.renren_upload_status = '疑似走私车或车商'
       yc_car_user_info.save!
+      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
       return
     end
 
@@ -166,6 +177,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     if /^[a-z|A-Z|0-9|-|_]+$/.match yc_car_user_info.name
       yc_car_user_info.renren_upload_status = '疑似走私车'
       yc_car_user_info.save!
+      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
       return
     end
 
@@ -173,6 +185,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     if /[0-9]+/.match yc_car_user_info.name
       yc_car_user_info.renren_upload_status = '疑似走私车'
       yc_car_user_info.save!
+      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
       return
     end
 
@@ -182,6 +195,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
       yc_car_user_info.renren_upload_status = '疑似走私车'
       yc_car_user_info.save!
+      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
       return
     end
 
@@ -309,6 +323,55 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     end
     yc_car_user_info.save!
 
+  end
+
+  #给到瓜子介绍的人人渠道
+  def self.upload_renren_xxx yc_car_user_info
+    token = 'd77d7c44bdeb8425'
+
+    domain = '60.205.108.209'
+    require 'digest/md5'
+    time = Time.now.to_i
+    data = {
+        "name" => yc_car_user_info.name,
+        "mobile" => yc_car_user_info.phone,
+        "city" => yc_car_user_info.city_chinese,
+        "brand" => yc_car_user_info.brand,
+        "series" => yc_car_user_info.car_user_info.cx,
+        "model" => "待定",
+        "kilometer" => yc_car_user_info.car_user_info.milage,
+        "licensed_date_year" => yc_car_user_info.che_ling,
+        "is_operation" => 0,
+        "seat_number" => "5",
+        "is_accidented" =>  0
+    }
+
+    data_json = data.to_json
+    params = {
+        "token" => token,
+        "time" => time,
+        "sign" => Digest::MD5.hexdigest("#{data_json}#{token}#{time}"),
+        "data" => data_json
+    }
+
+
+
+    response = RestClient.post "#{domain}/v1/clue/saler", params#, :content_type => 'application/json'
+
+
+    response = JSON.parse response.body
+
+
+    yc_car_user_info.renren_upload_status = '已上传'
+    yc_car_user_info.renren_chengjiao = token
+    if response["status"] == 200
+      yc_car_user_info.renren_id = response["data"]["renrenche_infoid"]
+      yc_car_user_info.renren_status_message = response["msg"]
+      yc_car_user_info.renren_yaoyue = '重复' if response["data"]["is_repeat"]
+    else
+      yc_car_user_info.renren_status_message = response["msg"]
+    end
+    yc_car_user_info.save!
   end
 
   def self.tongji_renren_che
