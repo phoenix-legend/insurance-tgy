@@ -286,8 +286,8 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
       end
 
       if response["code"].to_i == 0
+        cui.guazi_id = response["code"]
         if [2,6,14].include? response["data"]["statusCode"].to_i
-          cui.guazi_id = response["code"]
           cui.guazi_jiance = response["data"]["statusCode"].to_i
           cui.guazi_yaoyue = '失败'
           cui.save!
@@ -295,7 +295,6 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
         end
 
         if [9].include? response["data"]["statusCode"].to_i
-          cui.guazi_id = response["code"]
           cui.guazi_yaoyue = '成功'
           cui.guazi_jiance = response["data"]["statusCode"].to_i
           cui.yaoyue_time = Time.now
