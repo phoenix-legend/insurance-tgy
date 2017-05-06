@@ -49,6 +49,8 @@ namespace :zongjie do
 			UserSystem::CarUserInfo.get_info_for_zhenteng_lianyungang
       #更新房产数据  早上7点整的任务
       ErShouFang.shanghai_run
+			ErShouFang.beijing_run
+
 
       #每小时定时导出车置宝数据
       #目前车置宝可以自动上传到网页, 所以停掉。
@@ -59,7 +61,7 @@ namespace :zongjie do
 
       #瓜子网: 导出excel供测试用, 同时将24小时前的数据上传一体化。
       #以下方法不再导出瓜子的表格, 只延迟给胡磊。
-			UserSystem::AishiCarUserInfo.export_to_guazi_and_to_hulei
+			# UserSystem::AishiCarUserInfo.export_to_guazi_and_to_hulei
 
 			# 去侍埃更新数据， 每天凌晨一点更新一次。
       # 移至zongjie::all 定时任务, 逢整点20分执行

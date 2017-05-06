@@ -7,7 +7,7 @@ module UploadTianTian
           '合肥', '长沙', '青岛', '郑州', '南宁']
 
   CITY_YL = ["上海", "北京", "苏州", "南京", "天津", "佛山", "重庆", "成都", '绍兴', '滁州', '顺德', '惠州', '武汉', '宁波',
-             '合肥', '长沙', '青岛', '郑州']
+             '合肥', '长沙', '青岛', '郑州', '东莞', '南宁']
   #   上海、北京、成都、重庆、杭州、苏州、南京、天津、深圳、广州、东莞、佛山、武汉 YL这边支持的城市,一点一点往上加
 
   SOURCE_YL = '2-775-778' #yl这边的source
@@ -37,6 +37,9 @@ module UploadTianTian
   # end
 
   def self.upload_one_tt car_user_info
+    return if car_user_info.brand.blank?
+
+    return unless ['58', 'ganji', 'baixing', 'che168', 'zuoxi'].include? car_user_info.site_name
 
     is_select = true
 
@@ -188,7 +191,7 @@ module UploadTianTian
       end
 
       #北京拿出三成给YL
-      if ['北京'].include? car_user_info.city_chinese and  rand(100) < 80
+      if ['北京'].include? car_user_info.city_chinese #and  rand(100) < 80
         yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
         if yl_count > 370 # 整体规模达到350个。
           car_user_info.tt_upload_status = 'yl超限'
@@ -210,7 +213,7 @@ module UploadTianTian
       end
 
       #南宁, 东莞拿出七成给YL
-      if ['南宁','东莞'].include? car_user_info.city_chinese and rand(100) < 80
+      if ['南宁','东莞'].include? car_user_info.city_chinese #and rand(100) < 80
         yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
         if yl_count > 370 # 整体规模达到350个。
           car_user_info.tt_upload_status = 'yl超限'
