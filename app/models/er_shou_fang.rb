@@ -27,9 +27,9 @@ class ErShouFang < ActiveRecord::Base
 
   # ErShouFang.beijing_run
   def self.beijing_run
-    # return unless Time.now.hour == 10
-    # return unless Time.now.min >= 0
-    # return unless Time.now.min < 10
+    return unless Time.now.hour == 10
+    return unless Time.now.min >= 0
+    return unless Time.now.min < 10
     ErShouFang.beijing_zhen_codes.each do |town_code|
       pp town_code
 
