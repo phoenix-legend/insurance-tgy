@@ -79,6 +79,8 @@ Rails.application.routes.draw do
     namespace :order_system do
       resources :products do
         collection do
+
+
           get :new_appointment
           post :create_appointment
           get :appointment_success
@@ -119,6 +121,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resource :update_user_infos do
         collection do
+
           get :update_user_by_xiecheyangche
           post :update_user_by_xiecheyangche
           post :update_car_user_info
@@ -137,6 +140,7 @@ Rails.application.routes.draw do
           post :vps_urls
 
           get :get_kouling_for_kefu
+          post :shouche
         end
       end
     end
@@ -150,6 +154,7 @@ Rails.application.routes.draw do
   get '/i/:template_name/:qudao_name', to: "wz/order_system/products#index"
   get 'baobiaocx', to: 'wz/weizhang/chaxun#car_user_info'
   get 'baobiaocity', to: 'wz/weizhang/chaxun#citycar_user_info'
+  post '/shouche/:qudao', to: 'api/v1/update_user_infos#shouche'
 
 
   # The priority is based upon order of creation: first created -> highest priority.

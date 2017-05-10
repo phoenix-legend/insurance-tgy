@@ -13,6 +13,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
+    return if car_user_info.brand.blank?
+    return unless ['58', 'ganji', 'baixing', 'che168', 'zuoxi'].include? car_user_info.site_name
     if car_user_info.is_pachong == false and car_user_info.is_real_cheshang == false and UserSystem::YouyicheCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
         #数据回传到优车
@@ -67,7 +69,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   def temp_upload
     # 广州 195    佛山    温州  187
     # [  "贵阳", "临沂", "广州","佛山", "南通", "嘉兴", "金华", "温州", '台州', "合肥","徐州","大连","沈阳", "天津", "哈尔滨","长春"].each do |k|
-    ["临沂", "广州"].each do |k|
+    ["沈阳", "天津", "哈尔滨","长春"].each do |k|
       cuis = UserSystem::CarUserInfo.where("city_chinese = ? and created_at > ?", k, Time.now - 30.days)
       cuis.each do |cui|
         pp cui.id
@@ -402,7 +404,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
       escape_shi = CGI::escape "#{ycui.city_chinese}市" rescue ''
 
-      response = `curl 'http://www.mychebao.com/czhib_promote/addInfoToFdep.htm' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' --data 'id=272&phone=#{ycui.phone}&regionid=#{diqu[ycui.city_chinese]}&location=#{escape_shi}&brand=#{begin CGI::escape ycui.brand rescue '' end}&model=#{begin CGI::escape ycui.car_user_info.cx rescue '' end}&type=#{CGI::escape "其它"}&channelId=799' --compressed`
+      response = `curl 'http://www.mychebao.com/czhib_promote/addInfoToFdep.htm' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' --data 'id=272&phone=#{ycui.phone}&regionid=#{diqu[ycui.city_chinese]}&location=#{escape_shi}&brand=#{begin CGI::escape ycui.brand rescue '' end}&model=#{begin CGI::escape ycui.car_user_info.cx rescue '' end}&type=#{CGI::escape "其它"}&channelId=998' --compressed`
 
       ycui.youyiche_status_message = '已倒出'
       ycui.save!
@@ -608,6 +610,22 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   #   file_path = File.join(dir, "又一车转化率 #{Time.now.strftime("%Y%m%dT%H%M%S")}导出.xls")
   #   book.write file_path
   #   file_path
+  # end
+
+  # def self.s
+  #
+  #
+  #   ycuis = UserSystem::YouyicheCarUserInfo.where("youyiche_chengjiao like '%已超过单日最大提交量,请明日再提交数据%'")
+  #   ids = []
+  #   ycuis.each do |k|
+  #     ids << k.car_user_info_id
+  #   end
+  #
+  #   ids.each do |id|
+  #     cui = UserSystem::CarUserInfo.find id
+  #     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
+  #   end
+  #
   # end
 
 end

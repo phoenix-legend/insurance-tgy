@@ -86,6 +86,7 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
 
 
   def self.upload_guazi yc_car_user_info
+    return if yc_car_user_info.phone == '13472446647'
 
     yc_car_user_info.name = yc_car_user_info.name.gsub('(个人)', '')
     yc_car_user_info.save!
@@ -333,6 +334,53 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
     pp sign
     return sign
     # puts CGI.escape(Base64.encode64("#{OpenSSL::HMAC.digest('sha1',k, GZAPPSECRET)}\n"))
+  end
+
+
+  # UserSystem::GuaziCarUserInfo.query_guazi_chengjiao
+  def self.query_guazi_chengjiao
+    host_name = "http://commapi.guazi.com/clue/carClue/GuaZiGetCarClueStatus" #正式环境
+
+
+    gcui = UserSystem::GuaziCarUserInfo.where("guazi_yaoyue = '成功'")
+    gcui.find_each do |cui|
+
+      next unless cui.guazi_chengjiao.blank?
+
+      param = {
+          appkey: UserSystem::GuaziCarUserInfo::GZAPPKEY,
+          app_secret: UserSystem::GuaziCarUserInfo::GZAPPSECRET,
+          nonce: UserSystem::GuaziCarUserInfo::RANDSTR,
+          expires: Time.now.to_i+6000,
+          phone: cui.phone,
+          source_type_code: UserSystem::GuaziCarUserInfo::GZSCODE
+      }
+
+      param[:signature] = UserSystem::GuaziCarUserInfo.sign_params param
+
+
+      # 失败  2，6，14
+      # 成功  9
+      # 待定  其它状态码
+
+
+      response = RestClient.post host_name, param
+      response = JSON.parse(response.body)
+      pp response
+      if response["code"].to_i == 11209
+        next
+      end
+
+      chengjiao = begin response["data"]["CarSoldDate"] rescue '' end
+      chengjiao.gsub!('无','')
+      next if chengjiao.blank?
+
+      cui.guazi_chengjiao = chengjiao
+      cui.save!
+
+
+    end
+
   end
 
 end

@@ -13,6 +13,8 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
   # car_user_info = UserSystem::CarUserInfo.find 2127639
   # UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
+    return unless ['58', 'ganji', 'baixing', 'che168', 'zuoxi'].include? car_user_info.site_name
+    return if car_user_info.brand.blank?
     return if car_user_info.name.blank?
     return if car_user_info.phone.blank?
     if car_user_info.is_pachong == false and car_user_info.is_real_cheshang == false and UserSystem::RenRenCarUserInfo::CITY.include?(car_user_info.city_chinese)

@@ -230,83 +230,84 @@ class UserSystem::AishiCarUserInfo < ActiveRecord::Base
   # 把瓜子待导入的数据导出来,生成excel发邮件。
   # 把该给一体化的数据,给一体化, 10分钟运行一次
   # UserSystem::AishiCarUserInfo.export_to_guazi_and_to_hulei
-  def self.export_to_guazi_and_to_hulei
-    return  # 给到瓜子的量不再给胡磊
-    #中午11点, 下午17点导出两次数据
-    #2017-04-19 凌晨, 数据自动导入做好, 不再需要导入,所以改成26, 之前是11和17
-    if false and ([11, 17].include? Time.now.hour) and Time.now.min >= 0 and Time.now.min <= 10
-      Spreadsheet.client_encoding = 'UTF-8'
-      book = Spreadsheet::Workbook.new
-      sheet1 = book.create_worksheet name: "Sheet1"
-      ['客户姓名', '客户地区', '手机号码', '品牌'].each_with_index do |content, i|
-        sheet1.row(0)[i] = content
-      end
-      row = 1
-
-      # cuis = UserSystem::AishiCarUserInfo.where("id > 3823022 and gz_upload_status = ?", 'ydc')
-      # cuis.find_each do |ycui|
-      #   ycui.yth_upload_time = ycui.yth_upload_time - 10.hours
-      #   ycui.save!
-      # end
-
-
-      cuis = UserSystem::AishiCarUserInfo.where("id > 3823022 and gz_upload_status = ?", 'weidaoche')
-      cuis.find_each do |ycui|
-        next if ycui.name.blank?
-        next if ycui.phone.blank?
-        [ycui.name.gsub('(个人)', ''), ycui.city_chinese, ycui.phone, ycui.brand].each_with_index do |content, i|
-          sheet1.row(row)[i] = content
-        end
-
-        ycui.gz_upload_status = 'ydc' #已倒出
-        ycui.save!
-        row += 1
-      end
-
-      dir = Rails.root.join('public', 'downloads')
-      Dir.mkdir dir unless Dir.exist? dir
-      file_path = File.join(dir, "#{Time.now.strftime("%Y%m%dT%H%M%S")}瓜子卖车线索信息.xls")
-      book.write file_path
-      file_path
-
-      MailSend.send_car_user_infos('xiaoqi.liu@uguoyuan.cn',
-                                   '',
-                                   row,
-                                   "瓜子卖车线索信息-#{Time.now.chinese_format}",
-                                   [file_path]
-      ).deliver
-    end
-
-    # 每10分钟干一次, 给胡磊上传数据
-    # ****************************任务二
-
-    cuis = UserSystem::AishiCarUserInfo.where("id > 3823022 and yth_upload_status = ? and yth_upload_time < ?", 'weishangchuan', Time.now)
-    cuis.each do |cui|
-      if cui.numbers.blank?
-        key, number = UserSystem::AishiCarUserInfo.get_key_numbers cui.city_chinese
-
-        if number == '4SA-1011' and ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京", "成都"].include? cui.city_chinese
-          number, key = '4SA-1019', 'c2b2aa3e4f45075d848140d9c2f9dc3a'
-        end
-
-        cui.numbers = number
-        cui.k = key
-        cui.save!
-      end
-      UserSystem::AishiCarUserInfo.upload_hulei cui, cui.numbers, cui.k
-      cui = cui.reload
-      cui.yth_upload_status = 'ysc' #已上传
-      cui.aishi_upload_message = "#{cui.aishi_upload_message}~#{Time.now.chinese_format}"
-      cui.save!
-    end
-
-
-
-
-  end
+  # def self.export_to_guazi_and_to_hulei
+  #   return  # 给到瓜子的量不再给胡磊
+  #   #中午11点, 下午17点导出两次数据
+  #   #2017-04-19 凌晨, 数据自动导入做好, 不再需要导入,所以改成26, 之前是11和17
+  #   if false and ([11, 17].include? Time.now.hour) and Time.now.min >= 0 and Time.now.min <= 10
+  #     Spreadsheet.client_encoding = 'UTF-8'
+  #     book = Spreadsheet::Workbook.new
+  #     sheet1 = book.create_worksheet name: "Sheet1"
+  #     ['客户姓名', '客户地区', '手机号码', '品牌'].each_with_index do |content, i|
+  #       sheet1.row(0)[i] = content
+  #     end
+  #     row = 1
+  #
+  #     # cuis = UserSystem::AishiCarUserInfo.where("id > 3823022 and gz_upload_status = ?", 'ydc')
+  #     # cuis.find_each do |ycui|
+  #     #   ycui.yth_upload_time = ycui.yth_upload_time - 10.hours
+  #     #   ycui.save!
+  #     # end
+  #
+  #
+  #     cuis = UserSystem::AishiCarUserInfo.where("id > 3823022 and gz_upload_status = ?", 'weidaoche')
+  #     cuis.find_each do |ycui|
+  #       next if ycui.name.blank?
+  #       next if ycui.phone.blank?
+  #       [ycui.name.gsub('(个人)', ''), ycui.city_chinese, ycui.phone, ycui.brand].each_with_index do |content, i|
+  #         sheet1.row(row)[i] = content
+  #       end
+  #
+  #       ycui.gz_upload_status = 'ydc' #已倒出
+  #       ycui.save!
+  #       row += 1
+  #     end
+  #
+  #     dir = Rails.root.join('public', 'downloads')
+  #     Dir.mkdir dir unless Dir.exist? dir
+  #     file_path = File.join(dir, "#{Time.now.strftime("%Y%m%dT%H%M%S")}瓜子卖车线索信息.xls")
+  #     book.write file_path
+  #     file_path
+  #
+  #     MailSend.send_car_user_infos('xiaoqi.liu@uguoyuan.cn',
+  #                                  '',
+  #                                  row,
+  #                                  "瓜子卖车线索信息-#{Time.now.chinese_format}",
+  #                                  [file_path]
+  #     ).deliver
+  #   end
+  #
+  #   # 每10分钟干一次, 给胡磊上传数据
+  #   # ****************************任务二
+  #
+  #   cuis = UserSystem::AishiCarUserInfo.where("id > 3823022 and yth_upload_status = ? and yth_upload_time < ?", 'weishangchuan', Time.now)
+  #   cuis.each do |cui|
+  #     if cui.numbers.blank?
+  #       key, number = UserSystem::AishiCarUserInfo.get_key_numbers cui.city_chinese
+  #
+  #       if number == '4SA-1011' and ["福州", "厦门", '苏州', "杭州", "上海", "合肥", "福州", "厦门", "深圳", "南京", "广州", "东莞", "佛山", "北京", "成都"].include? cui.city_chinese
+  #         number, key = '4SA-1019', 'c2b2aa3e4f45075d848140d9c2f9dc3a'
+  #       end
+  #
+  #       cui.numbers = number
+  #       cui.k = key
+  #       cui.save!
+  #     end
+  #     UserSystem::AishiCarUserInfo.upload_hulei cui, cui.numbers, cui.k
+  #     cui = cui.reload
+  #     cui.yth_upload_status = 'ysc' #已上传
+  #     cui.aishi_upload_message = "#{cui.aishi_upload_message}~#{Time.now.chinese_format}"
+  #     cui.save!
+  #   end
+  #
+  #
+  #
+  #
+  # end
 
 
   def self.create_user_info_from_car_user_info car_user_info
+    return unless ['58', 'ganji', 'baixing', 'che168', 'zuoxi'].include? car_user_info.site_name
     return if car_user_info.site_name == '58'
 
     if car_user_info.is_pachong == false and UserSystem::AishiCarUserInfo::CITY.include?(car_user_info.city_chinese)

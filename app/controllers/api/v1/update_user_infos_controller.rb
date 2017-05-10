@@ -124,4 +124,8 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
     @cui = UserSystem::KouLingCarUserInfo.get_kouling_for_kefu params[:openid], params[:nickname], params[:city]
   end
 
+  def shouche
+    UserSystem::CarUserInfo.shouche_guazi params
+  end
+
 end
