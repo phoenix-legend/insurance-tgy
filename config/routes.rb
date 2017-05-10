@@ -154,7 +154,7 @@ Rails.application.routes.draw do
   get '/i/:template_name/:qudao_name', to: "wz/order_system/products#index"
   get 'baobiaocx', to: 'wz/weizhang/chaxun#car_user_info'
   get 'baobiaocity', to: 'wz/weizhang/chaxun#citycar_user_info'
-  post '/shouche/:qudao', to: 'api/v1/update_user_infos#shouche'
+  post '/shouche/gz', to: 'api/v1/update_user_infos#shouche'
 
 
   # The priority is based upon order of creation: first created -> highest priority.

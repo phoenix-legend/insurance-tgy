@@ -1736,14 +1736,14 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   # city   城市名称,不包含"市",
   # time  unix时间戳,
   # sign  渠道名称+unix时间戳+手机号+password  对这个字符串进行md5
-  # qudao  渠道名称包含在url中, 不用再次post
+  # qudao  渠道号
   # 返回值说明:
   #   {"error"=>"手机号码为空", "message"=>"手机号码为空", "code"=>1, "data"=>{}}
   # code = 0  接口正常
   # code = 1  异常
   # 无视data这个节点
-  # url为:  che.uguoyuan.cn/shouche/渠道号
-  # 比如:渠道号为abc, 则链接为:che.uguoyuan.cn/shouche/abc
+  # url为:  che.uguoyuan.cn/shouche/gz
+  # 比如:渠道号为abc, 则链接为:che.uguoyuan.cn/shouche/gz
   #
 
   def self.shouche_guazi params
