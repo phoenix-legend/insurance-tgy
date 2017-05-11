@@ -1766,6 +1766,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     param[:che_xing] = params[:brand] unless params[:brand].blank?
     param[:site_name] = 'guazi_shouche'
     param[:city_chinese] = params[:city]
+    param[:wuba_kouling] = params[:qudao]
     param[:detail_url] = "http://m.guazishouche.com/#{Time.now.chinese_format}"
     param[:milage] = '8'
     param[:fabushijian] = Time.now.chinese_format_day
