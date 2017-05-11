@@ -1743,7 +1743,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   # code = 1  异常
   # 无视data这个节点
   # url为:  che.uguoyuan.cn/shouche/gz
-  # 比如:渠道号为abc, 则链接为:che.uguoyuan.cn/shouche/gz
+  #
   #
 
   def self.shouche_guazi params
@@ -1755,6 +1755,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     BusinessException.raise '签名不正确' unless sign == params[:sign]
 
     # BusinessException.raise '渠道号不正确' unless params[:wuba_kouling].match(/k92kiHeu23KiAZP/)
+    param = {}
 
     param[:name] = if params[:name].blank?
                      '先生女士'
@@ -1784,7 +1785,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
     # if false
-    #   RestClient.post 'http://localhost:3000/shouche/abc', {name: 'abc'}
+    #   RestClient.post 'http://che.uguoyuan.cn/shouche/gz', {"qudao"=>"12345678", "phone"=>"13472446647", "city"=>"南通", "sign"=>"cbras/Eq6pZd59dNI2x/vw==", "time"=>1494484440}
     # end
 
 
