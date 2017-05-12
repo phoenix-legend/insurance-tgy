@@ -2,12 +2,12 @@ module UploadTianTian
 
 
   CITY = ["杭州", "深圳", "西安", "广州", "珠海", "中山",
-          "北京",  #先临时取消北京
+          "北京", #先临时取消北京
           "上海", "苏州", "南京", "天津", "广州", "佛山", "重庆", "成都", '绍兴', '滁州', '顺德', '惠州', '东莞', '武汉', '宁波',
           '合肥', '长沙', '青岛', '郑州', '南宁']
 
   CITY_YL = ["上海", "北京", "苏州", "南京", "天津", "佛山", "重庆", "成都", '绍兴', '滁州', '顺德', '惠州', '武汉', '宁波',
-             '合肥', '长沙', '青岛', '郑州', '东莞', '南宁']
+             '合肥', '长沙', '青岛', '郑州', '东莞', '南宁', "杭州", "深圳", "西安", "广州", "珠海", "中山"]
   #   上海、北京、成都、重庆、杭州、苏州、南京、天津、深圳、广州、东莞、佛山、武汉 YL这边支持的城市,一点一点往上加
 
   SOURCE_YL = '2-775-778' #yl这边的source
@@ -151,10 +151,10 @@ module UploadTianTian
     end
 
 
-    unless UploadTianTian::CITY.include? car_user_info.city_chinese
-      car_user_info.tt_upload_status = '城市不对'
-      is_select = false
-    end
+    # unless UploadTianTian::CITY.include? car_user_info.city_chinese
+    #   car_user_info.tt_upload_status = '城市不对'
+    #   is_select = false
+    # end
 
 
     # 车价小于1万的，跳过
@@ -179,65 +179,65 @@ module UploadTianTian
     if is_select
 
       #城市符合的情况下,给源鹿
-      if CITY_YL.include? car_user_info.city_chinese
-        yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
-        if yl_count > 370 # 整体规模达到350个。
-          car_user_info.tt_upload_status = 'yl超限'
-          car_user_info.save!
-          return
-        end
-        UploadTianTian.tt_pai_v2_0_yl car_user_info
-        return
-      end
-
-      #北京拿出三成给YL
-      if ['北京'].include? car_user_info.city_chinese #and  rand(100) < 80
-        yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
-        if yl_count > 370 # 整体规模达到350个。
-          car_user_info.tt_upload_status = 'yl超限'
-          car_user_info.save!
-          return
-        end
-        UploadTianTian.tt_pai_v2_0_yl car_user_info
-        return
-      end
-
-      if ['北京'].include? car_user_info.city_chinese
-        return
-      end
-
-      #58全部给RO
-      if ['58'].include? car_user_info.site_name
-        UploadTianTian.tt_pai_v2_0_yl car_user_info
-        return
-      end
-
-      #南宁, 东莞拿出七成给YL
-      if ['南宁','东莞'].include? car_user_info.city_chinese #and rand(100) < 80
-        yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
-        if yl_count > 370 # 整体规模达到350个。
-          car_user_info.tt_upload_status = 'yl超限'
-          car_user_info.save!
-          return
-        end
-        UploadTianTian.tt_pai_v2_0_yl car_user_info
-        return
-
-      end
-
-
-      yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_QQ}', '#{SOURCE_KK1}','#{SOURCE_KK2}','#{SOURCE_KK3}') and tt_id is not null", Date.today).count
-      if yl_count > 150
-        car_user_info.tt_upload_status = 'hl&kk超限'
+      # if CITY_YL.include? car_user_info.city_chinese
+      yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
+      if yl_count > 400 # 整体规模达到350个。
+        car_user_info.tt_upload_status = 'yl超限'
         car_user_info.save!
         return
       end
-      if rand(100) < 43 and ['58', 'ganji', 'baixing', 'che168'].include? car_user_info.site_name
-        UploadTianTian.tt_pai_v2_0_qq car_user_info
-        return
-      end
-      UploadTianTian.tt_pai_v1_0_hulei car_user_info
+      UploadTianTian.tt_pai_v2_0_yl car_user_info
       return
+      # end
+
+      #北京拿出三成给YL
+      # if ['北京'].include? car_user_info.city_chinese #and  rand(100) < 80
+      #   yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
+      #   if yl_count > 370 # 整体规模达到350个。
+      #     car_user_info.tt_upload_status = 'yl超限'
+      #     car_user_info.save!
+      #     return
+      #   end
+      #   UploadTianTian.tt_pai_v2_0_yl car_user_info
+      #   return
+      # end
+
+      # if ['北京'].include? car_user_info.city_chinese
+      #   return
+      # end
+
+      #58全部给RO
+      # if ['58'].include? car_user_info.site_name
+      #   UploadTianTian.tt_pai_v2_0_yl car_user_info
+      #   return
+      # end
+
+      #南宁, 东莞拿出七成给YL
+      # if ['南宁','东莞'].include? car_user_info.city_chinese #and rand(100) < 80
+      #   yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
+      #   if yl_count > 370 # 整体规模达到350个。
+      #     car_user_info.tt_upload_status = 'yl超限'
+      #     car_user_info.save!
+      #     return
+      #   end
+      #   UploadTianTian.tt_pai_v2_0_yl car_user_info
+      #   return
+      #
+      # end
+
+
+      # yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_QQ}', '#{SOURCE_KK1}','#{SOURCE_KK2}','#{SOURCE_KK3}') and tt_id is not null", Date.today).count
+      # if yl_count > 150
+      #   car_user_info.tt_upload_status = 'hl&kk超限'
+      #   car_user_info.save!
+      #   return
+      # end
+      # if rand(100) < 43 and ['58', 'ganji', 'baixing', 'che168'].include? car_user_info.site_name
+      #   UploadTianTian.tt_pai_v2_0_qq car_user_info
+      #   return
+      # end
+      # UploadTianTian.tt_pai_v1_0_hulei car_user_info
+      # return
     end
   end
 
