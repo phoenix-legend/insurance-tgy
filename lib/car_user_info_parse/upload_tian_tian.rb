@@ -195,7 +195,7 @@ module UploadTianTian
       #城市符合的情况下,给源鹿
       # if CITY_YL.include? car_user_info.city_chinese
       yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
-      if yl_count > 400 # 整体规模达到350个。
+      if yl_count > 450 # 整体规模达到350个。
         car_user_info.tt_upload_status = 'yl超限'
         car_user_info.save!
         return
