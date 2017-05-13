@@ -1,14 +1,14 @@
 module UploadTianTian
 
 
-  CITY = ["杭州", "深圳", "西安", "广州", "珠海", "中山",
+  CITY = ["杭州", "深圳", "西安", "珠海", "中山",
           "北京", #先临时取消北京
           "上海", "苏州", "南京", "天津", "广州", "佛山", "重庆", "成都", '绍兴', '滁州', '顺德', '惠州', '东莞', '武汉', '宁波',
           '合肥', '长沙', '青岛', '郑州', '南宁']
 
   CITY_YL = ["上海", "北京", "苏州", "南京", "天津", "佛山", "重庆", "成都", '绍兴', '滁州', '顺德', '惠州', '武汉', '宁波',
              '合肥', '长沙', '青岛', '郑州', '东莞', '南宁', "杭州", "深圳", "西安", "广州", "珠海", "中山"]
-  #   上海、北京、成都、重庆、杭州、苏州、南京、天津、深圳、广州、东莞、佛山、武汉 YL这边支持的城市,一点一点往上加
+
 
   SOURCE_YL = '2-775-778' #yl这边的source
   SOURCE_HL_ZL_KK = '23-23-15' #通过一体化直连过去的source, 我们只用它来查询
@@ -144,16 +144,22 @@ module UploadTianTian
 
     if car_user_info.name.blank?
       is_select = false
+      car_user_info.save!
+      return
     end
 
     if car_user_info.brand.blank?
       is_select = false
+      car_user_info.save!
+      return
     end
 
 
     unless UploadTianTian::CITY.include? car_user_info.city_chinese
       car_user_info.tt_upload_status = '城市不对'
       is_select = false
+      car_user_info.save!
+      return
     end
 
 
