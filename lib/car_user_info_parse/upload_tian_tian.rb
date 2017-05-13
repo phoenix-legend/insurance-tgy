@@ -151,10 +151,10 @@ module UploadTianTian
     end
 
 
-    # unless UploadTianTian::CITY.include? car_user_info.city_chinese
-    #   car_user_info.tt_upload_status = '城市不对'
-    #   is_select = false
-    # end
+    unless UploadTianTian::CITY.include? car_user_info.city_chinese
+      car_user_info.tt_upload_status = '城市不对'
+      is_select = false
+    end
 
 
     # 车价小于1万的，跳过
