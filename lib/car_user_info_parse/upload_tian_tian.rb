@@ -37,6 +37,14 @@ module UploadTianTian
   # end
 
   def self.upload_one_tt car_user_info
+
+    unless UploadTianTian::CITY.include? car_user_info.city_chinese
+      car_user_info.tt_upload_status = '城市不对'
+      # is_select = false
+      car_user_info.save!
+      return
+    end
+
     return if car_user_info.brand.blank?
 
     return unless ['58', 'ganji', 'baixing', 'che168', 'zuoxi'].include? car_user_info.site_name
