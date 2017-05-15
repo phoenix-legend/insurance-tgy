@@ -3,6 +3,7 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
   GZAPPKEY = '58886888'
   GZAPPSECRET = 'pi8E45Vft2sJ'
   GZSCODE = '204003368020000'
+  GZSCODE_SHOUCHE = '204003133020000'
   RANDSTR = 'kkkkksdflksdfjlskdfjsdlkfjsdlkfj'
 
   CITY = ['苏州', "杭州", "上海", "合肥",
@@ -82,7 +83,6 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
   # gcuis.each do |cui|
   #   UserSystem::GuaziCarUserInfo.upload_guazi cui
   # end
-
 
 
   def self.upload_guazi yc_car_user_info
@@ -226,27 +226,32 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
 
     host_name = "http://commapi.guazi.com/clue/carClue/AddCarSource" #正式环境
 
+    scode = if yc_car_user_info.site_name == 'guazi_shouche'
+              UserSystem::GuaziCarUserInfo::GZSCODE_SHOUCHE
+            else
+              UserSystem::GuaziCarUserInfo::GZSCODE
+            end
+
     param = {
         appkey: UserSystem::GuaziCarUserInfo::GZAPPKEY,
         app_secret: UserSystem::GuaziCarUserInfo::GZAPPSECRET,
         nonce: UserSystem::GuaziCarUserInfo::RANDSTR,
         expires: Time.now.to_i+6000,
         phoneNum: cui.phone,
-        scode: UserSystem::GuaziCarUserInfo::GZSCODE,
+        scode: scode,
         cityName: cui.city_chinese,
     }
 
     param[:signature] = UserSystem::GuaziCarUserInfo.sign_params param
 
 
-
     response = RestClient.post host_name, param
     pp response.body
     response = JSON.parse(response.body)
     yc_car_user_info.guazi_upload_status = response["code"]
-     if response["code"].to_i == 0
-       yc_car_user_info.guazi_status = 1
-     end
+    if response["code"].to_i == 0
+      yc_car_user_info.guazi_status = 1
+    end
     yc_car_user_info.save!
   end
 
@@ -288,7 +293,7 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
 
       if response["code"].to_i == 0
         cui.guazi_id = response["code"]
-        if [2,6,14].include? response["data"]["statusCode"].to_i
+        if [2, 6, 14].include? response["data"]["statusCode"].to_i
           cui.guazi_jiance = response["data"]["statusCode"].to_i
           cui.guazi_yaoyue = '失败'
           cui.save!
@@ -310,12 +315,11 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
   end
 
 
-
   # UserSystem::GuaziCarUserInfo.sign_params param
   def self.sign_params params
     k = ""
     params = params.sort
-    params.each_with_index  do |param,i|
+    params.each_with_index do |param, i|
       k << param[0].to_s
       k << "="
       k << CGI::escape(param[1].to_s)
@@ -329,7 +333,7 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
     require 'digest/md5'
 
 
-    sign = (Digest::MD5.hexdigest(Base64.encode64("#{OpenSSL::HMAC.digest('sha256', UserSystem::GuaziCarUserInfo::GZAPPSECRET, k)}").gsub("\n",'')))[5,10]
+    sign = (Digest::MD5.hexdigest(Base64.encode64("#{OpenSSL::HMAC.digest('sha256', UserSystem::GuaziCarUserInfo::GZAPPSECRET, k)}").gsub("\n", '')))[5, 10]
 
     pp sign
     return sign
@@ -371,8 +375,10 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
         next
       end
 
-      chengjiao = begin response["data"]["CarSoldDate"] rescue '' end
-      chengjiao.gsub!('无','')
+      chengjiao = begin
+        response["data"]["CarSoldDate"] rescue ''
+      end
+      chengjiao.gsub!('无', '')
       next if chengjiao.blank?
 
       cui.guazi_chengjiao = chengjiao
