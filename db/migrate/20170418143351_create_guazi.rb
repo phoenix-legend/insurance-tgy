@@ -25,6 +25,7 @@ class CreateGuazi < ActiveRecord::Migration
       t.date :yaoyue_day
       t.integer :guazi_status
       t.string :guazi_status_message
+      t.string :xiaoqudao
       t.timestamps
 
       t.index :guazi_status
@@ -39,6 +40,7 @@ class CreateGuazi < ActiveRecord::Migration
       t.index :is_pachong
       t.index :is_repeat_one_month
       t.index :guazi_id
+      t.index :xiaoqudao
       t.index :guazi_yaoyue
       t.index :guazi_upload_status
     end

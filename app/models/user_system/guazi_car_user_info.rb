@@ -76,6 +76,7 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
     cui = UserSystem::GuaziCarUserInfo.new options
     cui.save!
 
+    cui.xiaoqudao = cui.car_user_info.wuba_kouling if cui.site_name == 'guazi_shouche'
     cui.created_day = cui.created_at.chinese_format_day
     cui.save!
 
