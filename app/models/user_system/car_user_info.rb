@@ -1763,7 +1763,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                      params[:name]
                    end
     param[:phone] = params[:phone]
-    param[:che_xing] = params[:brand] unless params[:brand].blank?
+     if params[:brand].blank?
+       param[:che_xing] = '未知'
+     else
+       param[:che_xing] = params[:brand]
+     end
     param[:site_name] = 'guazi_shouche'
     param[:city_chinese] = params[:city]
     param[:wuba_kouling] = params[:qudao]

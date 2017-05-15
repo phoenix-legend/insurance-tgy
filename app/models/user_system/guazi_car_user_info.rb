@@ -29,6 +29,10 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
           "保定", "包头", "百色", "巴中", "鞍山", "安阳", "安庆", "红河", "蚌埠", "丽水",
           "咸阳", "乌鲁木齐", "银川", "西宁", "菏泽", "铜陵", "黄冈", "鄂州", "阳泉"
   ]
+  # if false
+  #   cui = UserSystem::CarUserInfo.find 8314722
+  #   UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info cui
+  # end
 
 
   # UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -86,7 +90,7 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
 
 
   def self.upload_guazi yc_car_user_info
-    return if yc_car_user_info.phone == '13472446647'
+    # return if yc_car_user_info.phone == '13472446647'
 
     yc_car_user_info.name = yc_car_user_info.name.gsub('(个人)', '')
     yc_car_user_info.save!
@@ -152,6 +156,8 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
     end
 
     ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ'].each do |kw|
+      next if yc_car_user_info.name.blank?
+      next if yc_car_user_info.car_user_info.che_xing.blank?
       if yc_car_user_info.name.include? kw or yc_car_user_info.car_user_info.che_xing.include? kw
         yc_car_user_info.guazi_upload_status = '疑似走私车或车商'
         yc_car_user_info.save!
