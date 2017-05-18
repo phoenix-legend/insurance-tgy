@@ -10,7 +10,7 @@ module Ganji
     city_hash.each_pair do |areaid, areaname|
       begin
         pp "现在跑赶集.. #{areaname}"
-        1.upto 3 do |i|
+        1.upto 1 do |i|
           url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=1&deal_type=1&page=#{i}"
 
           content = RestClient.get url, {

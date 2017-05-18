@@ -17,7 +17,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   BAIXINGUPLOAD = 'baixingupload'
 
   CITY1 = ['上海', '成都', '杭州', '苏州', '福州', '合肥', "西安", "郑州", "长沙", "常州", "南宁", "济南", "太原", "青岛"]
-  CITY2 = ['深圳', '南京', '广州', '武汉', '佛山', '天津', '东莞', '重庆', '厦门', '北京', "无锡", "宁波", "南昌", "昆明"]
+  CITY2 = ['深圳', '南京', '广州', '武汉', '佛山', '天津', '东莞', '重庆', '厦门', '北京', "无锡", "宁波", "南昌", "昆明", "常熟"]
   CITY3 = ["威海", "烟台", "潍坊", "兰州", "徐州", "南通", "扬州", "济南", "石家庄", "唐山", "宝鸡", "宿州", "洛阳",
            "南阳", "新乡", "湘潭", "株洲", "常德", "岳阳", "沈阳", "大连", "营口", "乌鲁木齐", "泉州", "长春", "哈尔滨", "大庆", "滁州", "芜湖", "惠州", "肇庆",
            "中山", "嘉兴", "贵阳", "遵义", "呼和浩特", "绵阳", "襄阳", "宜昌", "大同", "晋中", "临汾", "运城", "滨州", "德州", "东营", "济宁", "临沂", "日照", "泰安", "枣庄",
@@ -32,6 +32,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     new_hash = {}
     city_names.each do |city_name|
       code = all_hash.invert[city_name]
+      next if code.blank?
       new_hash[code] = city_name
     end
     new_hash
@@ -152,7 +153,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "guiyang" => "贵阳", "zunyi" => "遵义", "huhehaote" => "呼和浩特", "wulumuqi" => "乌鲁木齐", "deyang" => "德阳",
       "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌", "beijing" => "北京",
       "datong" => "大同", "jinzhong" => "晋中", "linfen" => "临汾", "yuncheng" => "运城",
-      "lanzhou" => "兰州",
+      "lanzhou" => "兰州","changshu" => "常熟",
       "binzhou" => "滨州", "dezhou" => "德州", "dongying" => "东营", "jining" => "济宁", "linyi" => "临沂", "rizhao" => "日照", "taian" => "泰安", "zaozhuang" => "枣庄", "ningbo" => "宁波", "suqian" => "宿迁", "tz" => "泰州", "yancheng" => "盐城", "zhenjiang" => "镇江",
 
 
@@ -197,7 +198,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jn" => "济南", "sjz" => "石家庄", "tangshan" => "唐山", "ty" => "太原",
       "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
       "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
-      "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口",
+      "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口",  "changshu" => "常熟",
       "fz" => "福州", "xm" => "厦门", "quanzhou" => "泉州", "ahsuzhou" => "宿州",
       "cc" => "长春", "hrb" => "哈尔滨", "daqing" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
       "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
