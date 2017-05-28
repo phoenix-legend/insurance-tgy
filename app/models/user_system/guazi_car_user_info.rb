@@ -395,6 +395,15 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
     end
   end
 
+  def self.xx
+    shouche_date = '2017-5-15'
+    password = 'i8293lUFopW#ksi(&%$FJK'
+    t = Time.now.to_i
+    sign = Digest::MD5.hexdigest("#{shouche_date}#{t}#{password}")
+    response = RestClient.get "http://che.uguoyuan.cn/api/v1/update_user_infos/shoucheyj?date=#{CGI.escape shouche_date}&time=#{t}&sign=#{sign}"
+    pp JSON.parse response
+  end
+
 
   # 收车业绩
   # 传入查询日期
@@ -407,7 +416,7 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
     shouche_date = Date.parse shouche_date
     BusinessExceptin.raise '未出结果' if shouche_date >= Date.today
 
-    BusinessExceptin.raise '已过期' if Time.now.to_i - time > 300
+    BusinessExceptin.raise '已过期' if Time.now.to_i - time.to_i > 300
 
 
         #提交
