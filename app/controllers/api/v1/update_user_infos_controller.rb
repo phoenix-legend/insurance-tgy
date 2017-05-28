@@ -128,4 +128,10 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
     UserSystem::CarUserInfo.shouche_guazi params
   end
 
+  #小渠道收车业绩
+  def shoucheyj
+    @date = params[:date]
+    @result = UserSystem::GuaziCarUserInfo.shouche_yeji params[:date], params[:time], params[:sign]
+  end
+
 end

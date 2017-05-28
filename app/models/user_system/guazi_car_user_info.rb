@@ -268,7 +268,7 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
     host_name = "http://commapi.guazi.com/clue/carClue/GuaZiGetCarClueStatus" #正式环境
 
 
-    gcui = UserSystem::GuaziCarUserInfo.where("guazi_yaoyue is null and created_at > ? and guazi_upload_status = '0'", Time.now - 15.days)
+    gcui = UserSystem::GuaziCarUserInfo.where("guazi_yaoyue is null and created_at > ? and guazi_upload_status = '0'", Time.now - 20.days)
     gcui.find_each do |cui|
       next if cui.guazi_upload_status.blank?
       param = {
@@ -393,10 +393,65 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
 
 
     end
+  end
 
+
+  # 收车业绩
+  # 传入查询日期
+  def self.shouche_yeji shouche_date, time, paramsign
+    password = 'i8293lUFopW#ksi(&%$FJK'
+    sign = Digest::MD5.hexdigest("#{shouche_date}#{time}#{password}")
+    BusinessException.raise '签名不正确' unless sign == paramsign
+
+    shouche_date = "2017-05-15"
+    shouche_date = Date.parse shouche_date
+    BusinessExceptin.raise '未出结果' if shouche_date >= Date.today
+
+    BusinessExceptin.raise '已过期' if Time.now.to_i - time > 300
+
+
+        #提交
+    push_cuis = UserSystem::GuaziCarUserInfo.
+        joins("left join car_user_infos  on guazi_car_user_infos.car_user_info_id = car_user_infos.id").
+        where("guazi_car_user_infos.created_day = ? and guazi_car_user_infos.site_name = ? and guazi_car_user_infos.guazi_upload_status in ('0', '重复')",
+              shouche_date, "guazi_shouche").
+        group('car_user_infos.wuba_kouling').
+        select("count(*) as c, car_user_infos.wuba_kouling as qudao")
+
+    shangjia_cuis = UserSystem::GuaziCarUserInfo.
+        joins("left join car_user_infos  on guazi_car_user_infos.car_user_info_id = car_user_infos.id").
+        where("guazi_car_user_infos.guazi_yaoyue = '成功' and guazi_car_user_infos.yaoyue_day = ? and guazi_car_user_infos.site_name = ? ",
+              shouche_date, "guazi_shouche").
+        group('car_user_infos.wuba_kouling').
+        select("count(*) as c, car_user_infos.wuba_kouling as qudao")
+
+    chengjiao_cuis = UserSystem::GuaziCarUserInfo.
+        joins("left join car_user_infos  on guazi_car_user_infos.car_user_info_id = car_user_infos.id").
+        where("guazi_car_user_infos.guazi_yaoyue = '成功' and guazi_car_user_infos.guazi_chengjiao > ? and guazi_car_user_infos.guazi_chengjiao < ? and guazi_car_user_infos.site_name = ? ",
+              "#{shouche_date.strftime("%Y-%m-%d")} 00:00:00","#{shouche_date.chinese_format_day} 23:59:59" , "guazi_shouche").
+        group('car_user_infos.wuba_kouling').
+        select("count(*) as c, car_user_infos.wuba_kouling as qudao")
+
+    return {:push => push_cuis, :shangjia => shangjia_cuis, :chengjiao => chengjiao_cuis}
+
+
+    # 上架  成交
+
+
+    # gz_today_chenggong = UserSystem::GuaziCarUserInfo.where("guazi_yaoyue = '成功' and yaoyue_day = ?", Date.today).count
+    # gz_month_chenggong = UserSystem::GuaziCarUserInfo.where("guazi_yaoyue = '成功' and yaoyue_day >= ?", Date.new(Date.today.year, Date.today.month, 1)).count
+
+    # 瓜子创建量
+    # gz_today_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_id = '0' and created_day = ?", Date.today ).count
+    # gz_yesterady_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_id = '0' and created_day = ?", Date.today.yesterday ).count
+
+    # 瓜子提交量,包含重复和创建
+    # gz_today_all_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_upload_status in ('0', '重复') and created_day = ?", Date.today).count
+    # gz_yesterady_all_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_upload_status in ('0', '重复') and created_day = ?", D
   end
 
 end
+
 __END__
 
 

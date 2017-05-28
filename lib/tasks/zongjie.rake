@@ -15,6 +15,8 @@ namespace :zongjie do
 			UserSystem::PengyoucheCarUserInfo.query_result
       #瓜子查询
       UserSystem::GuaziCarUserInfo.query_guazi
+      # 瓜子成交查询
+			UserSystem::GuaziCarUserInfo.query_guazi_chengjiao
 		end
 	end
 

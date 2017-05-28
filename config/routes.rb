@@ -141,6 +141,7 @@ Rails.application.routes.draw do
 
           get :get_kouling_for_kefu
           post :shouche
+          get :shoucheyj
         end
       end
     end
