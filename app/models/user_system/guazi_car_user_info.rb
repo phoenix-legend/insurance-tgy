@@ -414,9 +414,9 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
 
     shouche_date = "2017-05-15"
     shouche_date = Date.parse shouche_date
-    BusinessExceptin.raise '未出结果' if shouche_date >= Date.today
+    BusinessException.raise '未出结果' if shouche_date >= Date.today
 
-    BusinessExceptin.raise '已过期' if Time.now.to_i - time.to_i > 300
+    BusinessException.raise '已过期' if Time.now.to_i - time.to_i > 300
 
 
         #提交
