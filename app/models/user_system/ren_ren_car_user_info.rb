@@ -217,6 +217,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       if yc_car_user_info.car_user_info.note.include? kw
         yc_car_user_info.renren_upload_status = '疑似车商'
         yc_car_user_info.save!
+        UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
         return
       end
     end
@@ -279,6 +280,11 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     #   return
     # end
     config_key_words = 0
+
+    if rand(10) >= 8
+      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+      return
+    end
 
 
 
