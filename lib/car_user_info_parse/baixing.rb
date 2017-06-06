@@ -6,7 +6,7 @@ module Baixing
     redis = Redis.current
     return_urls = []
     urls.each do |url|
-      next unless url.match /ershouqiche/
+      next unless url.match /ershouqiche|ershouche|che168/
       next if redis[url] == 'y'
       cui = UserSystem::CarUserInfo.where detail_url: url
       next unless cui.blank?
