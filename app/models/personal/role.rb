@@ -50,5 +50,18 @@ class Personal::Role < ActiveRecord::Base
         end
       end
     end
+
+    def self.system_name
+      redis = Redis.current
+      system_name = redis["system_name"]
+      if system_name.blank?
+        name = Personal::Role.first.name
+        redis["system_name"] = name
+        return name
+      else
+        return system_name
+      end
+
+    end
   end
 end

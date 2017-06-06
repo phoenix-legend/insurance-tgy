@@ -468,10 +468,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
 
-    UploadTianTian.upload_one_tt car_user_info
+    system_name = Personal::Role.system_name
 
-    #同步至又一车
-    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    UploadTianTian.upload_one_tt car_user_info
 
     # 同步给人人车
     UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -483,8 +482,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
+    return if system_name == 'ali'  #阿里平台不提交以下几个B端。
+
     # 同步至车置宝  车置宝作废
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
+
+    #同步至又一车
+    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
     # 同步至4A

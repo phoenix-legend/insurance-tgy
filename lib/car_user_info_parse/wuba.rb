@@ -577,6 +577,19 @@ module Wuba
     return unless car_user_info.phone.blank?
     return if car_user_info.detail_url.match /zhineng/
 
+    system_name = Personal::Role.system_name
+    if system_name == 'ali'
+      response = RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/vps_urls', {urls: car_user_info.detail_url}
+      response = JSON.parse(response.body)
+
+      detail_urls = response["data"]
+
+      if detail_urls.blank?
+        car_user_info.tt_upload_status = 'skip'
+        car_user_info.save!
+        return
+      end
+    end
 
     begin
       puts '更新明细'
