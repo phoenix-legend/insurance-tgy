@@ -977,6 +977,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     UserSystem::CarType.all.each do |t|
       simple_type = t.name.gsub(t.car_brand.name, '')
+      simple_type.strip!
       if self.che_xing.match Regexp.new(t.name, true) or self.che_xing.match Regexp.new(simple_type, true)
         self.brand = t.car_brand.name
         self.cx = t.name
