@@ -1,6 +1,7 @@
 class UserSystem::CarBrand < ActiveRecord::Base
   require 'rest-client'
   require 'pp'
+  has_many :car_types, :class_name => 'UserSystem::CarType'
 
   # UserSystem=>=>CarBrand.get_brand
 #   def self.get_brand
