@@ -79,7 +79,7 @@ module Ganji
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
     threads = []
     city_hash.each_pair do |areaid, areaname|
-      if threads.length > 3
+      if threads.length > 10
         while true
           threads.delete_if { |thread| thread.status == false }
           if threads.length < 3
@@ -164,14 +164,22 @@ module Ganji
   def self.get_car_user_list party = 0
 
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
+    threads = []
 
     city_hash.each_pair do |areaid, areaname|
-
+      if threads.length > 3
+        while true
+          threads.delete_if { |thread| thread.status == false }
+          if threads.length < 3
+            break
+          else
+            sleep 0.5
+          end
+        end
+      end
+      t = Thread.new do
       begin
         pp "现在跑赶集.. #{areaname}"
-        # 赶集注销掉分页循环,只跑第一页即可
-        # 1.upto 1 do |i|
-        # url = "http://wap.ganji.com/#{areaid}/ershouche/?back=search&agent=1&deal_type=1&page=#{i}"
 
         url = "http://#{areaid}.ganji.com/ershouche/a1/"
         content = RestClient.get url, {
@@ -250,67 +258,21 @@ module Ganji
       rescue Exception => e
         pp e
       end
+      end
+      threads << t
 
 
+    end
+    1.upto(200) do
+      sleep(1)
+      # pp '休息.......'
+      threads.delete_if { |thread| thread.status == false }
+      break if threads.blank?
     end
 
   end
 
-  #  Ganji.get_car_user_list  单线程sleep 版
-  # def self.get_car_user_list_v2 content, areaid
-  #
-  #   begin
-  #     areaname = UserSystem::CarUserInfo::GANJI_CITY[areaid]
-  #     return if content.blank?
-  #     content = Nokogiri::HTML(content)
-  #     car_infos = content.css(".infor")
-  #     return if car_infos.blank?
-  #
-  #
-  #     car_infos.each do |car_info|
-  #       detail_url = car_info.attributes["href"].value
-  #       detail_url.gsub!('_', '/')
-  #       chexing = car_info.css('.iName').text
-  #       chexing.gsub!(/\n|\s/, '')
-  #
-  #       price = car_info.css('.price').text
-  #       price.gsub!('万元', '')
-  #
-  #       cheling_licheng = car_info.css('.iol').text
-  #       cheling = begin
-  #         cheling_licheng.split('年')[0] rescue 2012
-  #       end
-  #       cheling.gsub!('  ', '')
-  #       cheling.gsub!('\n|\s|\r', '')
-  #       licheng = begin
-  #         cheling_licheng.split(/上牌|万公里/)[1] rescue 2012
-  #       end
-  #       is_cheshang = (chexing.match /个人/).blank?
-  #       cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: "~#{chexing}",
-  #                                                              che_ling: cheling,
-  #                                                              milage: licheng,
-  #                                                              detail_url: "http://wap.ganji.com#{detail_url.split('?')[0]}",
-  #                                                              city_chinese: areaname,
-  #                                                              price: price,
-  #                                                              site_name: 'ganji',
-  #                                                              is_cheshang: is_cheshang
-  #
-  #
-  #       unless cui_id.blank?
-  #         begin
-  #           Ganji.update_one_detail cui_id
-  #         rescue Exception => e
-  #           pp "赶集出错"
-  #           pp e
-  #         end
-  #       end
-  #
-  #     end
-  #   rescue Exception => e
-  #     pp e
-  #   end
-  #
-  # end
+
 
 
   def self.update_one_detail car_user_info_id
