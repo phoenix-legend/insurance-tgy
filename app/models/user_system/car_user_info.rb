@@ -691,7 +691,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   def self.run_ganji party = 0
 
     begin
-      Ganji.get_car_user_list party
+      (1..10).each do |i|
+        Ganji.get_car_user_list party
+      end
     rescue Exception => e
       pp e
     end

@@ -191,7 +191,7 @@ module Wuba
 
             cheling = cheling_licheng.split('年')[0]
             milage = cheling_licheng.split('年')[1]
-            milage.gsub(/\s|万|公里/, '')
+            milage.gsub(/\s|万|公里/, '') unless milage.blank?
 
 
             url = tr.css('a')[0].attributes["href"].value
