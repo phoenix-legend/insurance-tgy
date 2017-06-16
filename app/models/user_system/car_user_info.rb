@@ -475,8 +475,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # 同步给人人车
     UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
 
-    #朋友E车
-    # UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # 朋友E车
+    UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     #传给瓜子
     UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -544,7 +544,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
 
     #朋友E车
-    # UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     #传给瓜子
     UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
