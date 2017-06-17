@@ -641,7 +641,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   def self.run_che168 sub_city_party = 0
 
     begin
-      Che168.get_car_user_list sub_city_party
+      (1..20).each do |i|
+        Che168.get_car_user_list sub_city_party
+      end
+
     rescue Exception => e
       pp e
     end

@@ -4,12 +4,35 @@ module UploadTianTian
   CITY = ["杭州", "深圳", "西安", "珠海", "中山",
           "北京", #先临时取消北京
           "上海", "苏州", "南京", "天津", "广州", "佛山", "重庆", "成都", '绍兴', '滁州', '顺德', '惠州', '东莞', '武汉', '宁波',
-          '合肥', '长沙', '青岛', '郑州', '南宁', "温州","太原","沈阳","无锡","昆明","厦门","南昌"]
+          '合肥', '长沙', '青岛', '郑州', '南宁', "温州", "太原", "沈阳", "无锡", "昆明", "厦门", "南昌"]
 
 
   CITY_YL = ["上海", "北京", "苏州", "南京", "天津", "佛山", "重庆", "成都", '绍兴', '滁州', '顺德', '惠州', '武汉', '宁波',
              '合肥', '长沙', '青岛', '郑州', '东莞', '南宁', "杭州", "深圳", "西安", "广州", "珠海", "中山",
-             "温州","太原","沈阳","无锡","昆明","厦门","南昌"]
+             "温州", "太原", "沈阳", "无锡", "昆明", "厦门", "南昌"]
+
+  # UploadTianTian::CITY_YL.each do |city|
+  #   cuis = ::UserSystem::CarUserInfo.where("city_chinese = ? and tt_code is not null and created_at > '2017-06-01 00:00:00' and created_at < '2017-06-08 00:00:00'", city).
+  #       group(:tt_created_day).
+  #       select("tt_created_day, count(*) as c")
+  #
+  #   all_count = 0
+  #   cuis.each do |cui|
+  #     all_count += cui.c
+  #   end
+  #
+  #   pp "#{city} :  #{all_count/7}"
+  # end
+
+  # ["郑州", "合肥", "深圳"].each do |city|
+  #   number_14 = ::UserSystem::CarUserInfo.where("city_chinese = ? and tt_code is not null and created_at > '2017-06-14 00:00:00' and created_at < '2017-06-14 18:00:00'", city).count
+  #   number_14_yx = ::UserSystem::CarUserInfo.where("city_chinese = ? and tt_code is not null and tt_id is not null and created_at > '2017-06-14 00:00:00' and created_at < '2017-06-14 18:00:00'", city).count
+  #   pp "#{city}14日有效率: #{number_14_yx.to_f/number_14}"
+  #
+  #   number_16 = ::UserSystem::CarUserInfo.where("city_chinese = ? and tt_code is not null and created_at > '2017-06-16 00:00:00' and created_at < '2017-06-16 18:00:00'", city).count
+  #   number_16_yx =_ ::UserSystem::CarUserInfo.where("city_chinese = ? and tt_code is not null and tt_id is not null and  created_at > '2017-06-16 00:00:00' and created_at < '2017-06-16 18:00:00'", city).count
+  #   pp "#{city}16日有效率: #{number_16_yx.to_f/number_16}"
+  # end
 
 
   SOURCE_YL = '2-775-778' #yl这边的source
