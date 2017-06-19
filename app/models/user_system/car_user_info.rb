@@ -229,14 +229,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   }
 
 
-  def self.get_ganji_sub_cities sub_party = 0
+  def self.get_ganji_sub_cities sub_party = 0, cities = []
+    cities = nil if cities.blank?
     case sub_party
       when 0
-        UserSystem::CarUserInfo.get_city_hash UserSystem::CarUserInfo::GANJI_CITY, UserSystem::CarUserInfo::CITY1
+        UserSystem::CarUserInfo.get_city_hash UserSystem::CarUserInfo::GANJI_CITY, cities||UserSystem::CarUserInfo::CITY1
       when 1
-        UserSystem::CarUserInfo.get_city_hash UserSystem::CarUserInfo::GANJI_CITY, UserSystem::CarUserInfo::CITY2
+        UserSystem::CarUserInfo.get_city_hash UserSystem::CarUserInfo::GANJI_CITY, cities||UserSystem::CarUserInfo::CITY2
       else
-        UserSystem::CarUserInfo.get_city_hash UserSystem::CarUserInfo::GANJI_CITY, UserSystem::CarUserInfo::CITY3
+        UserSystem::CarUserInfo.get_city_hash UserSystem::CarUserInfo::GANJI_CITY, cities||UserSystem::CarUserInfo::CITY3
     end
   end
 

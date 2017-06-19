@@ -167,13 +167,13 @@ module Ganji
     threads = []
 
     city_hash.each_pair do |areaid, areaname|
-      if threads.length > 3
+      if threads.length > 10
         while true
           threads.delete_if { |thread| thread.status == false }
-          if threads.length < 3
+          if threads.length < 10
             break
           else
-            sleep 0.5
+            sleep 0.1
           end
         end
       end
@@ -193,17 +193,67 @@ module Ganji
 
   end
 
+
+
+  # 从www网站上获取列表, 3g版由于拿不到及时性高的数据作废
+  # Ganji.get_car_user_list_one_city_list 1, ['上海']
+  def self.get_car_user_list_one_city_list party, citys
+
+    # citys = ['上海']
+    city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party, citys
+    # threads = []
+
+    (1..60).each do |i|
+      city_hash.each_pair do |areaid, areaname|
+
+        pp "活线程数量 #{Thread.list.length} "
+        if Thread.list.length > 15
+          while true
+            # threads.delete_if { |thread| thread.status == false || thread.status == nil || thread.status == "aborting"}
+            if Thread.list.length < 17
+              # sleep 1
+              break
+            else
+              sleep 0.2
+            end
+          end
+        end
+        sleep 1
+        t = Thread.start do
+
+          pp "执行开始 #{areaname}  #{Time.now}"
+          Ganji.get_car_user_list_one_city areaname, areaid
+          pp "执行结束 #{areaname} #{Time.now}"
+        end
+        # t.join
+        # threads << t
+      end
+    end
+
+    Thread.list.each do |thread|
+      thread.join
+    end
+
+    # 1.upto(200) do
+    #   sleep(1)
+    #   # pp '休息.......'
+    #   # threads.delete_if { |thread| thread.status == false }
+    #   break if Thread.list.length == 0 #threads.blank?
+    # end
+
+  end
+
   def self.get_car_user_list_one_city areaname, areaid
     begin
-      pp "现在跑赶集.. #{areaname}"
+      # pp "现在跑赶集.. #{areaname}"
 
       url = "http://#{areaid}.ganji.com/ershouche/a1/"
-      pp "发起请求 #{areaname}  #{Time.now}"
+      # pp "发起请求 #{areaname}  #{Time.now}"
       content = RestClient.get url, {
           'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
           'Cookie' => 'ganji_uuid=5283133772326517092624; ganji_xuuid=f60ba7d5-b4de-4c7b-b8e0-890ad74ebaea.1463541968024; Hm_lvt_73a12ba5aced499cae6ff7c0a9a989eb=1463541966,1463794955; wap_list_view_type=pic; gr_user_id=8fcb69d6-a9e2-43f2-b05d-955ce16276a5; GANJISESSID=f4096cfc2cde87d4b1622848d2afce66; mobversionbeta=3g; index_city_refuse=refuse; GANJI_SID=d727f98d-2205-42b7-c9e5-796c36bd8984; __utmganji_v20110909=0xe17e1688f8364e8228f5a20bbf08f82; cityDomain=hz; webimverran=82; statistics_clientid=me; ErshoucheDetailPageScreenType=1440; citydomain=sh; __utmt=1; Hm_lvt_8dba7bd668299d5dabbd8190f14e4d34=1490169006; Hm_lpvt_8dba7bd668299d5dabbd8190f14e4d34=1490174240; ganji_login_act=1490174240592; lg=1; vehicle_list_view_type=1; _gl_tracker=%7B%22ca_source%22%3A%22-%22%2C%22ca_name%22%3A%22-%22%2C%22ca_kw%22%3A%22-%22%2C%22ca_id%22%3A%22-%22%2C%22ca_s%22%3A%22self%22%2C%22ca_n%22%3A%22-%22%2C%22ca_i%22%3A%22-%22%2C%22sid%22%3A56930235227%7D; __utma=32156897.2034222174.1460360232.1490168931.1490174031.6; __utmb=32156897.10.10.1490174031; __utmc=32156897; __utmz=32156897.1490168931.5.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)'
       }
-      pp "收到请求 #{areaname} #{Time.now}"
+      # pp "收到请求 #{areaname} #{Time.now}"
       content = content.body
 
 
