@@ -162,56 +162,39 @@ module Ganji
   # 从www网站上获取列表, 3g版由于拿不到及时性高的数据作废
   # Ganji.get_car_user_list 0
   def self.get_car_user_list party = 0
-
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
-    threads = []
-
-    city_hash.each_pair do |areaid, areaname|
-      if threads.length > 10
-        while true
-          threads.delete_if { |thread| thread.status == false }
-          if threads.length < 10
-            break
-          else
-            sleep 0.1
+    (1..60).each do |i|
+      city_hash.each_pair do |areaid, areaname|
+        if Thread.list.length > 12
+          while true
+            if Thread.list.length < 14
+              break
+            else
+              sleep 0.2
+            end
           end
         end
+        sleep 0.3
+        Thread.start do
+          Ganji.get_car_user_list_one_city areaname, areaid
+        end
       end
-      t = Thread.new do
-        Ganji.get_car_user_list_one_city areaname, areaid
-      end
-      threads << t
-
-
     end
-    1.upto(200) do
-      sleep(1)
-      # pp '休息.......'
-      threads.delete_if { |thread| thread.status == false }
-      break if threads.blank?
-    end
-
   end
-
 
 
   # 从www网站上获取列表, 3g版由于拿不到及时性高的数据作废
   # Ganji.get_car_user_list_one_city_list 1, ['上海']
   def self.get_car_user_list_one_city_list party, citys
 
-    # citys = ['上海']
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party, citys
-    # threads = []
-
-    (1..60).each do |i|
+    (1..1000).each do |i|
       city_hash.each_pair do |areaid, areaname|
 
         pp "活线程数量 #{Thread.list.length} "
-        if Thread.list.length > 15
+        if Thread.list.length > 8
           while true
-            # threads.delete_if { |thread| thread.status == false || thread.status == nil || thread.status == "aborting"}
-            if Thread.list.length < 17
-              # sleep 1
+            if Thread.list.length < 10
               break
             else
               sleep 0.2
@@ -219,28 +202,11 @@ module Ganji
           end
         end
         sleep 1
-        t = Thread.start do
-
-          pp "执行开始 #{areaname}  #{Time.now}"
+        Thread.start do
           Ganji.get_car_user_list_one_city areaname, areaid
-          pp "执行结束 #{areaname} #{Time.now}"
         end
-        # t.join
-        # threads << t
       end
     end
-
-    Thread.list.each do |thread|
-      thread.join
-    end
-
-    # 1.upto(200) do
-    #   sleep(1)
-    #   # pp '休息.......'
-    #   # threads.delete_if { |thread| thread.status == false }
-    #   break if Thread.list.length == 0 #threads.blank?
-    # end
-
   end
 
   def self.get_car_user_list_one_city areaname, areaid
@@ -257,12 +223,10 @@ module Ganji
       content = content.body
 
 
-
       content.gsub!('list-pic clearfix cursor_pointer ', 'dlclass')
       content.gsub!('comNum js-price', 'priceclass')
 
       content = Nokogiri::HTML(content)
-
 
 
       car_infos = content.css('.dlclass')
@@ -315,8 +279,6 @@ module Ganji
       pp e
     end
   end
-
-
 
 
   def self.update_one_detail car_user_info_id
