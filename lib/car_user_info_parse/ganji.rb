@@ -31,6 +31,7 @@ module Ganji
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party, citys
     (1..1000).each do |i|
       city_hash.each_pair do |areaid, areaname|
+        brand = UserSystem::CarBrand.first
 
         pp "活线程数量 #{Thread.list.length} "
         if Thread.list.length > 8
