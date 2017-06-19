@@ -16,6 +16,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   YAOLIUBAUPLOAD = '168upload'
   BAIXINGUPLOAD = 'baixingupload'
 
+
+
   CITY1 = ['上海', '成都', '杭州', '苏州', '福州', '合肥', "西安", "郑州", "长沙", "常州", "南宁", "济南", "太原", "青岛","沈阳"]
   # CITY2 = ['深圳', '南京', '广州', '武汉', '佛山', '天津', '东莞', '重庆', '厦门', '北京', "无锡", "宁波", "南昌", "昆明", "常熟"]
   CITY2 = ['深圳', '南京', '广州', '武汉', '佛山', '天津', '东莞', '重庆', '厦门', '北京', "无锡", "宁波", "南昌", "昆明","温州"]
@@ -226,6 +228,49 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "huanggang" => "黄冈",
       "ezhou" => "鄂州",
       "yangquan" => "阳泉"
+  }
+
+
+  GANJI_CITY_API = {
+      '上海' => '100', '北京' => '0', '成都' => '500' , "深圳" => '401', '南京' => '900',
+      "广州" => '400', "武汉" => '2500',"天津" => '200', "苏州" => '901', "杭州" => '600',
+      "东莞" => '402',  "重庆" => '300', "无锡" => '902', '佛山' => '405',
+      '郑州' => '1200', '长沙' => '2600',  '西安' => '2300', '青岛' => '1501', '镇江' => '910',
+      '威海' => '1502', '烟台' => '1506', '潍坊' => '1507',
+      "常州" => '904', '徐州'=> '903', '南通' => '905','扬州' =>'906', "济南"=>'1500',
+      "石家庄" => '1100', "唐山" => '1101', "太原" => '2000', "福州" => '1000', "合肥" =>'1600',
+      "南宁" => "1700", "沈阳" => '800',  '厦门' => '1001', "宁波" => "601", "南昌" => "2700",
+      "昆明" => '2800',"温州" => '602'
+
+
+      #
+      # "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
+      # "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
+      # "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口",  "changshu" => "常熟",
+      # "fz" => "福州", "xm" => "厦门", "quanzhou" => "泉州", "ahsuzhou" => "宿州",
+      # "cc" => "长春", "hrb" => "哈尔滨", "daqing" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
+      # "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
+      # "gy" => "贵阳", "zunyi" => "遵义", "nmg" => "呼和浩特", "xj" => "乌鲁木齐", "deyang" => "德阳",
+      # "mianyang" => "绵阳", "xiangyang" => "襄阳", "yichang" => "宜昌",
+      # "datong" => "大同", "jinzhong" => "晋中", "linfen" => "临汾", "yuncheng" => "运城", "lz" => "兰州",
+      # "binzhou" => "滨州", "dezhou" => "德州", "dongying" => "东营", "jining" => "济宁", "linyi" => "临沂", "rizhao" => "日照", "taian" => "泰安", "zaozhuang" => "枣庄", "nb" => "宁波", "suqian" => "宿迁", "jstaizhou" => "泰州", "yancheng" => "盐城", "zhenjiang" => "镇江",
+      #
+      # "zigong" => "自贡", "zibo" => "淄博", "ziyang" => "资阳", "zhumadian" => "驻马店", "zhuhai" => "珠海", "changzhi" => "长治", "zhangzhou" => "漳州", "zhangjiakou" => "张家口", "gxyulin" => "玉林", "yiyang" => "益阳", "yiwu" => "义乌", "jxyichun" => "宜春", "yibin" => "宜宾", "yancheng" => "盐城",
+      # "yanbian" => "延边", "yaan" => "雅安", "xuchang" => "许昌", "xingtai" => "邢台", "xinyang" => "信阳", "xiaogan" => "孝感", "xianning" => "咸宁", "wenzhou" => "温州", "tongliao" => "通辽", "tieling" => "铁岭", "zjtaizhou" => "台州", "suining" => "遂宁", "suizhou" => "随州", "songyuan" => "松原",
+      # "siping" => "四平", "shiyan" => "十堰", "shaoxing" => "绍兴", "shangrao" => "上饶", "shangqiu" => "商丘", "shantou" => "汕头", "sanming" => "三明", "qujing" => "曲靖", "quzhou" => "衢州", "qinhuangdao" => "秦皇岛", "qinzhou" => "钦州", "qiqihaer" => "齐齐哈尔", "putian" => "莆田", "pingdingshan" => "平顶山",
+      # "panzhihua" => "攀枝花", "ningde" => "宁德", "neijiang" => "内江", "nanchong" => "南充", "mudanjiang" => "牡丹江", "meishan" => "眉山", "maanshan" => "马鞍山", "luohe" => "漯河", "luzhou" => "泸州", "longyan" => "龙岩", "liupanshui" => "六盘水", "luan" => "六安", "liuzhou" => "柳州", "liaoyang" => "辽阳",
+      # "lianyungang" => "连云港", "leshan" => "乐山", "langfang" => "廊坊", "km" => "昆明", "kaifeng" => "开封", "jiujiang" => "九江", "jingdezhen" => "景德镇", "jingzhou" => "荆州", "jingmen" => "荆门", "jinzhou" => "锦州", "jinhua" => "金华", "jiaozuo" => "焦作", "jiangmen" => "江门", "jiamusi" => "佳木斯",
+      # "jilin" => "吉林", "jian" => "吉安", "huangshi" => "黄石", "huaian" => "淮安", "huzhou" => "湖州", "nmg" => "呼和浩特", "hengshui" => "衡水", "handan" => "邯郸", "gl" => "桂林", "guangyuan" => "广元", "guangan" => "广安", "ganzhou" => "赣州", "fuyang" => "阜阳", "jxfuzhou" => "抚州", "fushun" => "抚顺",
+      # "fz" => "福州", "enshi" => "恩施", "eerduosi" => "鄂尔多斯", "deyang" => "德阳", "dali" => "大理", "dazhou" => "达州", "chuxiong" => "楚雄", "chifeng" => "赤峰", "chengde" => "承德", "cangzhou" => "沧州", "beihai" => "北海", "baoding" => "保定", "baotou" => "包头", "baise" => "百色", "bazhong" => "巴中",
+      # "anshan" => "鞍山", "anyang" => "安阳", "anqing" => "安庆", "honghe" => "红河", "bengbu" => "蚌埠", "lishui" => "丽水",
+      # "xianyang" => "咸阳",
+      # "yc" => "银川",
+      # "xn" => "西宁",
+      # "heze" => "菏泽", "滁州" => "chuzhou",
+      # "tongling" => "铜陵",
+      # "huanggang" => "黄冈",
+      # "ezhou" => "鄂州",
+      # "yangquan" => "阳泉"
   }
 
 
