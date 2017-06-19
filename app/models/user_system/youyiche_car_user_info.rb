@@ -78,8 +78,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     # [  "贵阳", "临沂", "广州","佛山", "南通", "嘉兴", "金华", "温州", '台州', "合肥","徐州","大连","沈阳", "天津", "哈尔滨","长春"].each do |k|
 
 
-    # "泉州","石家庄","邯郸","唐山","沧州","保定"
-    ["厦门","福州"].each do |k|
+    #"厦门",        "泉州","石家庄","邯郸","唐山","沧州","保定"
+    ["福州"].each do |k|
       cuis = UserSystem::CarUserInfo.where("city_chinese = ? and created_at > ?", k, Time.now - 90.days)
       cuis.each do |cui|
         pp cui.id
