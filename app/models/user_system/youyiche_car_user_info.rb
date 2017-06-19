@@ -79,8 +79,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
 
     #"厦门",        "泉州","石家庄","邯郸","唐山","沧州","保定"
-    ["福州"].each do |k|
-      cuis = UserSystem::CarUserInfo.where("city_chinese = ? and created_at > ?", k, Time.now - 90.days)
+    ["合肥"].each do |k|
+      cuis = UserSystem::CarUserInfo.where("city_chinese = ? and created_at > ?", k, Time.now - 120.days)
       cuis.each do |cui|
         pp cui.id
         next if cui.tt_yaoyue == '历史遗留数据'
