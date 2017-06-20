@@ -10,6 +10,7 @@ module Ganji
         (1..100).each do |i|
           Ganji.get_car_user_list_one_city_list 1, cities
         end
+
         return
       end
     end
@@ -52,7 +53,7 @@ module Ganji
             if Thread.list.length < 10
               break
             else
-              sleep 0.2
+              sleep 0.5
             end
           end
         end
@@ -62,6 +63,8 @@ module Ganji
         end
       end
     end
+
+
   end
 
 
@@ -129,6 +132,7 @@ module Ganji
           end
         end
       end
+      ActiveRecord::Base.connection.close
     rescue Exception => e
       pp e
     end
@@ -202,6 +206,7 @@ module Ganji
           end
         end
       end
+      ActiveRecord::Base.connection.close
     rescue Exception => e
       pp e
     end
