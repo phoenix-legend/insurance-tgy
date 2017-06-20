@@ -72,11 +72,11 @@ module Ganji
 
       areaid2 = UserSystem::CarUserInfo::GANJI_CITY_API[areaname]
       if areaid2.blank?
-        pp '走网页'
+        pp "网页  #{areaname}  #{Time.now.chinese_format}"
         Ganji.get_car_user_list_one_city areaname, areaid
         return
       end
-      pp '走接口'
+      pp "接口  #{areaname}  #{Time.now.chinese_format}"
       url = "http://mobapi.ganji.com/datashare/HTTP/1.1"
       response = RestClient.post url,
                                  {jsonArgs: '{"customerId":"801","cityScriptIndex":"'+ "#{areaid2}" +'","categoryId":"6","pageIndex":"0","pageSize":"10","majorCategoryScriptIndex":"1","queryFilters":[{"name":"deal_type","operator":"=","value":"0"},{"name":"agent","operator":"=","value":"0"}],"sortKeywords":[{"field":"post_at","sort":"desc"}]}',
@@ -96,7 +96,7 @@ module Ganji
       response = JSON.parse response.body
       # pp response
       car_infos = response["posts"]
-      pp "接口 #{car_infos.length} 条记录"
+      pp "接口 #{car_infos.length} 条记录 #{areaname}"
       car_infos.each do |car_info|
 
         k = car_info["detail_url"].match /puid=(\d*)&/
