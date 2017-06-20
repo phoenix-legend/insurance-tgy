@@ -337,6 +337,12 @@ module Baixing
         return
       end
 
+      if response.match /【搞定了！】/
+        car_user_info.need_update = false
+        car_user_info.save
+        return
+      end
+
       detail_content1.gsub!('content normal-content long-content', 'eric_content')
       detail_content1.gsub!('content normal-content', 'eric_content')
       detail_content1.gsub!('friendly datetime', 'fabushijian')
