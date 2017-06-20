@@ -2,6 +2,19 @@ module Ganji
   # 多线程获取汽车列表, 多个城市
   # Ganji.get_car_user_list 0
   def self.get_car_user_list party = 0
+    if File.exist? '/data/cities_name'
+      cities = File.read '/data/cities_name'
+      cities.strip!
+      cities = cities.split(',')
+      if not cities.blank?
+        (1..100).each do |i|
+          Ganji.get_car_user_list_one_city_list 1, cities
+        end
+        return
+      end
+    end
+
+
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
     (1..100).each do |i|
       city_hash.each_pair do |areaid, areaname|
@@ -312,8 +325,6 @@ module Ganji
   end
 
 
-
-
   # {"agent" => "个人",
   #  "CategoryName" => "车辆买卖",
   #  "CategoryId" => "6",
@@ -402,7 +413,6 @@ module Ganji
   #  'GjData-Version' => '1.0',
   #  'uniqueId' => '93c6fcc41a2fbcb954a10a1bd87c53cb',
   # }
-
 
 
   #  Ganji.get_car_user_list  单线程sleep 版
@@ -562,7 +572,6 @@ module Ganji
   #     break if threads.blank?
   #   end
   # end
-
 
 
 end
