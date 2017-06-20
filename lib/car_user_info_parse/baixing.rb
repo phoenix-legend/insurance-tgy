@@ -353,7 +353,14 @@ module Baixing
           phone = detail_content.css(".contact-main-txt")[0].text
         rescue Exception => e
           pp "car_user_info id is   #{car_user_info_id}"
+
+          pp detail_url
+
+          pp response
+
           raise e
+
+
 
         end
       end
