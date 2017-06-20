@@ -63,6 +63,7 @@ module Che168
           rescue Exception => e
             pp e
           end
+          ActiveRecord::Base.connection.close
         end
 
       end
@@ -148,9 +149,9 @@ module Che168
           pp $@
           car_user_info.need_update = false
           car_user_info.save
-          # ActiveRecord::Base.connection.close
+          ActiveRecord::Base.connection.close
         end
-        # ActiveRecord::Base.connection.close
+        ActiveRecord::Base.connection.close
       end
       threads << t
       # pp "现在线程池中有#{threads.length}个。"
