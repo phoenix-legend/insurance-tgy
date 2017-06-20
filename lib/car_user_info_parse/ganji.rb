@@ -5,7 +5,7 @@ module Ganji
     if File.exist? '/data/cities_name'
       cities = File.read '/data/cities_name'
       cities.strip!
-      cities = cities.split(',')
+      cities = cities.split(',|，')
       if not cities.blank?
         (1..100).each do |i|
           Ganji.get_car_user_list_one_city_list 1, cities
@@ -56,7 +56,7 @@ module Ganji
             end
           end
         end
-        sleep 1
+        sleep 0.4
         Thread.start do
           Ganji.get_car_user_list_one_city_api_webservice areaname, areaid
         end
