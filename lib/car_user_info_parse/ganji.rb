@@ -44,7 +44,7 @@ module Ganji
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party, citys
     (1..1000).each do |i|
       city_hash.each_pair do |areaid, areaname|
-        brand = UserSystem::CarBrand.first
+
 
         pp "活线程数量 #{Thread.list.length} "
         if Thread.list.length > 8
@@ -69,6 +69,8 @@ module Ganji
   def self.get_car_user_list_one_city_api_webservice areaname, areaid
     begin
       # areaid2 = 100
+
+      brand = UserSystem::CarBrand.first
 
       areaid2 = UserSystem::CarUserInfo::GANJI_CITY_API[areaname]
       if areaid2.blank?
@@ -136,6 +138,7 @@ module Ganji
   def self.get_car_user_list_one_city areaname, areaid
     begin
       # pp "现在跑赶集.. #{areaname}"
+      brand = UserSystem::CarBrand.first
 
       url = "http://#{areaid}.ganji.com/ershouche/a1/"
       # pp "发起请求 #{areaname}  #{Time.now}"
