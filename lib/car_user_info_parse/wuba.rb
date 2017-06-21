@@ -27,7 +27,7 @@ module Wuba
     end
     return if matchs.nil?
     uid = matchs[1]
-      pp '222'
+    pp '222'
     #根据用户id获取iframe链接,用于获取历史消息
     # url = "http://my.58.com/30715922179334"
     # uid = 43961037693201
@@ -98,7 +98,6 @@ module Wuba
       pp sms_match
 
 
-
       phone = phone_match[1] rescue nil
       phoneno = phoneno_match[1] rescue nil
       phone_sms = sms_match[1] rescue nil
@@ -120,7 +119,7 @@ module Wuba
       next if cui.name.match /商家|瓜子/
       phone = Wuba.get_phone_by_userinfo cui.detail_url
       pp "#{cui.detail_url}   #{phone}"
-      k+=1  if not phone.blank?
+      k+=1 if not phone.blank?
     end
     pp k
   end
@@ -129,132 +128,109 @@ module Wuba
   # 获取58部分城市的车辆列表
   def self.get_car_user_list lest_number = 20, sub_city_party = 0
     city_hash = ::UserSystem::CarUserInfo.get_58_sub_cities sub_city_party
-    # threads = []
-    city_hash.each_pair do |areaid, areaname|
-      # threads.delete_if { |thread| thread.status == false }
-      # if threads.length > 3
-      #   pp "现在共有#{threads.length}个线程正在运行"
-      #   while true
-      #     threads.delete_if { |thread| thread.status == false }
-      #     if threads.length < 2
-      #       break
-      #     else
-      #       sleep 0.5
-      #     end
-      #   end
-      # end
-      # t = Thread.new do
-      begin
-        pp "现在跑58.. #{areaname}"
-        1.upto 1 do |i|
-          url = "http://#{areaid}.58.com/ershouche/0/pn#{i}/"
-          pp url
-          content = RestClient.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
-          content = content.body
-          content.gsub!('infoList list-info', 'list_infos_eric')
-          break if content.blank?
-          content = Nokogiri::HTML(content)
-          trs = content.css('.list_infos_eric .item')
-          car_number = trs.length
-          exists_car_number = 0
-          trs.each do |tr|
-            chexing = ''
-            next if tr.to_s.match /google|7天可退|259项全车检测/
-
-            next if (
-            begin
-              tr.attributes["style"] rescue ''
-            end).to_s == 'display:none;'
-
-
-            begin
-              chexing = tr.css('.info-title strong')[0].text
-            rescue
-              car_number = car_number -1
-              pp tr.to_s
-              pp 'Exception  车型获取失败'
-              next
+    (1..100).each do |i|
+      city_hash.each_pair do |areaid, areaname|
+        if Thread.list.length > 7
+          pp "现在共有#{Thread.list.length}个线程正在运行"
+          while true
+            if Thread.list.length < 9
+              break
+            else
+              sleep 0.3
             end
-
-            price = 2
-            begin
-              price = tr.css('.info-desc-tag-price')[0].text.strip
-              price.gsub!('万', '')
-            rescue
-              car_number = car_number -1
-              pp tr.to_s
-              pp 'Exception  价格获取失败'
-              next
-            end
-
-            cheling_licheng = tr.css('.info-desc-detail').text
-
-            cheling = cheling_licheng.split('年')[0]
-            milage = cheling_licheng.split('年')[1]
-            milage.gsub(/\s|万|公里/, '') unless milage.blank?
-
-
-            url = tr.css('a')[0].attributes["href"].value
-            # url = tr.css('td .t')[0].attributes["href"].value
-            begin
-              if url.match /http:\/\/short/
-                url_short = url
-                url = Wuba.get_normal_url_by_short_url_and_city url, areaid
-                # pp "翻译58shorturl #{url_short} 为 #{url}"
-                next if url.blank?
-              end
-
-              # 如果58抓到的数据不是当前城市的，直接不进数据库
-              zhengze = "http://#{areaid}.58.com"
-              url_sx = url.match Regexp.new zhengze
-              if url_sx.blank?
-                next
-              end
-            rescue
-
-            end
-
-            result = UserSystem::CarUserInfo.create_car_user_info che_xing: chexing,
-                                                                  price: price,
-                                                                  che_ling: cheling,
-                                                                  milage: milage,
-                                                                  detail_url: url.split('?')[0],
-                                                                  city_chinese: areaname,
-                                                                  site_name: '58'
-
-            if result == 0
-              u = url.split('?')[0]
-
-              unless u.blank?
-                c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
-                Wuba.update_one_detail_kouling c.id if not c.blank?
-              end
-            end
-            exists_car_number = exists_car_number + 1 if result == 1
           end
-          if car_number - exists_car_number < lest_number
-            pp '58 本页数据全部存在，跳出'
-            break
-          end
+        end
+        Thread.start do
+          get_car_list_from_one_city areaname, areaid
+        end
+      end
+    end
+  end
 
+
+  def self.get_car_list_from_one_city areaname, areaid
+    begin
+      pp "#{areaname}   跑58..    #{Time.now.chinese_format}"
+      url = "http://#{areaid}.58.com/ershouche/0/pn1/"
+      # pp url
+      content = RestClient.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+      content = content.body
+      content.gsub!('infoList list-info', 'list_infos_eric')
+      return if content.blank?
+      content = Nokogiri::HTML(content)
+      trs = content.css('.list_infos_eric .item')
+      trs.each do |tr|
+        chexing = ''
+        next if tr.to_s.match /google|7天可退|259项全车检测/
+
+        next if (
+        begin
+          tr.attributes["style"] rescue ''
+        end).to_s == 'display:none;'
+
+
+        begin
+          chexing = tr.css('.info-title strong')[0].text
+        rescue
+          pp tr.to_s
+          pp 'Exception  车型获取失败'
+          next
         end
 
+        price = 2
+        begin
+          price = tr.css('.info-desc-tag-price')[0].text.strip
+          price.gsub!('万', '')
+        rescue
+          car_number = car_number -1
+          pp tr.to_s
+          pp 'Exception  价格获取失败'
+          next
+        end
 
-      rescue Exception => e
-        pp e
-        pp $@
+        cheling_licheng = tr.css('.info-desc-detail').text
+        cheling = cheling_licheng.split('年')[0]
+        milage = cheling_licheng.split('年')[1]
+        milage.gsub(/\s|万|公里/, '') unless milage.blank?
+        url = tr.css('a')[0].attributes["href"].value
+        # url = tr.css('td .t')[0].attributes["href"].value
+        begin
+          if url.match /http:\/\/short/
+            url_short = url
+            url = Wuba.get_normal_url_by_short_url_and_city url, areaid
+            # pp "翻译58shorturl #{url_short} 为 #{url}"
+            next if url.blank?
+          end
 
+          # 如果58抓到的数据不是当前城市的，直接不进数据库
+          zhengze = "http://#{areaid}.58.com"
+          url_sx = url.match Regexp.new zhengze
+          if url_sx.blank?
+            next
+          end
+        rescue
+        end
+        result = UserSystem::CarUserInfo.create_car_user_info che_xing: chexing,
+                                                              price: price,
+                                                              che_ling: cheling,
+                                                              milage: milage,
+                                                              detail_url: url.split('?')[0],
+                                                              city_chinese: areaname,
+                                                              site_name: '58'
+        if result == 0
+          u = url.split('?')[0]
+          unless u.blank?
+            c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
+            Wuba.update_one_detail_kouling c.id if not c.blank?
+          end
+        end
       end
-      # end
-
-      # threads << t
+      ActiveRecord::Base.connection.close
+    rescue Exception => e
+      pp e
+      pp $@
+      ActiveRecord::Base.connection.close
     end
-
-    # 1.upto(2000) do
-    #   sleep(1)
-    #   threads.delete_if { |thread| thread.status == false }
-    #   break if threads.blank?
-    # end
   end
 
 

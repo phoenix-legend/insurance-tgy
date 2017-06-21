@@ -2,7 +2,6 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
 
 
-
   # 泉州
   # 唐山
   # 邯郸
@@ -12,10 +11,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   CITY = ["北京", "南京", "深圳", "上海", "青岛", "西安", "郑州", "无锡", "苏州", "杭州", "常州", "重庆", "武汉", "长沙", "成都",
           "太原", "南昌", "昆明", "宁波", "东莞", "济南", "南宁",
-          "贵阳", "临沂", "广州", "佛山", "南通", "嘉兴", "金华", "温州", '台州', "合肥","徐州","大连","沈阳", "天津", "哈尔滨","长春",
-  "厦门","福州","泉州","石家庄","邯郸","唐山","沧州","保定"]
-
-
+          "贵阳", "临沂", "广州", "佛山", "南通", "嘉兴", "金华", "温州", '台州', "合肥", "徐州", "大连", "沈阳", "天津", "哈尔滨", "长春",
+          "厦门", "福州", "泉州", "石家庄", "邯郸", "唐山", "沧州", "保定"]
 
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -79,7 +76,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
 
     #"厦门","合肥",        "泉州","石家庄","邯郸","唐山","沧州","保定"
-    ["泉州","石家庄","邯郸","唐山","沧州","保定"].each do |k|
+    ["泉州", "石家庄", "邯郸", "唐山", "沧州", "保定"].each do |k|
       cuis = UserSystem::CarUserInfo.where("city_chinese = ? and created_at > ?", k, Time.now - 80.days)
       cuis.each do |cui|
         pp cui.id
@@ -178,8 +175,12 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     end
 
     #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
-    tmp_chexing = begin yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '') rescue '' end
-    tmp_note = begin yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '') rescue '' end
+    tmp_chexing = begin
+      yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '') rescue ''
+    end
+    tmp_note = begin
+      yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '') rescue ''
+    end
     if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
       yc_car_user_info.youyiche_upload_status = '疑似走私车'
       yc_car_user_info.save!
@@ -281,9 +282,9 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
     # 新城市临时通过手动方式进行上传,在这里先进行标记
     if ["太原", "南昌", "昆明", "宁波", "东莞", "济南", "南宁",
-        "贵阳", '临沂' , "广州", "佛山", "南通", "嘉兴", "金华", "温州",
-        '台州', "合肥","徐州","大连","沈阳", "天津", "哈尔滨","长春","厦门","福州","泉州",
-        "石家庄","邯郸","唐山","沧州","保定"].include? yc_car_user_info.city_chinese
+        "贵阳", '临沂', "广州", "佛山", "南通", "嘉兴", "金华", "温州",
+        '台州', "合肥", "徐州", "大连", "沈阳", "天津", "哈尔滨", "长春", "厦门", "福州", "泉州",
+        "石家庄", "邯郸", "唐山", "沧州", "保定"].include? yc_car_user_info.city_chinese
       yc_car_user_info.youyiche_status_message = 'need_export_excel'
       yc_car_user_info.save!
 
@@ -409,25 +410,25 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
             "东莞" => "2067",
             "济南" => "1930",
             "南宁" => "2085",
-            "贵阳" => "2167", "临沂" => '1942', "广州"=>'2051', "佛山"=>'2056', "南通"=>'2077', "嘉兴"=>'2126', "金华"=>'2129', "温州"=>'2125',
-            '台州'=>'2132', "合肥"=>'2150',"徐州"=>'2074',"大连"=>'1989',"沈阳"=>'1988', "天津"=>'1892', "哈尔滨"=>'2038',"长春"=>'2015',
-            "厦门"=>"1911","福州"=>"1910","泉州"=>"1914","石家庄"=>"1899","邯郸"=>"1902","唐山"=>"1900","沧州"=>"1907","保定"=>"1904"
+            "贵阳" => "2167", "临沂" => '1942', "广州" => '2051', "佛山" => '2056', "南通" => '2077', "嘉兴" => '2126', "金华" => '2129', "温州" => '2125',
+            '台州' => '2132', "合肥" => '2150', "徐州" => '2074', "大连" => '1989', "沈阳" => '1988', "天津" => '1892', "哈尔滨" => '2038', "长春" => '2015',
+            "厦门" => "1911", "福州" => "1910", "泉州" => "1914", "石家庄" => "1899", "邯郸" => "1902", "唐山" => "1900", "沧州" => "1907", "保定" => "1904"
     }
 
     users = {
-    "gaoyixiangchezhu1" => {"id"=>"318", "channelId"=>"1099"},
-    "gaoyixiangchezhu2" => {"id"=>"319", "channelId"=>"1100"},
-    "cxmcsj" => {"id"=>"272", "channelId"=>"998"}
+        "gaoyixiangchezhu1" => {"id" => "318", "channelId" => "1099"},
+        "gaoyixiangchezhu2" => {"id" => "319", "channelId" => "1100"},
+        "cxmcsj" => {"id" => "272", "channelId" => "998"}
     }
 
     user_name = if ["太原", "南昌", "昆明", "宁波", "东莞", "济南", "南宁", "贵阳", '临沂', "广州", "佛山", "南通", "嘉兴", "金华", "温州", '台州', "合肥", "徐州", "大连", "沈阳", "天津"].include? ycui.city_chinese
                   "cxmcsj"
                 else
-                  # if rand(10) < 5
-                  #   "gaoyixiangchezhu2"
-                  # else
-                  "gaoyixiangchezhu1"
-                  # end
+                  if rand(10) < 5
+                    "gaoyixiangchezhu2"
+                  else
+                    "gaoyixiangchezhu1"
+                  end
                 end
 
     # user_name = "gaoyixiangchezhu2"
@@ -436,16 +437,21 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     channelId = users[user_name]["channelId"]
 
 
+    escape_shi = CGI::escape "#{ycui.city_chinese}市" rescue ''
 
-      escape_shi = CGI::escape "#{ycui.city_chinese}市" rescue ''
+    response = `curl 'http://www.mychebao.com/czhib_promote/addInfoToFdep.htm' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' --data 'id=#{id}&phone=#{ycui.phone}&regionid=#{diqu[ycui.city_chinese]}&location=#{escape_shi}&brand=#{
+    begin
+      CGI::escape ycui.brand rescue ''
+    end}&model=#{
+    begin
+      CGI::escape ycui.car_user_info.cx rescue ''
+    end}&type=#{CGI::escape "其它"}&channelId=#{channelId}' --compressed`
 
-      response = `curl 'http://www.mychebao.com/czhib_promote/addInfoToFdep.htm' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' --data 'id=#{id}&phone=#{ycui.phone}&regionid=#{diqu[ycui.city_chinese]}&location=#{escape_shi}&brand=#{begin CGI::escape ycui.brand rescue '' end}&model=#{begin CGI::escape ycui.car_user_info.cx rescue '' end}&type=#{CGI::escape "其它"}&channelId=#{channelId}' --compressed`
+    ycui.youyiche_status_message = '已倒出'
+    ycui.save!
 
-      ycui.youyiche_status_message = '已倒出'
-      ycui.save!
-
-      ycui.youyiche_chengjiao = response
-      ycui.save
+    ycui.youyiche_chengjiao = response
+    ycui.save
 
 
   end
