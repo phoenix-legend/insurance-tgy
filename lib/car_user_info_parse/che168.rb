@@ -23,7 +23,7 @@ module Che168
         Thread.start do
           begin
             pp "现在跑168.. #{areaname}"
-            1.upto 3 do |i|
+            1.upto 1 do |i|
               content = RestClient.get "http://m.che168.com/handler/getcarlist.ashx?num=#{number_per_page}&pageindex=#{i}&brandid=0&seriesid=0&specid=0&price=#{car_price_start}_#{car_price_end}&carageid=5&milage=0&carsource=1&store=6&levelid=0&key=&areaid=#{areaid}&browsetype=0&market=00&browserType=0"
               content = content.body
               break if content.blank?
@@ -59,7 +59,8 @@ module Che168
                 puts 'che 168 本页数据全部存在，跳出'
                 break
               end
-            end # ActiveRecord::Base.connection.close
+            end
+            ActiveRecord::Base.connection.close
           rescue Exception => e
             pp e
           end

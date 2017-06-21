@@ -487,4 +487,28 @@ module Baixing
   end
 
 
+
+  def self.xxx
+    interfance_name = "/api/mobile/ershouqiche/ad"
+    params = "apiFormatter=AdList&suggestOn=1&AF_adList=category&structure=umbrella&src2listing=firstCategoryershouqiche&area=m30&from=0&size=30"
+
+    url = 'http://www.baixing.com/api/mobile/ershouqiche/ad?apiFormatter=AdList&suggestOn=1&AF_adList=category&structure=umbrella&src2listing=firstCategoryershouqiche&area=m30&from=0&size=30'
+    RestClient.get url,
+        {
+            "BAPI-APP-KEY"=>"api_androidbaixing",
+            "APP-VERSION" => '8.2.0',
+            "udid" => "e87c07583d87319c",
+            "BAPI-NONCE" => Time.now.to_i,
+            "BAPI-HASH" => '2c5e31d49db710703281b387ebd46abf',
+            "User-Agent" => 'com.quanleimu.activity/8.2.0;samsung;samsung;SM-G6100;6.0.1;1080x1920;',
+            "Cookie" => "__trackId=149797128656439",
+            "If-Modified-Since" => Time.now
+
+
+        }
+
+    Digest::MD5.hexdigest("/api/mobile/ershouqiche/ad")
+  end
+
+
 end
