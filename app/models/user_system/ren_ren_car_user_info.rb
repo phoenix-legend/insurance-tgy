@@ -193,7 +193,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
 
     #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
     tmp_chexing = yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
-    tmp_note = yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '')
+    tmp_note = begin yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '') rescue '' end
     if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
       yc_car_user_info.renren_upload_status = '疑似走私车'
       yc_car_user_info.save!
