@@ -5,9 +5,9 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
   # CITY = ["北京","厦门","太原","烟台","潍坊","青岛","济南","廊坊","保定","大连","大庆","长春","哈尔滨","沈阳","天津","唐山","石家庄","郑州","洛阳","南阳","新乡","上海","苏州","南通","昆明","重庆","西安","咸阳","乌鲁木齐","银川","兰州","成都","贵阳","遵义","绵阳","德阳","南充","乐山","东莞","南宁","惠州","深圳","广州","佛山","肇庆","中山","南京","扬州","合肥","徐州","杭州","无锡","常州","武汉","株洲","湘潭","长沙","宜昌","福州","襄阳","常德","南昌","呼和浩特","嘉兴","宁波","西宁","珠海"]
   #  有人喊，就把这几个城市去了  ["遵义", "南充", "乐山", "宜昌", "襄阳", "常德", "南昌"]
   # CITY = []
-  CITY = ["北京" ,"东莞","佛山" ,"深圳", "南宁" ,"杭州" ,"南京" ,"长沙" ,"合肥" ,"厦门", "太原",
-  "青岛", "济南", "大连", "长春", "哈尔滨", "沈阳", "天津", "石家庄", "徐州", "无锡", "武汉", "广州", "惠州", "上海", "郑州", "洛阳", "昆明", "重庆",
-  "西安", "兰州", "成都", "贵阳", "苏州", "南通", "乌鲁木齐","潍坊", "肇庆", "福州", "咸阳"]
+  CITY = ["北京", "东莞", "佛山", "深圳", "南宁", "杭州", "南京", "长沙", "合肥", "厦门", "太原",
+          "青岛", "济南", "大连", "长春", "哈尔滨", "沈阳", "天津", "石家庄", "徐州", "无锡", "武汉", "广州", "惠州", "上海", "郑州", "洛阳", "昆明", "重庆",
+          "西安", "兰州", "成都", "贵阳", "苏州", "南通", "乌鲁木齐", "潍坊", "肇庆", "福州", "咸阳"]
 
 
   # car_user_info = UserSystem::CarUserInfo.find 2127639
@@ -81,18 +81,17 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       return
     end
 
-     # if yc_car_user_info.car_user_info.che_ling.to_i < 2008
-     #   yc_car_user_info.renren_upload_status = '车太老'
-     #   yc_car_user_info.save!
-     #   return
-     # end
+    # if yc_car_user_info.car_user_info.che_ling.to_i < 2008
+    #   yc_car_user_info.renren_upload_status = '车太老'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
     # if yc_car_user_info.car_user_info.milage.to_i > 12
     #   yc_car_user_info.renren_upload_status = '里程太多'
     #   yc_car_user_info.save!
     #   return
     # end
-
 
 
     yc_car_user_info.name = yc_car_user_info.name.gsub('(个人)', '')
@@ -192,13 +191,18 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     end
 
     #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
-    tmp_chexing = yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
-    tmp_note = begin yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '') rescue '' end
-    if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
-      yc_car_user_info.renren_upload_status = '疑似走私车'
-      yc_car_user_info.save!
-      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
-      return
+    begin
+      tmp_chexing = yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
+      tmp_note = begin
+        yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '') rescue ''
+      end
+      if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
+        yc_car_user_info.renren_upload_status = '疑似走私车'
+        yc_car_user_info.save!
+        UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+        return
+      end
+    rescue Exception => e
     end
 
     # 2017-04-23 去除条件
@@ -209,17 +213,20 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     # end
 
     # 2017-04-23 去除条件
-    ['QQ', '求购', '牌照', '批发', '私家一手车', '一手私家车', '身份', '身 份', '身~份', '个体经商', '过不了户', '帮朋友', '外地',
-     '贷款', '女士一手', '包过户', '原漆', '原版漆', '当天开走', '美女', '车辆说明', '车辆概述', '选购', '一个螺丝',
-     '精品', '驾驶证', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
-     '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信', 'wx', '微 信',
-     '威信', '加微', '评估师点评', '车主自述', "溦 信", '电话量大', '包你满意', '刷卡', '办理', '纯正', '抢购', '心动', '本车', '送豪礼'].each do |kw|
-      if yc_car_user_info.car_user_info.note.include? kw
-        yc_car_user_info.renren_upload_status = '疑似车商'
-        yc_car_user_info.save!
-        UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
-        return
+    begin
+      ['QQ', '求购', '牌照', '批发', '私家一手车', '一手私家车', '身份', '身 份', '身~份', '个体经商', '过不了户', '帮朋友', '外地',
+       '贷款', '女士一手', '包过户', '原漆', '原版漆', '当天开走', '美女', '车辆说明', '车辆概述', '选购', '一个螺丝',
+       '精品', '驾驶证', '驾-驶-证', '车况原版', '随时过户', '来电有惊喜', '值得拥有', '包提档过户',
+       '车源', '神州', '分期', '分 期', '必须过户', '抵押', '原车主', '店内服务', '选购', '微信', 'wx', '微 信',
+       '威信', '加微', '评估师点评', '车主自述', "溦 信", '电话量大', '包你满意', '刷卡', '办理', '纯正', '抢购', '心动', '本车', '送豪礼'].each do |kw|
+        if yc_car_user_info.car_user_info.note.include? kw
+          yc_car_user_info.renren_upload_status = '疑似车商'
+          yc_car_user_info.save!
+          UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+          return
+        end
       end
+    rescue Exception => e
     end
 
     # 用手机号归属地的时候，最好先去表中查询一下，看看有没有外地号
@@ -248,11 +255,14 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     end
 
 
-    if yc_car_user_info.car_user_info.note.match /^出售/
-      yc_car_user_info.renren_upload_status = '疑似车商'
-      yc_car_user_info.save!
-      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
-      return
+    begin
+      if yc_car_user_info.car_user_info.note.match /^出售/
+        yc_car_user_info.renren_upload_status = '疑似车商'
+        yc_car_user_info.save!
+        UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+        return
+      end
+    rescue Exception => e
     end
 
     if yc_car_user_info.car_user_info.che_xing.match /QQ|电话|不准|低价|私家车|咨询|一手车|精品|业务|打折|货车|联系|处理|过户|包你/
@@ -287,8 +297,6 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     end
 
 
-
-
     token = 'J8UkigIBffy0xZen'
     # domain = '123.56.187.192:2872'
     domain = '60.205.108.209'
@@ -305,7 +313,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
         "licensed_date_year" => yc_car_user_info.che_ling,
         "is_operation" => 0,
         "seat_number" => "5座",
-        "is_accidented" =>  0
+        "is_accidented" => 0
     }
 
     data_json = data.to_json
@@ -317,8 +325,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     }
 
 
-
-    response = RestClient.post "#{domain}/v1/clue/saler", params#, :content_type => 'application/json'
+    response = RestClient.post "#{domain}/v1/clue/saler", params #, :content_type => 'application/json'
 
 
     response = JSON.parse response.body
@@ -354,7 +361,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
         "licensed_date_year" => yc_car_user_info.che_ling,
         "is_operation" => 0,
         "seat_number" => "5",
-        "is_accidented" =>  0
+        "is_accidented" => 0
     }
 
     data_json = data.to_json
@@ -366,8 +373,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     }
 
 
-
-    response = RestClient.post "#{domain}/v1/clue/saler", params#, :content_type => 'application/json'
+    response = RestClient.post "#{domain}/v1/clue/saler", params #, :content_type => 'application/json'
 
 
     response = JSON.parse response.body

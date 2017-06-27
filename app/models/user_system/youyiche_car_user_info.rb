@@ -76,15 +76,15 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
 
     #"厦门","合肥",        "泉州","石家庄","邯郸","唐山","沧州","保定"
-    ["泉州", "石家庄", "邯郸", "唐山", "沧州", "保定"].each do |k|
-      cuis = UserSystem::CarUserInfo.where("city_chinese = ? and created_at > ?", k, Time.now - 80.days)
-      cuis.each do |cui|
-        pp cui.id
-        next if cui.tt_yaoyue == '历史遗留数据'
-        UserSystem::CarUserInfo.che_shang_jiao_yan cui, true
-        UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
-      end
-    end
+    # ["昆明"].each do |k|
+    #   cuis = UserSystem::CarUserInfo.where("city_chinese = ? and created_at > ?", k, Time.now - 100.days)
+    #   cuis.each do |cui|
+    #     pp cui.id
+    #     next if cui.tt_yaoyue == '历史遗留数据'
+    #     UserSystem::CarUserInfo.che_shang_jiao_yan cui, true
+    #     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
+    #   end
+    # end
 
   end
 
@@ -175,6 +175,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     end
 
     #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
+    begin
     tmp_chexing = begin
       yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '') rescue ''
     end
@@ -186,6 +187,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       yc_car_user_info.save!
       return
     end
+    rescue Exception => e
+      end
 
     # cui = yc_car_user_info.car_user_info
     # cui.phone_city = UserSystem::YoucheCarUserInfo.get_city_name(yc_car_user_info.phone)
@@ -421,7 +424,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
         "cxmcsj" => {"id" => "272", "channelId" => "998"}
     }
 
-    user_name = if ["太原", "南昌", "昆明", "宁波", "东莞", "济南", "南宁", "贵阳", '临沂', "广州", "佛山", "南通", "嘉兴", "金华", "温州", '台州', "合肥", "徐州", "大连", "沈阳", "天津"].include? ycui.city_chinese
+    user_name = if [ '太原', "南昌", "宁波", "东莞", "济南", "南宁", "贵阳", '临沂', "广州", "佛山", "南通", "嘉兴", "金华", "温州", '台州', "合肥", "徐州", "大连", "沈阳", "天津"].include? ycui.city_chinese
                   "cxmcsj"
                 else
                   if rand(10) < 5
