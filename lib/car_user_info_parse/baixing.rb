@@ -172,7 +172,6 @@ module Baixing
           }
 
 
-
           RestClient.post 'http://che.uguoyuan.cn/api/v1/update_user_infos/vps_create_and_upload', {cui: a}
           # over, 下一个提交
         end
@@ -367,7 +366,6 @@ module Baixing
           raise e
 
 
-
         end
       end
 
@@ -487,28 +485,193 @@ module Baixing
   end
 
 
+  # Baixing.proxy_info "response_body" => k
+  def self.proxy_info params
 
-  def self.xxx
-    interfance_name = "/api/mobile/ershouqiche/ad"
-    params = "apiFormatter=AdList&suggestOn=1&AF_adList=category&structure=umbrella&src2listing=firstCategoryershouqiche&area=m30&from=0&size=30"
+    # pp params
 
-    url = 'http://www.baixing.com/api/mobile/ershouqiche/ad?apiFormatter=AdList&suggestOn=1&AF_adList=category&structure=umbrella&src2listing=firstCategoryershouqiche&area=m30&from=0&size=30'
-    RestClient.get url,
-        {
-            "BAPI-APP-KEY"=>"api_androidbaixing",
-            "APP-VERSION" => '8.2.0',
-            "udid" => "e87c07583d87319c",
-            "BAPI-NONCE" => Time.now.to_i,
-            "BAPI-HASH" => '2c5e31d49db710703281b387ebd46abf',
-            "User-Agent" => 'com.quanleimu.activity/8.2.0;samsung;samsung;SM-G6100;6.0.1;1080x1920;',
-            "Cookie" => "__trackId=149797128656439",
-            "If-Modified-Since" => Time.now
+    # password = 'kkdi%df09JK8%$k'
+    # sign = Digest::MD5.hexdigest("#{params[:time]}#{password}")
+    # BusinessException.raise '签名不正确' unless sign == params[:sign]
+
+    response = begin
+      JSON.parse params[:response_body] rescue ''
+    end
 
 
-        }
+    return if response.blank?
 
-    Digest::MD5.hexdigest("/api/mobile/ershouqiche/ad")
+    children = begin
+      response["result"]["children"] rescue nil
+    end
+
+    (children||response["result"]||[]).each do |res|
+      next unless res["display"]["style"] == 'car_ad_item'
+
+      che_xing = res["display"]["content"]["title"]
+      price = res["display"]["content"]["subtitle"]
+      price.gsub!("万元", "")
+      note = res["display"]["content"]["content"]
+      wuba_kouling = begin
+        res["display"]["content"]["areaNames"].join(',') rescue nil
+      end # 城市,区,街道
+      phone = res["display"]["content"]["user"]["mobile"]
+      areaname = begin
+        res["display"]["content"]["areaNames"][0] rescue res["display"]["content"]["user"]["subtitle"]
+      end
+      che_ling = res["display"]["content"]["meta"].split("年")[0]
+      milage = begin
+        res["display"]["content"]["meta"].split(" ")[1] rescue 8
+      end
+
+      pp areaname
+
+      begin
+        milage.gsub!("万公里", '') rescue ''
+      end
+
+      area_id = UserSystem::CarUserInfo::BAIXING_PINYIN_CITY.invert[areaname]
+
+      detail_url = "http://#{area_id}.baixing.com/m/ershouqiche/a#{res["source"]["id"]}.html"
+
+      pp detail_url
+
+
+      car_user_info_id = UserSystem::CarUserInfo.create_car_user_info2 che_ling: che_ling,
+                                                                       milage: milage,
+                                                                       detail_url: detail_url,
+                                                                       city_chinese: areaname,
+                                                                       site_name: 'baixing',
+                                                                       is_cheshang: false,
+                                                                       price: price,
+                                                                       wuba_kouling: wuba_kouling
+
+      pp 'xx'*20
+      pp car_user_info_id
+
+      next if car_user_info_id.blank?
+
+      car_user_info = UserSystem::CarUserInfo.find car_user_info_id
+      fabushijian = (Time.at res["display"]["content"]["time"].to_i).chinese_format
+
+      name = '车主'
+
+      UserSystem::CarUserInfo.update_detail id: car_user_info.id,
+                                            name: name,
+                                            phone: phone,
+                                            note: note,
+                                            fabushijian: fabushijian,
+                                            che_xing: che_xing,
+                                            licheng: milage
+
+    end
+    ''
+
+
   end
+
+
+  # Baixing.xxx
+  def self.xxx
+    #   url = "http://www.baixing.com/api/mobile/Cheliang.todayCars/?apiFormatter=CheliangAdList&cityId=m188&from=0&size=30"
+    #
+    #   header = Baixing.get_header_info
+    #
+    #   pp '进入列表页面'
+    #   i = 0
+    #   while i< 200
+    #     i+=1
+    #     break unless header.blank?
+    #     sleep 0.7
+    #     header = Baixing.get_header_info
+    #     Personal::Employee.first
+    #   end
+    #
+    #   response = begin
+    #     sleep 3
+    #     re = RestClient.get url, header
+    #     pp '获取到body'
+    #     re.body
+    #   rescue Exception => e
+    #     pp e
+    #     pp '出异常'
+    #     ''
+    #   end
+    #
+    #   # pp response
+    #
+    #
+    #   return  if response.blank?
+    #
+    #   pp "begin" * 10
+    (1..100000).each do |k|
+      response = File.read("/Users/ericliu/tmp/car.txt")
+      if response.blank?
+        sleep 3
+        next
+      end
+      OrderSystem::WeizhangLog.add_baixing_json_body response
+      file = File.open("/Users/ericliu/tmp/car.txt", 'w')
+      file << ''
+      file.close
+      sleep 2
+    end
+
+  end
+
+
+  # Baixing.xxx2
+  def self.xxx2
+    (1..1000000).each do |i|
+      body = OrderSystem::WeizhangLog.get_baixing_json_body
+      if body.blank?
+        sleep 3
+        next
+      end
+      Baixing.proxy_info :response_body => body
+    end
+
+  end
+
+  # Baixing.get_header_info
+  # def self.get_header_info
+  #   redis = Redis.current
+  #   hash = {"BAPI-USER-TOKEN" => ''}
+  #   ["udid", "APP-VERSION", "BAPI-APP-KEY", "BAPI-NONCE", "BAPI-HASH", "User-Agent", "Host", "Connection", "Accept-Encoding", "Cookie","If-Modified-Since"].each do |k|
+  #     value = redis["baixing_#{k}"]
+  #     return nil if value.nil?
+  #     hash[k] = value
+  #   end
+  #   return hash
+  # end
+  #
+  # # Baixing.set_header_info
+  # def self.set_header_info
+  #   (1..10000).each do |i|
+  #     redis = Redis.current
+  #     text = File.read('/Users/ericliu/tmp/car.txt')
+  #     pp text
+  #     lines = text.split(/\r|\t|\n/)
+  #     pp lines.length
+  #     lines.each do |line|
+  #
+  #       line.strip!
+  #       next if line.match /GET/
+  #       next if line.blank?
+  #
+  #
+  #       fields = line.split(": ")
+  #       pp fields
+  #       redis["baixing_#{fields[0]}"] = fields[1]
+  #       redis.expire "baixing_#{fields[0]}", 20
+  #
+  #     end
+  #     pp i
+  #     sleep 5
+  #   end
+  #
+  #
+  # end
 
 
 end
