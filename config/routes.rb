@@ -138,6 +138,7 @@ Rails.application.routes.draw do
           # post :upload_youyiche
           post :vps_create_and_upload
           post :vps_urls
+          post :proxy_info
 
           get :get_kouling_for_kefu
           post :shouche

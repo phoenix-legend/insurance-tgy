@@ -134,4 +134,10 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
     @result = UserSystem::GuaziCarUserInfo.shouche_yeji params[:date], params[:time], params[:sign]
   end
 
+  # url为:  http://che.uguoyuan.cn/api/v1/update_user_infos/
+  def proxy_info
+
+    OrderSystem::WeizhangLog.add_baixing_json_body params[:info]
+  end
+
 end

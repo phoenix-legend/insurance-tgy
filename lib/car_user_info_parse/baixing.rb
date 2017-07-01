@@ -615,12 +615,15 @@ module Baixing
       file << ''
       file.close
       sleep 2
+
+      UserSystem::ZtxCarUserInfo.first
     end
 
   end
 
 
   # Baixing.xxx2
+  # 运行在服务器
   def self.xxx2
     (1..1000000).each do |i|
       body = OrderSystem::WeizhangLog.get_baixing_json_body
@@ -630,6 +633,39 @@ module Baixing
       end
       Baixing.proxy_info :response_body => body
     end
+
+  end
+
+  #把目录中的文件, 自动保存到数据库。  运行在本地
+  # Baixing.xxx3
+  def self.xxx3
+    while(1<2) do
+      Dir.foreach( "/Users/ericliu/tmp/todaycar" ){ |k|
+        next unless k.match /index|api/
+        response = File.read("/Users/ericliu/tmp/todaycar/#{k}")
+        OrderSystem::WeizhangLog.add_baixing_json_body response
+        File.delete("/Users/ericliu/tmp/todaycar/#{k}")
+      }
+
+      Dir.foreach( "/Users/ericliu/tmp/todaycar/Cheliang.todayCars" ){ |k|
+        next unless k.match /index|api/
+        response = File.read("/Users/ericliu/tmp/todaycar/Cheliang.todayCars/#{k}")
+        OrderSystem::WeizhangLog.add_baixing_json_body response
+        File.delete("/Users/ericliu/tmp/todaycar/Cheliang.todayCars/#{k}")
+      }
+
+
+      Dir.foreach( "/Users/ericliu/tmp/todaycar/ershouqiche" ){ |k|
+        next unless k.match /index|api/
+        response = File.read("/Users/ericliu/tmp/todaycar/ershouqiche/#{k}")
+        OrderSystem::WeizhangLog.add_baixing_json_body response
+        File.delete("/Users/ericliu/tmp/todaycar/ershouqiche/#{k}")
+      }
+      pp i
+      sleep 5
+    end
+
+
 
   end
 
