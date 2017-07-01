@@ -661,7 +661,7 @@ module Baixing
         OrderSystem::WeizhangLog.add_baixing_json_body response
         File.delete("/Users/ericliu/tmp/todaycar/ershouqiche/#{k}")
       }
-      pp i
+
       sleep 5
     end
 
