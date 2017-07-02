@@ -95,7 +95,19 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
 
   #是否需要重启指定客户端
   def need_chongqi
-    @is_need = UserSystem::DeviceAccessLog.need_restart params[:machine_name]
+    # @is_need = UserSystem::DeviceAccessLog.need_restart params[:machine_name]
+
+    redis = Redis.current
+    if redis["#{params[:machine_name]}_need_chongqi"].blank?
+      redis["#{params[:machine_name]}_need_chongqi"] = "#{Time.now.to_i}"
+      @is_need = false
+    else
+      if Time.now.to_i - redis["#{params[:machine_name]}_need_chongqi"].to_i > 60*10
+        @is_need = true
+      else
+        @is_need = false
+      end
+    end
   end
 
   # def upload_youyiche
@@ -134,8 +146,10 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
     @result = UserSystem::GuaziCarUserInfo.shouche_yeji params[:date], params[:time], params[:sign]
   end
 
-  # url为:  http://che.uguoyuan.cn/api/v1/update_user_infos/
+  # url为:  http://che.uguoyuan.cn/api/v1/update_user_infos/proxy_info
   def proxy_info
+    redis = Redis.current
+    redis["#{params[:machine_name]}_need_chongqi"] = "#{Time.now.to_i}"
     OrderSystem::WeizhangLog.add_baixing_json_body params[:proxy_info]
   end
 
