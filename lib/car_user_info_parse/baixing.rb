@@ -196,6 +196,10 @@ module Baixing
 
   # Baixing.get_car_user_list
   def self.get_car_user_list party = 0
+    # 百姓网主要依赖代理服务器以及app模拟, 故注释掉主要功能,解析json就ok了。
+    Baixing.save_baixing_data_from_app_json
+    return
+
     pp "现在时间:#{Time.now.chinese_format}"
     city_number = 0
     # city_hash = ::UserSystem::CarUserInfo::BAIXING_PINYIN_CITY
@@ -529,7 +533,7 @@ module Baixing
         res["display"]["content"]["meta"].split(" ")[1] rescue 8
       end
 
-      pp areaname
+      # pp areaname
 
       begin
         milage.gsub!("万公里", '') rescue ''
@@ -551,8 +555,8 @@ module Baixing
                                                                        price: price,
                                                                        wuba_kouling: wuba_kouling
 
-      pp 'xx'*20
-      pp car_user_info_id
+      # pp 'xx'*20
+      # pp car_user_info_id
 
       next if car_user_info_id.blank?
 
@@ -627,13 +631,13 @@ module Baixing
   end
 
 
-  # Baixing.xxx2
+  # Baixing.save_baixing_data_from_app_json
   # 运行在服务器
-  def self.xxx2
-    (1..1000000).each do |i|
+  def self.save_baixing_data_from_app_json
+    (1..10000).each do |i|
       body = OrderSystem::WeizhangLog.get_baixing_json_body
       if body.blank?
-        sleep 3
+        sleep 5
         next
       end
       Baixing.proxy_info :response_body => body
@@ -643,6 +647,7 @@ module Baixing
 
   #把目录中的文件, 自动保存到数据库。  运行在本地
   # Baixing.xxx3
+  # 有了anyproxy以后, 作废
   def self.xxx3
     while(1<2) do
       Dir.foreach( "/Users/ericliu/tmp/todaycar" ){ |k|
