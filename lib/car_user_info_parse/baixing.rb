@@ -506,7 +506,12 @@ module Baixing
     end
 
     (children||response["result"]||[]).each do |res|
-      next unless res["display"]["style"] == 'car_ad_item'
+      begin
+        next unless res["display"]["style"] == 'car_ad_item'
+      rescue
+        next
+      end
+
 
       che_xing = res["display"]["content"]["title"]
       price = res["display"]["content"]["subtitle"]
