@@ -4,12 +4,16 @@ module UploadTianTian
   CITY = ["杭州", "深圳", "西安", "珠海", "中山",
           "北京", #先临时取消北京
           "上海", "苏州", "南京", "天津", "广州", "佛山", "重庆", "成都", '绍兴', '滁州', '顺德', '惠州', '东莞', '武汉', '宁波',
-          '合肥', '长沙', '青岛', '郑州', '南宁', "温州", "太原", "沈阳", "无锡", "昆明", "厦门", "南昌"]
+          '合肥', '长沙', '青岛', '郑州', '南宁', "温州", "太原", "沈阳", "无锡", "昆明", "厦门", "南昌",
+          "绍兴","嘉兴","金华","南通","常州","济南","大连","绵阳","南充","赣州","洛阳","惠州"
+
+  ]
 
 
   CITY_YL = ["上海", "北京", "苏州", "南京", "天津", "佛山", "重庆", "成都", '绍兴', '滁州', '顺德', '惠州', '武汉', '宁波',
              '合肥', '长沙', '青岛', '郑州', '东莞', '南宁', "杭州", "深圳", "西安", "广州", "珠海", "中山",
-             "温州", "太原", "沈阳", "无锡", "昆明", "厦门", "南昌"]
+             "温州", "太原", "沈阳", "无锡", "昆明", "厦门", "南昌",
+             "绍兴","嘉兴","金华","南通","常州","济南","大连","绵阳","南充","赣州","洛阳","惠州"]
 
   # UploadTianTian::CITY_YL.each do |city|
   #   cuis = ::UserSystem::CarUserInfo.where("city_chinese = ? and tt_code is not null and created_at > '2017-06-01 00:00:00' and created_at < '2017-06-08 00:00:00'", city).
@@ -219,12 +223,12 @@ module UploadTianTian
 
       #城市符合的情况下,给源鹿
       # if CITY_YL.include? car_user_info.city_chinese
-      yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
-      if yl_count > 650 # 整体规模达到350个。
-        car_user_info.tt_upload_status = 'yl超限'
-        car_user_info.save!
-        return
-      end
+      # yl_count = UserSystem::CarUserInfo.where("tt_created_day = ? and tt_source in ('#{SOURCE_YL}') and tt_id is not null", Date.today).count
+      # if yl_count > 850 # 整体规模达到350个。
+      #   car_user_info.tt_upload_status = 'yl超限'
+      #   car_user_info.save!
+      #   return
+      # end
       UploadTianTian.tt_pai_v2_0_yl car_user_info
       return
       # end
@@ -477,119 +481,119 @@ module UploadTianTian
   # end
 
 
-  def self.tt_pai_v1_0_hulei user_info
-    params = {}
-    qudao = '23-23-1'
-    user_info = user_info.reload
-    return if user_info.tt_upload_status != 'weishangchuan'
+  # def self.tt_pai_v1_0_hulei user_info
+  #   params = {}
+  #   qudao = '23-23-1'
+  #   user_info = user_info.reload
+  #   return if user_info.tt_upload_status != 'weishangchuan'
+  #
+  #   n, s = "4SA-1011", '098f6bcd4621d373cade4e832627b4f6'
+  #
+  #   params[:number] = n
+  #   params[:sign] = Digest::MD5.hexdigest("#{n}#{s}")
+  #   params[:key_data] = user_info.created_at.chinese_format
+  #   params[:city] = "#{user_info.city_chinese}市"
+  #   params[:mobile] = user_info.phone
+  #   params[:brand] = user_info.brand
+  #   params[:name] = user_info.name
+  #   response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/ttpinsert', params
+  #   response = JSON.parse response.body
+  #   pp response
+  #   # response = response[0]
+  #
+  #
+  #   error = response["error"]
+  #   message = response["message"]
+  #
+  #   user_info.tt_created_day = user_info.created_at.chinese_format_day
+  #   user_info.tt_upload_status = "4Aerror#{message}"
+  #   if error.to_s == 'true'
+  #     user_info.tt_message = "4Aerror#{message}"
+  #
+  #     user_info.save!
+  #     return
+  #   end
+  #
+  #
+  #   id = begin
+  #     response["result"]["ttpdate"]["result"]["id"] rescue ''
+  #   end
+  #   message = "4A#{response["result"]["id"]}~#{response["result"]["ttpdate"]["message"]}"
+  #
+  #   user_info.tt_source = qudao
+  #   user_info.tt_chengjiao = n
+  #
+  #   ttp_error_code = if response["result"]["ttpdate"]["error"].to_s == "true" then
+  #                      1
+  #                    else
+  #                      0
+  #                    end
+  #   user_info.tt_id = id if not id.blank?
+  #   user_info.tt_code = ttp_error_code
+  #   user_info.tt_message = message
+  #   user_info.tt_upload_status = '已上传'
+  #   user_info.save!
+  #   # UploadTianTian.upload_to_hulei_not_yitihua user_info
+  #
+  # end
 
-    n, s = "4SA-1011", '098f6bcd4621d373cade4e832627b4f6'
-
-    params[:number] = n
-    params[:sign] = Digest::MD5.hexdigest("#{n}#{s}")
-    params[:key_data] = user_info.created_at.chinese_format
-    params[:city] = "#{user_info.city_chinese}市"
-    params[:mobile] = user_info.phone
-    params[:brand] = user_info.brand
-    params[:name] = user_info.name
-    response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/ttpinsert', params
-    response = JSON.parse response.body
-    pp response
-    # response = response[0]
-
-
-    error = response["error"]
-    message = response["message"]
-
-    user_info.tt_created_day = user_info.created_at.chinese_format_day
-    user_info.tt_upload_status = "4Aerror#{message}"
-    if error.to_s == 'true'
-      user_info.tt_message = "4Aerror#{message}"
-
-      user_info.save!
-      return
-    end
-
-
-    id = begin
-      response["result"]["ttpdate"]["result"]["id"] rescue ''
-    end
-    message = "4A#{response["result"]["id"]}~#{response["result"]["ttpdate"]["message"]}"
-
-    user_info.tt_source = qudao
-    user_info.tt_chengjiao = n
-
-    ttp_error_code = if response["result"]["ttpdate"]["error"].to_s == "true" then
-                       1
-                     else
-                       0
-                     end
-    user_info.tt_id = id if not id.blank?
-    user_info.tt_code = ttp_error_code
-    user_info.tt_message = message
-    user_info.tt_upload_status = '已上传'
-    user_info.save!
-    # UploadTianTian.upload_to_hulei_not_yitihua user_info
-
-  end
-
-  def self.tt_pai_v2_0_qq user_info
-
-
-    params = {}
-    qudao = SOURCE_QQ
-    user_info = user_info.reload
-    return if user_info.tt_upload_status != 'weishangchuan'
-
-    # n, s = "4SA-1011", 'dcd7f18c776dbaddfea4ce0ed5d2cfc3'
-
-    n, s = '4SA-1012', "13cfe7dfa0dd2fe5e2a7d5fb467099a6"
-    params[:number] = n
-    params[:sign] = Digest::MD5.hexdigest("#{n}#{s}")
-    params[:key_data] = user_info.created_at.chinese_format
-    params[:city] = "#{user_info.city_chinese}市"
-    params[:mobile] = user_info.phone
-    params[:brand] = user_info.brand
-    params[:name] = user_info.name
-    response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/ttpinsert', params
-    response = JSON.parse response.body
-    pp response
-    # response = response[0]
-
-
-    error = response["error"]
-    message = response["message"]
-
-    user_info.tt_created_day = user_info.created_at.chinese_format_day
-    user_info.tt_upload_status = "4Aerror#{message}"
-    if error.to_s == 'true'
-      user_info.tt_message = "4Aerror#{message}"
-      user_info.save!
-      return
-    end
-
-
-    id = begin
-      response["result"]["ttpdate"]["result"]["id"] rescue ''
-    end
-    message = "4A#{response["result"]["id"]}~#{response["result"]["ttpdate"]["message"]}"
-
-    user_info.tt_source = qudao
-    user_info.tt_chengjiao = n
-
-    ttp_error_code = if response["result"]["ttpdate"]["error"].to_s == "true" then
-                       1
-                     else
-                       0
-                     end
-    user_info.tt_id = id if not id.blank?
-    user_info.tt_code = ttp_error_code
-    user_info.tt_message = message
-    user_info.tt_upload_status = '已上传'
-    user_info.save!
-    # UploadTianTian.upload_to_hulei_not_yitihua user_info
-
-  end
+  # def self.tt_pai_v2_0_qq user_info
+  #
+  #
+  #   params = {}
+  #   qudao = SOURCE_QQ
+  #   user_info = user_info.reload
+  #   return if user_info.tt_upload_status != 'weishangchuan'
+  #
+  #   # n, s = "4SA-1011", 'dcd7f18c776dbaddfea4ce0ed5d2cfc3'
+  #
+  #   n, s = '4SA-1012', "13cfe7dfa0dd2fe5e2a7d5fb467099a6"
+  #   params[:number] = n
+  #   params[:sign] = Digest::MD5.hexdigest("#{n}#{s}")
+  #   params[:key_data] = user_info.created_at.chinese_format
+  #   params[:city] = "#{user_info.city_chinese}市"
+  #   params[:mobile] = user_info.phone
+  #   params[:brand] = user_info.brand
+  #   params[:name] = user_info.name
+  #   response = RestClient.post 'http://api.formal.4scenter.com/index.php?r=apicar/ttpinsert', params
+  #   response = JSON.parse response.body
+  #   pp response
+  #   # response = response[0]
+  #
+  #
+  #   error = response["error"]
+  #   message = response["message"]
+  #
+  #   user_info.tt_created_day = user_info.created_at.chinese_format_day
+  #   user_info.tt_upload_status = "4Aerror#{message}"
+  #   if error.to_s == 'true'
+  #     user_info.tt_message = "4Aerror#{message}"
+  #     user_info.save!
+  #     return
+  #   end
+  #
+  #
+  #   id = begin
+  #     response["result"]["ttpdate"]["result"]["id"] rescue ''
+  #   end
+  #   message = "4A#{response["result"]["id"]}~#{response["result"]["ttpdate"]["message"]}"
+  #
+  #   user_info.tt_source = qudao
+  #   user_info.tt_chengjiao = n
+  #
+  #   ttp_error_code = if response["result"]["ttpdate"]["error"].to_s == "true" then
+  #                      1
+  #                    else
+  #                      0
+  #                    end
+  #   user_info.tt_id = id if not id.blank?
+  #   user_info.tt_code = ttp_error_code
+  #   user_info.tt_message = message
+  #   user_info.tt_upload_status = '已上传'
+  #   user_info.save!
+  #   # UploadTianTian.upload_to_hulei_not_yitihua user_info
+  #
+  # end
 
 
   #天天芮欧(源鹿)
@@ -789,23 +793,23 @@ module UploadTianTian
     end
   end
 
-  def self.get_qudao_zongjie
-    cuis = ::UserSystem::CarUserInfo.where("tt_yaoyue = '成功' and tt_source is null")
-    cuis.each do |cui|
-      source = "23-23-1"
-      if cui.site_name == 'baixing' or cui.site_name == 'zuoxi'
-        source = "23-23-4"
-      elsif cui.site_name == '58'
-        source = "23-23-5"
-      end
-      pp cui.id
-      cui.tt_source = source if cui.tt_source.blank?
-      cui.tt_created_day = cui.created_at.chinese_format_day if cui.tt_created_day.blank?
-      # cui.tt_yaoyue_day = cui.tt_yaoyue_time.chinese_format_day unless cui.tt_yaoyue_time.blank?
-      cui.save!
-    end
-
-  end
+  # def self.get_qudao_zongjie
+  #   cuis = ::UserSystem::CarUserInfo.where("tt_yaoyue = '成功' and tt_source is null")
+  #   cuis.each do |cui|
+  #     source = "23-23-1"
+  #     if cui.site_name == 'baixing' or cui.site_name == 'zuoxi'
+  #       source = "23-23-4"
+  #     elsif cui.site_name == '58'
+  #       source = "23-23-5"
+  #     end
+  #     pp cui.id
+  #     cui.tt_source = source if cui.tt_source.blank?
+  #     cui.tt_created_day = cui.created_at.chinese_format_day if cui.tt_created_day.blank?
+  #     # cui.tt_yaoyue_day = cui.tt_yaoyue_time.chinese_format_day unless cui.tt_yaoyue_time.blank?
+  #     cui.save!
+  #   end
+  #
+  # end
 
 
   # 检查有多少数据的城市与真实城市不相符
@@ -972,44 +976,44 @@ module UploadTianTian
 
   #实时在胡磊那边备份一次
   # UploadTianTian.upload_to_hulei_not_yitihua cui
-  def self.upload_to_hulei_not_yitihua cui
-    cui = cui.reload
-    return if cui.tt_id.blank?
-    return unless cui.tt_jiance.blank?
-
-    n, s = 1, 2
-    if [SOURCE_KK1, SOURCE_KK2, SOURCE_KK3].include? cui.tt_source
-      n, s = "4SA-1011", 'dcd7f18c776dbaddfea4ce0ed5d2cfc3'
-    elsif [SOURCE_QQ].include? cui.tt_source
-      n, s = '4SA-1012', "13cfe7dfa0dd2fe5e2a7d5fb467099a6"
-    else
-      return
-    end
-
-
-    url = 'http://api.formal.4scenter.com//index.php?r=apicar/getresponse'
-
-
-    k = {"response_id" => cui.tt_id,
-         "number" => n,
-         "sign" => Digest::MD5.hexdigest("#{n}#{s}"),
-         "source" => 'ttpc',
-         "key_data" => cui.created_at.chinese_format,
-         "city" => cui.city_chinese,
-         "mobile" => cui.phone,
-         "brand" => cui.brand,
-         "name" => cui.name}
-
-
-    response = RestClient.post url, k
-
-    response = JSON.parse response
-    if response["error"] == 'false'
-      cui.tt_jiance = response["result"]["id"]
-      cui.save!
-    end
-
-  end
+  # def self.upload_to_hulei_not_yitihua cui
+  #   cui = cui.reload
+  #   return if cui.tt_id.blank?
+  #   return unless cui.tt_jiance.blank?
+  #
+  #   n, s = 1, 2
+  #   if [SOURCE_KK1, SOURCE_KK2, SOURCE_KK3].include? cui.tt_source
+  #     n, s = "4SA-1011", 'dcd7f18c776dbaddfea4ce0ed5d2cfc3'
+  #   elsif [SOURCE_QQ].include? cui.tt_source
+  #     n, s = '4SA-1012', "13cfe7dfa0dd2fe5e2a7d5fb467099a6"
+  #   else
+  #     return
+  #   end
+  #
+  #
+  #   url = 'http://api.formal.4scenter.com//index.php?r=apicar/getresponse'
+  #
+  #
+  #   k = {"response_id" => cui.tt_id,
+  #        "number" => n,
+  #        "sign" => Digest::MD5.hexdigest("#{n}#{s}"),
+  #        "source" => 'ttpc',
+  #        "key_data" => cui.created_at.chinese_format,
+  #        "city" => cui.city_chinese,
+  #        "mobile" => cui.phone,
+  #        "brand" => cui.brand,
+  #        "name" => cui.name}
+  #
+  #
+  #   response = RestClient.post url, k
+  #
+  #   response = JSON.parse response
+  #   if response["error"] == 'false'
+  #     cui.tt_jiance = response["result"]["id"]
+  #     cui.save!
+  #   end
+  #
+  # end
 
 end
 
