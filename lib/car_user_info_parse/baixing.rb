@@ -648,7 +648,7 @@ module Baixing
         Baixing.proxy_info :response_body => body["contents"]
       end
 
-      if body.query_types == 'czb'
+      if body["query_types"] == 'czb'
         pp "处理czb, 为: #{body["contents"]}"
         UserSystem::YouyicheCarUserInfo.post_data_with_session body["contents"]
       end
