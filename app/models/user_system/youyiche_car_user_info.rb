@@ -459,14 +459,10 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
 
     escape_shi = CGI::escape "#{ycui.city_chinese}市" rescue ''
+    escape_brand = CGI::escape ycui.brand rescue "未知"
+    escape_cx = CGI::escape ycui.car_user_info.cx rescue "未知"
 
-    response = `curl 'http://www.mychebao.com/czhib_promote/addInfoToFdep.htm' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' --data 'id=#{id}&phone=#{ycui.phone}&regionid=#{diqu[ycui.city_chinese]}&location=#{escape_shi}&brand=#{
-    begin
-      CGI::escape ycui.brand rescue ''
-    end}&model=#{
-    begin
-      CGI::escape ycui.car_user_info.cx rescue ''
-    end}&type=#{CGI::escape "其它"}&channelId=#{channelId}' --compressed`
+    response = `curl 'http://www.mychebao.com/czhib_promote/addInfoToFdep.htm' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' --data 'id=#{id}&phone=#{ycui.phone}&regionid=#{diqu[ycui.city_chinese]}&location=#{escape_shi}&brand=#{escape_brand}&model=#{ escape_cx}&type=#{CGI::escape "其它"}&channelId=#{channelId}' --compressed`
 
     ycui.youyiche_status_message = '已倒出'
     ycui.save!

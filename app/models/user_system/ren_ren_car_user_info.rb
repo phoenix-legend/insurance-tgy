@@ -307,7 +307,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
         "mobile" => yc_car_user_info.phone,
         "city" => yc_car_user_info.city_chinese,
         "brand" => yc_car_user_info.brand,
-        "series" => yc_car_user_info.car_user_info.cx||'未知',
+        "series" => if yc_car_user_info.car_user_info.cx.blank? then '未知' else yc_car_user_info.car_user_info.cx end,
         "model" => "未知",
         "kilometer" => yc_car_user_info.car_user_info.milage,
         "licensed_date_year" => yc_car_user_info.che_ling,
