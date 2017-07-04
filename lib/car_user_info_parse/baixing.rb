@@ -643,7 +643,7 @@ module Baixing
         next
       end
       if body["query_types"].blank? || body["query_types"] == 'baixing'
-        pp "处理百姓网, 长度为: #{body["contents"].length}"
+        pp "处理百姓网, 长度为: #{body["contents"]}"
 
         Baixing.proxy_info :response_body => body["contents"]
       end

@@ -426,6 +426,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   def self.upload_cui_via_web ycui
     return if ycui.phone.blank?
+    # OrderSystem::WeizhangLog.add_baixing_json_body 318280, 'czb'
     OrderSystem::WeizhangLog.add_baixing_json_body ycui.id, 'czb'
     return
 

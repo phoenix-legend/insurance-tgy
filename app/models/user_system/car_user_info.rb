@@ -773,6 +773,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       Baixing.get_car_user_list party
     rescue Exception => e
       pp e
+      pp $!
     end
 
     begin
