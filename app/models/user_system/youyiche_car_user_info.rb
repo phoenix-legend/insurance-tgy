@@ -612,9 +612,10 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   # UserSystem::YouyicheCarUserInfo.get_user_name yyc_id
   def self.post_data_with_session yyc_id
+    yyc_id = 318303
     yyc_cui = UserSystem::YouyicheCarUserInfo.find yyc_id.to_i
     user_name = UserSystem::YouyicheCarUserInfo.get_user_name
-    text = `curl -b /root/test/#{user_name} http://fdep.mychebao.com/car/manage`
+    text = `curl -b '/data/czb/#{user_name}' http://fdep.mychebao.com/car/manage`
     form = Nokogiri::HTML(text)
     token = form.css("#add_Token")[0]["value"]
 
@@ -626,13 +627,12 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     escape_cx = CGI::escape begin yyc_cui.car_user_info.cx rescue "未知" end
     name = CGI::escape begin yyc_cui.name rescue "未知" end
 
-    response = `curl 'http://fdep.mychebao.com/car/addCar' -b '/root/test/cxmcsj' -H 'User-Agent: Mozilla/5.0 (MeeGo; NokiaN9) AppleWebKit/534.13 (KHTML, like Gecko) NokiaBrowser/8.5.0 Mobile Safari/534.13' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Referer: http://fdep.mychebao.com/car/manage' -H 'X-Requested-With: XMLHttpRequest' -H 'Proxy-Connection: keep-alive' --data 'addToken=#{token}&contactname=#{name}&phone=#{phone}&regionid=#{regionid}&location=#{escape_shi}&brandname=#{escape_brand}&modelname=#{ escape_cx}&type=#{CGI::escape "其它"}' --compressed`
+    response = `curl 'http://fdep.mychebao.com/car/addCar' -b '/data/czb/#{user_name}' -H 'User-Agent: Mozilla/5.0 (MeeGo; NokiaN9) AppleWebKit/534.13 (KHTML, like Gecko) NokiaBrowser/8.5.0 Mobile Safari/534.13' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Referer: http://fdep.mychebao.com/car/manage' -H 'X-Requested-With: XMLHttpRequest' -H 'Proxy-Connection: keep-alive' --data 'addToken=#{token}&contactname=#{name}&phone=#{phone}&regionid=#{regionid}&location=#{escape_shi}&brandname=#{escape_brand}&modelname=#{ escape_cx}&type=#{CGI::escape "其它"}' --compressed`
 
-    ycui.youyiche_status_message = '已倒出'
-    ycui.save!
+    yyc_cui.youyiche_status_message = '已倒出'
 
-    ycui.youyiche_chengjiao = response
-    ycui.save
+    yyc_cui.youyiche_chengjiao = response
+    yyc_cui.save
 
 
   end
