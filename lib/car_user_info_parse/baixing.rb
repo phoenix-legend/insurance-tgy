@@ -643,6 +643,9 @@ module Baixing
         sleep 5
         next
       end
+      #刷新车置宝
+      UserSystem::YouyicheCarUserInfo.shuaxin_3_user
+
       if body["query_types"].blank? || body["query_types"] == 'baixing'
         pp "处理百姓网, 长度为: #{body["contents"]}"
 
