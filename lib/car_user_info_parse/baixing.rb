@@ -638,6 +638,7 @@ module Baixing
 
 
       body = OrderSystem::WeizhangLog.get_baixing_json_body
+      pp body
       if body.blank?
         sleep 5
         next
