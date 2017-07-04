@@ -612,7 +612,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   # UserSystem::YouyicheCarUserInfo.get_user_name yyc_id
   def self.post_data_with_session yyc_id
-    yyc_id = 318303
+    # yyc_id = 318303
     yyc_cui = UserSystem::YouyicheCarUserInfo.find yyc_id.to_i
     user_name = UserSystem::YouyicheCarUserInfo.get_user_name
     text = `curl -b '/data/czb/#{user_name}' http://fdep.mychebao.com/car/manage`
