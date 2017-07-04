@@ -638,7 +638,7 @@ module Baixing
 
 
       body = OrderSystem::WeizhangLog.get_baixing_json_body
-      pp body
+      # pp body
       if body.blank?
         sleep 5
         next
@@ -647,7 +647,7 @@ module Baixing
       UserSystem::YouyicheCarUserInfo.shuaxin_3_user
 
       if body["query_types"].blank? || body["query_types"] == 'baixing'
-        pp "处理百姓网, 长度为: #{body["contents"]}"
+        pp "处理百姓网, 长度为: #{body["contents"].length}"
 
         Baixing.proxy_info :response_body => body["contents"]
       end
