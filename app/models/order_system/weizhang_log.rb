@@ -5,17 +5,17 @@ class OrderSystem::WeizhangLog < ActiveRecord::Base
   # validates_format_of :engine_no, :with => EricTools::RegularConstants::EngineNo, message:'请正确填写发动机号' ,allow_blank: true
 
 
-  def self.add_baixing_json_body str
-    log = OrderSystem::WeizhangLog.new contents: str
+  #目前channel有两个, baixing一个是百姓网json,   czb一个是需要往车置宝中保存的id
+  def self.add_baixing_json_body str, channel = 'baixing'
+    log = OrderSystem::WeizhangLog.new contents: str, query_types: channel
     log.save!
   end
 
   def self.get_baixing_json_body
     log = OrderSystem::WeizhangLog.last
     return if log.blank?
-    body = log.contents
     log.destroy!
-    return body
+    return {:contents => log.contents, :query_types => log.query_types}
   end
 
 end

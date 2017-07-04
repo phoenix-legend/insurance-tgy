@@ -9,10 +9,13 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   # 沧州
   # 保定
 
-  CITY = ["北京", "南京", "深圳", "上海", "青岛", "西安", "郑州", "无锡", "苏州", "杭州", "常州", "重庆", "武汉", "长沙", "成都",
-          "太原", "南昌", "昆明", "宁波", "东莞", "济南", "南宁",
-          "贵阳", "临沂", "广州", "佛山", "南通", "嘉兴", "金华", "温州", '台州', "合肥", "徐州", "大连", "沈阳", "天津", "哈尔滨", "长春",
-          "厦门", "福州", "泉州", "石家庄", "邯郸", "唐山", "沧州", "保定"]
+  CITY = ["北京", "南京", "深圳", "上海", "青岛", "西安", "郑州", "无锡", "苏州", "杭州", "常州", "重庆", "武汉", "长沙", "成都", "太原", "南昌", "昆明", "宁波", "东莞", "济南", "南宁",
+          "贵阳", "临沂", "广州", "佛山", "南通", "嘉兴", "金华", "温州", '台州', "合肥", "徐州", "大连", "沈阳", "天津", "哈尔滨", "长春", "厦门", "福州", "泉州", "石家庄", "邯郸", "唐山", "沧州", "保定"]
+
+  DIQU = {"太原" => '1947', "南昌" => "1919", "昆明" => "2134", "宁波" => "2124", "东莞" => "2067", "济南" => "1930", "南宁" => "2085",
+          "贵阳" => "2167", "临沂" => '1942', "广州" => '2051', "佛山" => '2056', "南通" => '2077', "嘉兴" => '2126', "金华" => '2129', "温州" => '2125',
+          '台州' => '2132', "合肥" => '2150', "徐州" => '2074', "大连" => '1989', "沈阳" => '1988', "天津" => '1892', "哈尔滨" => '2038', "长春" => '2015',
+          "厦门" => "1911", "福州" => "1910", "泉州" => "1914", "石家庄" => "1899", "邯郸" => "1902", "唐山" => "1900", "沧州" => "1907", "保定" => "1904"}
 
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -423,6 +426,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
   def self.upload_cui_via_web ycui
     return if ycui.phone.blank?
+    OrderSystem::WeizhangLog.add_baixing_json_body ycui.id, 'czb'
+    return
 
     diqu = {"太原" => '1947',
             "南昌" => "1919",
@@ -479,196 +484,112 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   # 2017-04-10 切换到车置宝以后,结束又一车查询,直接return
   def self.query_youyiche
     return #切换到车置宝以后, 查询功能丧失
-    return unless Time.now.hour == 15
-    return unless Time.now.hour == 20
-    return unless Time.now.min < 10
-    # host_name = 'uat.youyiche.com' #测试环境
-    host_name = "b.youyiche.com" #正式环境
-
+    # return unless Time.now.hour == 15
+    # return unless Time.now.hour == 20
+    # return unless Time.now.min < 10
+    # # host_name = 'uat.youyiche.com' #测试环境
+    # host_name = "b.youyiche.com" #正式环境
+    #
+    # # query_q_ids = {}
+    # # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_jiance is null  and id > 84000 and created_day > ?", Date.today - 30).find_each do |cui|
+    # #   next if cui.youyiche_yaoyue == '失败'
+    # #   next if cui.youyiche_jiance == '竞拍中'
+    # #   next if cui.youyiche_chengjiao == '失败'
+    # #
+    # #
+    # #   query_q_ids[0] = cui.youyiche_id
+    # #
+    # #   # 想加速查询，把5改为更大的数字
+    # #
+    # #
+    # #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", query_q_ids.to_json, :content_type => 'application/json'
+    # #   response = JSON.parse response.body
+    # #   pp response
+    # #
+    # # end
+    #
+    #
     # query_q_ids = {}
-    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_jiance is null  and id > 84000 and created_day > ?", Date.today - 30).find_each do |cui|
+    # kk = 0
+    # sanbaideliang = 0
+    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and (youyiche_yaoyue is null or youyiche_yaoyue in ('未拨通')) and id > 70000 and created_day > ?", Date.today - 30).find_each do |cui|
+    #   next if cui.youyiche_id.to_i == -1
+    #   kk += 1
+    #   query_q_ids["#{kk}"] = cui.youyiche_id
+    #   # 想加速查询，把10改为更大的数字
+    #   if kk == (
+    #   if sanbaideliang < 180 then
+    #     300
+    #   else
+    #     10
+    #   end)
+    #     pp 'XXX'
+    #     kk = 0
+    #     sanbaideliang += 1
+    #     response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", query_q_ids.to_json, :content_type => 'application/json'
+    #     pp response.body
+    #
+    #     response = JSON.parse response.body
+    #     pp response
+    #     response.each do |xx|
+    #       status = xx["status"].strip
+    #       next if ['待跟进', '跟进中'].include? status
+    #       next if status.blank?
+    #       cuii = (UserSystem::YouyicheCarUserInfo.find_by_youyiche_id xx["need_id"])
+    #       next if status == cuii.youyiche_yaoyue
+    #       if status == '竞拍中'
+    #         cuii.youyiche_jiance = status
+    #       end
+    #       cuii.youyiche_yaoyue = status
+    #       cuii.save!
+    #     end
+    #     query_q_ids = {}
+    #   end
+    # end
+    #
+    #
+    # query_q_ids = {}
+    # kk = 0
+    # sanbaideliang = 0
+    # UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_jiance is null  and id > 70000 and created_day > ?", Date.today - 30).find_each do |cui|
     #   next if cui.youyiche_yaoyue == '失败'
     #   next if cui.youyiche_jiance == '竞拍中'
     #   next if cui.youyiche_chengjiao == '失败'
+    #   kk += 1
     #
-    #
-    #   query_q_ids[0] = cui.youyiche_id
+    #   query_q_ids["#{kk}"] = cui.youyiche_id
     #
     #   # 想加速查询，把5改为更大的数字
+    #   if kk == (
+    #   if sanbaideliang < 180 then
+    #     300
+    #   else
+    #     10
+    #   end)
+    #     kk = 0
+    #     sanbaideliang += 1
+    #     response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", query_q_ids.to_json, :content_type => 'application/json'
+    #     response = JSON.parse response.body
+    #     pp response
+    #     response.each do |xx|
+    #       status = xx["status"].strip
+    #       if status == '竞拍中'
+    #         cuii = (UserSystem::YouyicheCarUserInfo.find_by_youyiche_id xx["need_id"])
+    #         cuii.youyiche_jiance = status
+    #         cuii.yaoyue_time = Time.now.chinese_format
+    #         cuii.yaoyue_day = Time.now.chinese_format_day
+    #         cuii.save!
+    #       end
+    #     end
     #
-    #
-    #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", query_q_ids.to_json, :content_type => 'application/json'
-    #   response = JSON.parse response.body
-    #   pp response
-    #
+    #     query_q_ids = {}
+    #   end
     # end
-
-
-    query_q_ids = {}
-    kk = 0
-    sanbaideliang = 0
-    UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and (youyiche_yaoyue is null or youyiche_yaoyue in ('未拨通')) and id > 70000 and created_day > ?", Date.today - 30).find_each do |cui|
-      next if cui.youyiche_id.to_i == -1
-      kk += 1
-      query_q_ids["#{kk}"] = cui.youyiche_id
-      # 想加速查询，把10改为更大的数字
-      if kk == (
-      if sanbaideliang < 180 then
-        300
-      else
-        10
-      end)
-        pp 'XXX'
-        kk = 0
-        sanbaideliang += 1
-        response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", query_q_ids.to_json, :content_type => 'application/json'
-        pp response.body
-
-        response = JSON.parse response.body
-        pp response
-        response.each do |xx|
-          status = xx["status"].strip
-          next if ['待跟进', '跟进中'].include? status
-          next if status.blank?
-          cuii = (UserSystem::YouyicheCarUserInfo.find_by_youyiche_id xx["need_id"])
-          next if status == cuii.youyiche_yaoyue
-          if status == '竞拍中'
-            cuii.youyiche_jiance = status
-          end
-          cuii.youyiche_yaoyue = status
-          cuii.save!
-        end
-        query_q_ids = {}
-      end
-    end
-
-
-    query_q_ids = {}
-    kk = 0
-    sanbaideliang = 0
-    UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_jiance is null  and id > 70000 and created_day > ?", Date.today - 30).find_each do |cui|
-      next if cui.youyiche_yaoyue == '失败'
-      next if cui.youyiche_jiance == '竞拍中'
-      next if cui.youyiche_chengjiao == '失败'
-      kk += 1
-
-      query_q_ids["#{kk}"] = cui.youyiche_id
-
-      # 想加速查询，把5改为更大的数字
-      if kk == (
-      if sanbaideliang < 180 then
-        300
-      else
-        10
-      end)
-        kk = 0
-        sanbaideliang += 1
-        response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", query_q_ids.to_json, :content_type => 'application/json'
-        response = JSON.parse response.body
-        pp response
-        response.each do |xx|
-          status = xx["status"].strip
-          if status == '竞拍中'
-            cuii = (UserSystem::YouyicheCarUserInfo.find_by_youyiche_id xx["need_id"])
-            cuii.youyiche_jiance = status
-            cuii.yaoyue_time = Time.now.chinese_format
-            cuii.yaoyue_day = Time.now.chinese_format_day
-            cuii.save!
-          end
-        end
-
-        query_q_ids = {}
-      end
-    end
 
   end
 
 
-  # UserSystem::YouyicheCarUserInfo.chengjiaogengxin
-  # 查看又一车有多少车辆成交，成交价格多少。
-  # def self.chengjiaogengxin
-  #   #一次更新所有数据   最终结果
-  #   host_name = "b.youyiche.com" #正式环境
-  #   p = {}
-  #   cuis = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and youyiche_jiance = '竞拍中'").each_with_index do |cui, i|
-  #     next if cui.youyiche_chengjiao == '成交'
-  #     next if cui.youyiche_chengjiao == '失败'
-  #     p["#{i}"] = cui.youyiche_id
-  #   end
-  #   response = RestClient.post "http://#{host_name}/thirdpartyapi/vehicles_from_need/sync/xuzuo", p.to_json, :content_type => 'application/json'
-  #   response = JSON.parse response.body
-  #   response.each do |xx|
-  #     cui = cuis.select { |cui| cui.youyiche_id == "#{xx["need_id"]}" }
-  #     cui = cui[0]
-  #     next if cui.youyiche_chengjiao == xx["status"]
-  #     cui.youyiche_chengjiao = xx["status"]
-  #     cui.save!
-  #   end
-  #
-  # end
 
-  # UserSystem::YouyicheCarUserInfo.jiancelu
-  # 一开始竞标的时候需要多关注， 已不再使用
-  # def self.jiancelu
-  #   Spreadsheet.client_encoding = 'UTF-8'
-  #   book = Spreadsheet::Workbook.new
-  #
-  #   sheet1 = book.create_worksheet name: "总体转化率"
-  #   ['日期', '创建数', '竞拍数', '竞拍率'].each_with_index do |content, i|
-  #     sheet1.row(0)[i] = content
-  #   end
-  #   0.upto 30 do |i|
-  #     date = Date.today - i
-  #     # yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? and youyiche_yaoyue not in ('重复') AND  youyiche_yaoyue IS NOT NULL", date.chinese_format_day)
-  #     yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? and youyiche_yaoyue <> '重复' ", date)
-  #     # yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? ", date.chinese_format_day)
-  #     yiccuis_yaoyue = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and yaoyue_day  = ? and youyiche_jiance = '竞拍中'", date)
-  #
-  #     yaoyuelv = if yiccuis_create.count == 0 then
-  #                  '无'
-  #                else
-  #                  "#{((yiccuis_yaoyue.count.to_f/yiccuis_create.count.to_f)*100).to_i}%"
-  #                end
-  #     [date.chinese_format_day, yiccuis_create.count, yiccuis_yaoyue.count, yaoyuelv].each_with_index do |content, j|
-  #       sheet1.row(i+1)[j] = content
-  #     end
-  #
-  #   end
-  #
-  #   CITY.each do |city|
-  #     sheet1 = book.create_worksheet name: "#{city}转化率"
-  #     ['日期', '创建数', '竞拍数', '竞拍率'].each_with_index do |content, i|
-  #       sheet1.row(0)[i] = content
-  #     end
-  #     0.upto 20 do |i|
-  #       date = Date.today - i
-  #
-  #       # yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? and youyiche_yaoyue not in ('重复') AND  youyiche_yaoyue IS NOT NULL and city_chinese = ?", date.chinese_format_day, city)
-  #       yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? and youyiche_yaoyue  <> '重复'  and city_chinese = ?", date, city)
-  #       # yiccuis_create = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and created_day  = ? ", date.chinese_format_day)
-  #       yiccuis_yaoyue = UserSystem::YouyicheCarUserInfo.where("youyiche_id is not null and yaoyue_day  = ? and youyiche_jiance = '竞拍中' and city_chinese = ?", date, city)
-  #       # next if yiccuis_create.count == 0
-  #       # pp "#{city} #{date.chinese_format_day}上架率：#{}%"
-  #
-  #       yaoyuelv = if yiccuis_create.count == 0 then
-  #                    '无'
-  #                  else
-  #                    "#{((yiccuis_yaoyue.count.to_f/yiccuis_create.count.to_f)*100).to_i}%"
-  #                  end
-  #
-  #       [date.chinese_format_day, yiccuis_create.count, yiccuis_yaoyue.count, yaoyuelv].each_with_index do |content, j|
-  #         sheet1.row(i+1)[j] = content
-  #       end
-  #
-  #     end
-  #   end
-  #
-  #   dir = Rails.root.join('public', 'downloads')
-  #   Dir.mkdir dir unless Dir.exist? dir
-  #   file_path = File.join(dir, "又一车转化率 #{Time.now.strftime("%Y%m%dT%H%M%S")}导出.xls")
-  #   book.write file_path
-  #   file_path
-  # end
 
   # def self.s
   #
@@ -685,6 +606,98 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   #   end
   #
   # end
+
+
+
+  # UserSystem::YouyicheCarUserInfo.get_user_name yyc_id
+  def self.post_data_with_session yyc_id
+    yyc_cui = UserSystem::YouyicheCarUserInfo.find yyc_id.to_i
+    user_name = UserSystem::YouyicheCarUserInfo.get_user_name
+    text = `curl -b /root/test/#{user_name} http://fdep.mychebao.com/car/manage`
+    form = Nokogiri::HTML(text)
+    token = form.css("#add_Token")[0]["value"]
+
+    phone = yyc_cui.phone
+    regionid = UserSystem::YouyicheCarUserInfo::DIQU[yyc_cui.city_chinese]
+
+    escape_shi = CGI::escape begin  "#{yyc_cui.city_chinese}市" rescue ''  end
+    escape_brand = CGI::escape begin yyc_cui.brand rescue "未知" end
+    escape_cx = CGI::escape begin yyc_cui.car_user_info.cx rescue "未知" end
+    name = CGI::escape begin yyc_cui.name rescue "未知" end
+
+    response = `curl 'http://fdep.mychebao.com/car/addCar' -b '/root/test/cxmcsj' -H 'User-Agent: Mozilla/5.0 (MeeGo; NokiaN9) AppleWebKit/534.13 (KHTML, like Gecko) NokiaBrowser/8.5.0 Mobile Safari/534.13' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Referer: http://fdep.mychebao.com/car/manage' -H 'X-Requested-With: XMLHttpRequest' -H 'Proxy-Connection: keep-alive' --data 'addToken=#{token}&contactname=#{name}&phone=#{phone}&regionid=#{regionid}&location=#{escape_shi}&brandname=#{escape_brand}&modelname=#{ escape_cx}&type=#{CGI::escape "其它"}' --compressed`
+
+    ycui.youyiche_status_message = '已倒出'
+    ycui.save!
+
+    ycui.youyiche_chengjiao = response
+    ycui.save
+
+
+  end
+
+  # 获取可以提交数据的用户名
+  # UserSystem::YouyicheCarUserInfo.get_user_name
+  def self.get_user_name
+    redis = Redis.current
+    user_name = []
+    ["cxmcsj", "gaoyixiangchezhu1", "gaoyixiangchezhu2"].each do |name|
+      user_name << name if  redis["#{name}-0001"] == 'yes'
+    end
+    user_name.shuffle!
+    user_name[0]
+
+  end
+
+
+  # 每次扫之前, 先检查redis, 检查是否过期。 如果有效,就刷新。
+  # 如果无效,就不再刷新,同时发邮件通知。
+  # 2分钟刷新一次网页, 网页在redis中对应的key是:  cxmcsj-0001   gaoyixiangchezhu1-0001    gaoyixiangchezhu2-0001
+  # UserSystem::YouyicheCarUserInfo.shuaxin_3_user
+  def self.shuaxin_3_user
+    redis = Redis.current
+    ["cxmcsj", "gaoyixiangchezhu1", "gaoyixiangchezhu2"].each do |name|
+      redis["#{name}-0001"] = 'yes' if redis["#{name}-0001"].blank?
+      redis["#{name}-0001_freshen_time"] = Time.now.to_i if redis["#{name}-0001_freshen_time"].blank?
+
+      #2分钟以内不刷新
+      next if Time.now.to_i - redis["#{name}-0001_freshen_time"].to_i <  120
+      redis["#{name}-0001_freshen_time"] = Time.now.to_i # 记录当前刷新时间
+
+      if redis["#{name}-0001"] == 'yes'
+        text = `curl -b /data/czb/#{name} http://fdep.mychebao.com/car/manage`
+        if text.include? '图形验证码'
+          redis["#{name}-0001"] = 'no'
+          MailSend.send_content('xiaoqi.liu@uguoyuan.cn',
+                                'xiaoqi.liu@uguoyuan.cn',
+                                "车置宝#{name}用户session失效",
+                                "车置宝#{name}用户session失效, 运行 UserSystem::YouyicheCarUserInfo.repair_cookie '#{name}', '正确的session'"
+
+          ).deliver
+        else
+          redis["#{name}-0001"] = 'yes'
+        end
+      end
+    end
+  end
+
+  # 在控制台,把参数写到cookie文件中, 同时把redis中的状态置为正常, 同时, 把正常数据提交到状态正常的账号中。
+  def self.repair_cookie user_name, session_id
+    cookie_content = "HTTP/1.1 200 OK
+Server: nginx
+Date: Tue, 04 Jul 2017 03:06:34 GMT
+Content-Type: text/html;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding
+Set-Cookie: JSESSIONID=#{session_id}; Path=/; HttpOnly"
+
+    file = File.open("/data/czb/#{user_name}", 'w')
+    file << cookie_content
+    file.close
+    redis = Redis.current
+    redis["#{user_name}-0001"] = 'yes'
+  end
 
 end
 __END__

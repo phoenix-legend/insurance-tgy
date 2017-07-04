@@ -150,7 +150,7 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
   def proxy_info
     redis = Redis.current
     redis["#{params[:machine_name]}_need_chongqi"] = "#{Time.now.to_i}"
-    OrderSystem::WeizhangLog.add_baixing_json_body params[:proxy_info]
+    OrderSystem::WeizhangLog.add_baixing_json_body params[:proxy_info], 'baixing'
   end
 
 end

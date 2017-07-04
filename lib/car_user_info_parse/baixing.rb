@@ -635,12 +635,25 @@ module Baixing
   # 运行在服务器
   def self.save_baixing_data_from_app_json
     (1..10000).each do |i|
+
+
       body = OrderSystem::WeizhangLog.get_baixing_json_body
       if body.blank?
         sleep 5
         next
       end
-      Baixing.proxy_info :response_body => body
+      if body["query_types"].blank? || body["query_types"] == 'baixing'
+        pp "处理百姓网, 长度为: #{body["contents"].length}"
+
+        Baixing.proxy_info :response_body => body["contents"]
+      end
+
+      if body.query_types == 'czb'
+        pp "处理czb, 为: #{body["contents"]}"
+        UserSystem::YouyicheCarUserInfo.post_data_with_session body["contents"]
+      end
+
+
     end
 
   end
@@ -648,36 +661,36 @@ module Baixing
   #把目录中的文件, 自动保存到数据库。  运行在本地
   # Baixing.xxx3
   # 有了anyproxy以后, 作废
-  def self.xxx3
-    while(1<2) do
-      Dir.foreach( "/Users/ericliu/tmp/todaycar" ){ |k|
-        next unless k.match /index|api/
-        response = File.read("/Users/ericliu/tmp/todaycar/#{k}")
-        OrderSystem::WeizhangLog.add_baixing_json_body response
-        File.delete("/Users/ericliu/tmp/todaycar/#{k}")
-      }
-
-      Dir.foreach( "/Users/ericliu/tmp/todaycar/Cheliang.todayCars" ){ |k|
-        next unless k.match /index|api/
-        response = File.read("/Users/ericliu/tmp/todaycar/Cheliang.todayCars/#{k}")
-        OrderSystem::WeizhangLog.add_baixing_json_body response
-        File.delete("/Users/ericliu/tmp/todaycar/Cheliang.todayCars/#{k}")
-      }
-
-
-      Dir.foreach( "/Users/ericliu/tmp/todaycar/ershouqiche" ){ |k|
-        next unless k.match /index|api/
-        response = File.read("/Users/ericliu/tmp/todaycar/ershouqiche/#{k}")
-        OrderSystem::WeizhangLog.add_baixing_json_body response
-        File.delete("/Users/ericliu/tmp/todaycar/ershouqiche/#{k}")
-      }
-
-      sleep 5
-    end
-
-
-
-  end
+  # def self.xxx3
+  #   while(1<2) do
+  #     Dir.foreach( "/Users/ericliu/tmp/todaycar" ){ |k|
+  #       next unless k.match /index|api/
+  #       response = File.read("/Users/ericliu/tmp/todaycar/#{k}")
+  #       OrderSystem::WeizhangLog.add_baixing_json_body response
+  #       File.delete("/Users/ericliu/tmp/todaycar/#{k}")
+  #     }
+  #
+  #     Dir.foreach( "/Users/ericliu/tmp/todaycar/Cheliang.todayCars" ){ |k|
+  #       next unless k.match /index|api/
+  #       response = File.read("/Users/ericliu/tmp/todaycar/Cheliang.todayCars/#{k}")
+  #       OrderSystem::WeizhangLog.add_baixing_json_body response
+  #       File.delete("/Users/ericliu/tmp/todaycar/Cheliang.todayCars/#{k}")
+  #     }
+  #
+  #
+  #     Dir.foreach( "/Users/ericliu/tmp/todaycar/ershouqiche" ){ |k|
+  #       next unless k.match /index|api/
+  #       response = File.read("/Users/ericliu/tmp/todaycar/ershouqiche/#{k}")
+  #       OrderSystem::WeizhangLog.add_baixing_json_body response
+  #       File.delete("/Users/ericliu/tmp/todaycar/ershouqiche/#{k}")
+  #     }
+  #
+  #     sleep 5
+  #   end
+  #
+  #
+  #
+  # end
 
   # Baixing.get_header_info
   # def self.get_header_info
