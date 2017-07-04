@@ -14,7 +14,7 @@ class OrderSystem::WeizhangLog < ActiveRecord::Base
   def self.get_baixing_json_body
     log = OrderSystem::WeizhangLog.last
     return if log.blank?
-    k = {:contents => log.contents, :query_types => log.query_types}
+    k = {"contents" => log.contents, "query_types" => log.query_types}
     log.destroy!
     return k
   end
