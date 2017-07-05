@@ -103,7 +103,7 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
       @is_need = false
     else
       if Time.now.to_i - redis["#{params[:machine_name]}_need_chongqi"].to_i > 60*10
-        @is_need = false #true
+        @is_need = true
       else
         @is_need = false
       end
