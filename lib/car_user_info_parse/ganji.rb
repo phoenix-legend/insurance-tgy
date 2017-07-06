@@ -272,7 +272,7 @@ module Ganji
         fabushijian = detail_content.css('.detail-meta span')[0].text
         fabushijian.strip!
         fabushijian.gsub!('发布:', '')
-      rescue ''
+      rescue Exception => e
       end
 
       phone = detail_content.css('.phone-contact a')[0].attributes['href'].value.gsub('tel:', '')
