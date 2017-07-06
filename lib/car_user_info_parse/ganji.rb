@@ -147,8 +147,8 @@ module Ganji
       url = "http://#{areaid}.ganji.com/ershouche/a1/"
       # pp "发起请求 #{areaname}  #{Time.now}"
       content = RestClient.get url, {
-          'User-Agent' => RestClientProxy.rand_ua #,
-          # 'Cookie' => 'gr_user_id=8fcb69d6-a9e2-43f2-b05d-955ce16276a5; __utmganji_v20110909=0xe17e1688f8364e8228f5a20bbf08f82; cityDomain=hz; webimverran=82; ganji_uuid=5283133772326517092624; ganji_xuuid=3255599f-19cb-4209-de05-2078bfda3f6a.1497849984212; __utmt=1; GANJISESSID=6ffddb27ce3486fbabbe75da706e56bb; _gl_tracker=%7B%22ca_source%22%3A%22-%22%2C%22ca_name%22%3A%22-%22%2C%22ca_kw%22%3A%22-%22%2C%22ca_id%22%3A%22-%22%2C%22ca_s%22%3A%22self%22%2C%22ca_n%22%3A%22-%22%2C%22ca_i%22%3A%22-%22%2C%22sid%22%3A48384010257%7D; __utma=32156897.2034222174.1460360232.1490174031.1497849984.7; __utmb=32156897.4.10.1497849984; __utmc=32156897; __utmz=32156897.1490168931.5.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); Hm_lvt_8dba7bd668299d5dabbd8190f14e4d34=1497849984; Hm_lpvt_8dba7bd668299d5dabbd8190f14e4d34=1497850043; ganji_login_act=1497850043498; lg=1; vehicle_list_view_type=1'
+          'User-Agent' => RestClientProxy.rand_ua ,
+          'Cookie' => 'gr_user_id=8fcb69d6-a9e2-43f2-b05d-955ce16276a5; __utmganji_v20110909=0xe17e1688f8364e8228f5a20bbf08f82; cityDomain=hz; webimverran=82; ganji_uuid=5283133772326517092624; ganji_xuuid=3255599f-19cb-4209-de05-2078bfda3f6a.1497849984212; __utmt=1; GANJISESSID=6ffddb27ce3486fbabbe75da706e56bb; _gl_tracker=%7B%22ca_source%22%3A%22-%22%2C%22ca_name%22%3A%22-%22%2C%22ca_kw%22%3A%22-%22%2C%22ca_id%22%3A%22-%22%2C%22ca_s%22%3A%22self%22%2C%22ca_n%22%3A%22-%22%2C%22ca_i%22%3A%22-%22%2C%22sid%22%3A48384010257%7D; __utma=32156897.2034222174.1460360232.1490174031.1497849984.7; __utmb=32156897.4.10.1497849984; __utmc=32156897; __utmz=32156897.1490168931.5.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); Hm_lvt_8dba7bd668299d5dabbd8190f14e4d34=1497849984; Hm_lpvt_8dba7bd668299d5dabbd8190f14e4d34=1497850043; ganji_login_act=1497850043498; lg=1; vehicle_list_view_type=1'
       }
       # pp "收到请求 #{areaname} #{Time.now}"
       content = content.body
@@ -214,7 +214,7 @@ module Ganji
 
 
   def self.update_one_detail car_user_info_id
-    # car_user_info_id = 4922735
+    # car_user_info_id = 9880700
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
 
     return unless car_user_info.name.blank?
