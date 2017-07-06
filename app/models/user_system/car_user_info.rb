@@ -485,6 +485,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     #专门针对赶集历史数据做校验
     reg = Regexp.new Time.now.strftime("%m-%d")
+    reg2 = Regexp.new (Time.now-1.days).strftime("%m-%d")
+    reg3 = Regexp.new (Time.now-2.days).strftime("%m-%d")
+    reg4 = Regexp.new (Time.now-3.days).strftime("%m-%d")
+    reg5 = Regexp.new (Time.now-4.days).strftime("%m-%d")
+    reg6 = Regexp.new (Time.now-5.days).strftime("%m-%d")
+    reg7 = Regexp.new (Time.now-6.days).strftime("%m-%d")
+
 
     if car_user_info.site_name == 'ganji' and car_user_info.fabushijian.blank?
       car_user_info.tt_upload_status = '没有发布时间'
@@ -492,7 +499,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       return
     end
 
-    if car_user_info.site_name == 'ganji' and !(car_user_info.fabushijian.to_s.match reg)
+    if car_user_info.site_name == 'ganji' and !(car_user_info.fabushijian.to_s.match(reg) || car_user_info.fabushijian.to_s.match(reg2) || car_user_info.fabushijian.to_s.match(reg3)|| car_user_info.fabushijian.to_s.match(reg4)|| car_user_info.fabushijian.to_s.match(reg5)|| car_user_info.fabushijian.to_s.match(reg6)|| car_user_info.fabushijian.to_s.match(reg7))
       car_user_info.tt_yaoyue = '历史遗留数据'
       car_user_info.save!
       return
