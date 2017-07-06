@@ -35,7 +35,7 @@ module RestClientProxy
   def self.refresh_proxy_ip
     [PROXYIP_GANJI1, PROXYIP_GANJI2, PROXYIP_GANJI3, PROXYIP_WUBA1, PROXYIP_WUBA2, PROXYIP_WUBA3, PROXYIP_WUBA4, PROXYIP_QITA1, PROXYIP_QITA2, PROXYIP_QITA3].each do |k|
       nameandpassword = (k.match /http:\/\/(.{11,12})@/)[1]
-      sleep 4
+      sleep 3
       `curl -u #{nameandpassword} http://ip.hahado.cn/switch-ip`
     end
 
@@ -43,43 +43,92 @@ module RestClientProxy
 
 
   def self.get_proxy_ip
-    case RestClientProxy.get_local_ip
-      when HOSTNAME_GANJI1
-        PROXYIP_GANJI1
-      when HOSTNAME_GANJI2
-        PROXYIP_GANJI2
-      when HOSTNAME_GANJI3
-        PROXYIP_GANJI3
-      when HOSTNAME_QITA1
-        PROXYIP_QITA1
-      when HOSTNAME_QITA2
-        PROXYIP_QITA2
-      when HOSTNAME_QITA3
-        PROXYIP_QITA3
-      when HOSTNAME_WUBA1
-        PROXYIP_WUBA1
-      when HOSTNAME_WUBA2
-        PROXYIP_WUBA2
-      when HOSTNAME_WUBA3
-        PROXYIP_WUBA3
-      when HOSTNAME_WUBA4
-        PROXYIP_WUBA4
-      else
-        PROXYIP_WUBA4
-    end
+
+    ips = [PROXYIP_GANJI1, PROXYIP_GANJI2, PROXYIP_GANJI3, PROXYIP_QITA1, PROXYIP_QITA2, PROXYIP_QITA3, PROXYIP_WUBA1, PROXYIP_WUBA2, PROXYIP_WUBA3, PROXYIP_WUBA4]
+    ips[rand(10)]
+
+    # case RestClientProxy.get_local_ip
+    #   when HOSTNAME_GANJI1
+    #     PROXYIP_GANJI1
+    #   when HOSTNAME_GANJI2
+    #     PROXYIP_GANJI2
+    #   when HOSTNAME_GANJI3
+    #     PROXYIP_GANJI3
+    #   when HOSTNAME_QITA1
+    #     PROXYIP_QITA1
+    #   when HOSTNAME_QITA2
+    #     PROXYIP_QITA2
+    #   when HOSTNAME_QITA3
+    #     PROXYIP_QITA3
+    #   when HOSTNAME_WUBA1
+    #     PROXYIP_WUBA1
+    #   when HOSTNAME_WUBA2
+    #     PROXYIP_WUBA2
+    #   when HOSTNAME_WUBA3
+    #     PROXYIP_WUBA3
+    #   when HOSTNAME_WUBA4
+    #     PROXYIP_WUBA4
+    #   else
+    #     PROXYIP_WUBA4
+    # end
 
   end
 
 
   def self.get url, header={}
-    if url.match /baixing/
-      sleep 2+rand(4)
+    #只针对58-1使用代理
+
+    proxy_ip = if RestClientProxy.get_local_ip == HOSTNAME_WUBA1
+                 RestClientProxy.get_proxy_ip
+               else
+                 nil
+               end
+
+
+    if url.match /baixing|ganji/
+      sleep 2+rand(3)
     end
-    proxy_ip = RestClientProxy.get_proxy_ip
+
     RestClient.proxy = proxy_ip
     pp RestClient.proxy
     response = begin
       RestClient.get url, header
+    rescue Exception => e
+      e.to_s
+      pp '..'*10
+      pp e.to_s
+    end
+
+
+    response = response.body unless response.class == String
+    response = response.force_encoding('UTF-8')
+    RestClient.proxy = nil
+    if response.length < 300
+      pp 'IP被封'
+      pp response
+      sleep 3
+    end
+    return response
+  end
+
+
+  def self.post url, param= {}, header={}
+    #只针对58-1使用代理
+
+    proxy_ip = if RestClientProxy.get_local_ip == HOSTNAME_WUBA1
+                 RestClientProxy.get_proxy_ip
+               else
+                 nil
+               end
+
+    if url.match /baixing|ganji/
+      sleep 2+rand(3)
+    end
+    # proxy_ip = RestClientProxy.get_proxy_ip
+    RestClient.proxy = proxy_ip
+    pp RestClient.proxy
+    response = begin
+      RestClient.post url, param, header
     rescue Exception => e
       e.to_s
       pp '..'*10
