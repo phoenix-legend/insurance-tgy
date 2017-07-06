@@ -85,7 +85,7 @@ module RestClientProxy
                end
 
 
-    if url.match /baixing|ganji/
+    if url.match /baixing|ganji/  and !proxy_ip.blank?
       sleep 2+rand(3)
     end
 
@@ -121,7 +121,7 @@ module RestClientProxy
                  nil
                end
 
-    if url.match /baixing|ganji/
+    if url.match /baixing|ganji/   and !proxy_ip.blank?
       sleep 2+rand(3)
     end
     # proxy_ip = RestClientProxy.get_proxy_ip

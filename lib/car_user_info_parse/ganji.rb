@@ -35,6 +35,11 @@ module Ganji
         end
       end
     end
+
+    if party == 0 and RestClientProxy.get_local_ip == RestClientProxy::HOSTNAME_WUBA1
+      Ganji.get_car_user_list 1
+      Ganji.get_car_user_list 2
+    end
   end
 
 
