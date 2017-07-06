@@ -90,6 +90,16 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     end
 
 
+    cuis = UserSystem::CarUserInfo.where("id > ? and site_name = ? ", 9637547, 'ganji')
+    cuis.find_each do |cui|
+      pp cui.id
+      # sleep 2
+      # next if cui.tt_yaoyue == '历史遗留数据'
+      UserSystem::CarUserInfo.che_shang_jiao_yan cui, true
+      UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
+    end
+
+
     # cuis = UserSystem::YouyicheCarUserInfo.where("youyiche_status_message = '车源提交失败'").select(:car_user_info_id)
     # ids = cuis.collect &:car_user_info_id
     #
