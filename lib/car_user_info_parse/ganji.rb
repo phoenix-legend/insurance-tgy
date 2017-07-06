@@ -88,18 +88,20 @@ module Ganji
       end
       pp "接口  #{areaname}  #{Time.now.chinese_format}"
       url = "http://mobapi.ganji.com/datashare/HTTP/1.1"
+      customerid = "801"
+      userid = "DE361EB315646E5CCF29674326801321"
       # response = RestClient.post url,
       response = RestClientProxy.post url,
-                                 {jsonArgs: '{"customerId":"801","cityScriptIndex":"'+ "#{areaid2}" +'","categoryId":"6","pageIndex":"0","pageSize":"10","majorCategoryScriptIndex":"1","queryFilters":[{"name":"deal_type","operator":"=","value":"0"},{"name":"agent","operator":"=","value":"0"}],"sortKeywords":[{"field":"post_at","sort":"desc"}]}',
+                                 {jsonArgs: '{"customerId":"'+customerid+'","cityScriptIndex":"'+ "#{areaid2}" +'","categoryId":"6","pageIndex":"0","pageSize":"40","majorCategoryScriptIndex":"1","queryFilters":[{"name":"deal_type","operator":"=","value":"0"},{"name":"agent","operator":"=","value":"0"}],"sortKeywords":[{"field":"post_at","sort":"desc"}]}',
                                   showType: 0},
                                  {'User-Agent' => "Dalvik/2.1.0 (Linux; U; Android 6.0.1; SM-G6100 Build/MMB29M)",
                                   'interface' => "SearchPostsByJson2",
-                                  'agency' => 'eoe01',
-                                  'userId' => 'DE361EB315646E5CCF29674326801321',
+                                  'agehcy' => 'eoe01',
+                                  'userId' => userid,
                                   'versionId' => '7.3.1',
                                   'model' => 'samsung/SM-G6100',
                                   'contentformat' => 'json2',
-                                  'CustomerId' => '801',
+                                  'CustomerId' => customerid,
                                   'clientAgent' => 'samsung/SM-G6100#1080*1920#3.0#6.0.1',
                                   'GjData-Version' => '1.0',
                                   'uniqueId' => '93c6fcc41a2fbcb954a10a1bd87c53cb',
