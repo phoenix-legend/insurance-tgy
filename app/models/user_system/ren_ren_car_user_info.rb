@@ -115,6 +115,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       # yc_car_user_info.save!
 
       UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+      # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
       return
     end
 
@@ -123,6 +124,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       yc_car_user_info.renren_upload_status = '车商'
       yc_car_user_info.save!
       UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+      # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
       return
     end
 
@@ -131,6 +133,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       yc_car_user_info.renren_upload_status = '爬虫'
       yc_car_user_info.save!
       UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+      # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
       return
     end
 
@@ -139,6 +142,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       yc_car_user_info.renren_upload_status = '城市不匹配'
       yc_car_user_info.save!
       UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+      # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
       return
     end
 
@@ -146,6 +150,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       yc_car_user_info.renren_upload_status = '疑似走私车'
       yc_car_user_info.save!
       UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+      # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
       return
     end
 
@@ -153,6 +158,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       yc_car_user_info.renren_upload_status = '疑似走私车'
       yc_car_user_info.save!
       UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+      # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
       return
     end
 
@@ -161,6 +167,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
         yc_car_user_info.renren_upload_status = '疑似走私车或车商'
         yc_car_user_info.save!
         UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+        # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
         return
 
       end
@@ -171,6 +178,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       yc_car_user_info.renren_upload_status = '疑似走私车或车商'
       yc_car_user_info.save!
       UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+      # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
       return
     end
 
@@ -179,6 +187,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       yc_car_user_info.renren_upload_status = '疑似走私车'
       yc_car_user_info.save!
       UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+      # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
       return
     end
 
@@ -187,6 +196,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       yc_car_user_info.renren_upload_status = '疑似走私车'
       yc_car_user_info.save!
       UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+      # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
       return
     end
 
@@ -200,6 +210,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
         yc_car_user_info.renren_upload_status = '疑似走私车'
         yc_car_user_info.save!
         UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+        # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
         return
       end
     rescue Exception => e
@@ -223,6 +234,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
           yc_car_user_info.renren_upload_status = '疑似车商'
           yc_car_user_info.save!
           UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+          # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
           return
         end
       end
@@ -250,6 +262,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
         yc_car_user_info.renren_upload_status = '非本地车'
         yc_car_user_info.save!
         UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+        # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
         return
       end
     end
@@ -260,6 +273,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
         yc_car_user_info.renren_upload_status = '疑似车商'
         yc_car_user_info.save!
         UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+        # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
         return
       end
     rescue Exception => e
@@ -269,6 +283,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       yc_car_user_info.renren_upload_status = '疑似车商'
       yc_car_user_info.save!
       UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+      # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
       return
     end
 
@@ -291,10 +306,10 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     # end
     config_key_words = 0
 
-    if rand(10) >= 8
-      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
-      return
-    end
+    # if rand(10) >= 8
+    #   UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+    #   return
+    # end
 
 
     token = 'J8UkigIBffy0xZen'
@@ -323,14 +338,8 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
         "sign" => Digest::MD5.hexdigest("#{data_json}#{token}#{time}"),
         "data" => data_json
     }
-
-
     response = RestClient.post "#{domain}/v1/clue/saler", params #, :content_type => 'application/json'
-
-
     response = JSON.parse response.body
-
-
     yc_car_user_info.renren_upload_status = '已上传'
     if response["status"] == 200
       yc_car_user_info.renren_id = response["data"]["renrenche_infoid"]
@@ -343,10 +352,50 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
 
   end
 
+
+  def self.upload_renren_xuzuo yc_car_user_info
+    token = 'J8UkigIBffy0xZen'
+    domain = '60.205.108.209'
+    require 'digest/md5'
+    time = Time.now.to_i
+    data = {
+        "name" => yc_car_user_info.name,
+        "mobile" => yc_car_user_info.phone,
+        "city" => yc_car_user_info.city_chinese,
+        "brand" => yc_car_user_info.brand,
+        "series" => if yc_car_user_info.car_user_info.cx.blank? then '未知' else yc_car_user_info.car_user_info.cx end,
+        "model" => "待定",
+        "kilometer" => yc_car_user_info.car_user_info.milage,
+        "licensed_date_year" => yc_car_user_info.che_ling,
+        "is_operation" => 0,
+        "seat_number" => "5",
+        "is_accidented" => 0
+    }
+    data_json = data.to_json
+    params = {
+        "token" => token,
+        "time" => time,
+        "sign" => Digest::MD5.hexdigest("#{data_json}#{token}#{time}"),
+        "data" => data_json
+    }
+    response = RestClient.post "#{domain}/v1/clue/saler", params #, :content_type => 'application/json'
+    response = JSON.parse response.body
+    yc_car_user_info.renren_upload_status = '已上传'
+    yc_car_user_info.renren_chengjiao = token
+    if response["status"] == 200
+      yc_car_user_info.renren_id = response["data"]["renrenche_infoid"]
+      yc_car_user_info.renren_status_message = response["msg"]
+      yc_car_user_info.renren_yaoyue = '重复' if response["data"]["is_repeat"]
+    else
+      yc_car_user_info.renren_status_message = response["msg"]
+    end
+    yc_car_user_info.save!
+  end
+
+
   #给到瓜子介绍的人人渠道
   def self.upload_renren_xxx yc_car_user_info
     token = 'd77d7c44bdeb8425'
-
     domain = '60.205.108.209'
     require 'digest/md5'
     time = Time.now.to_i

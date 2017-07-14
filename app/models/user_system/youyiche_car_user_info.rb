@@ -9,6 +9,14 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   # 沧州
   # 保定
 
+  # a = []
+  # cuis = UserSystem::YouyicheCarUserInfo.where("id >  328215")
+  # cuis.each do |cui|
+  #   next if cui.youyiche_chengjiao.blank?
+  #   next unless UserSystem::YouyicheCarUserInfo::DIQU.include? cui.city_chinese
+  #   a << cui.car_user_info_id
+  # end
+
   CITY = ["北京", "南京", "深圳", "上海", "青岛", "西安", "郑州", "无锡", "苏州", "杭州", "常州", "重庆", "武汉", "长沙", "成都", "太原", "南昌", "昆明", "宁波", "东莞", "济南", "南宁",
           "贵阳", "临沂", "广州", "佛山", "南通", "嘉兴", "金华", "温州", '台州', "合肥", "徐州", "大连", "沈阳", "天津", "哈尔滨", "长春", "厦门", "福州", "泉州", "石家庄", "邯郸", "唐山", "沧州", "保定"]
 
@@ -92,6 +100,17 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
     cuis = UserSystem::CarUserInfo.where("id > ? and site_name = ? ", 9637547, 'ganji')
     cuis.find_each do |cui|
+      pp cui.id
+      # sleep 2
+      # next if cui.tt_yaoyue == '历史遗留数据'
+      UserSystem::CarUserInfo.che_shang_jiao_yan cui, true
+      UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
+    end
+
+    cuis = UserSystem::CarUserInfo.where("id in (?)", a)
+    cuis.find_each do |cui|
+      ycui = UserSystem::YouyicheCarUserInfo.find_by_car_user_info_id cui.id
+      ycui.delete
       pp cui.id
       # sleep 2
       # next if cui.tt_yaoyue == '历史遗留数据'
