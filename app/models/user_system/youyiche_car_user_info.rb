@@ -670,6 +670,9 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   # UserSystem::YouyicheCarUserInfo.get_user_name
   def self.get_user_name
     redis = Redis.current
+
+    return 'cxmcsj' if  redis["cxmcsj-0001"] == 'yes'
+
     user_name = []
     ["cxmcsj", "gaoyixiangchezhu1", "gaoyixiangchezhu2"].each do |name|
       user_name << name if  redis["#{name}-0001"] == 'yes'
