@@ -7,12 +7,12 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
   # CITY = []
   CITY = ["北京", "东莞", "佛山", "深圳", "南宁", "杭州", "南京", "长沙", "合肥", "厦门", "太原",
           "青岛", "济南", "大连", "长春", "哈尔滨", "沈阳", "天津", "石家庄", "徐州", "无锡", "武汉", "广州", "惠州", "上海", "郑州", "洛阳", "昆明", "重庆",
-          "西安", "兰州", "成都", "贵阳", "苏州", "南通", "乌鲁木齐", "潍坊", "肇庆", "福州", "咸阳", "烟台", "宁波", "泉州", "南昌"]
+          "西安", "兰州", "成都", "贵阳", "苏州", "南通", "乌鲁木齐", "潍坊", "肇庆", "福州", "咸阳", "烟台", "宁波", "泉州", "南昌", "保定", "呼和浩特"]
 
 
 
-  # ["宁波", "泉州"].each do |k|
-  #   cuis = UserSystem::CarUserInfo.where("city_chinese = ? and created_at > ?", k, Time.now - 8.days)
+  # ["保定", "呼和浩特"].each do |k|
+  #   cuis = UserSystem::CarUserInfo.where("city_chinese = ? and created_at > ? and phone is not null", k, Time.now - 8.days)
   #   cuis.each do |cui|
   #     pp cui.id
   #     next if cui.tt_yaoyue == '历史遗留数据'
