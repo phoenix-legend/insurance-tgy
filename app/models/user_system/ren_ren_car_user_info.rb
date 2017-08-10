@@ -7,7 +7,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
   # CITY = []
   CITY = ["北京", "东莞", "佛山", "深圳", "南宁", "杭州", "南京", "长沙", "合肥", "厦门", "太原",
           "青岛", "济南", "大连", "长春", "哈尔滨", "沈阳", "天津", "石家庄", "徐州", "无锡", "武汉", "广州", "惠州", "上海", "郑州", "洛阳", "昆明", "重庆",
-          "西安", "兰州", "成都", "贵阳", "苏州", "南通", "乌鲁木齐", "潍坊", "肇庆", "福州", "咸阳", "烟台", "宁波", "泉州", "南昌", "保定", "呼和浩特"]
+          "西安", "兰州", "成都", "贵阳", "苏州", "南通", "乌鲁木齐", "潍坊", "肇庆", "福州", "咸阳", "烟台", "宁波", "泉州", "南昌", "保定", "呼和浩特","襄阳", "唐山", "南阳","新乡"]
 
 
 
@@ -86,11 +86,11 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
       return
     end
 
-    if yc_car_user_info.brand.blank?
-      yc_car_user_info.renren_upload_status = '品牌未知'
-      yc_car_user_info.save!
-      return
-    end
+    # if yc_car_user_info.brand.blank?
+    #   yc_car_user_info.renren_upload_status = '品牌未知'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
     # if yc_car_user_info.car_user_info.che_ling.to_i < 2008
     #   yc_car_user_info.renren_upload_status = '车太老'
@@ -332,7 +332,7 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
         "name" => yc_car_user_info.name,
         "mobile" => yc_car_user_info.phone,
         "city" => yc_car_user_info.city_chinese,
-        "brand" => yc_car_user_info.brand,
+        "brand" => yc_car_user_info.brand || '大众',
         "series" => if yc_car_user_info.car_user_info.cx.blank? then '未知' else yc_car_user_info.car_user_info.cx end,
         "model" => "未知",
         "kilometer" => yc_car_user_info.car_user_info.milage,
