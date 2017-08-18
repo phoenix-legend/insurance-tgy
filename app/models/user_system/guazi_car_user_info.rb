@@ -249,7 +249,8 @@ rescue
     #   return
     # end
 
-    host_name = "http://commapi.guazi.com/clue/carClue/AddCarSource" #正式环境
+    # host_name = "http://commapi.guazi.com/clue/carClue/AddCarSource" #正式环境
+    host_name = "http://clue-commapi.guazi.com/carClue/AddCarSource" #正式环境
 
     scode = if yc_car_user_info.site_name == 'guazi_shouche'
               UserSystem::GuaziCarUserInfo::GZSCODE_SHOUCHE
@@ -283,7 +284,9 @@ rescue
 
   # UserSystem::GuaziCarUserInfo.query_guazi
   def self.query_guazi
-    host_name = "http://commapi.guazi.com/clue/carClue/GuaZiGetCarClueStatus" #正式环境
+    # host_name = "http://commapi.guazi.com/clue/carClue/GuaZiGetCarClueStatus" #正式环境
+
+    host_name = "http://clue-commapi.guazi.com/CarClue/GetCooperationCarClueStatus"
 
 
     gcui = UserSystem::GuaziCarUserInfo.where("guazi_yaoyue is null and created_at > ? and guazi_upload_status = '0'", Time.now - 20.days)
