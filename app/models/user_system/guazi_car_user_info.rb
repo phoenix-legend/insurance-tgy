@@ -286,7 +286,11 @@ rescue
   def self.query_guazi
     # host_name = "http://commapi.guazi.com/clue/carClue/GuaZiGetCarClueStatus" #正式环境
 
-    host_name = "http://clue-commapi.guazi.com/CarClue/GetCooperationCarClueStatus"
+    # host_name = "http://clue-commapi.guazi.com/CarClue/GetCooperationCarClueStatus"
+
+    host_name = "http://clue-commapi.guazi.com/CarClue/GuaZiGetCarClueStatus"
+
+
 
 
     gcui = UserSystem::GuaziCarUserInfo.where("guazi_yaoyue is null and created_at > ? and guazi_upload_status = '0'", Time.now - 20.days)
