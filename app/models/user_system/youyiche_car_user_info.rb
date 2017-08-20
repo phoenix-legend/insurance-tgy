@@ -224,6 +224,12 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       return
     end
 
+    if ["温州", "宁波"].include? yc_car_user_info.city_chinese and /^17/.match yc_car_user_info.phone
+      yc_car_user_info.youyiche_upload_status = '拨不通电话'
+      yc_car_user_info.save!
+      return
+    end
+
     #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
     begin
       tmp_chexing = begin
