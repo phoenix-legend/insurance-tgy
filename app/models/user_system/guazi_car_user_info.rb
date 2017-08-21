@@ -375,7 +375,8 @@ rescue
 
   # UserSystem::GuaziCarUserInfo.query_guazi_chengjiao
   def self.query_guazi_chengjiao
-    host_name = "http://commapi.guazi.com/clue/carClue/GuaZiGetCarClueStatus" #正式环境
+    # host_name = "http://commapi.guazi.com/clue/carClue/GuaZiGetCarClueStatus" #正式环境
+    host_name = "http://clue-commapi.guazi.com/CarClue/GuaZiGetCarClueStatus"
 
 
     gcui = UserSystem::GuaziCarUserInfo.where("guazi_yaoyue = '成功'")
