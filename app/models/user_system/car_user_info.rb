@@ -384,6 +384,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info = UserSystem::CarUserInfo.new options
     car_user_info.name.gsub!(/\r|\n|\t/, '') unless car_user_info.name.blank?
     car_user_info.save!
+    if ["温州","宁波", "厦门"].include? car_user_info.city_chinese and ["baixing"].include? car_user_info.site_name
+      return nil
+    end
     redis[options[:detail_url]] = 'y'
     redis.expire options[:detail_url], 7*24*60*60
     car_user_info.id
