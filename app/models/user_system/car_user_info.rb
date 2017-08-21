@@ -388,13 +388,15 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     #   return nil
     # end
 
+    redis[options[:detail_url]] = 'y'
+    redis.expire options[:detail_url], 7*24*60*60
+
     #屏蔽掉百姓网的17号
     if ["baixing"].include? car_user_info.site_name and /^17/.match car_user_info.phone
       return nil
     end
 
-    redis[options[:detail_url]] = 'y'
-    redis.expire options[:detail_url], 7*24*60*60
+
     car_user_info.id
   end
 
