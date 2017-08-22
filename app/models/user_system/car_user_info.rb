@@ -391,10 +391,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     redis[options[:detail_url]] = 'y'
     redis.expire options[:detail_url], 7*24*60*60
 
-    #屏蔽掉百姓网的17号
-    if ["baixing"].include? car_user_info.site_name and /^17/.match car_user_info.phone
-      return nil
-    end
+
 
 
     car_user_info.id
@@ -509,6 +506,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       car_user_info.tt_upload_status = '数据超限'
       car_user_info.save!
       return
+    end
+
+    #屏蔽掉百姓网的17号
+    if ["baixing"].include? car_user_info.site_name and /^17/.match car_user_info.phone
+      car_user_info.tt_upload_status = '疑似百姓诈骗电话'
+      car_user_info.save!
+      return nil
     end
 
     # cuis = UserSystem::CarUserInfo.where("site_name = 'ganji'").order(id: :desc).limit(10000)
