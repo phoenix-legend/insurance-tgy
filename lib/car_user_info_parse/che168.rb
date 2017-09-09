@@ -198,6 +198,8 @@ module Che168
 
       # detail_content = `curl '#{car_user_info.detail_url}'`
       pp car_user_info.detail_url
+
+      # k = "http://m.che168.com/personal/23235774.html?type=1"
       response = RestClient.get car_user_info.detail_url,
                                 'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
                                 'Cookie' => '_ga=GA1.2.84789044.1442387486; sessionid=25e4b37e-7b66-480d-b17a-5e0fab529500; sessionip=114.111.166.28; area=110199; __utma=247243734.84789044.1442387486.1463541274.1463541274.1; isShowTool2=1; UsedCarBrowseHistory=0%3A20405753; Hm_lvt_0f2ac73eb429af8bb7f48d01f2a25a25=1490752053; Hm_lpvt_0f2ac73eb429af8bb7f48d01f2a25a25=1490752053; _ga=GA1.3.84789044.1442387486; _gat=1; sessionuid=25e4b37e-7b66-480d-b17a-5e0fab529500'
@@ -205,15 +207,15 @@ module Che168
 
       detail_content = response.body
       detail_content = Nokogiri::HTML(detail_content)
-      connect_info = detail_content.css("#callPhone")[0]
-      name = connect_info.css("span").text.strip
+      # connect_info = detail_content.css("#callPhone")[0]
+      name = "车主"#connect_info.css("span").text.strip
       # phone = connect_info.attributes["data-telno"].value.strip
       phone = (response.body.match /tel:(\d{11})/)[1]
       note = begin
         detail_content.css("#js-message")[0].text.strip rescue ''
       end
-      time = detail_content.css(".carousel-tt b")[1].text.gsub("发布", '').strip[0..9]
-      price = detail_content.css(".info-price")[0].text.gsub("¥", '').strip
+      time = begin detail_content.css(".carousel-tt b")[1].text.gsub("发布", '').strip[0..9] end
+      price = begin detail_content.css(".info-price")[0].text.gsub("¥", '').strip end
 
       UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                             name: name,
