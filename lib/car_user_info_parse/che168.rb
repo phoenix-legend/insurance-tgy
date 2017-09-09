@@ -125,17 +125,20 @@ module Che168
 
           # detail_content = `curl '#{car_user_info.detail_url}'`
           pp car_user_info.detail_url
+          k = "http://m.che168.com/personal/23235774.html?type=1"
           response = RestClient.get(car_user_info.detail_url)
           pp
           detail_content = response.body
+          phone = detail_content.match /tel:(\d{11})/
+          phone = phone[1]
           detail_content = Nokogiri::HTML(detail_content)
-          connect_info = detail_content.css("#callPhone")[0]
-          name = connect_info.css("span").text.strip
-          phone = connect_info.attributes["data-telno"].value.strip
+          # connect_info = detail_content.css("#callPhone")[0]
+          name = "车主"#connect_info.css("span").text.strip
+          # phone = products_content.match /tel:(\d{11})/#connect_info.attributes["data-telno"].value.strip
           note = begin
             detail_content.css("#js-message")[0].text.strip rescue ''
           end
-          time = detail_content.css(".carousel-images h2")[0].text.gsub("发布", '').strip[0..9]
+          # time = detail_content.css(".carousel-images h2")[0].text.gsub("发布", '').strip[0..9]
           price = detail_content.css(".info-price")[0].text.gsub("¥", '').strip
 
           UserSystem::CarUserInfo.update_detail id: car_user_info.id,
