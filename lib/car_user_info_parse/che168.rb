@@ -124,8 +124,8 @@ module Che168
           puts '开始跑明细'
 
           # detail_content = `curl '#{car_user_info.detail_url}'`
-          pp car_user_info.detail_url
-          k = "http://m.che168.com/personal/23235774.html?type=1"
+          # pp car_user_info.detail_url
+          # k = "http://m.che168.com/personal/23235774.html?type=1"
           response = RestClient.get(car_user_info.detail_url)
           pp
           detail_content = response.body
@@ -139,14 +139,15 @@ module Che168
             detail_content.css("#js-message")[0].text.strip rescue ''
           end
           # time = detail_content.css(".carousel-images h2")[0].text.gsub("发布", '').strip[0..9]
-          price = detail_content.css(".info-price")[0].text.gsub("¥", '').strip
+
+          price = begin  detail_content.css(".info-price")[0].text.gsub("¥", '').strip end
 
           UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                                 name: name,
                                                 phone: phone,
                                                 note: note,
-                                                price: price,
-                                                fabushijian: time
+                                                price: price
+                                                # fabushijian: time
 
         rescue Exception => e
           pp e
