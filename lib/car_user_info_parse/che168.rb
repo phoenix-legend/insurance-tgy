@@ -3,6 +3,7 @@ module Che168
 
 
   def self.get_car_user_list party = 0
+    sleep 10
     return 0
     city_hash = ::UserSystem::CarUserInfo.get_che168_sub_cities party
     city_hash.each_pair do |areaid, areaname|
