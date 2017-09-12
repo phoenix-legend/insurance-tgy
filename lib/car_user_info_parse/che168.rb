@@ -1,13 +1,14 @@
 module Che168
 
-  
+
 
   def self.get_car_user_list party = 0
+    return 0
     city_hash = ::UserSystem::CarUserInfo.get_che168_sub_cities party
     city_hash.each_pair do |areaid, areaname|
 
       list_url = "http://m.che168.com/#{areaid}/a0_0ms1dgscncgpiltocsp1ex/?pvareaid=103759"
-      response = `curl #{list_url} -c "/data/tmp_cookie#{party}"  -b "/data/tmp_cookie#{party}"`
+      response = `curl #{list_url} -c "/data/tmp_cookie"  -b "/data/tmp_cookie"`
       response = Nokogiri::HTML(response)
       details = response.css(".list-base li a")
       details.each do |detail|
@@ -37,7 +38,7 @@ module Che168
                                                                site_name: 'che168'
         if not result.blank?
 
-          Che168.update_one_detail result, party
+          Che168.update_one_detail result
 
         end
       end
@@ -218,7 +219,7 @@ module Che168
 
 
 # Che168.update_one_detail 11654337
-  def self.update_one_detail car_user_info_id, party
+  def self.update_one_detail car_user_info_id
     # pp "%%%"*15
 
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
@@ -242,7 +243,7 @@ module Che168
     end
 
     begin
-      response = `curl #{car_user_info.wuba_kouling} -b "/data/tmp_cookie#{party}"`
+      response = `curl #{car_user_info.wuba_kouling} -b "/data/tmp_cookie"`
 
       # response = `curl http://m.che168.com/personal/23278228.html#pvareaid=100864#pos=24#isRecom=0#rtype=0#page=1#filter=0a0a0_0a0_0a0_0#module=3 -b "/data/tmp_cookie"`
 
