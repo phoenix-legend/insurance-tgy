@@ -1,22 +1,15 @@
 module Che168
 
+  
 
   def self.get_car_user_list party = 0
-
-    sleep 10
-    return
-
     city_hash = ::UserSystem::CarUserInfo.get_che168_sub_cities party
-
     city_hash.each_pair do |areaid, areaname|
 
-
       list_url = "http://m.che168.com/#{areaid}/a0_0ms1dgscncgpiltocsp1ex/?pvareaid=103759"
-      response = `curl #{list_url} -c "~/tmp_cookie"  -b "~/tmp_cookie"`
-
+      response = `curl #{list_url} -c "/data/tmp_cookie"  -b "/data/tmp_cookie"`
       response = Nokogiri::HTML(response)
       details = response.css(".list-base li a")
-
       details.each do |detail|
         url = begin
           detail.attributes["href"].value rescue ''
@@ -26,43 +19,29 @@ module Che168
         che_xing = begin
           detail.css("h3 span").text rescue ''
         end
-        pp che_xing
-
+        # pp che_xing
         che_infos = detail.css("p b")
         che_ling = che_infos[1].text
         licheng = che_infos[0].text
         price = detail.css("ins").text
-
-        detail_url = "http:#{url.split(".html")}.html?type=1"
+        detail_url = "http:#{url.split(".html")[0]}.html?type=1"
         real_url = "http:#{url}"
-        # detail_response = `curl #{real_url} -b "~/tmp_cookie"`
-
-
+        # detail_response = `curl #{real_url} -b "/data/tmp_cookie"`
         pp "现在跑168.. #{areaname}"
+        result = UserSystem::CarUserInfo.create_car_user_info2 che_xing: che_xing,
+                                                               che_ling: che_ling,
+                                                               milage: licheng,
+                                                               detail_url: detail_url,
+                                                               wuba_kouling: real_url,
+                                                               city_chinese: areaname,
+                                                               site_name: 'che168'
+        if not result.blank?
 
+          Che168.update_one_detail result
 
-        result = UserSystem::CarUserInfo.create_car_user_info che_xing: che_xing,
-                                                              che_ling: che_ling,
-                                                              milage: licheng,
-                                                              detail_url: detail_url,
-                                                              wuba_kouling: real_url,
-                                                              city_chinese: areaname,
-                                                              site_name: 'che168'
-
-        if result == 0
-          u = url
-
-          unless u.blank?
-            c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
-            Che168.update_one_detail c.id if not c.blank?
-          end
         end
       end
-
-
     end
-
-
   end
 
 
@@ -240,6 +219,8 @@ module Che168
 
 # Che168.update_one_detail 11654337
   def self.update_one_detail car_user_info_id
+    # pp "%%%"*15
+
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
 
     return unless car_user_info.name.blank?
@@ -261,17 +242,19 @@ module Che168
     end
 
     begin
-      response = `curl http:#{car_user_info.wuba_kouling} -b "~/tmp_cookie"`
+      response = `curl #{car_user_info.wuba_kouling} -b "/data/tmp_cookie"`
 
-      response = `curl http://m.che168.com/personal/23278228.html#pvareaid=100864#pos=24#isRecom=0#rtype=0#page=1#filter=0a0a0_0a0_0a0_0#module=3 -b "~/tmp_cookie"`
+      # response = `curl http://m.che168.com/personal/23278228.html#pvareaid=100864#pos=24#isRecom=0#rtype=0#page=1#filter=0a0a0_0a0_0a0_0#module=3 -b "/data/tmp_cookie"`
 
+      # pp response
 
       phone = (response.match /tel:(\d{11})/)[1]
-      detail_content = Nokogiri::HTML(response)
+      # detail_content = Nokogiri::HTML(response)
 
       name = "车主"
 
 
+      # pp "+++"*20
       UserSystem::CarUserInfo.update_detail id: car_user_info.id,
                                             name: name,
                                             phone: phone
