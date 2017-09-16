@@ -1,48 +1,85 @@
 module Che168
 
+  require 'timeout'
+  # Che168.getxxx
+  def self.getxxx
+    while true do
+
+      Che168.get_car_user_list 0
+      sleep 1
+      Che168.get_car_user_list 1
+      sleep 1
+      Che168.get_car_user_list 2
+    end
+
+  end
 
 
+  # Che168.get_car_user_list 0
   def self.get_car_user_list party = 0
-    sleep 10
-    return 0
+    # sleep 10
+    # return 0
     city_hash = ::UserSystem::CarUserInfo.get_che168_sub_cities party
     city_hash.each_pair do |areaid, areaname|
+      begin
+        timeout(40) do
+          if rand(100) < 5
+            `curl  'http://m.che168.com/personal/23387110.html' \
+  -H 'Accept-Encoding: gzip, deflate' \
+  -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' \
+  -H 'Upgrade-Insecure-Requests: 1' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36' \
+  -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8' \
+  -H 'Cache-Control: max-age=0' \
+  -H 'Cookie: sessionid=25e4b37e-7b66-480d-b17a-5e0fab529500; __utma=247243734.84789044.1442387486.1463541274.1463541274.1; appadfirst=1; uarea=410100%7Czhengzhou; UsedCarBrowseHistory=0%3A23387005%2C0%3A23234620%2C0%3A23079771%2C0%3A22677660%2C0%3A20939328%2C0%3A23235438%2C0%3A23235774%2C0%3A20405753; sessionip=183.193.41.173; area=310199; sessionvisit=7e560f1c-aaaa-4552-87d1-ced660d222e6; sessionvisitInfo=25e4b37e-7b66-480d-b17a-5e0fab529500||100864; Hm_lvt_0f2ac73eb429af8bb7f48d01f2a25a25=1504974280,1505573318; Hm_lpvt_0f2ac73eb429af8bb7f48d01f2a25a25=1505573318; _ga=GA1.3.84789044.1442387486; _gid=GA1.3.1972352028.1505573318; _gat=1; sessionuid=25e4b37e-7b66-480d-b17a-5e0fab529500' \
+  -H 'Connection: keep-alive' --compressed`
+          end
 
-      list_url = "http://m.che168.com/#{areaid}/a0_0ms1dgscncgpiltocsp1ex/?pvareaid=103759"
-      response = `curl #{list_url} -c "/data/tmp_cookie"  -b "/data/tmp_cookie"`
-      response = Nokogiri::HTML(response)
-      details = response.css(".list-base li a")
-      details.each do |detail|
-        url = begin
-          detail.attributes["href"].value rescue ''
-        end
-        pp url
-        next if url.blank?
-        che_xing = begin
-          detail.css("h3 span").text rescue ''
-        end
-        # pp che_xing
-        che_infos = detail.css("p b")
-        che_ling = che_infos[1].text
-        licheng = che_infos[0].text
-        price = detail.css("ins").text
-        detail_url = "http:#{url.split(".html")[0]}.html?type=1"
-        real_url = "http:#{url}"
-        # detail_response = `curl #{real_url} -b "/data/tmp_cookie"`
-        pp "现在跑168.. #{areaname}"
-        result = UserSystem::CarUserInfo.create_car_user_info2 che_xing: che_xing,
-                                                               che_ling: che_ling,
-                                                               milage: licheng,
-                                                               detail_url: detail_url,
-                                                               wuba_kouling: real_url,
-                                                               city_chinese: areaname,
-                                                               site_name: 'che168'
-        if not result.blank?
 
-          Che168.update_one_detail result
 
+        sleep 1
+        brand = UserSystem::CarBrand.first
+
+        list_url = "http://m.che168.com/#{areaid}/a0_0ms1dgscncgpiltocsp1ex/?pvareaid=103759"
+        response = `curl #{list_url} -c "~/tmp_cookie"  -b "~/tmp_cookie"`
+
+        response = Nokogiri::HTML(response)
+        details = response.css(".list-base li a")
+        details.each do |detail|
+          url = begin
+            detail.attributes["href"].value rescue ''
+          end
+          pp url
+          next if url.blank?
+          che_xing = begin
+            detail.css("h3 span").text rescue ''
+          end
+          # pp che_xing
+          che_infos = detail.css("p b")
+          che_ling = che_infos[1].text
+          licheng = che_infos[0].text
+          price = detail.css("ins").text
+          detail_url = "http:#{url.split(".html")[0]}.html?type=1"
+          real_url = "http:#{url}"
+          # detail_response = `curl #{real_url} -b "/data/tmp_cookie"`
+          pp "现在跑168.. #{areaname}"
+          result = UserSystem::CarUserInfo.create_car_user_info2 che_xing: che_xing,
+                                                                 che_ling: che_ling,
+                                                                 milage: licheng,
+                                                                 detail_url: detail_url,
+                                                                 wuba_kouling: real_url,
+                                                                 city_chinese: areaname,
+                                                                 site_name: 'che168'
+          if not result.blank?
+
+            Che168.update_one_detail result
+
+          end
         end
+        end
+      rescue
       end
+
     end
   end
 
@@ -219,7 +256,7 @@ module Che168
 # end
 
 
-# Che168.update_one_detail 11654337
+# Che168.update_one_detail 11707798
   def self.update_one_detail car_user_info_id
     # pp "%%%"*15
 
@@ -244,7 +281,22 @@ module Che168
     end
 
     begin
-      response = `curl #{car_user_info.wuba_kouling} -b "/data/tmp_cookie"`
+      kouling_url = car_user_info.wuba_kouling
+      # new_url = "#{kouling_url.split(".html")[0]}.html#{CGI::escape kouling_url.split(".html")[1]}"
+      # response = `curl #{car_user_info.wuba_kouling} -b "~/tmp_cookie"`
+
+
+      response = `curl  '#{car_user_info.detail_url.gsub("?type=1", '')}' \
+  -H 'Accept-Encoding: gzip, deflate' \
+  -H 'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6' \
+  -H 'Upgrade-Insecure-Requests: 1' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36' \
+  -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8' \
+  -H 'Cache-Control: max-age=0' \
+  -H 'Cookie: sessionid=25e4b37e-7b66-480d-b17a-5e0fab529500; __utma=247243734.84789044.1442387486.1463541274.1463541274.1; appadfirst=1; uarea=410100%7Czhengzhou; UsedCarBrowseHistory=0%3A23387005%2C0%3A23234620%2C0%3A23079771%2C0%3A22677660%2C0%3A20939328%2C0%3A23235438%2C0%3A23235774%2C0%3A20405753; sessionip=183.193.41.173; area=310199; sessionvisit=7e560f1c-aaaa-4552-87d1-ced660d222e6; sessionvisitInfo=25e4b37e-7b66-480d-b17a-5e0fab529500||100864; Hm_lvt_0f2ac73eb429af8bb7f48d01f2a25a25=1504974280,1505573318; Hm_lpvt_0f2ac73eb429af8bb7f48d01f2a25a25=1505573318; _ga=GA1.3.84789044.1442387486; _gid=GA1.3.1972352028.1505573318; _gat=1; sessionuid=25e4b37e-7b66-480d-b17a-5e0fab529500' \
+  -H 'Connection: keep-alive' --compressed`
+
+      pp response
 
       # response = `curl http://m.che168.com/personal/23278228.html#pvareaid=100864#pos=24#isRecom=0#rtype=0#page=1#filter=0a0a0_0a0_0a0_0#module=3 -b "/data/tmp_cookie"`
 
