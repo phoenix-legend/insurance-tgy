@@ -157,11 +157,11 @@ class UserSystem::YoucheCarUserInfo < ActiveRecord::Base
     yc_car_user_info.name = yc_car_user_info.name.gsub('(个人)', '')
     yc_car_user_info.save!
 
-    if yc_car_user_info.phone_city.blank?
-      phone_city_name = get_city_name yc_car_user_info.phone
-      yc_car_user_info.phone_city = phone_city_name
-      yc_car_user_info.save!
-    end
+    # if yc_car_user_info.phone_city.blank?
+    #   phone_city_name = get_city_name yc_car_user_info.phone
+    #   yc_car_user_info.phone_city = phone_city_name
+    #   yc_car_user_info.save!
+    # end
 
 
     if yc_car_user_info.phone.blank? or yc_car_user_info.brand.blank?

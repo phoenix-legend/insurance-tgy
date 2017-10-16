@@ -8,7 +8,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   validates_presence_of :brand, message: '请填写品牌', :if => Proc.new { |cui| cui.site_name == 'zuoxi' }
   validates_presence_of :city_chinese, message: '请填写城市', :if => Proc.new { |cui| cui.site_name == 'zuoxi' }
 
-
+  
   # CURRENT_ID = 171550  第一次导入
   CURRENT_ID = 2400000
   GANJIUPLOAD = 'ganjiupload'
