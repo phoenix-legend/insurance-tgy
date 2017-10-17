@@ -7,6 +7,7 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
   def self.create_user_info_from_car_user_info car_user_info
     # return if car_user_info.brand.blank?
     return unless ['58', 'ganji', 'baixing', 'che168', 'zuoxi'].include? car_user_info.site_name
+    return unless ['baixing', '58'].include? car_user_info.site_name   #先不推送赶集的数据,降低重复。
     if car_user_info.is_pachong == false and car_user_info.is_real_cheshang == false and UserSystem::PengyoucheCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
 
@@ -200,7 +201,7 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
     # response = RestClient.post "http://api.fecar.com/msg/sell", params.to_json, :content_type => 'application/json'
 
     response = RestClient.post host_name, {
-        token: '24c81a87a1e97ea3f3b83aff71e2b184',
+        token: 'cb715659d80925c948a5cbfbe3c1fe57',
         phone: yc_car_user_info.phone,
         car_area: yc_car_user_info.city_chinese
     }
@@ -228,7 +229,7 @@ class UserSystem::PengyoucheCarUserInfo < ActiveRecord::Base
       next unless cui.pengyou_yaoyue.blank?
       host_name = "http://api.fecar.com/msg/query"
       response = RestClient.post host_name, {
-          token: '24c81a87a1e97ea3f3b83aff71e2b184',
+          token: 'cb715659d80925c948a5cbfbe3c1fe57',
           id: cui.pengyou_id.to_i
       }
       response = JSON.parse response.body

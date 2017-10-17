@@ -19,7 +19,8 @@
    gz_today_all_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_upload_status in ('0', '重复') and created_day = ?", Date.today ).count
    gz_yesterady_all_maoshuju = UserSystem::GuaziCarUserInfo.where("guazi_upload_status in ('0', '重复') and created_day = ?", Date.today.yesterday ).count
 
-
+   pengyou_month_counts = UserSystem::PengyoucheCarUserInfo.where("yaoyue_day >= ? and pengyou_yaoyue is not null and pengyou_jiance = '成功'", Date.new(Date.today.year, Date.today.month, 1)).count
+   pengyou_today_counts = UserSystem::PengyoucheCarUserInfo.where("yaoyue_day = ? and pengyou_yaoyue is not null and pengyou_jiance = '成功'", Date.today).count
 %>
 
 测试二4444：<%=a4_today_counts%> 今日结算 / <%=a4_month_counts%> 本月结算  /<%= a4_today_maoshuju_counts %>  今日提交量
@@ -94,6 +95,9 @@ che168:<%= che168maoshuju %><br/>
 zuoxi:<%= zuoximaoshuju %><br/>
 总:<%= zongmaoshuju %><br/>
 
+
+PYEC
+今天/本月: <%= pengyou_today_counts %>/<%= pengyou_month_counts %>
 <style type="text/css">
     body, table {
         font-size: 12px;

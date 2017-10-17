@@ -101,45 +101,45 @@ module UploadTianTian
       is_select = false
     end
 
-    if false and car_user_info.city_chinese == '北京'
-      return if car_user_info.name.blank?
-      ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ', '经理', '老板', '总', '求购', '赶集'].each do |kw|
-        if car_user_info.name.include? kw or car_user_info.che_xing.include? kw
-          car_user_info.tt_upload_status = '疑似走私车或车商'
-          car_user_info.save!
-          return
-        end
-      end
+    # if false and car_user_info.city_chinese == '北京'
+    #   return if car_user_info.name.blank?
+    #   ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ', '经理', '老板', '总', '求购', '赶集'].each do |kw|
+    #     if car_user_info.name.include? kw or car_user_info.che_xing.include? kw
+    #       car_user_info.tt_upload_status = '疑似走私车或车商'
+    #       car_user_info.save!
+    #       return
+    #     end
+    #   end
+    #
+    #   # 2016-12-5 去掉
+    #   # if car_user_info.name.match /^小/ and car_user_info.name.length == 2
+    #   #   car_user_info.tt_upload_status = '疑似走私车或车商'
+    #   #   car_user_info.save!
+    #   #   return
+    #   # end
+    #
+    #
+    #   if /^[a-z|A-Z|0-9|-|_]+$/.match car_user_info.name
+    #     car_user_info.tt_upload_status = '疑似走私车'
+    #     car_user_info.save!
+    #     return
+    #   end
+    #
+    #   #还有用手机号，QQ号做名字的。
+    #   if /[0-9]+/.match car_user_info.name
+    #     car_user_info.tt_upload_status = '疑似走私车'
+    #     car_user_info.save!
+    #     return
+    #   end
 
-      # 2016-12-5 去掉
-      # if car_user_info.name.match /^小/ and car_user_info.name.length == 2
-      #   car_user_info.tt_upload_status = '疑似走私车或车商'
+      #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
+      # tmp_chexing = car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
+      # tmp_note = car_user_info.note.gsub(/\s|\.|~|-|_/, '')
+      # if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
+      #   car_user_info.tt_upload_status = '疑似走私车'
       #   car_user_info.save!
       #   return
       # end
-
-
-      if /^[a-z|A-Z|0-9|-|_]+$/.match car_user_info.name
-        car_user_info.tt_upload_status = '疑似走私车'
-        car_user_info.save!
-        return
-      end
-
-      #还有用手机号，QQ号做名字的。
-      if /[0-9]+/.match car_user_info.name
-        car_user_info.tt_upload_status = '疑似走私车'
-        car_user_info.save!
-        return
-      end
-
-      #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
-      tmp_chexing = car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
-      tmp_note = car_user_info.note.gsub(/\s|\.|~|-|_/, '')
-      if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
-        car_user_info.tt_upload_status = '疑似走私车'
-        car_user_info.save!
-        return
-      end
 
       # 2016-12-5 去掉
       # if ['金杯', '五菱汽车', "五菱", '五十铃', '昌河', '奥迪', '宝马', '宾利', '奔驰', '路虎', '保时捷', '江淮', '东风小康', '依维柯', '长安商用', '福田', '东风风神', '东风', '一汽'].include? car_user_info.brand
@@ -162,7 +162,7 @@ module UploadTianTian
       #   end
       # end
 
-    end
+    # end
 
     #晚上带[]的，全部认为是车商
     # 白天带[]的，留给4A
