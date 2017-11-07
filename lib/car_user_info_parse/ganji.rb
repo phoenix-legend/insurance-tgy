@@ -19,9 +19,9 @@ module Ganji
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
     (1..10).each do |i|
       city_hash.each_pair do |areaid, areaname|
-        if Thread.list.length > 1 #大并发为8
+        if Thread.list.length > 4 #大并发为8
           while true
-            if Thread.list.length < 2 #大并发为10
+            if Thread.list.length < 6 #大并发为10
               break
             else
               sleep 0.2
@@ -53,9 +53,9 @@ module Ganji
 
 
         pp "活线程数量 #{Thread.list.length} "
-        if Thread.list.length > 1 #大并发为8
+        if Thread.list.length > 4 #大并发为8
           while true
-            if Thread.list.length < 2 #大并发为10
+            if Thread.list.length < 6 #大并发为10
               break
             else
               sleep 0.5
