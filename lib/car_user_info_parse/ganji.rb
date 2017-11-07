@@ -78,7 +78,7 @@ module Ganji
     begin
       # areaid2 = 100
 
-      brand = UserSystem::CarBrand.first
+      brand = UserSystem::CarBrand.where("id = 1").select(:id).first if rand(10) < 4
 
       areaid2 = UserSystem::CarUserInfo::GANJI_CITY_API[areaname]
       if areaid2.blank?
