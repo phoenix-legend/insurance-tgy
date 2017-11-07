@@ -28,7 +28,7 @@ module Ganji
             end
           end
         end
-        sleep 0.3
+        sleep 0.1
         Thread.start do
           # Ganji.get_car_user_list_one_city areaname, areaid
           Ganji.get_car_user_list_one_city_api_webservice areaname, areaid
@@ -62,7 +62,7 @@ module Ganji
             end
           end
         end
-        sleep 0.4
+        sleep 0.1
         Thread.start do
           Ganji.get_car_user_list_one_city_api_webservice areaname, areaid
         end
