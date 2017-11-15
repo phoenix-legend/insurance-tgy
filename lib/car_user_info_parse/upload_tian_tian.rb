@@ -96,10 +96,10 @@ module UploadTianTian
       is_select = false
     end
 
-    if car_user_info.is_cheshang != 0
-      car_user_info.tt_upload_status = '疑似车商'
-      is_select = false
-    end
+    # if car_user_info.is_cheshang != 0
+    #   car_user_info.tt_upload_status = '疑似车商'
+    #   is_select = false
+    # end
 
     # if false and car_user_info.city_chinese == '北京'
     #   return if car_user_info.name.blank?
@@ -187,19 +187,21 @@ module UploadTianTian
       return
     end
 
-    if car_user_info.brand.blank?
-      is_select = false
-      car_user_info.save!
-      return
-    end
+    # 2017-11-15  增加数据范围 注释掉以下限制
+    # if car_user_info.brand.blank?
+    #   is_select = false
+    #   car_user_info.save!
+    #   return
+    # end
 
 
-    unless UploadTianTian::CITY.include? car_user_info.city_chinese
-      car_user_info.tt_upload_status = '城市不对'
-      is_select = false
-      car_user_info.save!
-      return
-    end
+    # 2017-11-15  判断重复,删除
+    # unless UploadTianTian::CITY.include? car_user_info.city_chinese
+    #   car_user_info.tt_upload_status = '城市不对'
+    #   is_select = false
+    #   car_user_info.save!
+    #   return
+    # end
 
 
     # 车价小于1万的，跳过

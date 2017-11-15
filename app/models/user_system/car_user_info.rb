@@ -548,11 +548,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
     #屏蔽掉百姓网的17号
-    if ["baixing"].include? car_user_info.site_name and /^17/.match car_user_info.phone
-      car_user_info.tt_upload_status = '疑似百姓诈骗电话'
-      car_user_info.save!
-      return nil
-    end
+    # if ["baixing"].include? car_user_info.site_name and /^17/.match car_user_info.phone
+    #   car_user_info.tt_upload_status = '疑似百姓诈骗电话'
+    #   car_user_info.save!
+    #   return nil
+    # end
 
     # cuis = UserSystem::CarUserInfo.where("site_name = 'ganji'").order(id: :desc).limit(10000)
     # cuis.each do |car_user_info|
@@ -577,6 +577,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     system_name = Personal::Role.system_name
 
+    #同步至又一车
+    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
+
     UploadTianTian.upload_one_tt car_user_info
 
     # 同步给人人车
@@ -588,8 +591,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     #传给瓜子
     UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
 
-    #同步至又一车
-    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
+
 
     return if system_name == 'ali'  #阿里平台不提交以下几个B端。
 
@@ -604,7 +606,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
     #同步至优车
-    UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     #同步至车城   车城作废
     # UserSystem::CheChengCarUserInfo.create_user_info_from_car_user_info car_user_info

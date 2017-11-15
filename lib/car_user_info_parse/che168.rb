@@ -37,8 +37,8 @@ module Che168
 
 
 
-        sleep 1
-        brand = UserSystem::CarBrand.first
+        sleep 0.5
+        brand = UserSystem::CarBrand.first  rand(100) < 30
 
         list_url = "https://m.che168.com/#{areaid}/a0_0ms1dgscncgpiltocsp1ex/?pvareaid=103759"
         response = `curl #{list_url} -c "~/tmp_cookie"  -b "~/tmp_cookie"`

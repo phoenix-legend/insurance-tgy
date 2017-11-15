@@ -208,32 +208,36 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       return
     end
 
-    ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ'].each do |kw|
-      if yc_car_user_info.name.include? kw or yc_car_user_info.car_user_info.che_xing.include? kw
-        yc_car_user_info.youyiche_upload_status = '疑似走私车或车商'
-        yc_car_user_info.save!
-        return
-      end
-    end
+    # 2017-11-15  增加数据范围 注释掉以下限制
+    # ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ'].each do |kw|
+    #   if yc_car_user_info.name.include? kw or yc_car_user_info.car_user_info.che_xing.include? kw
+    #     yc_car_user_info.youyiche_upload_status = '疑似走私车或车商'
+    #     yc_car_user_info.save!
+    #     return
+    #   end
+    # end
 
-    if /^[a-z|A-Z|0-9|-|_]+$/.match yc_car_user_info.name
-      yc_car_user_info.youyiche_upload_status = '疑似走私车'
-      yc_car_user_info.save!
-      return
-    end
+    # 2017-11-15  增加数据范围 注释掉以下限制
+    # if /^[a-z|A-Z|0-9|-|_]+$/.match yc_car_user_info.name
+    #   yc_car_user_info.youyiche_upload_status = '疑似走私车'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
     #还有用手机号，QQ号做名字的。
-    if /[0-9]+/.match yc_car_user_info.name
-      yc_car_user_info.youyiche_upload_status = '疑似走私车'
-      yc_car_user_info.save!
-      return
-    end
+    # 2017-11-15  增加数据范围 注释掉以下限制
+    # if /[0-9]+/.match yc_car_user_info.name
+    #   yc_car_user_info.youyiche_upload_status = '疑似走私车'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
-    if ["温州", "宁波"].include? yc_car_user_info.city_chinese and /^17/.match yc_car_user_info.phone
-      yc_car_user_info.youyiche_upload_status = '拨不通电话'
-      yc_car_user_info.save!
-      return
-    end
+    # 2017-11-15 临时去掉,看看还是不是存在类似情况。
+    # if ["温州", "宁波"].include? yc_car_user_info.city_chinese and /^17/.match yc_car_user_info.phone
+    #   yc_car_user_info.youyiche_upload_status = '拨不通电话'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
     #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
     begin
@@ -357,6 +361,12 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
       return
     end
+
+    #由于又一车做了ip限制, 所以阿里的数据统一走网页
+    # system_name = Personal::Role.system_name
+    # if system_name == 'ali'
+    #   UserSystem::YouyicheCarUserInfo.upload_cui_via_web yc_car_user_info
+    # end
 
     params = {
         "name" => yc_car_user_info.name,
