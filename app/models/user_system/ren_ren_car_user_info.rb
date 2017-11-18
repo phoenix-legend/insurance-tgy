@@ -145,15 +145,15 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     #   return
     # end
 
-    # 2017-11-10  把不好的数据也向自己这边,不再向赵这边提交,如果嫌数据质量差, 就再放开注释即可。
-    # if yc_car_user_info.is_pachong
-    #   pp '爬虫'
-    #   yc_car_user_info.renren_upload_status = '爬虫'
-    #   yc_car_user_info.save!
-    #   UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
-    #   # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
-    #   return
-    # end
+
+    if yc_car_user_info.is_pachong
+      pp '爬虫'
+      yc_car_user_info.renren_upload_status = '爬虫'
+      yc_car_user_info.save!
+      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+      # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
+      return
+    end
 
     # 2017-11-10  把不好的数据也向自己这边,不再向赵这边提交,如果嫌数据质量差, 就再放开注释即可。
     # if not yc_car_user_info.is_city_match
@@ -165,14 +165,13 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     #   return
     # end
 
-    # 2017-11-10  把不好的数据也向自己这边,不再向赵这边提交,如果嫌数据质量差, 就再放开注释即可。
-    # if !yc_car_user_info.car_user_info.note.blank? and yc_car_user_info.car_user_info.note.match /\d{11}/
-    #   yc_car_user_info.renren_upload_status = '疑似走私车'
-    #   yc_car_user_info.save!
-    #   UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
-    #   # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
-    #   return
-    # end
+    if !yc_car_user_info.car_user_info.note.blank? and yc_car_user_info.car_user_info.note.match /\d{11}/
+      yc_car_user_info.renren_upload_status = '疑似走私车'
+      yc_car_user_info.save!
+      UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+      # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
+      return
+    end
 
     # 2017-11-10  把不好的数据也向自己这边,不再向赵这边提交,如果嫌数据质量差, 就再放开注释即可。
     # if !yc_car_user_info.car_user_info.che_xing.blank? and yc_car_user_info.car_user_info.che_xing.match /\d{11}/
@@ -184,18 +183,17 @@ class UserSystem::RenRenCarUserInfo < ActiveRecord::Base
     # end
 
 
-    # 2017-11-10  把不好的数据也向自己这边,不再向赵这边提交,如果嫌数据质量差, 就再放开注释即可。
-    # ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ'].each do |kw|
-    #   if yc_car_user_info.name.include? kw or yc_car_user_info.car_user_info.che_xing.include? kw
-    #     yc_car_user_info.renren_upload_status = '疑似走私车或车商'
-    #     yc_car_user_info.save!
-    #     UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
-    #     # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
-    #     return
-    #
-    #   end
-    #
-    # end
+    ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ'].each do |kw|
+      if yc_car_user_info.name.include? kw or yc_car_user_info.car_user_info.che_xing.include? kw
+        yc_car_user_info.renren_upload_status = '疑似走私车或车商'
+        yc_car_user_info.save!
+        UserSystem::RenRenCarUserInfo.upload_renren_xxx yc_car_user_info
+        # UserSystem::RenRenCarUserInfo.upload_renren_xuzuo yc_car_user_info
+        return
+
+      end
+
+    end
 
 
     # 2017-11-10  把不好的数据也向自己这边,不再向赵这边提交,如果嫌数据质量差, 就再放开注释即可。
