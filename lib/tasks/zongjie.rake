@@ -58,8 +58,6 @@ namespace :zongjie do
       #目前车置宝可以自动上传到网页, 所以停掉。
 			# UserSystem::YouyicheCarUserInfo.export_last_city_phones
 
-			#更新又一车的数据, 又一车不再更新
-			# UserSystem::YouyicheCarUserInfo.query_youyiche
 
       #瓜子网: 导出excel供测试用, 同时将24小时前的数据上传一体化。
       #以下方法不再导出瓜子的表格, 只延迟给胡磊。
