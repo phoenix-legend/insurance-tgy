@@ -22,6 +22,20 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   }
 
 
+  #阿里的所有地区全部往网页中提交
+  ALIDIQU = {"太原" => '1947', "南昌" => "1919", "昆明" => "2134", "宁波" => "2124", "东莞" => "2067", "济南" => "1930", "南宁" => "2085",
+          "贵阳" => "2167", "临沂" => '1942', "广州" => '2051', "佛山" => '2056', "南通" => '2077', "嘉兴" => '2126', "金华" => '2129',
+          "温州" => '2125',
+          '台州' => '2132', "合肥" => '2150', "徐州" => '2074', "大连" => '1989', "沈阳" => '1988', "天津" => '1892', "哈尔滨" => '2038',
+          "长春" => '2015',
+          "厦门" => "1911", "福州" => "1910", "泉州" => "1914", "石家庄" => "1899", "邯郸" => "1902", "唐山" => "1900", "沧州" => "1907",
+          "保定" => "1904",
+          "北京" => "1867", "南京" => "2072", "深圳" => "2053", "上海"=>"1889", "青岛" => "1931", "西安" => "2176", "郑州" => "1970",
+          "无锡" => "2073", "苏州" => "2076",
+          "杭州" => "2123",
+          "常州" => "2075", "重庆" => "1898", "武汉" => "2002", "长沙" => "2024", "成都" => "2102"
+  }
+
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
     return if car_user_info.brand.blank?
@@ -247,7 +261,13 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     # end
 
 
-    if UserSystem::YouyicheCarUserInfo::DIQU.keys.include? yc_car_user_info.city_chinese
+
+    # 需要往网页端传的数据如下:
+    # ucloud 一部分进网页,一部分走又一车接口。    ali全部走网页
+    dq = UserSystem::YouyicheCarUserInfo::DIQU
+    dq = UserSystem::YouyicheCarUserInfo::ALIDIQU if Personal::Role.system_name == 'ali'
+
+    if dq.keys.include? yc_car_user_info.city_chinese
       yc_car_user_info.youyiche_status_message = 'need_export_excel'
       yc_car_user_info.save!
 
@@ -257,11 +277,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       return
     end
 
-    #ali 不能向网页提交
-    # system_name = Personal::Role.system_name
-    # if system_name == 'ali'
-    #   UserSystem::YouyicheCarUserInfo.upload_cui_via_web yc_car_user_info
-    # end
+
 
     params = {
         "name" => yc_car_user_info.name,
@@ -379,14 +395,16 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   def self.get_user_name
     redis = Redis.current
 
+    return "chexian2" if Personal::Role.system_name == 'ali' and redis["chexian2-0001"] == 'yes'
+
     return 'cxmcsj' if  redis["cxmcsj-0001"] == 'yes'
 
-    user_name = []
-    ["cxmcsj", "gaoyixiangchezhu1", "gaoyixiangchezhu2"].each do |name|
-      user_name << name if  redis["#{name}-0001"] == 'yes'
-    end
-    user_name.shuffle!
-    user_name[0]
+    # user_name = []
+    # ["cxmcsj", "gaoyixiangchezhu1", "gaoyixiangchezhu2"].each do |name|
+    #   user_name << name if  redis["#{name}-0001"] == 'yes'
+    # end
+    # user_name.shuffle!
+    # user_name[0]
 
   end
 
@@ -395,9 +413,13 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   # 如果无效,就不再刷新,同时发邮件通知。
   # 2分钟刷新一次网页, 网页在redis中对应的key是:  cxmcsj-0001   gaoyixiangchezhu1-0001    gaoyixiangchezhu2-0001
   # UserSystem::YouyicheCarUserInfo.shuaxin_3_user
+
+  #增加对阿里云服务器兼容
   def self.shuaxin_3_user
     redis = Redis.current
-    ["cxmcsj", "gaoyixiangchezhu1", "gaoyixiangchezhu2"].each do |name|
+    user_names = ["cxmcsj", "gaoyixiangchezhu1", "gaoyixiangchezhu2"]
+    user_names = ["chexian2"] if Personal::Role.system_name == 'ali'
+    user_names.each do |name|
       redis["#{name}-0001"] = 'yes' if redis["#{name}-0001"].blank?
       redis["#{name}-0001_freshen_time"] = Time.now.to_i if redis["#{name}-0001_freshen_time"].blank?
 
