@@ -578,7 +578,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     system_name = Personal::Role.system_name
 
     #同步至又一车
-    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info   if system_name != 'ali'
+    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info   #if system_name != 'ali'
 
     UploadTianTian.upload_one_tt car_user_info
 
