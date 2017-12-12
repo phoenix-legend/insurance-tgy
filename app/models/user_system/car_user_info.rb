@@ -423,6 +423,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     car_user_info = UserSystem::CarUserInfo.new options
     car_user_info.name.gsub!(/\r|\n|\t/, '') unless car_user_info.name.blank?
     car_user_info.save!
+
     # if ["温州", "宁波", "厦门", "南京"].include? car_user_info.city_chinese and ["baixing"].include? car_user_info.site_name and /^17/.match car_user_info.phone
     #   return nil
     # end
@@ -547,12 +548,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       return
     end
 
-    #屏蔽掉百姓网的17号
-    # if ["baixing"].include? car_user_info.site_name and /^17/.match car_user_info.phone
-    #   car_user_info.tt_upload_status = '疑似百姓诈骗电话'
-    #   car_user_info.save!
-    #   return nil
-    # end
+    # 屏蔽掉百姓网的17号
+    if ["baixing"].include? car_user_info.site_name and /^17/.match car_user_info.phone
+      car_user_info.tt_upload_status = '疑似百姓诈骗电话'
+      car_user_info.save!
+      return nil
+    end
 
     # cuis = UserSystem::CarUserInfo.where("site_name = 'ganji'").order(id: :desc).limit(10000)
     # cuis.each do |car_user_info|
