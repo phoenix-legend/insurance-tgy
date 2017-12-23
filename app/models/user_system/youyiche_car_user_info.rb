@@ -88,6 +88,12 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   end
 
 
+  def self.cc
+    UserSystem::YouyicheCarUserInfo.where("youyiche_chengjiao like '%管理员%'").each do |yc_car_user_info|
+      UserSystem::YouyicheCarUserInfo.upload_cui_via_web yc_car_user_info
+    end
+
+  end
 
   # yc_car_user_info = UserSystem::YouyicheCarUserInfo.find id
   # UserSystem::YouyicheCarUserInfo.upload_youyiche yc_car_user_info

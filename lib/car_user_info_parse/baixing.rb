@@ -197,14 +197,16 @@ module Baixing
   # Baixing.get_car_user_list
   def self.get_car_user_list party = 0
     # 百姓网主要依赖代理服务器以及app模拟, 故注释掉主要功能,解析json就ok了。
-    Baixing.save_baixing_data_from_app_json
-    return
+    # Baixing.save_baixing_data_from_app_json
+    # return
 
     pp "现在时间:#{Time.now.chinese_format}"
     city_number = 0
     # city_hash = ::UserSystem::CarUserInfo::BAIXING_PINYIN_CITY
     city_hash = ::UserSystem::CarUserInfo.get_baixing_sub_cities party
     city_hash.each_pair do |areaid, areaname|
+      seconds = rand(5)
+      sleep seconds
 
       # if UserSystem::CarUserInfo::CITY3.include? areaname
       #   city_number += 1
@@ -327,6 +329,8 @@ module Baixing
     begin
       puts '更新明细'
       # detail_url = "http://guangzhou.baixing.com/m/ershouqiche/a1028370758.html"
+      seconds = rand(7)
+      sleep seconds
       detail_url = car_user_info.detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
 
 
@@ -663,79 +667,7 @@ module Baixing
 
   end
 
-  #把目录中的文件, 自动保存到数据库。  运行在本地
-  # Baixing.xxx3
-  # 有了anyproxy以后, 作废
-  # def self.xxx3
-  #   while(1<2) do
-  #     Dir.foreach( "/Users/ericliu/tmp/todaycar" ){ |k|
-  #       next unless k.match /index|api/
-  #       response = File.read("/Users/ericliu/tmp/todaycar/#{k}")
-  #       OrderSystem::WeizhangLog.add_baixing_json_body response
-  #       File.delete("/Users/ericliu/tmp/todaycar/#{k}")
-  #     }
-  #
-  #     Dir.foreach( "/Users/ericliu/tmp/todaycar/Cheliang.todayCars" ){ |k|
-  #       next unless k.match /index|api/
-  #       response = File.read("/Users/ericliu/tmp/todaycar/Cheliang.todayCars/#{k}")
-  #       OrderSystem::WeizhangLog.add_baixing_json_body response
-  #       File.delete("/Users/ericliu/tmp/todaycar/Cheliang.todayCars/#{k}")
-  #     }
-  #
-  #
-  #     Dir.foreach( "/Users/ericliu/tmp/todaycar/ershouqiche" ){ |k|
-  #       next unless k.match /index|api/
-  #       response = File.read("/Users/ericliu/tmp/todaycar/ershouqiche/#{k}")
-  #       OrderSystem::WeizhangLog.add_baixing_json_body response
-  #       File.delete("/Users/ericliu/tmp/todaycar/ershouqiche/#{k}")
-  #     }
-  #
-  #     sleep 5
-  #   end
-  #
-  #
-  #
-  # end
 
-  # Baixing.get_header_info
-  # def self.get_header_info
-  #   redis = Redis.current
-  #   hash = {"BAPI-USER-TOKEN" => ''}
-  #   ["udid", "APP-VERSION", "BAPI-APP-KEY", "BAPI-NONCE", "BAPI-HASH", "User-Agent", "Host", "Connection", "Accept-Encoding", "Cookie","If-Modified-Since"].each do |k|
-  #     value = redis["baixing_#{k}"]
-  #     return nil if value.nil?
-  #     hash[k] = value
-  #   end
-  #   return hash
-  # end
-  #
-  # # Baixing.set_header_info
-  # def self.set_header_info
-  #   (1..10000).each do |i|
-  #     redis = Redis.current
-  #     text = File.read('/Users/ericliu/tmp/car.txt')
-  #     pp text
-  #     lines = text.split(/\r|\t|\n/)
-  #     pp lines.length
-  #     lines.each do |line|
-  #
-  #       line.strip!
-  #       next if line.match /GET/
-  #       next if line.blank?
-  #
-  #
-  #       fields = line.split(": ")
-  #       pp fields
-  #       redis["baixing_#{fields[0]}"] = fields[1]
-  #       redis.expire "baixing_#{fields[0]}", 20
-  #
-  #     end
-  #     pp i
-  #     sleep 5
-  #   end
-  #
-  #
-  # end
 
 
 end
