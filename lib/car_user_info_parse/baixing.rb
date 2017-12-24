@@ -202,6 +202,7 @@ module Baixing
       return
     end
 
+    party = 2
 
     pp "现在时间:#{Time.now.chinese_format}"
     city_number = 0
@@ -211,18 +212,18 @@ module Baixing
       seconds = rand(5)
       sleep seconds
 
-      # if UserSystem::CarUserInfo::CITY3.include? areaname
-      #   city_number += 1
-      #   if city_number%7 == 0
-      #     pp '...... 跑一类城市'
-      #     UserSystem::CarUserInfo.run_baixing 0 #常规城市跑7个， 一类重点城市跑一遍
-      #   end
-      #
-      #   if city_number%13 == 0
-      #     pp '...... 跑二类城市'
-      #     UserSystem::CarUserInfo.run_baixing 1 #常规城市跑13个， 二类重点城市跑一遍
-      #   end
-      # end
+      if UserSystem::CarUserInfo::CITY3.include? areaname
+        city_number += 1
+        if city_number%7 == 0
+          pp '...... 跑一类城市'
+          UserSystem::CarUserInfo.run_baixing 0 #常规城市跑7个， 一类重点城市跑一遍
+        end
+
+        if city_number%13 == 0
+          pp '...... 跑二类城市'
+          UserSystem::CarUserInfo.run_baixing 1 #常规城市跑13个， 二类重点城市跑一遍
+        end
+      end
       begin
         pp "现在跑..百姓 #{areaname}"
         1.upto 1 do |i|
