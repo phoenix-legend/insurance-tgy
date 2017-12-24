@@ -822,9 +822,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   end
 
-  def self.run_baixing party = 0
+  def self.run_baixing party = 0, from = 'system'
     begin
-      Baixing.get_car_user_list party
+      Baixing.get_car_user_list party, from
     rescue Exception => e
       pp e
       $@.to_logger

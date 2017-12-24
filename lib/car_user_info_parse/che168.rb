@@ -43,8 +43,10 @@ module Che168
         list_url = "https://m.che168.com/#{areaid}/a0_0ms1dgscncgpiltocsp1ex/?pvareaid=103759"
         response = `curl #{list_url} -c "~/tmp_cookie"  -b "~/tmp_cookie"`
 
+
         response = Nokogiri::HTML(response)
         details = response.css(".list-base li a")
+          pp details.length
         details.each do |detail|
           url = begin
             detail.attributes["href"].value rescue ''
@@ -60,7 +62,7 @@ module Che168
           licheng = che_infos[0].text
           price = detail.css("ins").text
           detail_url = "http:#{url.split(".html")[0]}.html?type=1"
-          real_url = "http:#{url}"
+          real_url = "https:#{url}"
           # detail_response = `curl #{real_url} -b "/data/tmp_cookie"`
           pp "现在跑168.. #{areaname}"
           result = UserSystem::CarUserInfo.create_car_user_info2 che_xing: che_xing,
@@ -256,7 +258,7 @@ module Che168
 # end
 
 
-# Che168.update_one_detail 11707798
+# Che168.update_one_detail 14069841
   def self.update_one_detail car_user_info_id
     # pp "%%%"*15
 
