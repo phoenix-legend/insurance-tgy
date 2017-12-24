@@ -197,8 +197,11 @@ module Baixing
   # Baixing.get_car_user_list
   def self.get_car_user_list party = 0
     # 百姓网主要依赖代理服务器以及app模拟, 故注释掉主要功能,解析json就ok了。
-    Baixing.save_baixing_data_from_app_json
-    return
+    if Dir.exists? '/data/czb'    #只有两台机器运行提交车置宝, 解析app接口的任务。
+      Baixing.save_baixing_data_from_app_json
+      return
+    end
+
 
     pp "现在时间:#{Time.now.chinese_format}"
     city_number = 0
