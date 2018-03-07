@@ -578,6 +578,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     system_name = Personal::Role.system_name
 
+    if rand(10) < 3
+      begin UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info rescue '' end
+    end
+
     #同步至又一车
     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info   #if system_name != 'ali'
 

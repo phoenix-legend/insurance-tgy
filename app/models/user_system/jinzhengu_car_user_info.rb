@@ -1,8 +1,18 @@
 class UserSystem::JinzhenguCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
-  SIGN = '6df23610-4124-4a42-896d-975086e06675'
+  SIGN = '33f886aa-24a6-4335-8e36-0304215e1e7f'
 
-  CITY = ["北京", "鞍山", "邯郸", "保定", "包头", "呼和浩特", "福州", "厦门", "泉州", "兰州", "合肥", "常德", "常州", "成都", "德阳", "绵阳", "达州", "大连", "东莞", "佛山", "广州", "惠州", "贵阳", "哈尔滨", "杭州", "宁波", "南京", "湖州", "济宁", "嘉兴", "金华", "临沂", "昆明", "柳州", "洛阳", "南昌", "南宁", "南阳", "南通", "青岛", "伸到", "上海", "深圳", "石家庄", "苏州", "太原", "唐山", "天津", "威海", "潍坊", "烟台", "芜湖", "无锡", "武汉", "襄阳", "西安", "湘潭", "新乡", "宿迁", "徐州", "扬州", "宜昌", "宜宾", "赣州", "重庆", "长沙", "长春", "郑州", "中山", "淄博", "济南", "肇庆", "廊坊", "沈阳", "咸阳", "乌鲁木齐"]
+  CITY = ["北京","深圳","东莞","南宁","郑州","武汉","福州","洛阳","扬州","临沂","长沙","厦门","新乡",
+          "徐州","济宁","南京","莆田","南阳","宿迁","苏州","泉州","安阳","无锡","兰州","哈尔滨","赣州","常州",
+          "广州","南昌","十堰","沈阳","济南","珠海","襄阳","大连","绵阳","青岛","宜昌",
+          "鞍山","遂宁","太原","中山","荆州","呼和浩特","宜宾","西安","佛山","包头","德阳",
+          "上海","惠州","常德","南充","成都","株洲","泸州","昆明","柳州","湘潭","烟台","内江","杭州","贵阳","长春","达州","天津",
+          "宁波","石家庄","重庆","唐山","合肥","廊坊","蚌埠","邯郸","马鞍山","沧州","芜湖","保定",
+          "吉安","运城","南通","菏泽","台州","淮安","淄博","湖州","泰安","金华","潍坊","嘉兴","威海",
+          "汕头","大同","咸阳","乌鲁木齐","许昌","大庆","吉林","泰州","德州","锦州","镇江","抚顺","盐城","桂林","绍兴","营口","枣庄","温州","银川","松原","漳州","聊城","日照","东营","乐山","眉山","焦作","辽阳","佳木斯","齐齐哈尔","铁岭","鄂尔多斯","衡水","邢台","临汾","阳泉","长治","承德","秦皇岛","江门","滨州","阜阳","六安","安庆","铜陵","资阳","自贡","曲靖","广安","衢州","信阳","黄石","孝感"
+  ]
+
+
 
   # UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
@@ -196,7 +206,7 @@ class UserSystem::JinzhenguCarUserInfo < ActiveRecord::Base
 
     # response = RestClient.post "http://api.fecar.com/msg/sell", params.to_json, :content_type => 'application/json'
 
-    host_name = "http://leads.jingzhengu.com/Interface/JZGReceivingClues.ashx" #正式环境
+    host_name = "http://clueapi.jingzhengu.com/Interface/JZGReceivingClues.ashx" #正式环境
     param = {
         Sign: SIGN,
         StyleName: cui.brand,
@@ -222,9 +232,10 @@ class UserSystem::JinzhenguCarUserInfo < ActiveRecord::Base
     yc_car_user_info.jinzhengu_upload_status = '已上传'
     if response["status"] == 100
       yc_car_user_info.jinzhengu_id = response["status"]
-      yc_car_user_info.jinzhengu_status_message = response['status_msg']
+      yc_car_user_info.jinzhengu_status_message = "#{response['data']}~#{response['msg']}"
     else
-      yc_car_user_info.jinzhengu_status_message = response['status_msg']
+      yc_car_user_info.jinzhengu_id = response["status"]
+      yc_car_user_info.jinzhengu_status_message = "#{response['data']}~#{response['msg']}"
     end
     yc_car_user_info.save!
 
