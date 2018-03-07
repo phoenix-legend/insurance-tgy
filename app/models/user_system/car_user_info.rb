@@ -579,7 +579,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     system_name = Personal::Role.system_name
 
     if rand(10) < 3
-      begin UserSystem::JinzhenguCarUserInfo.create_car_info car_user_info rescue '' end
+       begin
+         UserSystem::JinzhenguCarUserInfo.create_car_info car_user_info
+       rescue Exception => e
+         pp e
+       end
     end
 
     #同步至又一车
