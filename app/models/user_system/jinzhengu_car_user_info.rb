@@ -107,7 +107,7 @@ class UserSystem::JinzhenguCarUserInfo < ActiveRecord::Base
       return
     end
 
-    
+
 
 
     cui = yc_car_user_info.car_user_info

@@ -580,7 +580,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     if rand(10) < 3
        begin
-         UserSystem::JinzhenguCarUserInfo.create_car_info car_user_info
+         UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
        rescue Exception => e
          pp e
        end
