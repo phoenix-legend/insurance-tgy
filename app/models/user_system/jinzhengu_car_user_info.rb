@@ -17,9 +17,7 @@ class UserSystem::JinzhenguCarUserInfo < ActiveRecord::Base
   # UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
   def self.create_user_info_from_car_user_info car_user_info
 
-    if not car_user_info.site_name == 'zuoxi'
-      return nil
-    end
+
     if car_user_info.is_pachong == false and car_user_info.is_real_cheshang == false and UserSystem::JinzhenguCarUserInfo::CITY.include?(car_user_info.city_chinese)
       begin
 
@@ -152,8 +150,8 @@ class UserSystem::JinzhenguCarUserInfo < ActiveRecord::Base
     end
 
     # 车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
-    tmp_chexing = yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
-    tmp_note = yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '')
+    tmp_chexing = begin yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '') rescue '' end
+    tmp_note = begin yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '') rescue '' end
     if tmp_chexing.match /\d{9,11}|身份证|驾驶证/ or tmp_note.match /\d{9,11}|身份证|驾驶证/
       yc_car_user_info.jinzhengu_upload_status = '疑似走私车'
       yc_car_user_info.save!
