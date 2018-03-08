@@ -1,12 +1,5 @@
 
 <%
-   a4_month_counts = 0 #::UserSystem::AishiCarUserInfo.where("aishi_yaoyue = '成功' and aishi_yaoyue_day >= ? and numbers = '4SA-1012' ",Date.new(Date.today.year, Date.today.month, 1)).count
-   a4_today_counts = 0 #::UserSystem::AishiCarUserInfo.where("aishi_yaoyue = '成功' and aishi_yaoyue_day = ? and numbers = '4SA-1012'", Date.today).count
-   a4_today_maoshuju_counts = 0 #::UserSystem::AishiCarUserInfo.where("aishi_id is not null and created_day = ? ", Date.today).count
-
-
-   # all_yyc = UserSystem::YouyicheCarUserInfo.where("youyiche_jiance = '竞拍中' and yaoyue_day >= ?",Date.new(Date.today.year, Date.today.month, 1)).count
-   # today_yyc = UserSystem::YouyicheCarUserInfo.where("youyiche_jiance = '竞拍中' and yaoyue_day = ?",Date.today).count
 
    gz_today_chenggong = UserSystem::GuaziCarUserInfo.where("guazi_yaoyue = '成功' and yaoyue_day = ?", Date.today ).count
    gz_month_chenggong = UserSystem::GuaziCarUserInfo.where("guazi_yaoyue = '成功' and yaoyue_day >= ?", Date.new(Date.today.year, Date.today.month, 1) ).count
@@ -23,7 +16,7 @@
    pengyou_today_counts = UserSystem::PengyoucheCarUserInfo.where("yaoyue_day = ? and pengyou_yaoyue is not null and pengyou_jiance = '成功'", Date.today).count
 %>
 
-测试二4444：<%=a4_today_counts%> 今日结算 / <%=a4_month_counts%> 本月结算  /<%= a4_today_maoshuju_counts %>  今日提交量
+
 <br/><br/>
 
 测试二GZ成功：<%=gz_today_chenggong%> / <%=gz_month_chenggong%>
@@ -32,27 +25,17 @@
 <br/>
 测试二GZ提交毛数据：<%=gz_today_all_maoshuju%> 今天/ <%=gz_yesterady_all_maoshuju%> 昨天
 <br/><br/>
-<%
 
-yx_month_counts = 0 #::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day >= ?  and tt_source in ('2-263-266')", Date.new(Date.today.year, Date.today.month, 1)).count
-yx_qq_month_counts = 0 #::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day = ? and tt_source in ('2-263-266')", Date.today).count
-
-yx_qq_today_maoshuju_counts = 0 #::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ? and tt_source in ('2-263-266')", Date.today).count
-yx_qq_yesterday_maoshuju_counts = 0 #::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ? and tt_source in ('2-263-266')", Date.yesterday).count
-
-   %>
-测试p：<%=yx_qq_month_counts%> / <%=yx_month_counts%><br/>
-测试p_毛数据今天/昨天 today/yesterday：<%=yx_qq_today_maoshuju_counts%> / <%=yx_qq_yesterday_maoshuju_counts%>
 <br/>
 <br/>
 
 <%
 
-  ro_yx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day >= ?  and tt_source in ('2-775-778')", Date.new(Date.today.year, Date.today.month, 1)).count
-  ro_yx_qq_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day = ? and tt_source in ('2-775-778')", Date.today).count
+  ro_yx_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day >= ?  and tt_source in ('2-775-778', '2-474-1521')", Date.new(Date.today.year, Date.today.month, 1)).count
+  ro_yx_qq_month_counts = ::UserSystem::CarUserInfo.where("tt_id is not null and tt_yaoyue = '成功' and tt_yaoyue_day = ? and tt_source in ('2-775-778', '2-474-1521')", Date.today).count
 
-  ro_yx_qq_today_maoshuju_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ? and tt_source in ('2-775-778')", Date.today).count
-  ro_yx_qq_yesterday_maoshuju_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ? and tt_source in ('2-775-778')", Date.yesterday).count
+  ro_yx_qq_today_maoshuju_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ? and tt_source in ('2-775-778', '2-474-1521')", Date.today).count
+  ro_yx_qq_yesterday_maoshuju_counts = ::UserSystem::CarUserInfo.where("tt_id is not null  and tt_created_day = ? and tt_source in ('2-775-778', '2-474-1521')", Date.yesterday).count
 
 %>
 <br/>
