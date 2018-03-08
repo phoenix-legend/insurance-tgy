@@ -7,7 +7,7 @@ namespace :zongjie do
 		if match_data.length > 4
 			pp '前一次未执行完毕，退出任务'
 		else
-			UploadTianTian.get_now_status true
+			# UploadTianTian.get_now_status true
 			UploadTianTian.query_order2
 			# 去侍埃更新数据， 每天凌晨一点更新一次。
 			UserSystem::AishiCarUserInfo.query_aishi
@@ -50,8 +50,8 @@ namespace :zongjie do
 			#把连云港数据给振腾  早上7点50的任务
 			UserSystem::CarUserInfo.get_info_for_zhenteng_lianyungang
       #更新房产数据  早上7点整的任务
-      ErShouFang.shanghai_run
-			ErShouFang.beijing_run
+      # ErShouFang.shanghai_run
+			# ErShouFang.beijing_run
 
 
       #每小时定时导出车置宝数据
@@ -76,7 +76,7 @@ namespace :zongjie do
       # 移至zongjie::all定时任务, 逢整点20分运行一次
       # UserSystem::PengyoucheCarUserInfo.query_result
 			# 上传数据到U车, 降低优车诚品上传优先级
-			UserSystem::YoucheCarUserInfo.upload_to_youche
+			# UserSystem::YoucheCarUserInfo.upload_to_youche
 		end
 	end
 
@@ -103,7 +103,7 @@ namespace :zongjie do
 
 	desc "每天晚新天天数据状态  rake zongjie:all1 RAILS_ENV=production"
 	task :all1 => :environment do
-		UploadTianTian.get_now_status
+		# UploadTianTian.get_now_status
 		# UploadTianTian.query_order2
 	end
 
