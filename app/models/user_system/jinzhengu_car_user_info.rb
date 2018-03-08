@@ -1,6 +1,6 @@
 class UserSystem::JinzhenguCarUserInfo < ActiveRecord::Base
   belongs_to :car_user_info, :class_name => 'UserSystem::CarUserInfo'
-  SIGN = '33f886aa-24a6-4335-8e36-0304215e1e7f'
+  SIGN = '96dfbb59-5ffa-4534-9871-0316747703f8'
 
   CITY = ["北京","深圳","东莞","南宁","郑州","武汉","福州","洛阳","扬州","临沂","长沙","厦门","新乡",
           "徐州","济宁","南京","莆田","南阳","宿迁","苏州","泉州","安阳","无锡","兰州","哈尔滨","赣州","常州",
