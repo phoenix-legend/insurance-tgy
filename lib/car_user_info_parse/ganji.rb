@@ -19,19 +19,20 @@ module Ganji
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
     (1..10).each do |i|
       city_hash.each_pair do |areaid, areaname|
-        if Thread.list.length > 4 #大并发为8
+        if Thread.list.length > 1 #大并发为8
           while true
-            if Thread.list.length < 6 #大并发为10
+            if Thread.list.length < 2 #大并发为10
               break
             else
-              sleep 0.2
+              sleep 1
             end
           end
         end
-        sleep 0.1
+        sleep 1
         Thread.start do
-          # Ganji.get_car_user_list_one_city areaname, areaid
-          Ganji.get_car_user_list_one_city_api_webservice areaname, areaid
+          Ganji.get_car_user_list_one_city areaname, areaid
+          # Ganji.get_car_user_list_one_city_api_webservice areaname, areaid
+          # Ganji.get_car_user_list_one_city_api_webservice_https areaname, areaid #'北京', 'bj'
         end
       end
     end
@@ -50,22 +51,26 @@ module Ganji
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party, citys
     (1..10).each do |i|
       city_hash.each_pair do |areaid, areaname|
+        Ganji.get_car_user_list_one_city areaname, areaid
+        sleep 1
 
 
-        pp "活线程数量 #{Thread.list.length} "
-        if Thread.list.length > 4 #大并发为8
-          while true
-            if Thread.list.length < 6 #大并发为10
-              break
-            else
-              sleep 0.5
-            end
-          end
-        end
-        sleep 0.1
-        Thread.start do
-          Ganji.get_car_user_list_one_city_api_webservice areaname, areaid
-        end
+        # pp "活线程数量 #{Thread.list.length} "
+        # if Thread.list.length > 4 #大并发为8
+        #   while true
+        #     if Thread.list.length < 6 #大并发为10
+        #       break
+        #     else
+        #       sleep 0.5
+        #     end
+        #   end
+        # end
+        # sleep 0.1
+        # Thread.start do
+        #  Ganji.get_car_user_list_one_city_api_webservice areaname, areaid
+        #   # Ganji.get_car_user_list_one_city_api_webservice_https areaname, areaid #'北京', 'bj'
+        #
+        # end
       end
     end
 
@@ -74,223 +79,225 @@ module Ganji
 
 
   # 获取一个城市的汽车列表, 从api获取
-  def self.get_car_user_list_one_city_api_webservice areaname, areaid
-    begin
-      # areaid2 = 100
-
-      brand = UserSystem::CarBrand.where("id = 1").select(:id).first if rand(10) < 4
-
-      areaid2 = UserSystem::CarUserInfo::GANJI_CITY_API[areaname]
-      if areaid2.blank?
-        pp "网页  #{areaname}  #{Time.now.chinese_format}"
-        Ganji.get_car_user_list_one_city areaname, areaid
-        return
-      end
-      pp "接口  #{areaname}  #{Time.now.chinese_format}"
-      url = "http://mobapi.ganji.com/datashare/HTTP/1.1"
-      customerid = "801"
-      userid = "DE361EB315646E5CCF29674326801321"
-      # response = RestClient.post url,
-      response = RestClientProxy.post url,
-                                      {jsonArgs: '{"customerId":"'+customerid+'","cityScriptIndex":"'+ "#{areaid2}" +'","categoryId":"6","pageIndex":"0","pageSize":"40","majorCategoryScriptIndex":"1","queryFilters":[{"name":"deal_type","operator":"=","value":"0"},{"name":"agent","operator":"=","value":"0"}],"sortKeywords":[{"field":"post_at","sort":"desc"}]}',
-                                       showType: 0},
-                                      {'User-Agent' => "Dalvik/2.1.0 (Linux; U; Android 6.0.1; SM-G6100 Build/MMB29M)",
-                                       'interface' => "SearchPostsByJson2",
-                                       'agehcy' => 'eoe01',
-                                       'userId' => userid,
-                                       'versionId' => '7.3.1',
-                                       'model' => 'samsung/SM-G6100',
-                                       'contentformat' => 'json2',
-                                       'CustomerId' => customerid,
-                                       'clientAgent' => 'samsung/SM-G6100#1080*1920#3.0#6.0.1',
-                                       'GjData-Version' => '1.0',
-                                       'uniqueId' => '93c6fcc41a2fbcb954a10a1bd87c53cb',
-                                      }
-      # response = JSON.parse response.body
-      response = JSON.parse response
-
-      # pp response
-      car_infos = response["posts"]
-      pp "接口 #{car_infos.length} 条记录 #{areaname}"
-      car_infos.each do |car_info|
-
-        k = car_info["detail_url"].match /puid=(\d*)&/
-        car_ganji_number = k[1]
-        next if car_ganji_number.blank?
-        url = "http://wap.ganji.com/#{areaid}/ershouche/#{car_ganji_number}x"
-
-        chexing = car_info["title"]
-        cheling = car_info["license_year"]
-        licheng = car_info["road_haul"].to_i
-        price = car_info["price"]["v"]
-        is_cheshang = false
-
-        cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: chexing,
-                                                               che_ling: cheling,
-                                                               milage: licheng,
-                                                               detail_url: url,
-                                                               city_chinese: areaname,
-                                                               price: price,
-                                                               site_name: 'ganji',
-                                                               is_cheshang: is_cheshang
-        unless cui_id.blank?
-          begin
-            Ganji.update_one_detail cui_id
-          rescue Exception => e
-            ActiveRecord::Base.connection.close
-            pp "赶集出错"
-            pp e
-          end
-        end
-      end
-      ActiveRecord::Base.connection.close
-    rescue Exception => e
-      ActiveRecord::Base.connection.close
-      pp e
-    end
-  end
+  # def self.get_car_user_list_one_city_api_webservice areaname, areaid
+  #   begin
+  #     # areaid2 = 100
+  #
+  #     brand = UserSystem::CarBrand.where("id = 1").select(:id).first if rand(10) < 4
+  #
+  #     areaid2 = UserSystem::CarUserInfo::GANJI_CITY_API[areaname]
+  #     if areaid2.blank?
+  #       pp "网页  #{areaname}  #{Time.now.chinese_format}"
+  #       Ganji.get_car_user_list_one_city areaname, areaid
+  #       return
+  #     end
+  #     pp "接口  #{areaname}  #{Time.now.chinese_format}"
+  #     url = "https://mobapi.ganji.com/datashare/HTTP/1.1"
+  #     customerid = "801"
+  #     userid = "DE361EB315646E5CCF29674326801321"
+  #     # response = RestClient.post url,
+  #     response = RestClientProxy.post url,
+  #                                     {jsonArgs: '{"customerId":"'+customerid+'","cityScriptIndex":"'+ "#{areaid2}" +'","categoryId":"6","pageIndex":"0","pageSize":"40","majorCategoryScriptIndex":"1","queryFilters":[{"name":"deal_type","operator":"=","value":"0"},{"name":"agent","operator":"=","value":"0"}],"sortKeywords":[{"field":"post_at","sort":"desc"}]}',
+  #                                      showType: 0},
+  #                                     {'User-Agent' => "Dalvik/2.1.0 (Linux; U; Android 6.0.1; SM-G6100 Build/MMB29M)",
+  #                                      'interface' => "SearchPostsByJson2",
+  #                                      'agehcy' => 'eoe01',
+  #                                      'userId' => userid,
+  #                                      'versionId' => '7.3.1',
+  #                                      'model' => 'samsung/SM-G6100',
+  #                                      'contentformat' => 'json2',
+  #                                      'CustomerId' => customerid,
+  #                                      'clientAgent' => 'samsung/SM-G6100#1080*1920#3.0#6.0.1',
+  #                                      'GjData-Version' => '1.0',
+  #                                      'uniqueId' => '93c6fcc41a2fbcb954a10a1bd87c53cb',
+  #                                     }
+  #     # response = JSON.parse response.body
+  #     response = JSON.parse response
+  #
+  #     # pp response
+  #     car_infos = response["posts"]
+  #     pp "接口 #{car_infos.length} 条记录 #{areaname}"
+  #     car_infos.each do |car_info|
+  #
+  #       k = car_info["detail_url"].match /puid=(\d*)&/
+  #       car_ganji_number = k[1]
+  #       next if car_ganji_number.blank?
+  #       url = "http://wap.ganji.com/#{areaid}/ershouche/#{car_ganji_number}x"
+  #
+  #       chexing = car_info["title"]
+  #       cheling = car_info["license_year"]
+  #       licheng = car_info["road_haul"].to_i
+  #       price = car_info["price"]["v"]
+  #       is_cheshang = false
+  #
+  #       cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: chexing,
+  #                                                              che_ling: cheling,
+  #                                                              milage: licheng,
+  #                                                              detail_url: url,
+  #                                                              city_chinese: areaname,
+  #                                                              price: price,
+  #                                                              site_name: 'ganji',
+  #                                                              is_cheshang: is_cheshang
+  #       unless cui_id.blank?
+  #         begin
+  #           Ganji.update_one_detail cui_id
+  #         rescue Exception => e
+  #           ActiveRecord::Base.connection.close
+  #           pp "赶集出错"
+  #           pp e
+  #         end
+  #       end
+  #     end
+  #     ActiveRecord::Base.connection.close
+  #   rescue Exception => e
+  #     ActiveRecord::Base.connection.close
+  #     pp e
+  #   end
+  # end
 
 
   # Ganji.get_car_user_list_one_city_api_webservice_https '北京', 'bj'
-  def self.get_car_user_list_one_city_api_webservice_https areaname, areaid
-    begin
-      # areaid2 = 100
-
-      brand = UserSystem::CarBrand.first
-
-      areaid2 = UserSystem::CarUserInfo::GANJI_CITY_API[areaname]
-      if areaid2.blank?
-        pp "网页  #{areaname}  #{Time.now.chinese_format}"
-        Ganji.get_car_user_list_one_city areaname, areaid
-        return
-      end
-      pp "接口  #{areaname}  #{Time.now.chinese_format}"
-      url = "https://app.ganji.com/datashare/HTTP/1.1"
-      random_string = EricTools.generate_random_string(6, type = 3)
-      integer_string = EricTools.generate_random_string(3, type = 3)
-      customerid = "705"
-      time =  Time.now.chinese_format
-
-
-      heder = {host: 'app.ganji.com',
-               uid: '',
-               contentformat: 'json2',
-               "gjdata-version" => '1.0',
-               accept: '*/*',
-               # sid: "31EDCF25-1AF2-4938-A848-9C#{random_string}2CA9",
-               sid: "213AD020-B832-4BC2-B166-DC7F59C992A5",
-               lbs: '',
-               clienttimestamp: time,
-               agency: 'appstore',
-               'content-length' => 275,
-               # cookie: "GANJISESSID=4f336c372bfe74a1085b3bee#{random_string}e6; __utmganji_v20110909=b250e28e-dcdb-43e3-809a-51edf4e87c59",
-               cookie: " cityDomain=bj; mobversionbeta=3g; GANJISESSID=01000148d9e44aa1118ac24b7c76f76d; __utmganji_v20110909=b250e28e-dcdb-43e3-809a-51edf4e87c59",
-               'user-agent' => 'GJLife/7.9.11 CFNetwork/811.5.4 Darwin/16.6.0',
-               cityscriptindex: areaid2,
-               isp: '46002',
-               vs: '7.9.11',
-               # unid: "5A5F7809-FCCE-408F-9314-#{random_string}2DF62B",
-               unid: "5A5F7809-FCCE-408F-9314-9F66F22DF62B",
-               versionid: '7.9.11',
-               lar: '174',
-               rl: '375*667',
-               seqid: "62FEFCD7-B308-4510-941B-#{random_string}6246E6",
-               model: 'Generic/iphone',
-               'accept-language' => 'zh-cn',
-               lng: 116.483742, #"11#{rand(3)+3}.#{integer_string}788",
-
-               ct: '12',
-               tk: '',
-               cid: '705',
-               os: 'iOS',
-               lat: 39.996632, #"3#{rand(3)+3}.#{integer_string}681",
-
-               ay: 'appstore',
-               'content-type' => 'application/x-www-form-urlencoded',
-               clienttest: 'false',
-               of: 'self',
-               rid: "5366013A-DC83-42A6-8182-52860EC60BB9", #"15985A0D-C062-4312-A778-49#{random_string}B610",
-               connection: 'keep-alive',
-               dv: 'iPhone 6S',
-               uniqueid: "5A5F7809-FCCE-408F-9314-9F66F22DF62B", #"5A5F7809-FCCE-408F-9314-#{random_string}2DF62B",
-               aid: " 9577341F88ABAAA36DFD4B9732317AA1",#"9577341F88AB#{random_string}AA4B9732317AA1",
-               net: 'wifi',
-               lct: '12',
-               clientagent: 'iPhone 6S#375*667#10.3.2',
-               ov: '10.3.2',
-               interface: 'SearchPostsByJson3',
-               customerid: customerid,
-               # userid: "9577341F88AB#{random_string}AA4B9732317AA1"
-               userid: "9577341F88ABAAA36DFD4B9732317AA1"
-      }
-
-      json_args = {
-          pageSize: 40,
-          cityScriptIndex: areaid2.to_s,
-          sortKeywords: [{"field" => "post_at","sort" => "desc"}],
-          majorCategoryScriptIndex: 1,
-          categoryId: 6,
-          queryFilters: [{"name" => "agent","operator" => "=","value" => "0"},
-                         {"name"=>"deal_type","operator"=>"=","value"=>"0"},
-                         "name" => "sort","operator" => "=","value" => "3"],
-          customerid: customerid,
-          pageIndex: 0,
-      }
-
-
-      request_body ={
-          :jsonArgs => json_args.to_json,
-          :showType => 0,
-          :showtype => 0,
-          :t => "7#{integer_string}81" }
-
-      response = RestClientProxy.post url,request_body, heder
-
-      # response = JSON.parse response.body
-      response = JSON.parse response
-
-      pp response
-
-      # pp response
-      car_infos = response["posts"]
-      pp "接口 #{car_infos.length} 条记录 #{areaname}"
-      car_infos.each do |car_info|
-
-        k = car_info["detail_url"].match /puid=(\d*)&/
-        car_ganji_number = k[1]
-        next if car_ganji_number.blank?
-        url = "http://wap.ganji.com/#{areaid}/ershouche/#{car_ganji_number}x"
-
-        chexing = car_info["title"]
-        cheling = car_info["license_year"]
-        licheng = car_info["road_haul"].to_i
-        price = car_info["price"]["v"]
-        is_cheshang = false
-
-        cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: chexing,
-                                                               che_ling: cheling,
-                                                               milage: licheng,
-                                                               detail_url: url,
-                                                               city_chinese: areaname,
-                                                               price: price,
-                                                               site_name: 'ganji',
-                                                               is_cheshang: is_cheshang
-        unless cui_id.blank?
-          begin
-            Ganji.update_one_detail cui_id
-          rescue Exception => e
-            ActiveRecord::Base.connection.close
-            pp "赶集出错"
-            pp e
-          end
-        end
-      end
-      ActiveRecord::Base.connection.close
-    rescue Exception => e
-      ActiveRecord::Base.connection.close
-      pp e
-    end
-  end
+  # def self.get_car_user_list_one_city_api_webservice_https areaname, areaid
+  #   begin
+  #     # areaid2 = 100
+  #
+  #     brand = UserSystem::CarBrand.first
+  #
+  #     areaid2 = UserSystem::CarUserInfo::GANJI_CITY_API[areaname]
+  #     if areaid2.blank?
+  #       pp "网页  #{areaname}  #{Time.now.chinese_format}"
+  #       Ganji.get_car_user_list_one_city areaname, areaid
+  #       return
+  #     end
+  #     pp "接口  #{areaname}  #{Time.now.chinese_format}"
+  #     url = "https://app.ganji.com/datashare/HTTP/1.1"
+  #     random_string = EricTools.generate_random_string(6, type = 3)
+  #     integer_string = EricTools.generate_random_string(3, type = 3)
+  #     customerid = "705"
+  #     time =  Time.now.chinese_format
+  #
+  #
+  #     heder = {host: 'app.ganji.com',
+  #              uid: '',
+  #              contentformat: 'json2',
+  #              "gjdata-version" => '1.0',
+  #              accept: '*/*',
+  #              # sid: "31EDCF25-1AF2-4938-A848-9C#{random_string}2CA9",
+  #              sid: "213AD020-B832-4BC2-B166-DC7F59C992A5",
+  #              lbs: '',
+  #              clienttimestamp: time,
+  #              agency: 'appstore',
+  #              'content-length' => 275,
+  #              # cookie: "GANJISESSID=4f336c372bfe74a1085b3bee#{random_string}e6; __utmganji_v20110909=b250e28e-dcdb-43e3-809a-51edf4e87c59",
+  #              cookie: " cityDomain=#{areaid}; mobversionbeta=3g; GANJISESSID=01000148d9e44aa1118ac24b7c76f76d; __utmganji_v20110909=b250e28e-dcdb-43e3-809a-51edf4e87c59",
+  #              'user-agent' => 'GJLife/7.9.11 CFNetwork/811.5.4 Darwin/16.6.0',
+  #              cityscriptindex: areaid2,
+  #              isp: '46002',
+  #              vs: '7.9.11',
+  #              # unid: "5A5F7809-FCCE-408F-9314-#{random_string}2DF62B",
+  #              unid: "5A5F7809-FCCE-408F-9314-9F66F22DF62B",
+  #              versionid: '7.9.11',
+  #              lar: '174',
+  #              rl: '375*667',
+  #              seqid: "62FEFCD7-B308-4510-941B-#{random_string}6246E6",
+  #              model: 'Generic/iphone',
+  #              'accept-language' => 'zh-cn',
+  #              lng: 116.483742, #"11#{rand(3)+3}.#{integer_string}788",
+  #
+  #              ct: '12',
+  #              tk: '',
+  #              cid: '705',
+  #              os: 'iOS',
+  #              lat: 39.996632, #"3#{rand(3)+3}.#{integer_string}681",
+  #
+  #              ay: 'appstore',
+  #              'content-type' => 'application/x-www-form-urlencoded',
+  #              clienttest: 'false',
+  #              of: 'self',
+  #              rid: "5366013A-DC83-42A6-8182-52860EC60BB9", #"15985A0D-C062-4312-A778-49#{random_string}B610",
+  #              connection: 'keep-alive',
+  #              dv: 'iPhone 6S',
+  #              uniqueid: "5A5F7809-FCCE-408F-9314-9F66F22DF62B", #"5A5F7809-FCCE-408F-9314-#{random_string}2DF62B",
+  #              aid: " 9577341F88ABAAA36DFD4B9732317AA1",#"9577341F88AB#{random_string}AA4B9732317AA1",
+  #              net: 'wifi',
+  #              lct: '12',
+  #              clientagent: 'iPhone 6S#375*667#10.3.2',
+  #              ov: '10.3.2',
+  #              interface: 'SearchPostsByJson3',
+  #              customerid: customerid,
+  #              # userid: "9577341F88AB#{random_string}AA4B9732317AA1"
+  #              userid: "9577341F88ABAAA36DFD4B9732317AA1"
+  #     }
+  #
+  #     json_args = {
+  #         pageSize: 40,
+  #         cityScriptIndex: areaid2.to_s,
+  #         # sortKeywords: [{"field" => "post_at","sort" => "desc"}],
+  #         majorCategoryScriptIndex: 1,
+  #         categoryId: 6,
+  #         queryFilters: [{"name" => "agent","operator" => "=","value" => "0"},
+  #                        {"name"=>"deal_type","operator"=>"=","value"=>"0"},
+  #                        # "name" => "sort","operator" => "=","value" => "2"
+  #         ],
+  #         customerid: customerid,
+  #         pageIndex: 0,
+  #     }
+  #
+  #
+  #     request_body ={
+  #         :jsonArgs => json_args.to_json,
+  #         :showType => 0,
+  #         :showtype => 0,
+  #         :t => "7#{integer_string}81" }
+  #
+  #     response = RestClientProxy.post url,request_body, heder
+  #
+  #     # response = JSON.parse response.body
+  #     response = JSON.parse response
+  #
+  #     pp response
+  #
+  #     # pp response
+  #     car_infos = response["posts"]
+  #     pp "接口 #{car_infos.length} 条记录 #{areaname}"
+  #     car_infos.each do |car_info|
+  #       next if car_info["agent"] != "个人"
+  #
+  #       # k = car_info["detail_url"].match /puid=(\d*)&/
+  #       car_ganji_number = car_info["puid"]
+  #       next if car_ganji_number.blank?
+  #       url = "http://wap.ganji.com/#{areaid}/ershouche/#{car_ganji_number}x"
+  #
+  #       chexing = car_info["title"]
+  #       cheling = car_info["license_year"]
+  #       licheng = car_info["road_haul"].to_i
+  #       price = car_info["price"]["v"]
+  #       is_cheshang = false
+  #
+  #       cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: chexing,
+  #                                                              che_ling: cheling,
+  #                                                              milage: licheng,
+  #                                                              detail_url: url,
+  #                                                              city_chinese: areaname,
+  #                                                              price: price,
+  #                                                              site_name: 'ganji',
+  #                                                              is_cheshang: is_cheshang
+  #       unless cui_id.blank?
+  #         begin
+  #           Ganji.update_one_detail cui_id
+  #         rescue Exception => e
+  #           ActiveRecord::Base.connection.close
+  #           pp "赶集出错"
+  #           pp e
+  #         end
+  #       end
+  #     end
+  #     ActiveRecord::Base.connection.close
+  #   rescue Exception => e
+  #     ActiveRecord::Base.connection.close
+  #     pp e
+  #   end
+  # end
 
   #获取一个城市的汽车列表, 从网页获取,
   def self.get_car_user_list_one_city areaname, areaid
