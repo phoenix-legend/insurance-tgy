@@ -17,25 +17,37 @@ module Ganji
 
 
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
+    #以下19行多线程版
+    # (1..10).each do |i|
+    #   city_hash.each_pair do |areaid, areaname|
+    #     if Thread.list.length > 1 #大并发为8
+    #       while true
+    #         if Thread.list.length < 2 #大并发为10
+    #           break
+    #         else
+    #           sleep 1
+    #         end
+    #       end
+    #     end
+    #     sleep 1
+    #     Thread.start do
+    #       Ganji.get_car_user_list_one_city areaname, areaid
+    #       # Ganji.get_car_user_list_one_city_api_webservice areaname, areaid
+    #       # Ganji.get_car_user_list_one_city_api_webservice_https areaname, areaid #'北京', 'bj'
+    #     end
+    #   end
+    # end
+
     (1..10).each do |i|
       city_hash.each_pair do |areaid, areaname|
-        if Thread.list.length > 1 #大并发为8
-          while true
-            if Thread.list.length < 2 #大并发为10
-              break
-            else
-              sleep 1
-            end
-          end
-        end
-        sleep 1
-        Thread.start do
-          Ganji.get_car_user_list_one_city areaname, areaid
-          # Ganji.get_car_user_list_one_city_api_webservice areaname, areaid
-          # Ganji.get_car_user_list_one_city_api_webservice_https areaname, areaid #'北京', 'bj'
-        end
+
+        sec = if Time.now <  Time.parse('2018-04-21 15:00:00') then 50 else 2 end
+        sleep rand(4)+sec
+        Ganji.get_car_user_list_one_city areaname, areaid
+
       end
     end
+
 
     if party == 0 and RestClientProxy.get_local_ip == RestClientProxy::HOSTNAME_WUBA1
       Ganji.get_car_user_list 1
