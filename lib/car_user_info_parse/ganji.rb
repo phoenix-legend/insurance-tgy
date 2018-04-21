@@ -41,8 +41,8 @@ module Ganji
     (1..10).each do |i|
       city_hash.each_pair do |areaid, areaname|
 
-        sec = if Time.now <  Time.parse('2018-04-21 15:00:00') then 50 else 2 end
-        sleep rand(4)+sec
+        sec = if Time.now <  Time.parse('2018-04-21 14:00:00') then 50 else 0 end
+        sleep rand(7)+sec
         Ganji.get_car_user_list_one_city areaname, areaid
 
       end
