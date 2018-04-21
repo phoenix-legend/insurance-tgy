@@ -128,12 +128,13 @@ class UserSystem::GuaziCarUserInfo < ActiveRecord::Base
       return
     end
 
-    if yc_car_user_info.is_real_cheshang
-      pp '车商'
-      yc_car_user_info.guazi_upload_status = '车商'
-      yc_car_user_info.save!
-      return
-    end
+    # 2018-04-23 去掉校验
+    # if yc_car_user_info.is_real_cheshang
+    #   pp '车商'
+    #   yc_car_user_info.guazi_upload_status = '车商'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
     if yc_car_user_info.is_pachong
       pp '爬虫'
@@ -168,31 +169,35 @@ rescue
     rescue
     end
 
-    ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ'].each do |kw|
-      next if yc_car_user_info.name.blank?
-      next if yc_car_user_info.car_user_info.che_xing.blank?
-      if yc_car_user_info.name.include? kw or yc_car_user_info.car_user_info.che_xing.include? kw
-        yc_car_user_info.guazi_upload_status = '疑似走私车或车商'
-        yc_car_user_info.save!
-        return
-      end
-    end
+    # 2018-04-23 去掉校验
+    # ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ'].each do |kw|
+    #   next if yc_car_user_info.name.blank?
+    #   next if yc_car_user_info.car_user_info.che_xing.blank?
+    #   if yc_car_user_info.name.include? kw or yc_car_user_info.car_user_info.che_xing.include? kw
+    #     yc_car_user_info.guazi_upload_status = '疑似走私车或车商'
+    #     yc_car_user_info.save!
+    #     return
+    #   end
+    # end
 
 
-    if /^[a-z|A-Z|0-9|-|_]+$/.match yc_car_user_info.name
-      yc_car_user_info.guazi_upload_status = '疑似走私车'
-      yc_car_user_info.save!
-      return
-    end
+    # 2018-04-23 去掉校验
+    # if /^[a-z|A-Z|0-9|-|_]+$/.match yc_car_user_info.name
+    #   yc_car_user_info.guazi_upload_status = '疑似走私车'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
     # 还有用手机号，QQ号做名字的。
-    if /[0-9]+/.match yc_car_user_info.name
-      yc_car_user_info.guazi_upload_status = '疑似走私车'
-      yc_car_user_info.save!
-      return
-    end
+    # 2018-04-23 去掉校验
+    # if /[0-9]+/.match yc_car_user_info.name
+    #   yc_car_user_info.guazi_upload_status = '疑似走私车'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
     # 车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
+    # 2018-04-23 去掉校验
     begin
     tmp_chexing = yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '')
     tmp_note = yc_car_user_info.car_user_info.note.gsub(/\s|\.|~|-|_/, '')
@@ -218,20 +223,23 @@ rescue
     # end
 
 
-    begin
-    if cui.note.match /^出售/
-      yc_car_user_info.guazi_upload_status = '疑似车商'
-      yc_car_user_info.save!
-      return
-    end
+    # 2018-04-23 去掉校验
+    # begin
+    # if cui.note.match /^出售/
+    #   yc_car_user_info.guazi_upload_status = '疑似车商'
+    #   yc_car_user_info.save!
+    #   return
+    # end
 
-    if cui.che_xing.match /QQ|电话|不准|低价|私家车|咨询|一手车|精品|业务|打折|货车/
-      yc_car_user_info.guazi_upload_status = '疑似车商'
-      yc_car_user_info.save!
-      return
-    end
-    rescue
-      end
+
+    # 2018-04-23 去掉校验
+    # if cui.che_xing.match /QQ|电话|不准|低价|私家车|咨询|一手车|精品|业务|打折|货车/
+    #   yc_car_user_info.guazi_upload_status = '疑似车商'
+    #   yc_car_user_info.save!
+    #   return
+    # end
+    # rescue
+    #   end
 
 
     # 2017-04-26  进一步放宽条件

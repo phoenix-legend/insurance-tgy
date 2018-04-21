@@ -582,11 +582,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     #先推人人车
     UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
 
-    #同步至又一车/车置宝
-    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info   #if system_name != 'ali'
 
-    #朋友E车
-    UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+
+
 
     if rand(10) < 6
        begin
@@ -595,6 +593,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
          pp e
        end
     end
+
+    #同步至又一车/车置宝
+    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info   #if system_name != 'ali'
+
+    #朋友E车
+    UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     UploadTianTian.upload_one_tt car_user_info
 
