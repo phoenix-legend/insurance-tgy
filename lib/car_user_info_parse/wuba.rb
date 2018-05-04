@@ -133,10 +133,10 @@ module Wuba
     city_hash = ::UserSystem::CarUserInfo.get_58_sub_cities sub_city_party
     (1..100).each do |i|
       city_hash.each_pair do |areaid, areaname|
-        if Thread.list.length > 7
+        if Thread.list.length > 1
           pp "现在共有#{Thread.list.length}个线程正在运行"
           while true
-            if Thread.list.length < 9
+            if Thread.list.length < 2
               break
             else
               sleep 0.3
