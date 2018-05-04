@@ -6,7 +6,7 @@ module Wuba
   def self.get_phone_by_userinfo url
     # url = "http://qd.58.com/ershouche/29304765491892x.shtml"
     #获取用户id
-    sleep 1
+    sleep 30
     content = RestClient.get url, {
         'User-Agent' => 'Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Mobile Safari/537.36',
         "Cookie" => 'f=n; cookieuid=fe381b34-65b8-470c-b39c-1168a8c8c640; id58=05cDFFWQErahRK6kFErWAg==; __ag_cm_=1435571528704; jjqp=1; ag_fid=O5XPZqteqcIjuuvF; bj58_id58s="cFNlMnlwQjNaek11NTIxMw=="; br58=index_old; gr_user_id=2fd1e7a2-acd5-4c9a-8776-0757b6db2bfc; __utma=253535702.876986337.1463542865.1463548490.1471528581.3; 58home=linyixian; sessionid=46dd4432-3aa3-4b85-90c0-8a8f9c452864; ishome=true; als=0; selectcity=yes; car_detail_app_open=8; prompt=personalId; Hm_lvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; Hm_lpvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; commonTopbar_myfeet_tooltip=end; car_list_app_open=7; userip=101.45.219.92; tc_userid=0; job_detail_app_open=3; job_detail_show_time=2; Hm_lvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899518; Hm_lpvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899532; house_finalpage_app_open=4; m58comvp=t08v115.159.229.15; house_list_app_open=5; city=3144; cookieuid1=c5/npli/YPedgnSPBaywAg==; GA_GTID=0d40009c-01b5-a5f7-024a-863e35b8d819; _ga=GA1.2.876986337.1463542865; nearCity=%5B%7B%22cityName%22%3A%22%E5%8C%97%E4%BA%AC%22%2C%22city%22%3A%22bj%22%7D%2C%7B%22cityName%22%3A%22%E4%B8%8A%E6%B5%B7%22%2C%22city%22%3A%22sh%22%7D%2C%7B%22cityName%22%3A%22%E5%AE%89%E9%A1%BA%22%2C%22city%22%3A%22anshun%22%7D%5D; webps=A; curr_platform=pc; firstLogin=true; ipcity=sh%7C%u4E0A%u6D77%7C0; bdshare_firstime=1488944272624; f=n; bangbigtip2=1; commontopbar_city=122%7C%u9752%u5C9B%7Cqd; __track_id=20170308115320762839203278110577014; myfeet_tooltip=end; bj58_new_uv=16; JSESSIONID=B4D90C778C6E5268D157E94A952163C0; Hm_lvt_ef9ab733a6772ffc77e498ec3aee46bd=1488944272,1488948327; Hm_lpvt_ef9ab733a6772ffc77e498ec3aee46bd=1488948327; 58tj_uuid=330b45e3-a726-4c76-99fa-9845b0354944; new_uv=31; final_history=26155300337100%2C29225934567471%2C29304765491892%2C28673705311532'
@@ -32,6 +32,7 @@ module Wuba
     # url = "http://my.58.com/30715922179334"
     # uid = 43961037693201
     pp "uid is #{uid}"
+    sleep 30
     userinfo_content = RestClient.get "http://my.58.com/#{uid}", {
         'User-Agent' => 'Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Mobile Safari/537.36',
         # "Cookie" => 'f=n; cookieuid=fe381b34-65b8-470c-b39c-1168a8c8c640; id58=05cDFFWQErahRK6kFErWAg==; __ag_cm_=1435571528704; jjqp=1; ag_fid=O5XPZqteqcIjuuvF; bj58_id58s="cFNlMnlwQjNaek11NTIxMw=="; br58=index_old; gr_user_id=2fd1e7a2-acd5-4c9a-8776-0757b6db2bfc; __utma=253535702.876986337.1463542865.1463548490.1471528581.3; 58home=linyixian; sessionid=46dd4432-3aa3-4b85-90c0-8a8f9c452864; ishome=true; als=0; selectcity=yes; car_detail_app_open=8; prompt=personalId; Hm_lvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; Hm_lpvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; commonTopbar_myfeet_tooltip=end; car_list_app_open=7; userip=101.45.219.92; tc_userid=0; job_detail_app_open=3; job_detail_show_time=2; Hm_lvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899518; Hm_lpvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899532; house_finalpage_app_open=4; m58comvp=t08v115.159.229.15; house_list_app_open=5; city=3144; cookieuid1=c5/npli/YPedgnSPBaywAg==; GA_GTID=0d40009c-01b5-a5f7-024a-863e35b8d819; _ga=GA1.2.876986337.1463542865; nearCity=%5B%7B%22cityName%22%3A%22%E5%8C%97%E4%BA%AC%22%2C%22city%22%3A%22bj%22%7D%2C%7B%22cityName%22%3A%22%E4%B8%8A%E6%B5%B7%22%2C%22city%22%3A%22sh%22%7D%2C%7B%22cityName%22%3A%22%E5%AE%89%E9%A1%BA%22%2C%22city%22%3A%22anshun%22%7D%5D; webps=A; curr_platform=pc; firstLogin=true; ipcity=sh%7C%u4E0A%u6D77%7C0; bdshare_firstime=1488944272624; f=n; bangbigtip2=1; commontopbar_city=122%7C%u9752%u5C9B%7Cqd; __track_id=20170308115320762839203278110577014; myfeet_tooltip=end; bj58_new_uv=16; JSESSIONID=B4D90C778C6E5268D157E94A952163C0; Hm_lvt_ef9ab733a6772ffc77e498ec3aee46bd=1488944272,1488948327; Hm_lpvt_ef9ab733a6772ffc77e498ec3aee46bd=1488948327; 58tj_uuid=330b45e3-a726-4c76-99fa-9845b0354944; new_uv=31; final_history=26155300337100%2C29225934567471%2C29304765491892%2C28673705311532'
@@ -57,6 +58,7 @@ module Wuba
     # frame_url = "http://my.58.com/home/0/0E5817AF9735058925DC71C3293F6A50"
     return if frame_url.blank?
     sleep 1
+    sleep 30
     frame_content = RestClient.get frame_url, {
         'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
         "Cookie" => 'f=n; cookieuid=fe381b34-65b8-470c-b39c-1168a8c8c640; id58=05cDFFWQErahRK6kFErWAg==; __ag_cm_=1435571528704; jjqp=1; ag_fid=O5XPZqteqcIjuuvF; bj58_id58s="cFNlMnlwQjNaek11NTIxMw=="; br58=index_old; gr_user_id=2fd1e7a2-acd5-4c9a-8776-0757b6db2bfc; __utma=253535702.876986337.1463542865.1463548490.1471528581.3; 58home=linyixian; sessionid=46dd4432-3aa3-4b85-90c0-8a8f9c452864; ishome=true; als=0; selectcity=yes; car_detail_app_open=8; prompt=personalId; Hm_lvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; Hm_lpvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; commonTopbar_myfeet_tooltip=end; car_list_app_open=7; userip=101.45.219.92; tc_userid=0; job_detail_app_open=3; job_detail_show_time=2; Hm_lvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899518; Hm_lpvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899532; house_finalpage_app_open=4; m58comvp=t08v115.159.229.15; house_list_app_open=5; city=3144; cookieuid1=c5/npli/YPedgnSPBaywAg==; GA_GTID=0d40009c-01b5-a5f7-024a-863e35b8d819; _ga=GA1.2.876986337.1463542865; nearCity=%5B%7B%22cityName%22%3A%22%E5%8C%97%E4%BA%AC%22%2C%22city%22%3A%22bj%22%7D%2C%7B%22cityName%22%3A%22%E4%B8%8A%E6%B5%B7%22%2C%22city%22%3A%22sh%22%7D%2C%7B%22cityName%22%3A%22%E5%AE%89%E9%A1%BA%22%2C%22city%22%3A%22anshun%22%7D%5D; webps=A; curr_platform=pc; firstLogin=true; ipcity=sh%7C%u4E0A%u6D77%7C0; bdshare_firstime=1488944272624; f=n; bangbigtip2=1; commontopbar_city=122%7C%u9752%u5C9B%7Cqd; __track_id=20170308115320762839203278110577014; myfeet_tooltip=end; bj58_new_uv=16; JSESSIONID=B4D90C778C6E5268D157E94A952163C0; Hm_lvt_ef9ab733a6772ffc77e498ec3aee46bd=1488944272,1488948327; Hm_lpvt_ef9ab733a6772ffc77e498ec3aee46bd=1488948327; 58tj_uuid=330b45e3-a726-4c76-99fa-9845b0354944; new_uv=31; final_history=26155300337100%2C29225934567471%2C29304765491892%2C28673705311532'
@@ -77,6 +79,7 @@ module Wuba
       next if products_url.blank?
       next if products_url.match /ershouche/
       sleep 1
+      sleep 30
       products_content = RestClient.get products_url, {
           'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'#,
           # "Cookie" => 'f=n; cookieuid=fe381b34-65b8-470c-b39c-1168a8c8c640; id58=05cDFFWQErahRK6kFErWAg==; __ag_cm_=1435571528704; jjqp=1; ag_fid=O5XPZqteqcIjuuvF; bj58_id58s="cFNlMnlwQjNaek11NTIxMw=="; br58=index_old; gr_user_id=2fd1e7a2-acd5-4c9a-8776-0757b6db2bfc; __utma=253535702.876986337.1463542865.1463548490.1471528581.3; 58home=linyixian; sessionid=46dd4432-3aa3-4b85-90c0-8a8f9c452864; ishome=true; als=0; selectcity=yes; car_detail_app_open=8; prompt=personalId; Hm_lvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; Hm_lpvt_4d4cdf6bc3c5cb0d6306c928369fe42f=1488899436; commonTopbar_myfeet_tooltip=end; car_list_app_open=7; userip=101.45.219.92; tc_userid=0; job_detail_app_open=3; job_detail_show_time=2; Hm_lvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899518; Hm_lpvt_5a7a7bfd6e7dfd9438b9023d5a6a4a96=1488899532; house_finalpage_app_open=4; m58comvp=t08v115.159.229.15; house_list_app_open=5; city=3144; cookieuid1=c5/npli/YPedgnSPBaywAg==; GA_GTID=0d40009c-01b5-a5f7-024a-863e35b8d819; _ga=GA1.2.876986337.1463542865; nearCity=%5B%7B%22cityName%22%3A%22%E5%8C%97%E4%BA%AC%22%2C%22city%22%3A%22bj%22%7D%2C%7B%22cityName%22%3A%22%E4%B8%8A%E6%B5%B7%22%2C%22city%22%3A%22sh%22%7D%2C%7B%22cityName%22%3A%22%E5%AE%89%E9%A1%BA%22%2C%22city%22%3A%22anshun%22%7D%5D; webps=A; curr_platform=pc; firstLogin=true; ipcity=sh%7C%u4E0A%u6D77%7C0; bdshare_firstime=1488944272624; f=n; bangbigtip2=1; commontopbar_city=122%7C%u9752%u5C9B%7Cqd; __track_id=20170308115320762839203278110577014; myfeet_tooltip=end; bj58_new_uv=16; JSESSIONID=B4D90C778C6E5268D157E94A952163C0; Hm_lvt_ef9ab733a6772ffc77e498ec3aee46bd=1488944272,1488948327; Hm_lpvt_ef9ab733a6772ffc77e498ec3aee46bd=1488948327; 58tj_uuid=330b45e3-a726-4c76-99fa-9845b0354944; new_uv=31; final_history=26155300337100%2C29225934567471%2C29304765491892%2C28673705311532'
@@ -153,8 +156,10 @@ module Wuba
       pp "#{areaname}   跑58..    #{Time.now.chinese_format}"
       url = "http://#{areaid}.58.com/ershouche/0/pn1/"
       # pp url
+      sleep 30
       content = RestClient.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
       content = content.body
+      # pp content
       content.gsub!('infoList list-info', 'list_infos_eric')
       return if content.blank?
       content = Nokogiri::HTML(content)
@@ -182,7 +187,7 @@ module Wuba
           price = tr.css('.info-desc-tag-price')[0].text.strip
           price.gsub!('万', '')
         rescue
-          car_number = car_number -1
+          # car_number = car_number -1
           pp tr.to_s
           pp 'Exception  价格获取失败'
           next
@@ -317,89 +322,13 @@ module Wuba
   end
 
 
-  # def chuli_list_page_content url, content, area_id
-  #   begin
-  #     return if content.blank?
-  #     content = Nokogiri::HTML(content)
-  #     trs = content.css('.tbimg tr')
-  #     trs.each do |tr|
-  #       chexing = ''
-  #       next if tr.to_s.match /google|7天可退/
-  #       begin
-  #         chexing = tr.css('td .t')[0].text
-  #       rescue
-  #         car_number = car_number -1
-  #         pp tr.to_s
-  #         pp 'Exception  车型获取失败'
-  #         next
-  #       end
-  #
-  #       price = 2
-  #       begin
-  #         price = tr.css('.tc .pri')[0].text
-  #       rescue
-  #         car_number = car_number -1
-  #         pp tr.to_s
-  #         pp 'Exception  价格获取失败'
-  #         next
-  #       end
-  #
-  #       cheling = tr.css('.t p')[0].children[0].text
-  #       cheling = cheling.gsub(/购于|年|\n|\r|\s/, '')
-  #       milage = begin
-  #         tr.css('.t p')[0].children[2].text rescue '8.0'
-  #       end
-  #       milage = milage.gsub(/万|公里/, '')
-  #       url = tr.css('td .t')[0].attributes["href"].value
-  #       begin
-  #         if url.match /http:\/\/short/
-  #           url = Wuba.get_normal_url_by_short_url_and_city url, areaid
-  #           next if url.blank?
-  #         end
-  #
-  #         # 如果58抓到的数据不是当前城市的，直接不进数据库
-  #         zhengze = "http://#{areaid}.58.com"
-  #         url_sx = url.match Regexp.new zhengze
-  #         if url_sx.blank?
-  #           next
-  #         end
-  #       rescue
-  #
-  #       end
-  #
-  #       result = UserSystem::CarUserInfo.create_car_user_info che_xing: chexing,
-  #                                                             price: price,
-  #                                                             che_ling: cheling,
-  #                                                             milage: milage,
-  #                                                             detail_url: url.split('?')[0],
-  #                                                             city_chinese: areaname,
-  #                                                             site_name: '58'
-  #
-  #       if result == 0
-  #         u = url.split('?')[0]
-  #
-  #         unless u.blank?
-  #           c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
-  #           Wuba.update_one_detail c.id if not c.blank?
-  #         end
-  #       end
-  #       exists_car_number = exists_car_number + 1 if result == 1
-  #     end
-  #     if car_number - exists_car_number < lest_number
-  #       pp '58 本页数据全部存在，跳出'
-  #       break
-  #     end
-  #
-  #   rescue Exception => e
-  #     pp e
-  #     pp $@
-  #   end
-  # end
+
 
 
   # Wuba.tttt 1175137
   def self.tttt car_user_info_id
     car_user_info = UserSystem::CarUserInfo.find car_user_info_id
+    sleep 30
     response = RestClient.get car_user_info.detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
     detail_content = response.body
     detail_content.gsub!('person-name', 'personname')
@@ -446,6 +375,7 @@ module Wuba
     api_url = "http://app.58.com/api/detail/ershouche/#{id_name}?appId=2&format=json&localname=#{city_name}&platform=ios&sidDict=%7B%22PGTID%22%3A%22%22%2C%22GTID%22%3A%22130722508192553938177207060%22%7D&version=7.0.0"
     pp api_url
     # api_url = 'http://app.58.com/api/detail/ershouche/25901110150859?appId=3&format=json&localname=sy&platform=ios&sidDict=%7B%22PGTID%22%3A%22%22%2C%22GTID%22%3A%22130722508192553938177207060%22%7D&version=7.1.1'
+    sleep 30
     response = RestClient.get api_url
     response = response.body
     response = JSON.parse response
@@ -487,6 +417,7 @@ module Wuba
       api_url = "http://app.58.com/api/detail/ershouche/#{id_name}?appId=3&format=json&localname=#{city_name}&platform=ios&sidDict=%7B%22PGTID%22%3A%22%22%2C%22GTID%22%3A%22130722508192553938177207060%22%7D&version=7.1.1"
       pp api_url
       # api_url = 'http://app.58.com/api/detail/ershouche/25901110150859?appId=3&format=json&localname=sy&platform=ios&sidDict=%7B%22PGTID%22%3A%22%22%2C%22GTID%22%3A%22130722508192553938177207060%22%7D&version=7.1.1'
+      sleep 30
       response = RestClient.get api_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
       response = response.body
       response = JSON.parse response
@@ -570,6 +501,7 @@ module Wuba
     begin
       puts '更新明细'
       pp car_user_info.detail_url
+      sleep 30
       response = RestClient.get car_user_info.detail_url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
 
       detail_content = response.body
@@ -632,6 +564,7 @@ module Wuba
 
       id = car_user_info.detail_url.match /ershouche\/(\d{8,15})x\.shtml/
       id = id[1]
+      sleep 30
       id_response = RestClient.get "http://app.58.com/api/windex/scandetail/car/#{id}/", {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
       id_response = id_response.body
       id_response = Nokogiri::HTML(id_response)
