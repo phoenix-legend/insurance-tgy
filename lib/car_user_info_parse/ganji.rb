@@ -104,7 +104,7 @@ module Ganji
                 'content-length' => 275,
                 cookie: "GANJISESSID=msncj1f72nbt6dil23lfr7pcem",
                 'user-agent' => 'GJLife/8.7.0 CFNetwork/894 Darwin/17.4.0',
-                cityscriptindex: code,
+                cityscriptindex: areaid2,
                 isp: '46002',
                 vs: '8.7.0',
                 xadid: 'mngUubSQjS365TxDlWW09qD/w8z4wvXU0OnAJVyJyq24HEDSSNeK8p3naqeksoiZ',
