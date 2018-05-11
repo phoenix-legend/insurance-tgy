@@ -15,7 +15,7 @@ module Ganji
 
   # 多线程获取汽车列表, 多个城市
   # Ganji.get_car_user_list 3
-  def self.get_car_user_list party = 0
+  def self.get_car_user_list party = 0,  source = 'web'
     if File.exist? '/data/cities_name'
       cities = File.read '/data/cities_name'
       cities.strip!
@@ -23,7 +23,7 @@ module Ganji
       if not cities.blank?
         (1..10).each do |i|
           city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party, citys
-          Ganji.get_car_user_list_city_hash city_hash
+          Ganji.get_car_user_list_city_hash city_hash, source
         end
         return
       end
@@ -31,7 +31,7 @@ module Ganji
 
 
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
-    Ganji.get_car_user_list_city_hash city_hash
+    Ganji.get_car_user_list_city_hash city_hash, source
 
   end
 
@@ -50,14 +50,22 @@ module Ganji
 
   end
 
-  def self.get_car_user_list_city_hash city_hash
+  def self.get_car_user_list_city_hash city_hash, source = 'web'
 
     (1..10).each do |i|
       city_hash.each_pair do |areaid, areaname|
         sleep 5+rand(1)
-        # Ganji.get_car_user_list_one_city_api_webservice_https areaname, areaid
 
-        Ganji.get_car_user_list_one_city_web areaname, areaid
+        if source == 'web'
+          #走web
+          Ganji.get_car_user_list_one_city_web areaname, areaid
+        else
+          #走api
+          Ganji.get_car_user_list_one_city_api_webservice_https areaname, areaid
+        end
+
+
+
       end
     end
   end
@@ -375,7 +383,7 @@ module Ganji
               price: clue.css('.v-Price').first.content.strip, # 价格
           }
 
-          age = option["age"].gsub!("万公里","")
+          age = option[:age].gsub!("万公里","")
 
 
           cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: option[:title],
