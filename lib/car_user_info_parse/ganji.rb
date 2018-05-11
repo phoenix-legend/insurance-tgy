@@ -161,7 +161,7 @@ module Ganji
           :jsonArgs => json_args.to_json,
           :showType => 0,
           :showtype => 0,
-          :t => "7#{integer_string}81"}
+          :t => "-14003#{rand(10)}7094"}
 
       response = RestClient.post url, request_body, heder
 
