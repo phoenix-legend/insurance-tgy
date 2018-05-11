@@ -163,7 +163,7 @@ module Ganji
           :showtype => 0,
           :t => "-14003#{rand(10)}7094"}
 
-      response = RestClient.post url, request_body, heder
+      response = RestClient.post url, request_body, header
 
       # response = JSON.parse response.body
       response = JSON.parse response
