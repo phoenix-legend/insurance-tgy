@@ -445,7 +445,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   def self.update_detail params
     pp params
-    car_user_info = UserSystem::CarUserInfo.find params[:id]
+    car_user_info =  UserSystem::CarUserInfo.find params[:id]
 
     #更新数据模块
     car_user_info.name = params[:name].gsub('联系TA', '先生女士') unless params[:name].blank?
@@ -1969,12 +1969,14 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                                              is_cheshang: false
 
 
+      return nil if  cui_id.blank?
       UserSystem::CarUserInfo.update_detail id: cui_id,
                                             name: params[:name] || '车主',
                                             phone: params['phone'],
                                             note: 'kong',
                                             fabushijian: Time.now.chinese_format
 
+      return  cui_id
 
     end
 
