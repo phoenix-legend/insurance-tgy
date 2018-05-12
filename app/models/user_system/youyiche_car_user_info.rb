@@ -433,7 +433,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
       if redis["#{name}-0001"] == 'yes'
         text = `curl -b /data/czb/#{name} http://fdep.mychebao.com/car/manage`
-        if text.include? '图形验证码'
+        if text.include? '输入用户名密码登录车置宝开放平台'
           redis["#{name}-0001"] = 'no'
           MailSend.send_content('xiaoqi.liu@uguoyuan.cn',
                                 'xiaoqi.liu@uguoyuan.cn',

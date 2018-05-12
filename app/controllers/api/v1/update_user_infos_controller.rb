@@ -146,6 +146,10 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
     @result = UserSystem::GuaziCarUserInfo.shouche_yeji params[:date], params[:time], params[:sign]
   end
 
+  def shouchexiaopeng
+    UserSystem::CarUserInfo.shouche_xiaopeng params
+  end
+
   # url为:  http://che.uguoyuan.cn/api/v1/update_user_infos/proxy_info
   def proxy_info
     redis = Redis.current

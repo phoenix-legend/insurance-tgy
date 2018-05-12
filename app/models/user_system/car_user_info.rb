@@ -18,9 +18,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # UserSystem::CarUserInfo::CITY1 + UserSystem::CarUserInfo::CITY2 + UserSystem::CarUserInfo::CITY3
 
-  CITY1 = ['上海', '成都', '杭州', '苏州', '福州', '合肥', "西安", "郑州", "长沙", "常州", "南宁", "济南", "太原", "青岛","沈阳"]
+  CITY1 = ['上海', '成都', '杭州', '苏州', '福州', '合肥', "西安", "郑州", "长沙", "常州", "南宁", "济南", "太原", "青岛", "沈阳"]
   # CITY2 = ['深圳', '南京', '广州', '武汉', '佛山', '天津', '东莞', '重庆', '厦门', '北京', "无锡", "宁波", "南昌", "昆明", "常熟"]
-  CITY2 = ['深圳', '南京', '广州', '武汉', '佛山', '天津', '东莞', '重庆', '厦门', '北京', "无锡", "宁波", "南昌", "昆明","温州"]
+  CITY2 = ['深圳', '南京', '广州', '武汉', '佛山', '天津', '东莞', '重庆', '厦门', '北京', "无锡", "宁波", "南昌", "昆明", "温州"]
 
 
   # CITY3 = ["威海", "烟台", "潍坊", "兰州", "徐州", "南通", "扬州", "济南", "石家庄", "唐山", "宝鸡", "宿州", "洛阳",
@@ -35,14 +35,14 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   #给city3瘦身, 清理多余城市, 减少44个城市
   CITY3 = ["威海", "烟台", "潍坊", "兰州", "徐州", "南通", "扬州", "石家庄", "唐山", "洛阳", "南阳", "新乡", "湘潭",
-           "株洲", "常德", "岳阳",  "大连", "营口", "乌鲁木齐", "泉州", "长春", "哈尔滨", "大庆", "滁州", "芜湖", "惠州",
+           "株洲", "常德", "岳阳", "大连", "营口", "乌鲁木齐", "泉州", "长春", "哈尔滨", "大庆", "滁州", "芜湖", "惠州",
            "肇庆", "中山", "嘉兴", "贵阳", "呼和浩特", "绵阳", "襄阳", "宜昌", "大同", "临汾", "运城", "滨州", "德州", "东营",
            "济宁", "临沂", "日照", "泰安", "枣庄", "宿迁", "泰州", "盐城", "镇江", "自贡", "淄博", "资阳", "驻马店", "珠海",
            "长治", "漳州", "宜春", "宜宾", "许昌", "邢台", "信阳", "孝感", "台州", "遂宁", "松原", "十堰", "绍兴",
            "汕头", "曲靖", "衢州", "秦皇岛", "齐齐哈尔", "莆田", "内江", "南充", "眉山", "马鞍山", "泸州", "六安", "柳州", "辽阳",
            "乐山", "廊坊", "开封", "荆州", "锦州", "金华", "焦作", "江门", "佳木斯", "吉林", "吉安", "黄石", "淮安", "湖州", "衡水",
-           "邯郸", "桂林", "广安", "赣州", "阜阳", "抚顺",  "鄂尔多斯", "德阳", "达州", "承德", "沧州", "保定", "包头", "鞍山",
-           "安阳", "安庆", "蚌埠", "咸阳", "银川", "菏泽", "铜陵", "黄冈","连云港"]
+           "邯郸", "桂林", "广安", "赣州", "阜阳", "抚顺", "鄂尔多斯", "德阳", "达州", "承德", "沧州", "保定", "包头", "鞍山",
+           "安阳", "安庆", "蚌埠", "咸阳", "银川", "菏泽", "铜陵", "黄冈", "连云港"]
 
   def self.get_city_hash all_hash, city_names
     new_hash = {}
@@ -208,7 +208,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "guiyang" => "贵阳", "zunyi" => "遵义", "huhehaote" => "呼和浩特", "wulumuqi" => "乌鲁木齐", "deyang" => "德阳",
       "mianyang" => "绵阳", "xiangfan" => "襄阳", "yichang" => "宜昌", "beijing" => "北京",
       "datong" => "大同", "jinzhong" => "晋中", "linfen" => "临汾", "yuncheng" => "运城",
-      "lanzhou" => "兰州","changshu" => "常熟",
+      "lanzhou" => "兰州", "changshu" => "常熟",
       "binzhou" => "滨州", "dezhou" => "德州", "dongying" => "东营", "jining" => "济宁", "linyi" => "临沂", "rizhao" => "日照", "taian" => "泰安", "zaozhuang" => "枣庄", "ningbo" => "宁波", "suqian" => "宿迁", "tz" => "泰州", "yancheng" => "盐城", "zhenjiang" => "镇江",
 
 
@@ -253,7 +253,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "changzhou" => "常州", "xuzhou" => '徐州', "nantong" => '南通', "yangzhou" => '扬州', "jn" => "济南", "sjz" => "石家庄", "tangshan" => "唐山", "ty" => "太原",
       "xianyang" => "咸阳", "baoji" => "宝鸡", "luoyang" => "洛阳", "nanyang" => "南阳", "xinxiang" => "新乡",
       "xiangtan" => "湘潭", "zhuzhou" => "株洲", "changde" => "常德", "yueyang" => "岳阳",
-      "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口",  "changshu" => "常熟",
+      "sy" => "沈阳", "dl" => "大连", "yingkou" => "营口", "changshu" => "常熟",
       "fz" => "福州", "xm" => "厦门", "quanzhou" => "泉州", "ahsuzhou" => "宿州",
       "cc" => "长春", "hrb" => "哈尔滨", "daqing" => "大庆", "hf" => "合肥", "wuhu" => "芜湖", "nn" => "南宁", "nc" => "南昌",
       "huizhou" => "惠州", "zhaoqing" => "肇庆", "zhongshan" => "中山", "jiaxing" => "嘉兴",
@@ -282,17 +282,17 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
   GANJI_CITY_API = {
-      '上海' => '100', '北京' => '0', '成都' => '500' , "深圳" => '401', '南京' => '900',
-      "广州" => '400', "武汉" => '2500',"天津" => '200', "苏州" => '901', "杭州" => '600',
-      "东莞" => '402',  "重庆" => '300', "无锡" => '902', '佛山' => '405',
-      '郑州' => '1200', '长沙' => '2600',  '西安' => '2300', '青岛' => '1501', '镇江' => '910',
+      '上海' => '100', '北京' => '0', '成都' => '500', "深圳" => '401', '南京' => '900',
+      "广州" => '400', "武汉" => '2500', "天津" => '200', "苏州" => '901', "杭州" => '600',
+      "东莞" => '402', "重庆" => '300', "无锡" => '902', '佛山' => '405',
+      '郑州' => '1200', '长沙' => '2600', '西安' => '2300', '青岛' => '1501', '镇江' => '910',
       '威海' => '1502', '烟台' => '1506', '潍坊' => '1507',
-      "常州" => '904', '徐州'=> '903', '南通' => '905','扬州' =>'906', "济南"=>'1500',
-      "石家庄" => '1100', "唐山" => '1101', "太原" => '2000', "福州" => '1000', "合肥" =>'1600',
-      "南宁" => "1700", "沈阳" => '800',  '厦门' => '1001', "宁波" => "601", "南昌" => "2700",
-      "昆明" => '2800',"温州" => '602', "兰州"=>"2200",  "洛阳" => "1201", "南阳" => "1207",
+      "常州" => '904', '徐州' => '903', '南通' => '905', '扬州' => '906', "济南" => '1500',
+      "石家庄" => '1100', "唐山" => '1101', "太原" => '2000', "福州" => '1000', "合肥" => '1600',
+      "南宁" => "1700", "沈阳" => '800', '厦门' => '1001', "宁波" => "601", "南昌" => "2700",
+      "昆明" => '2800', "温州" => '602', "兰州" => "2200", "洛阳" => "1201", "南阳" => "1207",
       "新乡" => "1205", "湘潭" => "2602", "珠州" => "2601", "常德" => "2606", "岳阳" => "2605",
-      "大连" => "801", "营口" => "806", "乌鲁木齐" => "2900", "泉州"=> "1004",  "长春" => "1300",
+      "大连" => "801", "营口" => "806", "乌鲁木齐" => "2900", "泉州" => "1004", "长春" => "1300",
       "哈尔滨" => "1400", "大庆" => "1405", "滁州" => "1605", "芜湖" => "1601", "惠州" => "408",
       "肇庆" => "412", "中山" => "407", "嘉兴" => "603",
       "贵阳" => "700", "呼和浩特" => "1900", "绵阳" => "504", "襄阳" => "2502", "宜昌" => "2505",
@@ -303,12 +303,12 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       "宜春" => '2710', "宜宾" => '509', "许昌" => '1212', "邢台" => '1103', "信阳" => '1215',
       "孝感" => '2510', "台州" => '609', "遂宁" => '512', "松原" => '1306', "十堰" => '2503', "绍兴" => '605',
       "汕头" => '404', "曲靖" => '2801', "衢州" => '607', "秦皇岛" => '1109', "齐齐哈尔" => '1401', "内江" => '513',
-      "南充" => '505', "眉山" => '515', "马鞍山" => '1603', "泸州" => '502', "六安" => '1609', "柳州"=>"1702",
+      "南充" => '505', "眉山" => '515', "马鞍山" => '1603', "泸州" => '502', "六安" => '1609', "柳州" => "1702",
       "辽阳" => "807", "乐山" => '507', "廊坊" => '1108', "开封" => '1210', "荆州" => '2506', "锦州" => '805', "金华" => '606',
       "焦作" => '1203', "江门" => '406', "佳木斯" => '1407', "吉林" => '1301', "吉安" => '2708', "黄石" => '2501', "淮安" => '907',
       "湖州" => '604', "衡水" => '1110', "邯郸" => '1102', "桂林" => '1701', "广安" => '514', "赣州" => '2706',
       "阜阳" => '1606', "抚顺" => '803', "鄂尔多斯" => '1905', "德阳" => '503', "达州" => '508', "承德" => '1106',
-      "沧州" => '1107', "保定" => '1104', "包头" => '1901', "鞍山" => '802', "安阳" => '1206',  "安庆" => '1604', "蚌埠" => '1602',
+      "沧州" => '1107', "保定" => '1104', "包头" => '1901', "鞍山" => '802', "安阳" => '1206', "安庆" => '1604', "蚌埠" => '1602',
       "咸阳" => '2303', "银川" => '2100', "菏泽" => '1516', "铜陵" => '1612', "黄冈" => '2511', "连云港" => '906'
   }
 
@@ -430,8 +430,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     redis[options[:detail_url]] = 'y'
     redis.expire options[:detail_url], 7*24*60*60
-
-
 
 
     car_user_info.id
@@ -583,19 +581,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
-
-
-
     if rand(10) < 7
-       begin
-         UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
-       rescue Exception => e
-         pp e
-       end
+      begin
+        UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
+      rescue Exception => e
+        pp e
+      end
     end
 
     #同步至又一车/车置宝
-    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info   #if system_name != 'ali'
+    UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info #if system_name != 'ali'
 
     UploadTianTian.upload_one_tt car_user_info
 
@@ -603,18 +598,14 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
-
     #传给瓜子
     UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
-
-    return if system_name == 'ali'  #阿里平台不提交以下几个B端。
+    return if system_name == 'ali' #阿里平台不提交以下几个B端。
 
     # 同步至车置宝  车置宝作废
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
-
-
 
 
     # 同步至4A
@@ -1918,11 +1909,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                      params[:name]
                    end
     param[:phone] = params[:phone]
-     if params[:brand].blank?
-       param[:che_xing] = '未知'
-     else
-       param[:che_xing] = params[:brand]
-     end
+    if params[:brand].blank?
+      param[:che_xing] = '未知'
+    else
+      param[:che_xing] = params[:brand]
+    end
     param[:site_name] = 'guazi_shouche'
     param[:city_chinese] = params[:city]
     param[:wuba_kouling] = params[:qudao]
@@ -1951,6 +1942,44 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   end
 
+
+  #从小朋系统同步数据
+  #  chexing   cheling  detail_url  phone city_chinese site_name(58,ganji,baixing) price
+  def self.shouche_xiaopeng params
+
+    return if params[:phone].blank?
+    return if params[:city_chinese].blank?
+    return if params[:site_name].blank?
+    return if params[:detail_url].blank?
+
+    param = {}
+    param[:wuba_kouling] = 'cxp'
+    param[:milage] = '8'
+    param[:fabushijian] = Time.now.chinese_format_day
+
+
+    self.transaction do
+      cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: params[:chexing]||"",
+                                                             che_ling: params[:cheling],
+                                                             milage: param[:milage],
+                                                             detail_url: params[:detail_url],
+                                                             city_chinese: params[:city_chinese],
+                                                             price: params[:price],
+                                                             site_name: params[:site_name],
+                                                             is_cheshang: false
+
+
+      UserSystem::CarUserInfo.update_detail id: cui_id,
+                                            name: params[:name] || '车主',
+                                            phone: car_info['phone'],
+                                            note: 'kong',
+                                            fabushijian: Time.now.chinese_format
+
+
+    end
+
+
+  end
 
   # UserSystem::CarUserInfo.shouche_guazi name: 'eric',
   #                                       phone: '13472446647',
