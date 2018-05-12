@@ -147,7 +147,7 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
   end
 
   def shouchexiaopeng
-    UserSystem::CarUserInfo.shouche_xiaopeng params
+    @userid = UserSystem::CarUserInfo.shouche_xiaopeng params
   end
 
   # url为:  http://che.uguoyuan.cn/api/v1/update_user_infos/proxy_info
