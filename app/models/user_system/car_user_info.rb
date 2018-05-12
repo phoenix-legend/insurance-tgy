@@ -1971,7 +1971,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
       UserSystem::CarUserInfo.update_detail id: cui_id,
                                             name: params[:name] || '车主',
-                                            phone: car_info['phone'],
+                                            phone: params['phone'],
                                             note: 'kong',
                                             fabushijian: Time.now.chinese_format
 
