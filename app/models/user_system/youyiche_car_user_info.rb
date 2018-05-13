@@ -374,7 +374,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     # yyc_id = 318303
     yyc_cui = UserSystem::YouyicheCarUserInfo.find yyc_id.to_i
     user_name = UserSystem::YouyicheCarUserInfo.get_user_name
-    text = `curl -b '/data/czb/#{user_name}' http://fdep.mychebao.com/car/manage`
+    text = `curl -b '/data/czb/#{user_name}' http://fdep.mychebao.com/car/manage.htm`
     form = Nokogiri::HTML(text)
     token = form.css("#add_Token")[0]["value"]
 

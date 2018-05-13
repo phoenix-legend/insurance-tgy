@@ -589,10 +589,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
       end
     end
 
+    UploadTianTian.upload_one_tt car_user_info
     #同步至又一车/车置宝
     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info #if system_name != 'ali'
 
-    UploadTianTian.upload_one_tt car_user_info
+
 
     #朋友E车
     UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
