@@ -369,14 +369,14 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
 
 
-  # UserSystem::YouyicheCarUserInfo.get_user_name yyc_id
+  # UserSystem::YouyicheCarUserInfo.post_data_with_session yyc_id
   def self.post_data_with_session yyc_id
     # yyc_id = 318303
     yyc_cui = UserSystem::YouyicheCarUserInfo.find yyc_id.to_i
     user_name = UserSystem::YouyicheCarUserInfo.get_user_name
     text = `curl -b '/data/czb/#{user_name}' http://fdep.mychebao.com/car/manage.htm`
     form = Nokogiri::HTML(text)
-    token = form.css("#add_Token")[0]["value"]
+    token = begin form.css("#add_Token")[0]["value"] rescue '' end
 
     phone = yyc_cui.phone
     regionid = UserSystem::YouyicheCarUserInfo::DIQU[yyc_cui.city_chinese]
