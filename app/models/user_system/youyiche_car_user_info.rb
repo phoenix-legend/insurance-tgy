@@ -386,7 +386,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     escape_cx = CGI::escape begin yyc_cui.car_user_info.cx rescue "未知" end
     name = CGI::escape begin yyc_cui.name rescue "未知" end
 
-    response = `curl 'http://fdep.mychebao.com/car/addCar' -b '/data/czb/#{user_name}' -H 'User-Agent: Mozilla/5.0 (MeeGo; NokiaN9) AppleWebKit/534.13 (KHTML, like Gecko) NokiaBrowser/8.5.0 Mobile Safari/534.13' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Referer: http://fdep.mychebao.com/car/manage' -H 'X-Requested-With: XMLHttpRequest' -H 'Proxy-Connection: keep-alive' --data 'addToken=#{token}&contactname=#{name}&phone=#{phone}&regionid=#{regionid}&location=#{escape_shi}&brandname=#{escape_brand}&modelname=#{ escape_cx}&type=#{CGI::escape "其它"}' --compressed`
+    response = `curl 'http://fdep.mychebao.com/car/addCar.htm' -b '/data/czb/#{user_name}' -H 'User-Agent: Mozilla/5.0 (MeeGo; NokiaN9) AppleWebKit/534.13 (KHTML, like Gecko) NokiaBrowser/8.5.0 Mobile Safari/534.13' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Referer: http://fdep.mychebao.com/car/manage' -H 'X-Requested-With: XMLHttpRequest' -H 'Proxy-Connection: keep-alive' --data 'addToken=#{token}&contactname=#{name}&phone=#{phone}&regionid=#{regionid}&location=#{escape_shi}&brandname=#{escape_brand}&modelname=#{ escape_cx}&type=#{CGI::escape "其它"}' --compressed`
 
     yyc_cui.youyiche_status_message = '已倒出'
 
@@ -432,7 +432,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       redis["#{name}-0001_freshen_time"] = Time.now.to_i # 记录当前刷新时间
 
       if redis["#{name}-0001"] == 'yes'
-        text = `curl -b /data/czb/#{name} http://fdep.mychebao.com/car/manage`
+        text = `curl -b /data/czb/#{name} http://fdep.mychebao.com/car/manage.htm`
         if text.include? '输入用户名密码登录车置宝开放平台'
           redis["#{name}-0001"] = 'no'
           MailSend.send_content('xiaoqi.liu@uguoyuan.cn',
