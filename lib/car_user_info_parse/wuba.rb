@@ -133,19 +133,21 @@ module Wuba
     city_hash = ::UserSystem::CarUserInfo.get_58_sub_cities sub_city_party
     (1..100).each do |i|
       city_hash.each_pair do |areaid, areaname|
-        if Thread.list.length > 1
-          pp "现在共有#{Thread.list.length}个线程正在运行"
-          while true
-            if Thread.list.length < 2
-              break
-            else
-              sleep 0.3
-            end
-          end
-        end
-        Thread.start do
-          get_car_list_from_one_city areaname, areaid
-        end
+        get_car_list_from_one_city areaname, areaid
+
+        # if Thread.list.length > 1
+        #   pp "现在共有#{Thread.list.length}个线程正在运行"
+        #   while true
+        #     if Thread.list.length < 1
+        #       break
+        #     else
+        #       sleep 0.3
+        #     end
+        #   end
+        # end
+        # Thread.start do
+        #   get_car_list_from_one_city areaname, areaid
+        # end
       end
     end
   end
@@ -179,7 +181,7 @@ module Wuba
         rescue
           pp tr.to_s
           pp 'Exception  车型获取失败'
-          next
+          # next
         end
 
         price = 2
@@ -190,7 +192,7 @@ module Wuba
           # car_number = car_number -1
           pp tr.to_s
           pp 'Exception  价格获取失败'
-          next
+          # next
         end
 
         cheling_licheng = tr.css('.info-desc-detail').text
