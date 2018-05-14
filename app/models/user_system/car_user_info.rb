@@ -813,7 +813,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     begin
       (1..10).each do |i|
-        Ganji.get_car_user_list party
+        # Ganji.get_car_user_list party
+        Ganji.test  #赶集不再区分是否重点城市。
       end
     rescue Exception => e
       pp e

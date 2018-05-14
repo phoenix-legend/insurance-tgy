@@ -25,18 +25,18 @@ module Ganji
     end
 
 
-    if File.exist? '/data/cities_name'
-      cities = File.read '/data/cities_name'
-      cities.strip!
-      cities = cities.split /,|，/
-      if not cities.blank?
-        (1..10).each do |i|
-          city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party, citys
-          Ganji.get_car_user_list_city_hash city_hash, source
-        end
-        return
-      end
-    end
+    # if File.exist? '/data/cities_name'
+    #   cities = File.read '/data/cities_name'
+    #   cities.strip!
+    #   cities = cities.split /,|，/
+    #   if not cities.blank?
+    #     (1..10).each do |i|
+    #       city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party, citys
+    #       Ganji.get_car_user_list_city_hash city_hash, source
+    #     end
+    #     return
+    #   end
+    # end
 
 
     city_hash = ::UserSystem::CarUserInfo.get_ganji_sub_cities party
@@ -230,6 +230,9 @@ module Ganji
 
 
   # Ganji.generate_user_id "52:54:00:5f:11:cd"
+  # Ganji.generate_user_id "52:54:00:84:f3:b8"      RestClientProxy.get_local_ip
+
+
   def self.generate_user_id mac
     header = {
         "Content-Type" => "application/json",
