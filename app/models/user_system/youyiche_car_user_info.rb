@@ -5,7 +5,8 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
           "杭州",
           "常州", "重庆", "武汉", "长沙", "成都", "太原", "南昌", "昆明", "宁波", "东莞", "济南", "南宁",
           "贵阳", "临沂", "广州", "佛山", "南通", "嘉兴", "金华", '台州', "合肥", "徐州", "大连", "沈阳",
-          "天津", "哈尔滨", "长春", "厦门", "福州", "泉州", "石家庄", "邯郸", "唐山", "沧州", "保定"]
+          "天津", "哈尔滨", "长春", "厦门", "福州", "泉州", "石家庄", "邯郸", "唐山", "沧州", "保定",
+          "汕头" , "盐城" , "襄阳" , "兰州" , "绍兴" ,"烟台" , "淄博" , "济宁" , "洛阳" , "惠州" , "盐城" , "镇江" ]
 
   # 只在在这个hash中出现的城市,都会被推到网页端。
   DIQU = {"太原" => '1947', "南昌" => "1919", "昆明" => "2134", "宁波" => "2124", "东莞" => "2067", "济南" => "1930", "南宁" => "2085",
@@ -18,7 +19,10 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
           "北京" => "1867", "南京" => "2072", "深圳" => "2053", "上海"=>"1889", "青岛" => "1931", "西安" => "2176", "郑州" => "1970",
           "无锡" => "2073", "苏州" => "2076",
           "杭州" => "2123",
-          "常州" => "2075", "重庆" => "1898", "武汉" => "2002", "长沙" => "2024", "成都" => "2102"
+          "常州" => "2075", "重庆" => "1898", "武汉" => "2002", "长沙" => "2024", "成都" => "2102",
+          "汕头" => '2055', "盐城" => '2080', "襄阳" => '7349', "兰州" => '2193', "绍兴" => "2128","烟台" => "1934", "淄博" => "1932",
+          "济宁" => "1936", "洛阳" => "1972", "惠州" => "2061", "盐城" => "2080", "镇江" => "2082"
+
   }
 
 
@@ -33,7 +37,10 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
           "北京" => "1867", "南京" => "2072", "深圳" => "2053", "上海"=>"1889", "青岛" => "1931", "西安" => "2176", "郑州" => "1970",
           "无锡" => "2073", "苏州" => "2076",
           "杭州" => "2123",
-          "常州" => "2075", "重庆" => "1898", "武汉" => "2002", "长沙" => "2024", "成都" => "2102"
+          "常州" => "2075", "重庆" => "1898", "武汉" => "2002", "长沙" => "2024", "成都" => "2102",
+             "汕头" => '2055', "盐城" => '2080', "襄阳" => '7349', "兰州" => '2193', "绍兴" => "2128","烟台" => "1934", "淄博" => "1932",
+             "济宁" => "1936", "洛阳" => "1972", "惠州" => "2061", "盐城" => "2080", "镇江" => "2082"
+
   }
 
   # UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -89,7 +96,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
 
   def self.cc
-    UserSystem::YouyicheCarUserInfo.where("youyiche_chengjiao like '%管理员%'").each do |yc_car_user_info|
+    UserSystem::YouyicheCarUserInfo.where(" id > 95936").each do |yc_car_user_info|
       UserSystem::YouyicheCarUserInfo.upload_cui_via_web yc_car_user_info
     end
 
@@ -361,6 +368,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
 
 
+  # UserSystem::YouyicheCarUserInfo.upload_cui_via_web yyc_id
   def self.upload_cui_via_web ycui
     return if ycui.phone.blank?
     OrderSystem::WeizhangLog.add_baixing_json_body ycui.id, 'czb'
@@ -433,7 +441,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
       if redis["#{name}-0001"] == 'yes'
         text = `curl -b /data/czb/#{name} http://fdep.mychebao.com/car/manage.htm`
-        if text.include? '输入用户名密码登录车置宝开放平台'
+        if text.include? '验证码'
           redis["#{name}-0001"] = 'no'
           MailSend.send_content('xiaoqi.liu@uguoyuan.cn',
                                 'xiaoqi.liu@uguoyuan.cn',
@@ -465,6 +473,42 @@ Set-Cookie: JSESSIONID=#{session_id}; Path=/; HttpOnly"
     redis = Redis.current
     redis["#{user_name}-0001"] = 'yes'
   end
+
+
+
+  def temp_upload
+
+    ["汕头" , "盐城" , "襄阳" , "兰州" , "绍兴" ,"烟台" , "淄博" , "济宁" , "洛阳" , "惠州" , "盐城" , "镇江" ].each do |k|
+      cuis = UserSystem::CarUserInfo.where("city_chinese = ? and created_at > ?", k, Time.now - 7.days)
+      cuis.each do |cui|
+        pp cui.id
+        next if cui.tt_yaoyue == '历史遗留数据'
+        UserSystem::CarUserInfo.che_shang_jiao_yan cui, true
+        UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
+      end
+    end
+
+
+    cuis = UserSystem::CarUserInfo.where("id > ? and site_name = ? ", 9637547, 'ganji')
+    cuis.find_each do |cui|
+      pp cui.id
+      # sleep 2
+      # next if cui.tt_yaoyue == '历史遗留数据'
+      UserSystem::CarUserInfo.che_shang_jiao_yan cui, true
+      UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
+    end
+
+    cuis = UserSystem::CarUserInfo.where("id in (?)", a)
+    cuis.find_each do |cui|
+      ycui = UserSystem::YouyicheCarUserInfo.find_by_car_user_info_id cui.id
+      ycui.delete
+      pp cui.id
+      # sleep 2
+      # next if cui.tt_yaoyue == '历史遗留数据'
+      UserSystem::CarUserInfo.che_shang_jiao_yan cui, true
+      UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
+    end
+    end
 
 end
 __END__
