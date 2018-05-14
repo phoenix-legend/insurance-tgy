@@ -171,9 +171,9 @@ module Ganji
         sleep 2+rand(3)
         response = RestClient.post url, request_body, header
 
-        pp response
+        # pp response
         # response = JSON.parse response.body
-        pp response
+        # pp response
         response = JSON.parse response
 
 
@@ -226,83 +226,10 @@ module Ganji
   #获取一个城市的汽车列表, 从网页获取,
 
 
-  # {"agent" => "个人",
-  #  "CategoryName" => "车辆买卖",
-  #  "CategoryId" => "6",
-  #  "d_sign" => "||",
-  #  "district_name" => "虹口",
-  #  "puid" => "2682549345",
-  #  "major_category" => "1",
-  #  "majorCategoryName" => "二手车",
-  #  "person" => "先生",
-  #  "street_name" => "",
-  #  "PostAtText" => "2分钟前",
-  #  "price" => {"u" => "元", "v" => "75000"},
-  #  "thumb_img" => "gjfsqq/v1bkujjd4jiuxfs7tyvjha_82-52c_6-0.jpg",
-  #  "title" => "荣威7502012款 1.8T 手自一体 HYBRID混合动力版 油电混合 无事故",
-  #  "url" => "ershouche",
-  #  "city_index" => "100",
-  #  "city" => "上海市",
-  #  "UniqueId" => "N3100001100125743049",
-  #  "id" => "25743049",
-  #  "user_id" => "594553245",
-  #  "username" => "",
-  #  "more_desc" => 0,
-  #  "description" =>
-  #      "出售2012年荣威750一辆 1.8T油电混合动力 自排 天窗 最高配置 车子跑了5万公里路 无事故车况如新 油电混合 百公里油耗5升 自行发电不用充电 上海牌照 国4排放标准 新车入手30万 原车照片 喜欢电聊",
-  #  "post_at" => "16:04",
-  #  "refresh_at" => "16:04",
-  #  "show_time" => "16:04",
-  #  "phone" => "13761797514",
-  #  "minor_category_name" => "荣威",
-  #  "minor_category_url" => "rongwei",
-  #  "listing_status" => {"v" => "5", "t" => "正常显示在列表页"},
-  #  "display_status" => {"v" => 0, "t" => "用户个人删除"},
-  #  "editor_audit_status" => {"v" => nil, "t" => nil},
-  #  "show_before_audit" => "否",
-  #  "post_type" => {"v" => "0", "t" => "普通贴"},
-  #  "minor_category" => "1293",
-  #  "tag" => "3212",
-  #  "postunixtime" => "1497859440",
-  #  "domain" => "sh",
-  #  "latlng" => "",
-  #  "detail_url" =>
-  #      "http://3g.ganji.com/misc/weixin/?domain=sh&url=ershouche&puid=2682549345&from=shenghuo_qqweixin_detail",
-  #  "icons" => {"ding" => "0", "image" => "1", "yan" => "0"},
-  #  "biz_post_type" => "0",
-  #  "district_id" => "5",
-  #  "street_id" => "-1",
-  #  "image_count" => "6",
-  #  "im" => "",
-  #  "seats" => "",
-  #  "deal_type" => {"v" => "0", "t" => "转让"},
-  #  "pin_che_start" => "",
-  #  "pin_che_end" => "",
-  #  "car_color" => {"v" => "1", "t" => "黑色"},
-  #  "gearbox" => {"v" => "2", "t" => "自动"},
-  #  "air_displacement" => "1",
-  #  "license_date" => "5",
-  #  "license_year" => "2012",
-  #  "license_math" => "",
-  #  "road_haul" => 5,
-  #  "tag_name" => "750",
-  #  "tag_url" => "rongwei750",
-  #  "user_defined_category" => "",
-  #  "uses" => {"v" => "", "t" => nil},
-  #  "maintenance_records" => {"v" => "", "t" => nil},
-  #  "iconsInfo" => {"labels" => [], "normalIcons" => []},
-  #  "resize_thumb_img" =>
-  #      "http://tct5.ganjistatic1.com/gjfsqq/v1bkujjd4jiuxfs7tyvjha_147-109c_7-0.jpg",
-  #  "link_info" =>
-  #      {"textHref" =>
-  #           {"href" =>
-  #                "http://jinrong.58.com/m/loan/k?from=ganji_app_esc_fzx_detail_an&gj_other_uuid=529292830&gj_other_ifid=from_ganji&gj_other_client_id=801&gj_other_version=7.3.1&gj_other_unique_id=93c6fcc41a2fbcb954a10a1bd87c53cb&gj_other_agency=eoe01&gj_other_gc_1=che",
-  #            "title" => "买车钱不够，我来凑点钱>>"},
-  #       "status" => 0,
-  #       "errMessage" => "成功"}}
 
 
-  # Ganji.generate_user_id "16:91:A1:f5:68:ee"
+
+  # Ganji.generate_user_id "52:54:00:5f:11:cd"
   def self.generate_user_id mac
     header = {
         "Content-Type" => "application/json",
