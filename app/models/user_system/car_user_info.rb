@@ -760,7 +760,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     begin
       (1..20).each do |i|
-        Che168.get_car_user_list sub_city_party
+        # Che168.get_car_user_list sub_city_party
+        Che168.test
       end
 
     rescue Exception => e
@@ -794,7 +795,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
   def self.run_58 sub_city_party = 0
 
     begin
-      Wuba.get_car_user_list 20, sub_city_party
+      # Wuba.get_car_user_list 20, sub_city_party
+      Wuba.test  #58不再区分重点城市
     rescue Exception => e
       pp e
     end
@@ -832,7 +834,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   def self.run_baixing party = 0, from = 'system'
     begin
-      Baixing.get_car_user_list party, from
+      # Baixing.get_car_user_list party, from
+      Baixing.test party, from
     rescue Exception => e
       pp e
       $@.to_logger

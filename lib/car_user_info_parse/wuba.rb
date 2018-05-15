@@ -1,6 +1,12 @@
 module Wuba
 
 
+  def self.test
+    Wuba.get_car_user_list 20, 0
+    Wuba.get_car_user_list 20, 1
+    Wuba.get_car_user_list 20, 2
+  end
+
   # url =
   # Wuba.get_phone_by_userinfo "http://qd.58.com/ershouche/29304765491892x.shtml"
   def self.get_phone_by_userinfo url

@@ -1,18 +1,12 @@
 module Che168
 
-  require 'timeout'
-  # Che168.getxxx
-  def self.getxxx
-    while true do
-
-      Che168.get_car_user_list 0
-      sleep 1
-      Che168.get_car_user_list 1
-      sleep 1
-      Che168.get_car_user_list 2
-    end
-
+  def test
+    Che168.get_car_user_list 0
+    Che168.get_car_user_list 1
+    Che168.get_car_user_list 2
   end
+
+  require 'timeout'
 
 
   # Che168.get_car_user_list 0

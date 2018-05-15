@@ -1,5 +1,12 @@
 module Baixing
 
+  def self.test party, from
+    Baixing.get_car_user_list 0, from
+    Baixing.get_car_user_list 1, from
+    Baixing.get_car_user_list 2, from
+  end
+
+
   #获取来自vps的detail_url, 然后判断是否存在,返回不存在的链接
   def self.get_detail_urls_for_vps urls
     return [] if urls.blank?
