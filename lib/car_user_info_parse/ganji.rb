@@ -230,7 +230,7 @@ module Ganji
 
 
   # Ganji.generate_user_id "52:54:00:5f:11:cd"
-  # Ganji.generate_user_id "52:54:00:84:f3:b8"      RestClientProxy.get_local_ip
+  # Ganji.generate_user_id "52:54:00:bc:a4:d1"      RestClientProxy.get_local_ip    `cat     /sys/class/net/eth0/address`
 
 
   def self.generate_user_id mac
