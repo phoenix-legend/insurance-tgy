@@ -190,16 +190,16 @@ module Wuba
           # next
         end
 
-        price = 2
-        begin
-          price = tr.css('.info-desc-tag-price')[0].text.strip
-          price.gsub!('万', '')
-        rescue
-          # car_number = car_number -1
-          pp tr.to_s
-          pp 'Exception  价格获取失败'
-          # next
-        end
+        price = 8
+        # begin
+        #   price = tr.css('.info-desc-tag-price')[0].text.strip
+        #   price.gsub!('万', '')
+        # rescue
+        #   # car_number = car_number -1
+        #   pp tr.to_s
+        #   pp 'Exception  价格获取失败'
+        #   # next
+        # end
 
         cheling_licheng = tr.css('.info-desc-detail').text
         cheling = cheling_licheng.split('年')[0]

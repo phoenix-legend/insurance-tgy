@@ -1,6 +1,6 @@
 module Che168
 
-  def test
+  def self.test
     Che168.get_car_user_list 0
     Che168.get_car_user_list 1
     Che168.get_car_user_list 2
