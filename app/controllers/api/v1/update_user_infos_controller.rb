@@ -159,8 +159,12 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
 
   def check_guazi_shangjia
     cuis = UserSystem::GuaziCarUserInfo.where("phone = ? and guazi_yaoyue = '成功'", params[:phone]).order(id: :desc).limit(1)
-    return nil if cuis.blank?
-    return cuis.created_at.chinese_format
+    @result = if cuis.blank?
+       'none'
+     else
+       cuis.created_at.chinese_format
+     end
+
   end
 
 end
