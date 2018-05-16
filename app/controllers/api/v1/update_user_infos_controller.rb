@@ -162,7 +162,7 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
     @result = if cuis.blank?
        'none'
      else
-       cuis.created_at.chinese_format
+       cuis[0].created_at.chinese_format
      end
 
   end
