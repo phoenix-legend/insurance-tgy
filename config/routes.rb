@@ -144,6 +144,7 @@ Rails.application.routes.draw do
           post :shouche
           get :shoucheyj
           post :shouchexiaopeng
+          post :check_guazi_shangjia
         end
       end
     end
