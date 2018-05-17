@@ -581,7 +581,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
-    if rand(10) < 7
+    if rand(10) < 3
       begin
         UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
       rescue Exception => e
