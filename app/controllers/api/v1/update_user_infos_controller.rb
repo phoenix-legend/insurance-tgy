@@ -160,7 +160,7 @@ class Api::V1::UpdateUserInfosController < Api::V1::BaseController
   def check_guazi_shangjia
     cuis = UserSystem::GuaziCarUserInfo.where("phone = ? and guazi_yaoyue = '成功'", params[:phone]).order(id: :desc).limit(1)
 
-    cuis = UserSystem::GuaziCarUserInfo.where("phone = ? and guazi_yaoyue = '成功'", '13993156253').order(id: :desc).limit(1)
+    # cuis = UserSystem::GuaziCarUserInfo.where("phone = ? and guazi_yaoyue = '成功'", '13993156253').order(id: :desc).limit(1)
     @result = if cuis.blank?
        'none'
      else
