@@ -1974,7 +1974,34 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                                              is_cheshang: false
 
 
-      return nil if  cui_id.blank?
+       if  cui_id.blank?
+         cuis = UserSystem::CarUserInfo.where('detail_url = ?', params[:detail_url])
+         if cuis.blank?
+           redis = Redis.current
+           redis[params[:detail_url]] = 'n'
+           redis.expire options[:detail_url], 7*24*60*60
+           UserSystem::CarUserInfo.shouche_xiaopeng params
+           return
+         else
+           phone = ''
+           cuis.each do |cui|
+             phone = cui.phone unless cui.phone.blank?
+           end
+           if phone.blank?
+             cuis.each do |cui|
+               cui.destroy!
+             end
+             redis = Redis.current
+             redis[params[:detail_url]] = 'n'
+             redis.expire options[:detail_url], 7*24*60*60
+             UserSystem::CarUserInfo.shouche_xiaopeng params
+             return
+           end
+         end
+
+
+
+       end
       UserSystem::CarUserInfo.update_detail id: cui_id,
                                             name: params[:name] || '车主',
                                             phone: params['phone'],
