@@ -1950,7 +1950,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   #从小朋系统同步数据
   #  chexing   cheling  detail_url  phone city_chinese site_name(58,ganji,baixing) price
-  def self.shouche_xiaopeng params
+  def self.shouche_xiaopeng params, number = 0
 
     return if params[:phone].blank?
     return if params[:city_chinese].blank?
@@ -1974,13 +1974,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                                              is_cheshang: false
 
 
-       if  cui_id.blank?
+       if  cui_id.blank? and number == 0
          cuis = UserSystem::CarUserInfo.where('detail_url = ?', params[:detail_url])
          if cuis.blank?
            redis = Redis.current
            redis[params[:detail_url]] = 'n'
            redis.expire options[:detail_url], 7*24*60*60
-           UserSystem::CarUserInfo.shouche_xiaopeng params
+           UserSystem::CarUserInfo.shouche_xiaopeng params, 1
            return
          else
            phone = ''
@@ -1994,7 +1994,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
              redis = Redis.current
              redis[params[:detail_url]] = 'n'
              redis.expire options[:detail_url], 7*24*60*60
-             UserSystem::CarUserInfo.shouche_xiaopeng params
+             UserSystem::CarUserInfo.shouche_xiaopeng params, 1
              return
            end
          end
