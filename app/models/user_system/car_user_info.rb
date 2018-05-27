@@ -1979,7 +1979,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
          if cuis.blank?
            redis = Redis.current
            redis[params[:detail_url]] = 'n'
-           redis.expire options[:detail_url], 7*24*60*60
+           redis.expire params[:detail_url], 7*24*60*60
            UserSystem::CarUserInfo.shouche_xiaopeng params, 1
            return
          else
@@ -1993,7 +1993,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
              end
              redis = Redis.current
              redis[params[:detail_url]] = 'n'
-             redis.expire options[:detail_url], 7*24*60*60
+             redis.expire params[:detail_url], 7*24*60*60
              UserSystem::CarUserInfo.shouche_xiaopeng params, 1
              return
            end
