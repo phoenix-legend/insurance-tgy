@@ -337,8 +337,8 @@ module Ganji
           cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: option[:title],
                                                                  che_ling: 2018-age.to_i,
                                                                  milage: option[:total_km],
-                                                                 # detail_url: "http://wap.ganji.com/#{areaid}/ershouche/#{option[:cid]}x",
-                                                                 detail_url: "https://3g.ganji.com/#{areaid}_ershouche/#{option[:cid]}x?type=jx",
+                                                                 detail_url: "http://wap.ganji.com/#{areaid}/ershouche/#{option[:cid]}x",
+                                                                 # detail_url: "https://3g.ganji.com/#{areaid}_ershouche/#{option[:cid]}x?type=jx",
                                                                  city_chinese: areaname,
                                                                  price: option[:price],
                                                                  site_name: 'ganji',
@@ -351,7 +351,7 @@ module Ganji
 
 
           sleep 20+rand(20)
-          response = RestClient.get(cui.detail_url)
+          response = RestClient.get("https://3g.ganji.com/#{areaid}_ershouche/#{option[:cid]}x?type=jx")
 
           body = response.body.encode("UTF-16be", :invalid => :replace, :replace => "?").encode('UTF-8')
           if body.match /访问过于频繁|您访问的速度太快|爬虫/
