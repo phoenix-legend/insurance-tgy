@@ -329,6 +329,7 @@ module Ganji
 
           real_url = "https://3g.ganji.com/#{clue.attributes["href"].value}"
           next unless  real_url.match /ershouche/
+          next if real_url.match /aozdclick/
           cid = real_url.match /ershouche\/((\d){8,12})x\?/
           cid = cid[1]
           option = {
