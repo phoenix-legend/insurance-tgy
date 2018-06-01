@@ -206,6 +206,7 @@ module Ganji
     rescue Exception => e
       ActiveRecord::Base.connection.close
       pp e
+
     end
   end
 
@@ -295,19 +296,21 @@ module Ganji
   ################################################################################################################################################################
 
 
-  # Ganji.get_car_user_list_one_city_web '北京', 'bj'
+  # Ganji.get_car_user_list_one_city_web '北京', 'bj'    areaname, areaid = '北京', 'bj'
   def self.get_car_user_list_one_city_web areaname, areaid
     begin
       begin
 
-        user_agents = ["Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1", "Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10; rv:33.0) Gecko/20100101 Firefox/33.0", "Mozilla/5.0 (X11; Linux i586; rv:31.0) Gecko/20100101 Firefox/31.0", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20130401 Firefox/31.0", "Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:29.0) Gecko/20120101 Firefox/29.0", "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/29.0", "Mozilla/5.0 (X11; OpenBSD amd64; rv:28.0) Gecko/20100101 Firefox/28.0", "Mozilla/5.0 (X11; Linux x86_64; rv:28.0) Gecko/20100101 Firefox/28.0", "Mozilla/5.0 (Windows NT 6.1; rv:27.3) Gecko/20130101 Firefox/27.3", "Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:27.0) Gecko/20121011 Firefox/27.0", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1 QIHU 360SE", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17 QIHU 360EE", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.152 Safari/537.36 QIHU 360SE", "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; 360SE)", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.19 (KHTML, like Gecko) Chrome/1.0.154.53 Safari/525.19", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.19 (KHTML, like Gecko) Chrome/1.0.154.36 Safari/525.19", "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.10 (KHTML, like Gecko) Chrome/7.0.540.0 Safari/534.10", "Mozilla/5.0 (Windows; U; Windows NT 5.2; en-US) AppleWebKit/534.4 (KHTML, like Gecko) Chrome/6.0.481.0 Safari/534.4", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.86 Safari/533.4", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/532.2 (KHTML, like Gecko) Chrome/4.0.223.3 Safari/532.2", "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.201.1 Safari/532.0", "Mozilla/5.0 (Windows; U; Windows NT 5.2; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/3.0.195.27 Safari/532.0", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/530.5 (KHTML, like Gecko) Chrome/2.0.173.1 Safari/530.5", "Mozilla/5.0 (Windows; U; Windows NT 5.2; en-US) AppleWebKit/534.10 (KHTML, like Gecko) Chrome/8.0.558.0 Safari/534.10", "Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/540.0 (KHTML,like Gecko) Chrome/9.1.0.0 Safari/540.0", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/534.14 (KHTML, like Gecko) Chrome/9.0.600.0 Safari/534.14", "Mozilla/5.0 (X11; U; Windows NT 6; en-US) AppleWebKit/534.12 (KHTML, like Gecko) Chrome/9.0.587.0 Safari/534.12", "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.13 (KHTML, like Gecko) Chrome/9.0.597.0 Safari/534.13", "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.11 Safari/534.16", "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.20 (KHTML, like Gecko) Chrome/11.0.672.2 Safari/534.20", "Mozilla/5.0 (Windows NT 6.0) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.792.0 Safari/535.1", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.872.0 Safari/535.2", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.36 Safari/535.7", "Mozilla/5.0 (Windows NT 6.0; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.66 Safari/535.11", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24", "Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1090.0 Safari/536.6", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.15 (KHTML, like Gecko) Chrome/24.0.1295.0 Safari/537.15", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.93 Safari/537.36", "Mozilla/5.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1467.0 Safari/537.36", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1623.0 Safari/537.36", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.116 Safari/537.36", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.103 Safari/537.36", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.38 Safari/537.36", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36", "Opera/5.11 (Windows 98; U) [en]", "Mozilla/4.0 (compatible; MSIE 5.0; Windows 98) Opera 5.12 [en]", "Opera/6.0 (Windows 2000; U) [fr]", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT 4.0) Opera 6.01 [en]", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1) Opera 7.10 [en]", "Opera/9.02 (Windows XP; U; ru)", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; en) Opera 9.24", "Opera/9.51 (Macintosh; Intel Mac OS X; U; en)", "Opera/9.70 (Linux i686 ; U; en) Presto/2.2.1", "Opera/9.80 (Windows NT 5.1; U; cs) Presto/2.2.15 Version/10.00", "Opera/9.80 (Windows NT 6.1; U; sv) Presto/2.7.62 Version/11.01", "Opera/9.80 (Windows NT 6.1; U; en-GB) Presto/2.7.62 Version/11.00", "Opera/9.80 (Windows NT 6.1; U; zh-tw) Presto/2.7.62 Version/11.01", "Opera/9.80 (Windows NT 6.0; U; en) Presto/2.8.99 Version/11.10", "Opera/9.80 (X11; Linux i686; U; ru) Presto/2.8.131 Version/11.11", "Opera/9.80 (Windows NT 5.1) Presto/2.12.388 Version/12.14", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.12 Safari/537.36 OPR/14.0.1116.4", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.29 Safari/537.36 OPR/15.0.1147.24 (Edition Next)", "Opera/9.80 (Linux armv6l ; U; CE-HTML/1.0 NETTV/3.0.1;; en) Presto/2.6.33 Version/10.60", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36 OPR/20.0.1387.91", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Oupeng/10.2.1.86910 Safari/534.30", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36 OPR/26.0.1656.60", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2376.0 Safari/537.36 OPR/31.0.1857.0", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36 OPR/32.0.1948.25", "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; fi-fi) AppleWebKit/420+ (KHTML, like Gecko) Safari/419.3", "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; de-de) AppleWebKit/125.2 (KHTML, like Gecko) Safari/125.7", "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en-us) AppleWebKit/312.8 (KHTML, like Gecko) Safari/312.6", "Mozilla/5.0 (Windows; U; Windows NT 5.1; cs-CZ) AppleWebKit/523.15 (KHTML, like Gecko) Version/3.0 Safari/523.15", "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/528.16 (KHTML, like Gecko) Version/4.0 Safari/528.16", "Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_5_6; it-it) AppleWebKit/528.16 (KHTML, like Gecko) Version/4.0 Safari/528.16", "Mozilla/5.0 (Windows; U; Windows NT 6.1; zh-HK) AppleWebKit/533.18.1 (KHTML, like Gecko) Version/5.0.2 Safari/533.18.5", "Mozilla/5.0 (Windows; U; Windows NT 6.1; sv-SE) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4", "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/534.55.3 (KHTML, like Gecko) Version/5.1.3 Safari/534.53.10", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/536.26.17 (KHTML, like Gecko) Version/6.0.2 Safari/536.26.17", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/6.1.3 Safari/537.75.14", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/600.3.10 (KHTML, like Gecko) Version/8.0.3 Safari/600.3.10", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11) AppleWebKit/601.1.39 (KHTML, like Gecko) Version/9.0 Safari/601.1.39", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13) AppleWebKit/603.1.13 (KHTML, like Gecko) Version/10.1 Safari/603.1.13"]
-        user_agent = user_agents[rand(90)]
+
+        user_agent = "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1"
 
         brand = UserSystem::CarBrand.first
-        url = "http://#{areaid}.ganji.com/ershouche/a1/"
+        # url = "http://#{areaid}.ganji.com/ershouche/a1/"
+        url = "https://3g.ganji.com/#{areaid}_ershouche/a1/"
         response = RestClient.get url, {
             'User-Agent' => user_agent,
-            'Cookie' => '58uuid=8a7e90f0-4ee1-488b-a7b6-1cce58a5274d; ASP.NET_SessionId=ASP.NET_SessionId; ErshoucheDetailPageScreenType=1280; GANJISESSID=bebpra2e3mo4ftbmhfun5gh327; Hm_lpvt_8dba7bd668299d5dabbd8190f14e4d34=1524230889; Hm_lvt_8dba7bd668299d5dabbd8190f14e4d34=1522121510,1524067933; __utma=32156897.987309773.1522121513.1524067936.1524229740.13; __utmb=32156897.9.10.1524229740; __utmc=32156897; __utmganji_v20110909=accfae81-7dd4-4f7c-b53d-5ab8630d8390; __utmt=1; __utmz=32156897.1524067936.12.10.utmcsr=sz.ganji.com|utmccn=(referral)|utmcmd=referral|utmcct=/; _gl_tracker=%7B%22ca_source%22%3A%22-%22%2C%22ca_name%22%3A%22-%22%2C%22ca_kw%22%3A%22-%22%2C%22ca_id%22%3A%22-%22%2C%22ca_s%22%3A%22self%22%2C%22ca_n%22%3A%22-%22%2C%22ca_i%22%3A%22-%22%2C%22sid%22%3A729790238%7D; _wap__utmganji_wap_caInfo_V2=%7B%22ca_name%22%3A%22-%22%2C%22ca_source%22%3A%22-%22%2C%22ca_id%22%3A%22-%22%2C%22ca_kw%22%3A%22-%22%7D; _wap__utmganji_wap_newCaInfo_V2=%7B%22ca_n%22%3A%22-%22%2C%22ca_s%22%3A%22self%22%2C%22ca_i%22%3A%22-%22%7D; als=0; cityDomain=bj; citydomain=bj; ganji_login_act=1524230893474; ganji_uuid=4143608234090131128650; ganji_xuuid=62952546-bbf5-48cf-913f-ea8587af686a.1522121506362; gr_user_id=a0664bfa-d41b-498d-9850-c1984ff6b757; init_refer=http%253A%252F%252Fsh.ganji.com%252Fershouche%252Fa1%252F; is_fold_show_more=0; mobversionbeta=3g; new_session=0; new_uv=11; statistics_clientid=me; statistics_clientid=me; vehicle_list_view_type=2; xxzl_deviceid=Fq4oiksDRumZZDm%2B7P9PU3Y1IW8gm8GTQ2xnIEG5I6v%2FSsaBYTBEWgneJP%2BhGbAb;'
+            'Cookie' => 'gr_user_id=8fcb69d6-a9e2-43f2-b05d-955ce16276a5; __utmganji_v20110909=0xe17e1688f8364e8228f5a20bbf08f82; ganji_uuid=5283133772326517092624; ganji_xuuid=3255599f-19cb-4209-de05-2078bfda3f6a.1497849984212; __utmz=32156897.1509970273.9.3.utmcsr=sh.ganji.com|utmccn=(referral)|utmcmd=referral|utmcct=/; Hm_lvt_8dba7bd668299d5dabbd8190f14e4d34=1523897869; __utma=32156897.2034222174.1460360232.1509970273.1523897870.10; xxzl_deviceid=28o%2Bt%2FAZyncjEX4xCKYb9z0OQAc%2FqMz83sOvCFMS%2B%2B1Gr9igG%2Feos3Cnj221dq0G; GANJISESSID=2s1okeped79pi0fqb8103qt3nf; mobversionbeta=3g; _wap__utmganji_wap_newCaInfo_V2=%7B%22ca_n%22%3A%22-%22%2C%22ca_s%22%3A%22self%22%2C%22ca_i%22%3A%22-%22%7D; Hm_lvt_d486038d25d7a009c28de3dca11595e2=1527854860; gr_session_id_b500fd00659c602c=70a639f5-6a53-4db8-8477-9a39c3602725_true; cityDomain=nmg; ershouche_post_browse_history=3275272413%2C34219398659501%2C2794920596; ershoucheDetailHistory=3275272413-1202-3187; Hm_lvt_42c1a7031efc9970f51536db2fbbfd19=1527857645; firstopen=on; cainfo=%7B%22ca_source%22%3A%22-%22%2C%22ca_name%22%3A%22-%22%7D; _wap__utmganji_wap_caInfo_V2=%7B%22ca_name%22%3A%22zhuzhan2wap_index_%22%2C%22ca_source%22%3A%22-%22%2C%22ca_id%22%3A%22-%22%2C%22ca_kw%22%3A%22-%22%7D; index_city_refuse=refuse; Hm_lpvt_42c1a7031efc9970f51536db2fbbfd19=1527857693; Hm_lpvt_d486038d25d7a009c28de3dca11595e2=1527857745',
+            "Referer" => "https://3g.ganji.com/nmg/?a=c&ifid=shouye_chengshi&backURL=ershouche%2Fa1%2F"
         }
 
         if response.body.match /访问过于频繁|您访问的速度太快|爬虫/
@@ -318,31 +321,36 @@ module Ganji
 
         body = Nokogiri::HTML(response.body)
 
-        body.css('.list-pic.clearfix.cursor_pointer').each do |clue|
-          cid = clue.attribute('id').value.split('-').last
+        # body.css('.list-pic.clearfix.cursor_pointer').each do |clue|
+        infos = body.css('.infor')
+        pp infos.length
+        infos.each do |clue|
 
 
+          real_url = "https://3g.ganji.com/#{clue.attributes["href"].value}"
+          next unless  real_url.match /ershouche/
+          cid = real_url.match /ershouche\/((\d){8,12})x\?/
+          cid = cid[1]
           option = {
               cid: cid,
-
-              title: clue.css('.infor-title.pt_tit.js-title').first.content, # 标题
-              age: clue.css('.js-license').first.content.strip, # 车龄
-              total_km: clue.css('.js-roadHaul').first.content.strip, # 行驶公里数
-              price: clue.css('.v-Price').first.content.strip, # 价格
+              title: clue.css('.iName').first.content, # 标题
+              age: clue.css('.iol').first.content.to_i, # 车龄
+              total_km: clue.css('.line_gray').first.content.to_i, # 行驶公里数
+              price: clue.css('.price').first.content.to_i, # 价格
           }
 
-          age = option[:age].gsub!("万公里", "")
+
 
 
           cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: option[:title],
-                                                                 che_ling: 2018-age.to_i,
+                                                                 che_ling: 2018-option[:age],
                                                                  milage: option[:total_km],
                                                                  detail_url: "http://wap.ganji.com/#{areaid}/ershouche/#{option[:cid]}x",
-                                                                 # detail_url: "https://3g.ganji.com/#{areaid}_ershouche/#{option[:cid]}x?type=jx",
                                                                  city_chinese: areaname,
                                                                  price: option[:price],
                                                                  site_name: 'ganji',
-                                                                 is_cheshang: false
+                                                                 is_cheshang: false,
+                                                                 wuba_kouling: real_url
 
 
           return if cui_id.blank?
@@ -350,8 +358,10 @@ module Ganji
           cui = UserSystem::CarUserInfo.find cui_id
 
 
-          sleep 20+rand(20)
-          response = RestClient.get("https://3g.ganji.com/#{areaid}_ershouche/#{option[:cid]}x?type=jx")
+          sleep 20+rand(15)
+          response = RestClient.get cui.wuba_kouling,{
+              'User-Agent' => user_agent
+          }
 
           body = response.body.encode("UTF-16be", :invalid => :replace, :replace => "?").encode('UTF-8')
           if body.match /访问过于频繁|您访问的速度太快|爬虫/
@@ -379,7 +389,7 @@ module Ganji
                                                 note: '',
                                                 fabushijian: Time.now.chinese_format
 
-          sleep 20+rand(20)
+          sleep 20+rand(15)
         end
 
 
@@ -387,6 +397,7 @@ module Ganji
       ActiveRecord::Base.connection.close
     rescue Exception => e
       ActiveRecord::Base.connection.close
+      pp $@
       pp e
     end
   end
