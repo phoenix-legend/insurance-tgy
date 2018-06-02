@@ -2,12 +2,15 @@ module Ganji
 
 
   def self.test
+    sleep 1000
+    return;
     1.upto 100000 do |o|
 
 
-      Ganji.get_car_user_list 2, 'web'
+
       Ganji.get_car_user_list 0, 'web'
       Ganji.get_car_user_list 1, 'web'
+      Ganji.get_car_user_list 2, 'web'
 
     end
 
