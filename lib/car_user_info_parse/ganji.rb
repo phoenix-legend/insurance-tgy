@@ -6,12 +6,11 @@ module Ganji
     # return;
     1.upto 100000 do |o|
 
-
-
-      Ganji.get_car_user_list 0, 'web'
-      Ganji.get_car_user_list 1, 'web'
-      Ganji.get_car_user_list 2, 'web'
-
+      code  = [0,1,2]
+      code.shuffle!
+      code.each do |code|
+        Ganji.get_car_user_list code, 'web'
+      end
     end
 
   end
@@ -54,8 +53,14 @@ module Ganji
 
   def self.get_car_user_list_city_hash city_hash, source = 'web'
 
-    (1..10).each do |i|
-      city_hash.each_pair do |areaid, areaname|
+
+
+      code = city_hash.keys
+      code.shuffle!
+
+      code.each do |areaid|
+        areaname = city_hash[areaid]
+
         sleep 5+rand(1)
 
         if source == 'web'
@@ -68,7 +73,7 @@ module Ganji
 
 
       end
-    end
+
   end
 
 

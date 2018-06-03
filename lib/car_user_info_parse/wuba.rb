@@ -2,9 +2,16 @@ module Wuba
 
 
   def self.test
-    Wuba.get_car_user_list 20, 0
-    Wuba.get_car_user_list 20, 1
-    Wuba.get_car_user_list 20, 2
+
+    1.upto 100000 do |o|
+
+      code  = [0,1,2]
+      code.shuffle!
+      code.each do |code|
+        Wuba.get_car_user_list 20, code
+      end
+    end
+
   end
 
   # url =
@@ -136,9 +143,19 @@ module Wuba
   # Wuba.get_car_user_list
   # 获取58部分城市的车辆列表
   def self.get_car_user_list lest_number = 20, sub_city_party = 0
+
+
+
     city_hash = ::UserSystem::CarUserInfo.get_58_sub_cities sub_city_party
-    (1..100).each do |i|
-      city_hash.each_pair do |areaid, areaname|
+
+
+    code = city_hash.keys
+    code.shuffle!
+
+    code.each do |areaid|
+      areaname = city_hash[areaid]
+
+
         get_car_list_from_one_city areaname, areaid
 
         # if Thread.list.length > 1
@@ -155,7 +172,7 @@ module Wuba
         #   get_car_list_from_one_city areaname, areaid
         # end
       end
-    end
+
   end
 
 
