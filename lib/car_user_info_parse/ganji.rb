@@ -2,8 +2,8 @@ module Ganji
 
 
   def self.test
-    sleep 1000
-    return;
+    # sleep 1000
+    # return;
     1.upto 100000 do |o|
 
 
