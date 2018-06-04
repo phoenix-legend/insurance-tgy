@@ -10,7 +10,7 @@ namespace :zongjie do
 			# UploadTianTian.get_now_status true
 			UploadTianTian.query_order2
 			# 去侍埃更新数据， 每天凌晨一点更新一次。
-			UserSystem::AishiCarUserInfo.query_aishi
+			# UserSystem::AishiCarUserInfo.query_aishi
 			# 更新朋友E车, 凌晨1点和下午9点后半个小时, 更新两次
 			UserSystem::PengyoucheCarUserInfo.query_result
       #瓜子查询
@@ -114,7 +114,7 @@ namespace :zongjie do
 		UploadTianTian.query_order_shibai
 
 		# 一体化平台瓜子成交查询
-		UserSystem::AishiCarUserInfo.query_chengjiao
+		# UserSystem::AishiCarUserInfo.query_chengjiao
 	end
 
 

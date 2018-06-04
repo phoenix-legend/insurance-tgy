@@ -1,9 +1,13 @@
 module Baixing
 
   def self.test party, from
-    Baixing.get_car_user_list 0, from
-    Baixing.get_car_user_list 1, from
-    Baixing.get_car_user_list 2, from
+    code  = [0,1,2]
+    code.shuffle!
+    code.each do |code|
+      Baixing.get_car_user_list code, from
+    end
+
+
   end
 
 
@@ -215,22 +219,26 @@ module Baixing
     city_number = 0
     # city_hash = ::UserSystem::CarUserInfo::BAIXING_PINYIN_CITY
     city_hash = ::UserSystem::CarUserInfo.get_baixing_sub_cities party
-    city_hash.each_pair do |areaid, areaname|
+    code = city_hash.keys
+    code.shuffle!
+    # city_hash.each_pair do |areaid, areaname|
+      code.each do |areaid|
+        areaname = city_hash[areaid]
       seconds = rand(5)
       sleep seconds
 
-      if UserSystem::CarUserInfo::CITY3.include? areaname
-        city_number += 1
-        if city_number%7 == 0
-          pp '...... 跑一类城市'
-          UserSystem::CarUserInfo.run_baixing 0, 'local' #常规城市跑7个， 一类重点城市跑一遍
-        end
-
-        if city_number%13 == 0
-          pp '...... 跑二类城市'
-          UserSystem::CarUserInfo.run_baixing 1, 'local' #常规城市跑13个， 二类重点城市跑一遍
-        end
-      end
+      # if UserSystem::CarUserInfo::CITY3.include? areaname
+      #   city_number += 1
+      #   if city_number%7 == 0
+      #     pp '...... 跑一类城市'
+      #     UserSystem::CarUserInfo.run_baixing 0, 'local' #常规城市跑7个， 一类重点城市跑一遍
+      #   end
+      #
+      #   if city_number%13 == 0
+      #     pp '...... 跑二类城市'
+      #     UserSystem::CarUserInfo.run_baixing 1, 'local' #常规城市跑13个， 二类重点城市跑一遍
+      #   end
+      # end
       begin
         pp "现在跑..百姓 #{areaname}"
         1.upto 1 do |i|
