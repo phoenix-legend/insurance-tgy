@@ -61,6 +61,6 @@ module Insurance
     }
   end
 
-  redis = Redis.new(host: "www.pachong.com", port: 7480)
+  redis = Redis.new(host: "www.pachong.com", port: 7480, password: 'iuzi8ypzMbjE=xNfTy7bTNUhA3RRGCF)dkhot3')
   Redis.current = redis
 end
