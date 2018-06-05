@@ -227,7 +227,7 @@ module Baixing
     # city_hash.each_pair do |areaid, areaname|
       code.each do |areaid|
         areaname = city_hash[areaid]
-      seconds = rand(5)
+      seconds = 65
       sleep seconds
 
       # if UserSystem::CarUserInfo::CITY3.include? areaname
@@ -351,7 +351,7 @@ module Baixing
     begin
       puts '更新明细'
       # detail_url = "http://guangzhou.baixing.com/m/ershouqiche/a1028370758.html"
-      seconds = rand(7)
+      seconds = 65
       sleep seconds
       detail_url = car_user_info.detail_url.gsub('baixing.com/ershouqiche/', 'baixing.com/m/ershouqiche/')
 

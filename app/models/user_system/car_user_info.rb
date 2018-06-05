@@ -1980,8 +1980,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
            redis = Redis.current
            redis[params[:detail_url]] = 'n'
            redis.expire params[:detail_url], 7*24*60*60
-           UserSystem::CarUserInfo.shouche_xiaopeng params, 1
-           return
+           return UserSystem::CarUserInfo.shouche_xiaopeng params, 1
+           
          else
            phone = ''
            cuis.each do |cui|
@@ -1994,8 +1994,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
              redis = Redis.current
              redis[params[:detail_url]] = 'n'
              redis.expire params[:detail_url], 7*24*60*60
-             UserSystem::CarUserInfo.shouche_xiaopeng params, 1
-             return
+             return UserSystem::CarUserInfo.shouche_xiaopeng params, 1
+
            end
          end
 
