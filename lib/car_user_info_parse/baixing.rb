@@ -2,8 +2,8 @@ module Baixing
 
   def self.test party, from
 
-    sleep 100
-    return
+    # sleep 100
+    # return
     code  = [0,1,2]
     code.shuffle!
     code.each do |code|
@@ -445,7 +445,7 @@ module Baixing
                                             licheng: licheng
     rescue Exception => e
       pp e
-      pp $@
+      # pp $@
       redis = Redis.current
       redis[car_user_info.detail_url] = 'n'
       redis.expire car_user_info.detail_url, 60

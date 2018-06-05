@@ -16,7 +16,7 @@ stdout_path "#{Rails.root}/log/unicorn.log"
 listen 3000, :tcp_nopush => false
 
 # listen "/tmp/unicorn.ddc.sock"
-worker_processes 20
+worker_processes 3
 timeout 1200
 
 if GC.respond_to?(:copy_on_write_friendly=)

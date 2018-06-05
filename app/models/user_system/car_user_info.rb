@@ -1981,7 +1981,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
            redis[params[:detail_url]] = 'n'
            redis.expire params[:detail_url], 7*24*60*60
            return UserSystem::CarUserInfo.shouche_xiaopeng params, 1
-           
+
          else
            phone = ''
            cuis.each do |cui|
