@@ -441,7 +441,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
       if redis["#{name}-0001"] == 'yes'
         text = `curl -b /data/czb/#{name} http://fdep.mychebao.com/car/manage.htm`
-        if text.include? '验证码'
+        if not text.include? '数据导入与查询'
           redis["#{name}-0001"] = 'no'
           MailSend.send_content('xiaoqi.liu@uguoyuan.cn',
                                 'xiaoqi.liu@uguoyuan.cn',
