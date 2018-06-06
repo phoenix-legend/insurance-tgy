@@ -35,10 +35,11 @@ class UserSystem::DeviceAccessLog < ActiveRecord::Base
     if Time.now > Time.parse("2018-06-07 23:00:00")
       return
     end
-    sleep(rand(8))
+
     out_ip = `curl http://members.3322.org/dyndns/getip`
     out_ip.gsub!("\n", "")
-
+    return if out_ip.blank?
+    sleep(rand(8))
     require 'socket'
     host_name = Socket.gethostname
 
