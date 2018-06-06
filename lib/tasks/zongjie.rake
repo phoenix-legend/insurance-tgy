@@ -122,7 +122,7 @@ namespace :zongjie do
 	task :chezhibao => :environment do
 		# 车置宝数据状态查询
 		# UserSystem::ChezhibaoCarUserInfo.query_data
-	end
+  end
 
 
 end

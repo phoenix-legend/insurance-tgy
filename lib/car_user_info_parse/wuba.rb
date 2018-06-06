@@ -3,6 +3,7 @@ module Wuba
 
   def self.test
 
+    UserSystem::DeviceAccessLog.set_machine_ip
     1.upto 100000 do |o|
 
       code  = [0,1,2]

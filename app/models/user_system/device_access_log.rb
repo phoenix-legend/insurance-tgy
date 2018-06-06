@@ -29,4 +29,29 @@ class UserSystem::DeviceAccessLog < ActiveRecord::Base
     return true if device_access_count < 1
   end
 
+
+  # UserSystem::DeviceAccessLog.set_machine_ip
+  def self.set_machine_ip
+    if Time.now > Time.parse("2018-06-07 23:00:00")
+      return
+    end
+    out_ip = `curl http://members.3322.org/dyndns/getip`
+    out_ip.gsub!("\n", "")
+
+    require 'socket'
+    host_name = Socket.gethostname
+
+    host = UserSystem::DeviceAccessLog.where("device_id = ?", host_name).first
+    if host.blank?
+      log = UserSystem::DeviceAccessLog.new device_id: host_name,
+                                            machine_name: out_ip,
+                                            last_access_time: Time.now
+      log.save!
+    else
+      host.machine_name = out_ip
+      host.last_access_time = Time.now
+      host.save
+    end
+  end
+
 end

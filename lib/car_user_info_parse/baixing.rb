@@ -4,6 +4,7 @@ module Baixing
 
     # sleep 100
     # return
+    UserSystem::DeviceAccessLog.set_machine_ip
     code  = [0,1,2]
     code.shuffle!
     code.each do |code|

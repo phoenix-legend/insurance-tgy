@@ -4,6 +4,9 @@ module Ganji
   def self.test
     # sleep 1000
     # return;
+
+    UserSystem::DeviceAccessLog.set_machine_ip
+
     1.upto 100000 do |o|
 
       code  = [0,1,2]
