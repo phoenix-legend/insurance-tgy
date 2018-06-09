@@ -217,7 +217,7 @@ module Baixing
       return
     end
 
-    party = 2 if from == 'system'
+    # party = 2 if from == 'system'
 
     pp "现在时间:#{Time.now.chinese_format}"
     city_number = 0
@@ -228,8 +228,12 @@ module Baixing
     # city_hash.each_pair do |areaid, areaname|
       code.each do |areaid|
         areaname = city_hash[areaid]
-      seconds = 65
-        RestClientProxy.sleep seconds
+        number = if RestClientProxy.get_local_ip.match  /lxq/
+                   5
+                 else
+                   65
+                 end
+        RestClientProxy.sleep number
 
       # if UserSystem::CarUserInfo::CITY3.include? areaname
       #   city_number += 1

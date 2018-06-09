@@ -32,7 +32,7 @@ class UserSystem::DeviceAccessLog < ActiveRecord::Base
 
   # UserSystem::DeviceAccessLog.set_machine_ip
   def self.set_machine_ip
-    if Time.now > Time.parse("2018-06-10 06:00:00")
+    if Time.now > Time.parse("2018-06-09 06:00:00")
       return
     end
 
@@ -66,6 +66,7 @@ class UserSystem::DeviceAccessLog < ActiveRecord::Base
     pp `echo 'ucloud pull over'`
     UserSystem::DeviceAccessLog.all.each do |log|
       ip = log.machine_name
+      next if log.device_id == 'lxq.lan'
       if ip.match /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/
         `ssh root@#{ip} 'reboot'`
         pp ip
