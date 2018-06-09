@@ -337,7 +337,7 @@ module Ganji
         pp infos.length
         infos.each do |clue|
 
-
+          sleep 65
           real_url = "https://3g.ganji.com/#{clue.attributes["href"].value}"
           next unless  real_url.match /ershouche/
           next if real_url.match /aozdclick/
@@ -368,6 +368,25 @@ module Ganji
           return if cui_id.blank?
 
           cui = UserSystem::CarUserInfo.find cui_id
+
+
+          u = real_url
+
+          #重大调整, 不再更新详情页, 改为提交列表页给小朋
+          cid = u.match /ershouche\/(\d{8,15})x/
+          cid = cid[1]
+          response = RestClient.post 'http://ugods.591order.com/api/clues/upload_cid', source: 'ganji',
+                                     cid:cid,
+                                     city_name: areaname,
+                                     title: option[:title]
+          response = JSON.parse(response.body)
+          if response["err"].blank?
+            c.tt_message = 'xp success'
+          else
+            c.tt_message = "#{response["err"]}xp"
+          end
+          c.save
+          return
 
 
           sleep 20+rand(15)

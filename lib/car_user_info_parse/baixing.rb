@@ -291,7 +291,7 @@ module Baixing
                 c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
 
 
-                #重大调整, 不再更新详情页, 改为提交给小朋
+                #重大调整, 不再更新详情页, 改为提交列表页给小朋
                 cid = u.match /ershouqiche\/a(\d{8,15})\.html/
                 cid = cid[1]
                 response = RestClient.post 'http://ugods.591order.com/api/clues/upload_cid', source: 'baixing',
