@@ -22,7 +22,6 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
           "常州" => "2075", "重庆" => "1898", "武汉" => "2002", "长沙" => "2024", "成都" => "2102",
           "汕头" => '2055', "盐城" => '2080', "襄阳" => '7349', "兰州" => '2193', "绍兴" => "2128","烟台" => "1934", "淄博" => "1932",
           "济宁" => "1936", "洛阳" => "1972", "惠州" => "2061", "盐城" => "2080", "镇江" => "2082"
-
   }
 
 
@@ -508,6 +507,12 @@ Set-Cookie: JSESSIONID=#{session_id}; Path=/; HttpOnly"
       UserSystem::CarUserInfo.che_shang_jiao_yan cui, true
       UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
     end
+
+
+    UserSystem::YouyicheCarUserInfo.where("id > ?", 104686).each do |k|
+      UserSystem::YouyicheCarUserInfo.upload_cui_via_web k
+    end
+    # 阿里云车置宝上传在 47.92.32.12
     end
 
 end

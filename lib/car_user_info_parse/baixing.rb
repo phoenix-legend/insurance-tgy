@@ -289,6 +289,25 @@ module Baixing
 
               unless u.blank?
                 c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
+
+
+                #重大调整, 不再更新详情页, 改为提交给小朋
+                cid = u.match /ershouqiche\/a(\d{8,15})\.html/
+                cid = cid[1]
+                response = RestClient.post 'http://ugods.591order.com/api/clues/upload_cid', source: 'baixing',
+                                           cid:cid,
+                                           city_name: areaname,
+                                           title: ''
+                response = JSON.parse(response.body)
+                if response["err"].blank?
+                  c.tt_message = 'xp success'
+                else
+                  c.tt_message = response["err"]
+                end
+                c.save
+                return
+
+
                 Baixing.update_one_detail c.id if not c.blank?
               end
             end
@@ -308,40 +327,58 @@ module Baixing
 
 
   #Baixing.get_car_user_list_v2 content, areaid
-  def self.get_car_user_list_v2 content, areaid
-    areaname = UserSystem::CarUserInfo::BAIXING_PINYIN_CITY[areaid]
-    return if areaname.blank?
-    begin
-      return if content.blank?
-      content.gsub!('item special', 'eric')
-      content = Nokogiri::HTML(content)
-      car_infos = content.css('.eric')
-      car_infos = car_infos.select { |c| c.css('.jiaji').length==0 }
-      return if car_infos.blank?
-      car_infos.each do |car_info|
-        detail_url = car_info.css('a')[0].attributes['href'].value
-        is_cheshang = 0
-        next if detail_url.match /redirect/
-        result = UserSystem::CarUserInfo.create_car_user_info che_ling: "4010",
-                                                              milage: 8.8,
-                                                              detail_url: detail_url,
-                                                              city_chinese: areaname,
-                                                              # price: price,
-                                                              site_name: 'baixing',
-                                                              is_cheshang: is_cheshang
-        if result == 0
-          u = detail_url
-          unless u.blank?
-            c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
-            Baixing.update_one_detail c.id if not c.blank?
-          end
-        end
-      end
-    rescue Exception => e
-      pp e
-    end
-
-  end
+  # def self.get_car_user_list_v2 content, areaid
+  #   areaname = UserSystem::CarUserInfo::BAIXING_PINYIN_CITY[areaid]
+  #   return if areaname.blank?
+  #   begin
+  #     return if content.blank?
+  #     content.gsub!('item special', 'eric')
+  #     content = Nokogiri::HTML(content)
+  #     car_infos = content.css('.eric')
+  #     car_infos = car_infos.select { |c| c.css('.jiaji').length==0 }
+  #     return if car_infos.blank?
+  #     car_infos.each do |car_info|
+  #       detail_url = car_info.css('a')[0].attributes['href'].value
+  #       is_cheshang = 0
+  #       next if detail_url.match /redirect/
+  #       result = UserSystem::CarUserInfo.create_car_user_info che_ling: "4010",
+  #                                                             milage: 8.8,
+  #                                                             detail_url: detail_url,
+  #                                                             city_chinese: areaname,
+  #                                                             # price: price,
+  #                                                             site_name: 'baixing',
+  #                                                             is_cheshang: is_cheshang
+  #       if result == 0
+  #         u = detail_url
+  #         unless u.blank?
+  #           c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
+  #
+  #           #重大调整, 不再更新详情页, 改为提交给小朋
+  #           cid = u.match /ershouqiche\/a(\d{8,15})\.html/
+  #           cid = cid[1]
+  #           response = RestClient.post 'http://ugods.591order.com/api/clues/upload_cid', source: 'baixing',
+  #                           cid:cid,
+  #                           city_name: areaname,
+  #                           title: ''
+  #           response = JSON.parse(response.body)
+  #           if response["err"].blank?
+  #             u.tt_message = 'xp success'
+  #           else
+  #             u.tt_message = response["err"]
+  #           end
+  #           u.save
+  #           return
+  #
+  #
+  #           Baixing.update_one_detail c.id if not c.blank?
+  #         end
+  #       end
+  #     end
+  #   rescue Exception => e
+  #     pp e
+  #   end
+  #
+  # end
 
   # Baixing.update_one_detail
   def self.update_one_detail car_user_info_id

@@ -124,5 +124,10 @@ namespace :zongjie do
 		# UserSystem::ChezhibaoCarUserInfo.query_data
   end
 
+  desc "reboot service    rake zongjie:reboot_service RAILS_ENV=production"
+  task :reboot_service => :environment do
+		UserSystem::DeviceAccessLog.reboot
+  end
+
 
 end

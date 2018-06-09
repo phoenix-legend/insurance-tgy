@@ -56,4 +56,29 @@ class UserSystem::DeviceAccessLog < ActiveRecord::Base
     end
   end
 
+
+  # UserSystem::DeviceAccessLog.reboot
+  # update device_access_logs set machine_name = ''.
+  def self.reboot
+    pp `ssh root@47.92.101.43 '/root/gitpull.sh'`
+    pp `echo 'aliyun pull over'`
+    pp `ssh root@123.59.130.146 '/root/gitpull.sh'`
+    pp `echo 'ucloud pull over'`
+    UserSystem::DeviceAccessLog.all.each do |log|
+      ip = log.machine_name
+      if ip.match /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/
+        `ssh root@#{ip} 'reboot'`
+        pp ip
+      end
+    end
+
+    # UserSystem::DeviceAccessLog.all.each do |log|
+    #   ip = log.machine_name
+    #   if ip.match /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/
+    #     pp `ssh root@#{ip} 'ls /data/'`
+    #     pp ip
+    #   end
+    # end
+  end
+
 end
