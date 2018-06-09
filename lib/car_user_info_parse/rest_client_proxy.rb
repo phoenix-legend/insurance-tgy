@@ -189,7 +189,7 @@ module RestClientProxy
       if number % 5 == 0
         brand = UserSystem::CarBrand.first
       end
-      sleep 1
+      Kernel.sleep 1
     end
 
   end
