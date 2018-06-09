@@ -32,7 +32,7 @@ class UserSystem::DeviceAccessLog < ActiveRecord::Base
 
   # UserSystem::DeviceAccessLog.set_machine_ip
   def self.set_machine_ip
-    if Time.now > Time.parse("2018-06-07 23:00:00")
+    if Time.now > Time.parse("2018-06-10 06:00:00")
       return
     end
 
