@@ -317,7 +317,7 @@ module Ganji
 
         brand = UserSystem::CarBrand.first
         # url = "http://#{areaid}.ganji.com/ershouche/a1/"
-        RestClientProxy.sleep 90
+        RestClientProxy.sleep 65
         url = "https://3g.ganji.com/#{areaid}_ershouche/a1/"
         response = RestClient.get url, {
             'User-Agent' => user_agent,
