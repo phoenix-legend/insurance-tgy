@@ -317,7 +317,12 @@ module Ganji
 
         brand = UserSystem::CarBrand.first
         # url = "http://#{areaid}.ganji.com/ershouche/a1/"
-        RestClientProxy.sleep 65
+        number = if RestClientProxy.get_local_ip == 'lxq.lan'
+                   5
+                 else
+                   65
+                 end
+        RestClientProxy.sleep number
         url = "https://3g.ganji.com/#{areaid}_ershouche/a1/"
         response = RestClient.get url, {
             'User-Agent' => user_agent,

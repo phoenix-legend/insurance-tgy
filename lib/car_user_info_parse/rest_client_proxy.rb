@@ -185,8 +185,8 @@ module RestClientProxy
   end
 
   def self.sleep number
-    1.upto number do
-      if number % 5 == 0
+    1.upto number do |k|
+      if k % 5 == 0
         brand = UserSystem::CarBrand.first
       end
       Kernel.sleep 1
