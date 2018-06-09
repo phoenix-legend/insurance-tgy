@@ -184,4 +184,14 @@ module RestClientProxy
     RestClientProxy::USER_AGENTS[n]
   end
 
+  def self.sleep number
+    1.upto number do
+      if number % 5 == 0
+        brand = UserSystem::CarBrand.first
+      end
+      sleep 1
+    end
+
+  end
+
 end

@@ -229,7 +229,7 @@ module Baixing
       code.each do |areaid|
         areaname = city_hash[areaid]
       seconds = 65
-      sleep seconds
+        RestClientProxy.sleep seconds
 
       # if UserSystem::CarUserInfo::CITY3.include? areaname
       #   city_number += 1
@@ -305,7 +305,7 @@ module Baixing
                   c.tt_message = "#{response["err"]}xp"
                 end
                 c.save
-                return
+                next
 
 
                 Baixing.update_one_detail c.id if not c.blank?

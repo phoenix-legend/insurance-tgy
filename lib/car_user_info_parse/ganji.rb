@@ -317,6 +317,7 @@ module Ganji
 
         brand = UserSystem::CarBrand.first
         # url = "http://#{areaid}.ganji.com/ershouche/a1/"
+        RestClientProxy.sleep 90
         url = "https://3g.ganji.com/#{areaid}_ershouche/a1/"
         response = RestClient.get url, {
             'User-Agent' => user_agent,
@@ -337,7 +338,7 @@ module Ganji
         pp infos.length
         infos.each do |clue|
 
-          sleep 65
+
           real_url = "https://3g.ganji.com/#{clue.attributes["href"].value}"
           next unless  real_url.match /ershouche/
           next if real_url.match /aozdclick/
@@ -365,7 +366,7 @@ module Ganji
                                                                  wuba_kouling: real_url
 
 
-          return if cui_id.blank?
+          next if cui_id.blank?
 
           cui = UserSystem::CarUserInfo.find cui_id
 
@@ -386,7 +387,7 @@ module Ganji
             c.tt_message = "#{response["err"]}xp"
           end
           c.save
-          return
+          next
 
 
           sleep 20+rand(15)
