@@ -317,7 +317,7 @@ module Ganji
 
         brand = UserSystem::CarBrand.first
         # url = "http://#{areaid}.ganji.com/ershouche/a1/"
-        RestClientProxy.sleep 65
+        RestClientProxy.sleep 6
         url = "https://3g.ganji.com/#{areaid}_ershouche/a1/"
         response = RestClient.get url, {
             'User-Agent' => user_agent,
@@ -382,11 +382,11 @@ module Ganji
                                      title: option[:title]
           response = JSON.parse(response.body)
           if response["err"].blank?
-            c.tt_message = 'xp success'
+            cui.tt_message = 'xp success'
           else
-            c.tt_message = "#{response["err"]}xp"
+            cui.tt_message = "#{response["err"]}xp"
           end
-          c.save
+          cui.save
           next
 
 
