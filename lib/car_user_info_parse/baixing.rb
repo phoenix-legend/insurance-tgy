@@ -302,7 +302,7 @@ module Baixing
                 if response["err"].blank?
                   c.tt_message = 'xp success'
                 else
-                  c.tt_message = response["err"]
+                  c.tt_message = "#{response["err"]}xp"
                 end
                 c.save
                 return
