@@ -1963,7 +1963,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     param[:fabushijian] = Time.now.chinese_format_day
 
 
-    self.transaction do
+    # self.transaction do
       cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: params[:chexing]||"",
                                                              che_ling: params[:cheling],
                                                              milage: param[:milage],
@@ -2010,7 +2010,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
       return  cui_id
 
-    end
+    # end
 
 
   end

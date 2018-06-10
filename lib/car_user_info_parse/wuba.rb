@@ -182,7 +182,12 @@ module Wuba
       pp "#{areaname}   跑58..    #{Time.now.chinese_format}"
       url = "http://#{areaid}.58.com/ershouche/0/pn1/"
       # pp url
-      sleep 30
+      number = if RestClientProxy.get_local_ip.match /lxq/
+                 5
+               else
+                 34
+               end
+      RestClientProxy.sleep number
       content = RestClient.get url, {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
       content = content.body
       # pp content
@@ -252,7 +257,26 @@ module Wuba
           u = url.split('?')[0]
           unless u.blank?
             c = UserSystem::CarUserInfo.where("detail_url = ?", u).order(id: :desc).first
-            Wuba.update_one_detail_kouling c.id if not c.blank?
+
+            #重大调整, 不再更新详情页, 改为提交列表页给小朋
+            cid = u.match /ershouche\/(\d{8,30})x/
+            cid = cid[1]
+            response = RestClient.post 'http://ugods.591order.com/api/clues/upload_cid', source: '58',
+                                       cid:cid,
+                                       city_name: areaname,
+                                       title: ''
+            response = JSON.parse(response.body)
+            if response["err"].blank?
+              c.tt_message = 'xp success'
+            else
+              c.tt_message = "#{response["err"]}xp"
+            end
+            c.save
+            next
+            # Wuba.update_one_detail_kouling c.id if not c.blank?
+
+
+
           end
         end
       end

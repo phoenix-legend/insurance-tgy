@@ -317,7 +317,7 @@ module Ganji
 
         brand = UserSystem::CarBrand.first
         # url = "http://#{areaid}.ganji.com/ershouche/a1/"
-        number = if RestClientProxy.get_local_ip.match  /lxq/
+        number = if RestClientProxy.get_local_ip.match /lxq/
                    5
                  else
                    65
