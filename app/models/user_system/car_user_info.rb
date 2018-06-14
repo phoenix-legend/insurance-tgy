@@ -645,7 +645,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     pp "准备单个上传#{car_user_info.phone}~~#{car_user_info.name}"
 
 
-    UploadTianTian.upload_one_tt car_user_info
+    # UploadTianTian.upload_one_tt car_user_info
 
     #先临时把一部分数据传给金针菇, 为提高优先级,先临时放到这里。测试通过后,再移回去
     # if rand(10)< 2
@@ -656,22 +656,22 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     # 同步给人人车
-    UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
     UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
 
     #朋友E车
-    UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     #传给瓜子
-    UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     # 同步至a s
     # UserSystem::AishiCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     # 同步至优车
-    UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # UserSystem::YoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     #同步至车城  车城作废
     # UserSystem::CheChengCarUserInfo.create_user_info_from_car_user_info car_user_info

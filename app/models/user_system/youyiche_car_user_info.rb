@@ -509,7 +509,7 @@ Set-Cookie: JSESSIONID=#{session_id}; Path=/; HttpOnly"
     end
 
 
-    UserSystem::YouyicheCarUserInfo.where("id > ?", 104686).each do |k|
+    UserSystem::YouyicheCarUserInfo.where("id > ?", 625231).each do |k|
       UserSystem::YouyicheCarUserInfo.upload_cui_via_web k
     end
     # 阿里云车置宝上传在 47.92.32.12

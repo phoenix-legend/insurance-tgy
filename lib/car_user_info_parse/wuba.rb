@@ -172,6 +172,16 @@ module Wuba
         # Thread.start do
         #   get_car_list_from_one_city areaname, areaid
         # end
+
+
+
+      # 1.upto 1000 do
+      #   Baixing.test 0, 'web'
+      #     Ganji.test
+      #   Wuba.test
+      #
+      #
+      # end
       end
 
   end
