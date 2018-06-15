@@ -216,34 +216,18 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     rescue Exception => e
     end
 
-    # cui = yc_car_user_info.car_user_info
-    # cui.phone_city = UserSystem::YoucheCarUserInfo.get_city_name(yc_car_user_info.phone)
-    # cui.save!
-    # unless cui.city_chinese == cui.phone_city
-    #   yc_car_user_info.youyiche_upload_status = '非本地车'
-    #   yc_car_user_info.save!
-    #   return
-    # end
 
-    # 针对苏，杭，成都 进行严格限制量。
-    # if ['苏州', '杭州', '成都', '合肥', '宿州', '福州'].include? yc_car_user_info.city_chinese
-
-    # if Time.now.hour < 6 and ['苏州','合肥'].include? yc_car_user_info.city_chinese
-    #   yc_car_user_info.youyiche_upload_status = '时间太早'
-    #   yc_car_user_info.save!
-    #   return
-    # end
 
     cui = yc_car_user_info.car_user_info
-    cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
-    cui.save!
-    if not cui.phone_city.blank?
-      unless cui.city_chinese == cui.phone_city
-        yc_car_user_info.youyiche_upload_status = '非本地车'
-        yc_car_user_info.save!
-        return
-      end
-    end
+    # cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
+    # cui.save!
+    # if not cui.phone_city.blank?
+    #   unless cui.city_chinese == cui.phone_city
+    #     yc_car_user_info.youyiche_upload_status = '非本地车'
+    #     yc_car_user_info.save!
+    #     return
+    #   end
+    # end
 
 
     if cui.note.match /^出售/
@@ -480,7 +464,7 @@ Set-Cookie: JSESSIONID=#{session_id}; Path=/; HttpOnly"
 
   def temp_upload
 
-    ["汕头" , "盐城" , "襄阳" , "兰州" , "绍兴" ,"烟台" , "淄博" , "济宁" , "洛阳" , "惠州" , "盐城" , "镇江" ].each do |k|
+    [].each do |k|
       cuis = UserSystem::CarUserInfo.where("city_chinese = ? and created_at > ?", k, Time.now - 7.days)
       cuis.each do |cui|
         pp cui.id
@@ -512,10 +496,20 @@ Set-Cookie: JSESSIONID=#{session_id}; Path=/; HttpOnly"
     end
 
 
-    UserSystem::YouyicheCarUserInfo.where("id > ?", 625231).each do |k|
+    UserSystem::YouyicheCarUserInfo.where("id > ?", 634526).each do |k|
       UserSystem::YouyicheCarUserInfo.upload_cui_via_web k
     end
     # 阿里云车置宝上传在 47.92.32.12
+
+
+
+    cuis = UserSystem::CarUserInfo.where("created_at > ? and phone is not null and city_chinese in (?)", '2018-05-01 00:00:00', ["葫芦岛", "抚顺", "大庆", "松原", "赤峰", "西宁", "锦州", "鞍山", "绥化", "吉林", "银川", "营口", "铁岭", "齐齐哈尔"])
+    cuis.find_each do |cui|
+      next unless ["葫芦岛", "抚顺", "大庆", "松原", "赤峰", "西宁", "锦州", "鞍山", "绥化", "吉林", "银川", "营口", "铁岭", "齐齐哈尔"].include? cui.city_chinese
+      next if cui.phone.blank?
+      UserSystem::CarUserInfo.che_shang_jiao_yan cui, true
+      UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
+    end
     end
 
 end

@@ -229,7 +229,7 @@ module Baixing
       code.each do |areaid|
         areaname = city_hash[areaid]
         number = if RestClientProxy.get_local_ip.match  /lxq/
-                   5
+                   65
                  else
                    65
                  end

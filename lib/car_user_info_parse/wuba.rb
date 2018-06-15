@@ -176,10 +176,10 @@ module Wuba
 
 
       # 1.upto 1000 do
-      #   Baixing.test 0, 'web'
-      #     Ganji.test
       #   Wuba.test
+      #     Ganji.test
       #
+      #     Baixing.test 0, 'web'
       #
       # end
       end
