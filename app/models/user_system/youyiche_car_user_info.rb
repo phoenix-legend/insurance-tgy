@@ -6,9 +6,12 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
           "常州", "重庆", "武汉", "长沙", "成都", "太原", "南昌", "昆明", "宁波", "东莞", "济南", "南宁",
           "贵阳", "临沂", "广州", "佛山", "南通", "嘉兴", "金华", '台州', "合肥", "徐州", "大连", "沈阳",
           "天津", "哈尔滨", "长春", "厦门", "福州", "泉州", "石家庄", "邯郸", "唐山", "沧州", "保定",
-          "汕头" , "盐城" , "襄阳" , "兰州" , "绍兴" ,"烟台" , "淄博" , "济宁" , "洛阳" , "惠州" , "盐城" , "镇江",
-          "葫芦岛", "抚顺", "大庆", "松原", "赤峰", "西宁", "锦州", "鞍山", "绥化", "吉林", "银川", "营口", "铁岭", "齐齐哈尔"
-        ]
+          "汕头", "盐城", "襄阳", "兰州", "绍兴", "烟台", "淄博", "济宁", "洛阳", "惠州", "盐城", "镇江",
+          "葫芦岛", "抚顺", "大庆", "松原", "赤峰", "西宁", "锦州", "鞍山", "绥化", "吉林", "银川", "营口", "铁岭", "齐齐哈尔",
+          "枣庄", "泰安", "滨州", "日照", "潍坊", "威海", "泰州", "淮安", "宿迁", "连云港", "珠海",
+          "中山", "柳州", "桂林", "岳阳", "常德", "衡阳", "湘潭", "宜昌", "漳州", "赣州", "蚌埠", "芜湖", "绵阳", "南充",
+          "廊坊", '张家口', '大同', "运城", "新乡", "商丘", "南阳"
+  ]
 
   # 只在在这个hash中出现的城市,都会被推到网页端。
   DIQU = {"太原" => '1947', "南昌" => "1919", "昆明" => "2134", "宁波" => "2124", "东莞" => "2067", "济南" => "1930", "南宁" => "2085",
@@ -18,29 +21,37 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
           "长春" => '2015',
           "厦门" => "1911", "福州" => "1910", "泉州" => "1914", "石家庄" => "1899", "邯郸" => "1902", "唐山" => "1900", "沧州" => "1907",
           "保定" => "1904",
-          "北京" => "1867", "南京" => "2072", "深圳" => "2053", "上海"=>"1889", "青岛" => "1931", "西安" => "2176", "郑州" => "1970",
+          "北京" => "1867", "南京" => "2072", "深圳" => "2053", "上海" => "1889", "青岛" => "1931", "西安" => "2176", "郑州" => "1970",
           "无锡" => "2073", "苏州" => "2076",
           "杭州" => "2123",
           "常州" => "2075", "重庆" => "1898", "武汉" => "2002", "长沙" => "2024", "成都" => "2102",
-          "汕头" => '2055', "盐城" => '2080', "襄阳" => '7349', "兰州" => '2193', "绍兴" => "2128","烟台" => "1934", "淄博" => "1932",
+          "汕头" => '2055', "盐城" => '2080', "襄阳" => '7349', "兰州" => '2193', "绍兴" => "2128", "烟台" => "1934", "淄博" => "1932",
           "济宁" => "1936", "洛阳" => "1972", "惠州" => "2061", "盐城" => "2080", "镇江" => "2082",
-          "葫芦岛" => "2001", "抚顺" => "1991", "大庆"=>"2043", "松原"=>"2021", "赤峰"=>"1961", "西宁"=>"2207", "锦州" => "1994", "鞍山"=>"1990", "绥化"=>"2049", "吉林"=>"2016", "银川"=>"2215", "营口" => "1995", "铁岭"=>"1999", "齐齐哈尔"=>"2039"
+          "葫芦岛" => "2001", "抚顺" => "1991", "大庆" => "2043", "松原" => "2021", "赤峰" => "1961", "西宁" => "2207", "锦州" => "1994", "鞍山" => "1990", "绥化" => "2049", "吉林" => "2016", "银川" => "2215", "营口" => "1995", "铁岭" => "1999", "齐齐哈尔" => "2039",
+          "枣庄" => "7368", "泰安" => "7370", "滨州" => "7373", "日照" => "7372", "潍坊" => "7369",
+          "威海" => "7371", "泰州" => "7388", "淮安" => "7387", "宿迁" => "7389", "连云港" => "7386", "珠海" => "7384",
+          "中山" => "7385", "柳州" => "7390", "桂林" => "7391", "岳阳" => '7382', "常德" => "7383",
+          "衡阳" => '7381', "湘潭" => '7380', "宜昌" => '7379', "漳州" => '7366', "赣州" => '7367', "蚌埠" => '7395',
+          "芜湖" => '7394', "绵阳" => '7392', "南充" => '7393',
+          "廊坊" => '7365', '张家口' => '7364', '大同' => '7374', "运城" => "7375", "新乡" => '7376', "商丘" => '7378', "南阳" => '7377'
+
+
   }
 
 
   #阿里的所有地区全部往网页中提交
   ALIDIQU = {"太原" => '1947', "南昌" => "1919", "昆明" => "2134", "宁波" => "2124", "东莞" => "2067", "济南" => "1930", "南宁" => "2085",
-          "贵阳" => "2167", "临沂" => '1942', "广州" => '2051', "佛山" => '2056', "南通" => '2077', "嘉兴" => '2126', "金华" => '2129',
-          "温州" => '2125',
-          '台州' => '2132', "合肥" => '2150', "徐州" => '2074', "大连" => '1989', "沈阳" => '1988', "天津" => '1892', "哈尔滨" => '2038',
-          "长春" => '2015',
-          "厦门" => "1911", "福州" => "1910", "泉州" => "1914", "石家庄" => "1899", "邯郸" => "1902", "唐山" => "1900", "沧州" => "1907",
-          "保定" => "1904",
-          "北京" => "1867", "南京" => "2072", "深圳" => "2053", "上海"=>"1889", "青岛" => "1931", "西安" => "2176", "郑州" => "1970",
-          "无锡" => "2073", "苏州" => "2076",
-          "杭州" => "2123",
-          "常州" => "2075", "重庆" => "1898", "武汉" => "2002", "长沙" => "2024", "成都" => "2102",
-             "汕头" => '2055', "盐城" => '2080', "襄阳" => '7349', "兰州" => '2193', "绍兴" => "2128","烟台" => "1934", "淄博" => "1932",
+             "贵阳" => "2167", "临沂" => '1942', "广州" => '2051', "佛山" => '2056', "南通" => '2077', "嘉兴" => '2126', "金华" => '2129',
+             "温州" => '2125',
+             '台州' => '2132', "合肥" => '2150', "徐州" => '2074', "大连" => '1989', "沈阳" => '1988', "天津" => '1892', "哈尔滨" => '2038',
+             "长春" => '2015',
+             "厦门" => "1911", "福州" => "1910", "泉州" => "1914", "石家庄" => "1899", "邯郸" => "1902", "唐山" => "1900", "沧州" => "1907",
+             "保定" => "1904",
+             "北京" => "1867", "南京" => "2072", "深圳" => "2053", "上海" => "1889", "青岛" => "1931", "西安" => "2176", "郑州" => "1970",
+             "无锡" => "2073", "苏州" => "2076",
+             "杭州" => "2123",
+             "常州" => "2075", "重庆" => "1898", "武汉" => "2002", "长沙" => "2024", "成都" => "2102",
+             "汕头" => '2055', "盐城" => '2080', "襄阳" => '7349', "兰州" => '2193', "绍兴" => "2128", "烟台" => "1934", "淄博" => "1932",
              "济宁" => "1936", "洛阳" => "1972", "惠州" => "2061", "盐城" => "2080", "镇江" => "2082"
 
   }
@@ -124,7 +135,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       return
     end
 
-    unless yc_car_user_info.phone.match /\d{11}/
+    unless yc_car_user_info.phone.match /\d{ 11 }/
       yc_car_user_info.youyiche_upload_status = '手机号不正确'
       yc_car_user_info.save!
       return
@@ -151,12 +162,12 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       return
     end
 
-    # if not yc_car_user_info.is_city_match
-    #   pp '城市不匹配'
-    #   yc_car_user_info.youyiche_upload_status = '城市不匹配'
-    #   yc_car_user_info.save!
-    #   return
-    # end
+# if not yc_car_user_info.is_city_match
+#   pp '城市不匹配'
+#   yc_car_user_info.youyiche_upload_status = '城市不匹配'
+#   yc_car_user_info.save!
+#   return
+# end
 
     if !yc_car_user_info.car_user_info.note.blank? and yc_car_user_info.car_user_info.note.match /\d{11}/
       yc_car_user_info.youyiche_upload_status = '疑似走私车'
@@ -169,7 +180,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       return
     end
 
-    # 2017-11-15  增加数据范围 注释掉以下限制
+# 2017-11-15  增加数据范围 注释掉以下限制
     ['图', '照片', '旗舰', '汽车', '短信', '威信', '微信', '店', '薇', 'QQ'].each do |kw|
       if yc_car_user_info.name.include? kw or yc_car_user_info.car_user_info.che_xing.include? kw
         yc_car_user_info.youyiche_upload_status = '疑似走私车或车商'
@@ -178,29 +189,29 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       end
     end
 
-    # 2017-11-15  增加数据范围 注释掉以下限制
+# 2017-11-15  增加数据范围 注释掉以下限制
     if /^[a-z|A-Z|0-9|-|_]+$/.match yc_car_user_info.name
       yc_car_user_info.youyiche_upload_status = '疑似走私车'
       yc_car_user_info.save!
       return
     end
 
-    #还有用手机号，QQ号做名字的。
-    # 2017-11-15  增加数据范围 注释掉以下限制
+#还有用手机号，QQ号做名字的。
+# 2017-11-15  增加数据范围 注释掉以下限制
     if /[0-9]+/.match yc_car_user_info.name
       yc_car_user_info.youyiche_upload_status = '疑似走私车'
       yc_car_user_info.save!
       return
     end
 
-    # 2017-11-15 临时去掉,看看还是不是存在类似情况。
+# 2017-11-15 临时去掉,看看还是不是存在类似情况。
     if ["温州", "宁波"].include? yc_car_user_info.city_chinese and /^17/.match yc_car_user_info.phone
       yc_car_user_info.youyiche_upload_status = '拨不通电话'
       yc_car_user_info.save!
       return
     end
 
-    #车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
+#车型，备注，去掉特殊字符后，再做一次校验，电话，微信，手机号关键字。
     begin
       tmp_chexing = begin
         yc_car_user_info.car_user_info.che_xing.gsub(/\s|\.|~|-|_/, '') rescue ''
@@ -217,17 +228,16 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     end
 
 
-
     cui = yc_car_user_info.car_user_info
-    # cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
-    # cui.save!
-    # if not cui.phone_city.blank?
-    #   unless cui.city_chinese == cui.phone_city
-    #     yc_car_user_info.youyiche_upload_status = '非本地车'
-    #     yc_car_user_info.save!
-    #     return
-    #   end
-    # end
+# cui.phone_city ||= UserSystem::YoucheCarUserInfo.get_city_name2(yc_car_user_info.phone)
+# cui.save!
+# if not cui.phone_city.blank?
+#   unless cui.city_chinese == cui.phone_city
+#     yc_car_user_info.youyiche_upload_status = '非本地车'
+#     yc_car_user_info.save!
+#     return
+#   end
+# end
 
 
     if cui.note.match /^出售/
@@ -243,28 +253,27 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     end
 
 
-    # config_key_words = 0
-    # ["天窗", "导航", "倒车雷达", "电动调节座椅", "后视镜加热", "后视镜电动调节", "多功能方向盘", "轮毂", "dvd",
-    #  "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜",
-    #  "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "空调",
-    #  "倒镜", "后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速", "一分钱"].each do |kw|
-    #   config_key_words+=1 if cui.note.include? kw
-    # end
-    #
-    #
-    # # 过多配置描述，一般车商
-    # if config_key_words > 6
-    #   yc_car_user_info.youyiche_upload_status = '疑似车商，'
-    #   yc_car_user_info.save!
-    #   return
-    # end
+# config_key_words = 0
+# ["天窗", "导航", "倒车雷达", "电动调节座椅", "后视镜加热", "后视镜电动调节", "多功能方向盘", "轮毂", "dvd",
+#  "行车记录", "影像", "蓝牙", "CD", "日行灯", "一键升降窗", "中控锁", "防盗断油装置", "全车LED灯", "电动后视镜",
+#  "电动门窗", "DVD，", "真皮", "原车旅行架", "脚垫", "气囊", "一键启动", "无钥匙", "四轮碟刹", "空调",
+#  "倒镜", "后视镜", "GPS", "电子手刹", "换挡拨片", "巡航定速", "一分钱"].each do |kw|
+#   config_key_words+=1 if cui.note.include? kw
+# end
+#
+#
+# # 过多配置描述，一般车商
+# if config_key_words > 6
+#   yc_car_user_info.youyiche_upload_status = '疑似车商，'
+#   yc_car_user_info.save!
+#   return
+# end
 
 
-
-    # 需要往网页端传的数据如下:
-    # ucloud 一部分进网页,一部分走又一车接口。    ali全部走网页
+# 需要往网页端传的数据如下:
+# ucloud 一部分进网页,一部分走又一车接口。    ali全部走网页
     dq = UserSystem::YouyicheCarUserInfo::DIQU
-    dq = UserSystem::YouyicheCarUserInfo::ALIDIQU if Personal::Role.system_name == 'ali'
+    # dq = UserSystem::YouyicheCarUserInfo::ALIDIQU if Personal::Role.system_name == 'ali'
 
     if dq.keys.include? yc_car_user_info.city_chinese
       yc_car_user_info.youyiche_status_message = 'need_export_excel'
@@ -277,7 +286,6 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     end
 
 
-
     params = {
         "name" => yc_car_user_info.name,
         "phone" => yc_car_user_info.phone,
@@ -288,7 +296,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
         "brand" => yc_car_user_info.brand
     }
 
-    # host_name = 'uat.youyiche.com' #测试环境
+# host_name = 'uat.youyiche.com' #测试环境
     host_name = "b.youyiche.com" #正式环境
 
     response = RestClient.post "http://#{host_name}/webapi/public/register_carneed", params.to_json, :content_type => 'application/json'
@@ -352,15 +360,12 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
   end
 
 
-
-
   # UserSystem::YouyicheCarUserInfo.upload_cui_via_web yyc_id
   def self.upload_cui_via_web ycui
     return if ycui.phone.blank?
     OrderSystem::WeizhangLog.add_baixing_json_body ycui.id, 'czb'
     return
   end
-
 
 
   # UserSystem::YouyicheCarUserInfo.post_data_with_session yyc_id
@@ -370,15 +375,25 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
     user_name = UserSystem::YouyicheCarUserInfo.get_user_name
     text = `curl -b '/data/czb/#{user_name}' http://fdep.mychebao.com/car/manage.htm`
     form = Nokogiri::HTML(text)
-    token = begin form.css("#add_Token")[0]["value"] rescue '' end
+    token = begin
+      form.css("#add_Token")[0]["value"] rescue ''
+    end
 
     phone = yyc_cui.phone
     regionid = UserSystem::YouyicheCarUserInfo::DIQU[yyc_cui.city_chinese]
 
-    escape_shi = CGI::escape begin  "#{yyc_cui.city_chinese}市" rescue ''  end
-    escape_brand = CGI::escape begin yyc_cui.brand rescue "未知" end
-    escape_cx = CGI::escape begin yyc_cui.car_user_info.cx rescue "未知" end
-    name = CGI::escape begin yyc_cui.name rescue "未知" end
+    escape_shi = CGI::escape begin
+                               "#{yyc_cui.city_chinese}市" rescue ''
+                             end
+    escape_brand = CGI::escape begin
+                                 yyc_cui.brand rescue "未知"
+                               end
+    escape_cx = CGI::escape begin
+                              yyc_cui.car_user_info.cx rescue "未知"
+                            end
+    name = CGI::escape begin
+                         yyc_cui.name rescue "未知"
+                       end
 
     response = `curl 'http://fdep.mychebao.com/car/addCar.htm' -b '/data/czb/#{user_name}' -H 'User-Agent: Mozilla/5.0 (MeeGo; NokiaN9) AppleWebKit/534.13 (KHTML, like Gecko) NokiaBrowser/8.5.0 Mobile Safari/534.13' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Referer: http://fdep.mychebao.com/car/manage' -H 'X-Requested-With: XMLHttpRequest' -H 'Proxy-Connection: keep-alive' --data 'addToken=#{token}&contactname=#{name}&phone=#{phone}&regionid=#{regionid}&location=#{escape_shi}&brandname=#{escape_brand}&modelname=#{ escape_cx}&type=#{CGI::escape "其它"}' --compressed`
 
@@ -395,7 +410,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
 
     return "chexian2" if Personal::Role.system_name == 'ali' and redis["chexian2-0001"] == 'yes'
 
-    return 'cxmcsj' if  redis["cxmcsj-0001"] == 'yes'
+    return 'cxmcsj' if redis["cxmcsj-0001"] == 'yes'
 
     # user_name = []
     # ["cxmcsj", "gaoyixiangchezhu1", "gaoyixiangchezhu2"].each do |name|
@@ -422,7 +437,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       redis["#{name}-0001_freshen_time"] = Time.now.to_i if redis["#{name}-0001_freshen_time"].blank?
 
       #2分钟以内不刷新
-      next if Time.now.to_i - redis["#{name}-0001_freshen_time"].to_i <  120
+      next if Time.now.to_i - redis["#{name}-0001_freshen_time"].to_i < 120
       redis["#{name}-0001_freshen_time"] = Time.now.to_i # 记录当前刷新时间
 
       if redis["#{name}-0001"] == 'yes'
@@ -459,7 +474,6 @@ Set-Cookie: JSESSIONID=#{session_id}; Path=/; HttpOnly"
     redis = Redis.current
     redis["#{user_name}-0001"] = 'yes'
   end
-
 
 
   def temp_upload
@@ -502,7 +516,6 @@ Set-Cookie: JSESSIONID=#{session_id}; Path=/; HttpOnly"
     # 阿里云车置宝上传在 47.92.32.12
 
 
-
     cuis = UserSystem::CarUserInfo.where("created_at > ? and phone is not null and city_chinese in (?)", '2018-05-01 00:00:00', ["葫芦岛", "抚顺", "大庆", "松原", "赤峰", "西宁", "锦州", "鞍山", "绥化", "吉林", "银川", "营口", "铁岭", "齐齐哈尔"])
     cuis.find_each do |cui|
       next unless ["葫芦岛", "抚顺", "大庆", "松原", "赤峰", "西宁", "锦州", "鞍山", "绥化", "吉林", "银川", "营口", "铁岭", "齐齐哈尔"].include? cui.city_chinese
@@ -510,7 +523,7 @@ Set-Cookie: JSESSIONID=#{session_id}; Path=/; HttpOnly"
       UserSystem::CarUserInfo.che_shang_jiao_yan cui, true
       UserSystem::YouyicheCarUserInfo.create_user_info_from_car_user_info cui
     end
-    end
+  end
 
 end
 __END__

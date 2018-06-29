@@ -18,6 +18,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # UserSystem::CarUserInfo::CITY1 + UserSystem::CarUserInfo::CITY2 + UserSystem::CarUserInfo::CITY3
 
+
+
   CITY1 = ['上海', '成都', '杭州', '苏州', '福州', '合肥', "西安", "郑州", "长沙", "常州", "南宁", "济南", "太原", "青岛", "沈阳",
            '深圳', '南京', '广州', '武汉', '佛山', '天津', '东莞', '重庆', '厦门', '北京', "无锡", "宁波", "南昌", "昆明", "温州",
            "威海", "烟台", "潍坊", "兰州", "徐州", "南通", "扬州", "石家庄", "唐山", "洛阳", "南阳", "新乡", "湘潭",
@@ -29,7 +31,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
            "乐山", "廊坊", "开封", "荆州", "锦州", "金华", "焦作", "江门", "佳木斯", "吉林", "吉安", "黄石", "淮安", "湖州", "衡水",
            "邯郸", "桂林", "广安", "赣州", "阜阳", "抚顺", "鄂尔多斯", "德阳", "达州", "承德", "沧州", "保定", "包头", "鞍山",
            "安阳", "安庆", "蚌埠", "咸阳", "银川", "菏泽", "铜陵", "黄冈", "连云港",
-           "葫芦岛",  "赤峰", "西宁", "绥化", "铁岭"]
+           "葫芦岛",  "赤峰", "西宁", "绥化", "铁岭","衡阳","张家口","商丘"]
   # CITY2 = ['深圳', '南京', '广州', '武汉', '佛山', '天津', '东莞', '重庆', '厦门', '北京', "无锡", "宁波", "南昌", "昆明", "常熟"]
   CITY2 = []
 
@@ -531,11 +533,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # reg7 = Regexp.new (Time.now-6.days).strftime("%m-%d")
 
 
-    if car_user_info.site_name == 'ganji' and car_user_info.fabushijian.blank?
-      car_user_info.tt_upload_status = '没有发布时间'
-      car_user_info.save!
-      return
-    end
+    # if car_user_info.site_name == 'ganji' and car_user_info.fabushijian.blank?
+    #   car_user_info.tt_upload_status = '没有发布时间'
+    #   car_user_info.save!
+    #   return
+    # end
 
     # if car_user_info.site_name == 'ganji' and !(car_user_info.fabushijian.to_s.match(reg) || car_user_info.fabushijian.to_s.match(reg2) || car_user_info.fabushijian.to_s.match(reg3)|| car_user_info.fabushijian.to_s.match(reg4)|| car_user_info.fabushijian.to_s.match(reg5)|| car_user_info.fabushijian.to_s.match(reg6)|| car_user_info.fabushijian.to_s.match(reg7))
     #   car_user_info.tt_yaoyue = '历史遗留数据'
@@ -543,11 +545,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     #   return
     # end
 
-    unless UserSystem::CarUserInfo.is_upload car_user_info.site_name
-      car_user_info.tt_upload_status = '数据超限'
-      car_user_info.save!
-      return
-    end
+    # unless UserSystem::CarUserInfo.is_upload car_user_info.site_name
+    #   car_user_info.tt_upload_status = '数据超限'
+    #   car_user_info.save!
+    #   return
+    # end
 
     # 屏蔽掉百姓网的17号
     if ["baixing"].include? car_user_info.site_name and /^17/.match car_user_info.phone
@@ -584,13 +586,13 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
-    if rand(10) < 3
-      begin
-        UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
-      rescue Exception => e
-        pp e
-      end
-    end
+    # if rand(10) < 3
+    #   begin
+    #     UserSystem::JinzhenguCarUserInfo.create_user_info_from_car_user_info car_user_info
+    #   rescue Exception => e
+    #     pp e
+    #   end
+    # end
 
     # UploadTianTian.upload_one_tt car_user_info
     #同步至又一车/车置宝
@@ -599,11 +601,11 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
     #朋友E车
-    # UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
     #传给瓜子
-    UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
     return if system_name == 'ali' #阿里平台不提交以下几个B端。
