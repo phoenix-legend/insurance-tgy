@@ -135,7 +135,7 @@ class UserSystem::YouyicheCarUserInfo < ActiveRecord::Base
       return
     end
 
-    unless yc_car_user_info.phone.match /\d{ 11 }/
+    unless yc_car_user_info.phone.match /\d{11}/
       yc_car_user_info.youyiche_upload_status = '手机号不正确'
       yc_car_user_info.save!
       return
