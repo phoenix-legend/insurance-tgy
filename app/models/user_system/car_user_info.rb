@@ -664,10 +664,10 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     # UserSystem::RenRenCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
-    UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
+    # UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
 
     #朋友E车
-    UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
     #传给瓜子
     # UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
@@ -1233,6 +1233,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
   # UserSystem::CarUserInfo.get_info_for_zhenteng_lianyungang
   def self.get_info_for_zhenteng_lianyungang
+    return
     return unless Time.now.hour == 7
     return unless Time.now.min >= 50
     Spreadsheet.client_encoding = 'UTF-8'
