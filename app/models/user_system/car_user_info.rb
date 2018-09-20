@@ -1981,7 +1981,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     param[:milage] = '8'
     param[:fabushijian] = Time.now.chinese_format_day
 
-
+    redis = Redis.current
     redis["#{params[:detail_url]}-temp"] = 'y'
     redis.expire "#{params[:detail_url]}-temp", 60
 
