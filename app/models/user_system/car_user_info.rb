@@ -438,6 +438,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
 
+    options.delete "#{options[:detail_url]}-temp"
     car_user_info = UserSystem::CarUserInfo.new options
     car_user_info.name.gsub!(/\r|\n|\t/, '') unless car_user_info.name.blank?
     car_user_info.save!
@@ -2035,8 +2036,6 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                             note: 'kong',
                                             fabushijian: Time.now.chinese_format
 
-    redis["#{params[:detail_url]}-temp"] = nil
-    redis.expire "#{params[:detail_url]}-temp", 60
       return  cui_id
 
     # end
