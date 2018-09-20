@@ -417,6 +417,19 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     end
 
 
+    #某些链接,不进行更新。
+    begin
+      if redis["#{options[:detail_url]}-temp"] == 'y'
+        if options["#{options[:detail_url]}-temp"] == 'y'
+          ''
+        else
+          return nil
+        end
+      end
+    rescue Exception => e
+    end
+
+
     user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]
     if user_infos.length > 0
       redis[options[:detail_url]] = 'y'
@@ -1969,15 +1982,23 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     param[:fabushijian] = Time.now.chinese_format_day
 
 
+    redis["#{params[:detail_url]}-temp"] = 'y'
+    redis.expire "#{params[:detail_url]}-temp", 60
+
     # self.transaction do
-      cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: params[:chexing]||"",
-                                                             che_ling: params[:cheling],
-                                                             milage: param[:milage],
-                                                             detail_url: params[:detail_url],
-                                                             city_chinese: params[:city_chinese],
-                                                             price: params[:price],
-                                                             site_name: params[:site_name],
-                                                             is_cheshang: false
+    k = {
+        :che_xing => params[:chexing]||"",
+        :che_ling => params[:cheling],
+        :milage => param[:milage],
+        :detail_url => params[:detail_url],
+        :city_chinese => params[:city_chinese],
+        :price => params[:price],
+        :site_name => params[:site_name],
+        :is_cheshang => false,
+        "#{params[:detail_url]}-temp" => 'y'
+    }
+      cui_id = UserSystem::CarUserInfo.create_car_user_info2 k
+
 
 
        if  cui_id.blank? and number == 0
@@ -2014,6 +2035,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                             note: 'kong',
                                             fabushijian: Time.now.chinese_format
 
+    redis["#{params[:detail_url]}-temp"] = nil
+    redis.expire "#{params[:detail_url]}-temp", 60
       return  cui_id
 
     # end
