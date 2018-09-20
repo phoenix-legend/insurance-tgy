@@ -2002,44 +2002,53 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     pp 0
 
 
-       if  cui_id.blank? and number == 0
-         cuis = UserSystem::CarUserInfo.where('detail_url = ?', params[:detail_url])
-         if cuis.blank?
-           pp 1
-           redis = Redis.current
-           redis[params[:detail_url]] = 'n'
-           redis.expire params[:detail_url], 7*24*60*60
-           return UserSystem::CarUserInfo.shouche_xiaopeng params, 1
+       if  cui_id.blank?
+         # cuis = UserSystem::CarUserInfo.where('detail_url = ?', params[:detail_url])
+         # if cuis.blank?
+         #   pp 1
+         #   redis = Redis.current
+         #   redis[params[:detail_url]] = 'n'
+         #   redis.expire params[:detail_url], 7*24*60*60
+         #   return UserSystem::CarUserInfo.shouche_xiaopeng params, 1
+         #
+         # else
+         #   pp 2
+         #   phone = ''
+         #   cuis.each do |cui|
+         #     phone = cui.phone unless cui.phone.blank?
+         #   end
+         #   if phone.blank?
+         #     cuis.each do |cui|
+         #       pp 3
+         #       cui.destroy!
+         #     end
+         #
+         #     pp 4
+         #     redis = Redis.current
+         #     redis[params[:detail_url]] = 'n'
+         #     redis.expire params[:detail_url], 7*24*60*60
+         #     return UserSystem::CarUserInfo.shouche_xiaopeng params, 1
+         #
+         #   end
+         # end
 
-         else
-           pp 2
-           phone = ''
-           cuis.each do |cui|
-             phone = cui.phone unless cui.phone.blank?
-           end
-           if phone.blank?
-             cuis.each do |cui|
-               pp 3
-               cui.destroy!
-             end
+         cui = UserSystem::CarUserInfo.where('detail_url = ?', params[:detail_url]).order(id: :desc).first
 
-             pp 4
-             redis = Redis.current
-             redis[params[:detail_url]] = 'n'
-             redis.expire params[:detail_url], 7*24*60*60
-             return UserSystem::CarUserInfo.shouche_xiaopeng params, 1
-
-           end
-         end
+         pp "cui 为空"
+         UserSystem::CarUserInfo.update_detail id: cui.id,
+                                               name: params[:name] || '车主',
+                                               phone: params['phone'],
+                                               note: 'kong',
+                                               fabushijian: Time.now.chinese_format
 
 
 
        end
-      UserSystem::CarUserInfo.update_detail id: cui_id,
-                                            name: params[:name] || '车主',
-                                            phone: params['phone'],
-                                            note: 'kong',
-                                            fabushijian: Time.now.chinese_format
+      # UserSystem::CarUserInfo.update_detail id: cui_id,
+      #                                       name: params[:name] || '车主',
+      #                                       phone: params['phone'],
+      #                                       note: 'kong',
+      #                                       fabushijian: Time.now.chinese_format
 
       return  cui_id
 
