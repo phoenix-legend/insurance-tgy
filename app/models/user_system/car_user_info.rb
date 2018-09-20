@@ -418,16 +418,16 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
     #某些链接,不进行更新。
-    begin
-      if redis["#{options[:detail_url]}-temp"] == 'y'
-        if options["#{options[:detail_url]}-temp"] == 'y'
-          ''
-        else
-          return nil
-        end
-      end
-    rescue Exception => e
-    end
+    # begin
+    #   if redis["#{options[:detail_url]}-temp"] == 'y'
+    #     if options["#{options[:detail_url]}-temp"] == 'y'
+    #       ''
+    #     else
+    #       return nil
+    #     end
+    #   end
+    # rescue Exception => e
+    # end
 
 
     user_infos = UserSystem::CarUserInfo.where detail_url: options[:detail_url]
@@ -1982,9 +1982,9 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     param[:milage] = '8'
     param[:fabushijian] = Time.now.chinese_format_day
 
-    redis = Redis.current
-    redis["#{params[:detail_url]}-temp"] = 'y'
-    redis.expire "#{params[:detail_url]}-temp", 60
+    # redis = Redis.current
+    # redis["#{params[:detail_url]}-temp"] = 'y'
+    # redis.expire "#{params[:detail_url]}-temp", 60
 
     # self.transaction do
     k = {
