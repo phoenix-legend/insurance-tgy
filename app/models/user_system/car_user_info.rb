@@ -579,7 +579,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
 
-    # system_name = Personal::Role.system_name
+    system_name = Personal::Role.system_name
 
 
     #先推人人车
@@ -601,14 +601,14 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
     #朋友E车
-    # UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
     #传给瓜子
     # UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
-    # return if system_name == 'ali' #阿里平台不提交以下几个B端。
+    return if system_name == 'ali' #阿里平台不提交以下几个B端。
 
     # 同步至车置宝  车置宝作废
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
@@ -1968,6 +1968,8 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
     param[:milage] = '8'
     param[:fabushijian] = Time.now.chinese_format_day
 
+
+    # self.transaction do
     cui_id = UserSystem::CarUserInfo.create_car_user_info2 che_xing: params[:chexing]||"",
                                                            che_ling: params[:cheling],
                                                            milage: param[:milage],
@@ -1978,69 +1980,43 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
                                                            is_cheshang: false
 
 
+    if  cui_id.blank? and number == 0
+      cuis = UserSystem::CarUserInfo.where('detail_url = ?', params[:detail_url]).order(id: :desc).first
+      if cuis.blank?
+        redis = Redis.current
+        redis[params[:detail_url]] = 'n'
+        redis.expire params[:detail_url], 7*24*60*60
+        return UserSystem::CarUserInfo.shouche_xiaopeng params, 1
 
-       if  cui_id.blank?
-         # cuis = UserSystem::CarUserInfo.where('detail_url = ?', params[:detail_url])
-         # if cuis.blank?
-         #   pp 1
-         #   redis = Redis.current
-         #   redis[params[:detail_url]] = 'n'
-         #   redis.expire params[:detail_url], 7*24*60*60
-         #   return UserSystem::CarUserInfo.shouche_xiaopeng params, 1
-         #
-         # else
-         #   pp 2
-         #   phone = ''
-         #   cuis.each do |cui|
-         #     phone = cui.phone unless cui.phone.blank?
-         #   end
-         #   if phone.blank?
-         #     cuis.each do |cui|
-         #       pp 3
-         #       cui.destroy!
-         #     end
-         #
-         #     pp 4
-         #     redis = Redis.current
-         #     redis[params[:detail_url]] = 'n'
-         #     redis.expire params[:detail_url], 7*24*60*60
-         #     return UserSystem::CarUserInfo.shouche_xiaopeng params, 1
-         #
-         #   end
-         # end
+      else
+        phone = ''
+        cuis.each do |cui|
+          phone = cui.phone unless cui.phone.blank?
+        end
+        if phone.blank?
+          cuis.each do |cui|
+            cui.destroy!
+          end
+          redis = Redis.current
+          redis[params[:detail_url]] = 'n'
+          redis.expire params[:detail_url], 7*24*60*60
+          return UserSystem::CarUserInfo.shouche_xiaopeng params, 1
+        else
+          return
 
-         cui = UserSystem::CarUserInfo.where('detail_url = ?', params[:detail_url]).order(id: :desc).first
-
-         pp "cui 为空"
-         UserSystem::CarUserInfo.update_detail id: cui.id,
-                                               name: params[:name] || '车主',
-                                               phone: params['phone'],
-                                               note: 'kong——xp',
-                                               fabushijian: Time.now.chinese_format,
-                                               che_xing: params[:chexing]||"",
-                                               che_ling: params[:cheling],
-                                               milage: param[:milage],
-                                               detail_url: params[:detail_url],
-                                               city_chinese: params[:city_chinese],
-                                               price: params[:price],
-                                               site_name: params[:site_name],
-                                               is_cheshang: false
+        end
+      end
 
 
 
+    end
+    UserSystem::CarUserInfo.update_detail id: cui_id,
+                                          name: params[:name] || '车主',
+                                          phone: params['phone'],
+                                          note: 'kong',
+                                          fabushijian: Time.now.chinese_format
 
-
-
-
-
-       end
-      # UserSystem::CarUserInfo.update_detail id: cui_id,
-      #                                       name: params[:name] || '车主',
-      #                                       phone: params['phone'],
-      #                                       note: 'kong',
-      #                                       fabushijian: Time.now.chinese_format
-
-      return  cui_id
+    return  cui_id
 
     # end
 
