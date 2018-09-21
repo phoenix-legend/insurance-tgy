@@ -1981,7 +1981,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
     if  cui_id.blank? and number == 0
-      cuis = UserSystem::CarUserInfo.where('detail_url = ?', params[:detail_url]).order(id: :desc).first
+      cuis = UserSystem::CarUserInfo.where('detail_url = ?', params[:detail_url])#.order(id: :desc).first
       if cuis.blank?
         redis = Redis.current
         redis[params[:detail_url]] = 'n'
