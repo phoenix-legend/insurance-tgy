@@ -579,7 +579,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
     UserSystem::CarUserInfo.che_shang_jiao_yan car_user_info, true
 
-    system_name = Personal::Role.system_name
+    # system_name = Personal::Role.system_name
 
 
     #先推人人车
@@ -601,14 +601,14 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
 
 
     #朋友E车
-    UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
+    # UserSystem::PengyoucheCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
     #传给瓜子
     # UserSystem::GuaziCarUserInfo.create_user_info_from_car_user_info car_user_info
 
 
-    return if system_name == 'ali' #阿里平台不提交以下几个B端。
+    # return if system_name == 'ali' #阿里平台不提交以下几个B端。
 
     # 同步至车置宝  车置宝作废
     # UserSystem::ChezhibaoCarUserInfo.create_info_from_car_user_info car_user_info
@@ -2015,7 +2015,7 @@ class UserSystem::CarUserInfo < ActiveRecord::Base
          UserSystem::CarUserInfo.update_detail id: cui.id,
                                                name: params[:name] || '车主',
                                                phone: params['phone'],
-                                               note: 'kong',
+                                               note: 'kong——xp',
                                                fabushijian: Time.now.chinese_format,
                                                che_xing: params[:chexing]||"",
                                                che_ling: params[:cheling],
